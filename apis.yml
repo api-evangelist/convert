@@ -1,0 +1,29 @@
+aid: convert
+url: https://raw.githubusercontent.com/api-evangelist/convert/refs/heads/main/apis.yml
+name: Convert
+x-type: company
+description: >-
+  Convert is a privacy-focused A/B testing and personalization platform with full-stack testing, integrations with major analytics tools, and EU/US data residency.
+image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+tags:
+  - A/B Testing
+  - Experimentation
+  - Personalization
+  - Privacy
+  - CRO
+created: '2026-05-08'
+modified: '2026-05-08'
+specificationVersion: '0.19'
+apis: []
+common:
+  - type: Website
+    url: https://www.convert.com/
+  - type: Plans
+    url: plans/convert-plans-pricing.yml
+  - type: RateLimits
+    url: rate-limits/convert-rate-limits.yml
+  - type: FinOps
+    url: finops/convert-finops.yml
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com
