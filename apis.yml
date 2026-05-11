@@ -42,6 +42,107 @@ common:
     url: rate-limits/convert-rate-limits.yml
   - type: FinOps
     url: finops/convert-finops.yml
+  - type: Integrations
+    url: https://www.convert.com/integrations/
+integrations:
+  - name: 3DCart
+  - name: 6sense
+  - name: Active Campaign
+  - name: Adobe Analytics
+  - name: Amplitude
+  - name: AppsFlyer
+  - name: Baidu Analytics
+  - name: Bigcommerce Integration
+  - name: Civic Cookie Control
+  - name: Clearbit Reveal
+  - name: ClickFunnels
+  - name: Clicktale
+  - name: Clicky Integration
+  - name: Cloudflare SDK
+  - name: Cloudflare Zaraz
+  - name: CNZZ Statistics
+  - name: comScore
+  - name: ContentSquare
+  - name: Cookiebot
+  - name: CookieConsent.io
+  - name: Crazy Egg
+  - name: Customer.io
+  - name: Demandbase
+  - name: Drupal
+  - name: Econda
+  - name: Eulerian Technologies
+  - name: Exponea
+  - name: Formstack Integration
+  - name: FullStory
+  - name: Gatsby
+  - name: Google Analytics
+  - name: Google Analytics 4
+  - name: Google Data Studio
+  - name: Google Tag Manager
+  - name: GoSquared
+  - name: Heap Analytics
+  - name: Hotjar Integration
+  - name: HubSpot
+  - name: Inspectlet
+  - name: Instapage
+  - name: Jumplead
+  - name: Justuno
+  - name: Keap
+  - name: Kissmetrics
+  - name: Klaviyo
+  - name: Lander (LanderApp)
+  - name: LogRocket
+  - name: Lucky Orange
+  - name: Lyssna
+  - name: Magento
+  - name: Mapp (formerly Webtrekk)
+  - name: Marketo
+  - name: Matomo
+  - name: Medallia Digital Experience Analytics
+  - name: Microsoft Clarity
+  - name: Microsoft Power BI
+  - name: Mixpanel
+  - name: Mouseflow
+  - name: Mousestats
+  - name: mParticle
+  - name: New Relic
+  - name: Ontraport
+  - name: Oracle BlueKai
+  - name: Parse.ly
+  - name: Pendo
+  - name: Piano Analytics
+  - name: Plausible.io
+  - name: Prestashop
+  - name: Roistat
+  - name: RudderStack
+  - name: Salesforce CRM
+  - name: SAP Hybris
+  - name: Segment
+  - name: SessionCam | Glassbox
+  - name: Shopify
+  - name: Smartlook
+  - name: Snowplow Analytics
+  - name: Split
+  - name: Tealium
+  - name: Triblio
+  - name: Triple Whale Analytics
+  - name: Tumblr
+  - name: Typeform
+  - name: Umbraco
+  - name: Unbounce
+  - name: Usabilla
+  - name: Volusion
+  - name: Webflow
+  - name: Webtrends Infinity Analytics
+  - name: Wigzo
+  - name: Wix
+  - name: WooCommerce
+  - name: Woopra
+  - name: WordPress
+  - name: Wufoo
+  - name: Yandex Metrica
+  - name: Ysance
+  - name: Zuko
 maintainers:
   - FN: Kin Lane
     email: kin@apievangelist.com
