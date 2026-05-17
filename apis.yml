@@ -1,7 +1,7 @@
 aid: convert
 url: https://raw.githubusercontent.com/api-evangelist/convert/refs/heads/main/apis.yml
 name: Convert
-x-type: company
+kind: company
 description: >-
   Convert is an A/B testing and experimentation platform with privacy-first analytics and integrations for marketers and developers.
 image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
