@@ -44,6 +44,8 @@ common:
     url: finops/convert-finops.yml
   - type: Integrations
     url: https://www.convert.com/integrations/
+  - type: LLMsTxt
+    url: https://www.convert.com/llms.txt
 integrations:
   - name: 3DCart
   - name: 6sense
