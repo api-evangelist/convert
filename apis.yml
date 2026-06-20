@@ -4,7 +4,7 @@ name: Convert
 kind: company
 description: >-
   Convert is an A/B testing and experimentation platform with privacy-first analytics and integrations for marketers and developers.
-image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
 tags:
   - Experimentation
   - AB Testing
@@ -19,7 +19,7 @@ apis:
     name: Convert Experiences REST API v2
     description: >-
       Convert Experiences REST API v2 manages accounts, projects, experiments, goals, audiences, locations, reports, and collaborators. Requests are signed via HMAC.
-    image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
     humanURL: https://api.convert.com/doc/v2/
     baseURL: https://api.convert.com/api/v2
     tags:
