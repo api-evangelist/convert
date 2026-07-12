@@ -32,6 +32,12 @@ apis:
       - type: Developers
         url: https://www.convert.com/help/category/integrations/
 common:
+  - type: TrustCenter
+    url: security/convert-trust-center.yml
+  - type: DomainSecurity
+    url: security/convert-domain-security.yml
+  - type: Authentication
+    url: authentication/convert-authentication.yml
   - type: Website
     url: https://www.convert.com/
   - type: Documentation
@@ -46,6 +52,8 @@ common:
     url: https://www.convert.com/integrations/
   - type: LlmsText
     url: https://www.convert.com/llms.txt
+  - url: https://www.convert.com/blog/feed/
+    type: Blog
 integrations:
   - name: 3DCart
   - name: 6sense

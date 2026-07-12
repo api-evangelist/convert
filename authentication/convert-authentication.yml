@@ -1,0 +1,33 @@
+generated: '2026-07-11'
+method: derived
+source: openapi/convert-openapi.yml
+summary:
+  types:
+  - apiKey
+  - http
+  api_key_in:
+  - cookie
+  - header
+schemes:
+- name: requestSigning
+  type: apiKey
+  in: header
+  parameter: Authorization
+  description: See **[API Key Authentication](#tag/API-KEY-Authentication)** for more information.
+  sources:
+  - openapi/convert-openapi.yml
+- name: secretKey
+  type: http
+  scheme: bearer
+  description: See **[API Key Authentication](#tag/API-KEY-Authentication)** for more information.
+  sources:
+  - openapi/convert-openapi.yml
+- name: cookieAuthentication
+  type: apiKey
+  in: cookie
+  parameter: sid
+  description: Cookie authentication is used against Convert's own IdentityProvider  or third
+    party identity providers and is described more in the "[Cookie Authentication](#tag/Cookie-Authentication)"
+    section
+  sources:
+  - openapi/convert-openapi.yml
