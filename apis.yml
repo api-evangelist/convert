@@ -32,6 +32,8 @@ apis:
       - type: Developers
         url: https://www.convert.com/help/category/integrations/
 common:
+  - type: AgenticAccess
+    url: agentic-access/convert-agentic-access.yml
   - type: TrustCenter
     url: security/convert-trust-center.yml
   - type: DomainSecurity
