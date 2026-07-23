@@ -1,0 +1,555 @@
+openapi: 3.1.0
+info:
+  title: Convert Accounts Tags API
+  description: 'Move your app forward with the Convert API. The Convert API allows
+
+    you to manage your Convert Experiences projects using code. The REST API is
+
+    an interface for managing and extending functionality of Convert. For
+
+    example, instead of creating and maintaining projects using the Convert
+
+    Experiences web dashboard you can create an experiment programmatically.
+
+    Additionally, if you prefer to run custom analysis on experiment results you
+
+    can leverage the API to pull data from Convert Experiences into your own
+
+    workflow. If you do not have a Convert account already, sign up for a free
+
+    developer account at https://www.convert.com/api/.
+
+
+    *[Convert API V1](/doc/v1) is still available and documentation can be found [here](/doc/v1) but using it is highly discouraged
+
+    as it will be phased out in the future*
+
+    '
+  version: 2.0.0
+servers:
+- url: https://api.convert.com/api/v2
+  description: Live API server
+- url: https://apidev.convert.com/api/v2
+  description: DEV API server
+- url: http://apidev.convert.com:5000/api/v2
+  description: DEV mocked API server
+tags:
+- name: Tags
+  description: Tags define tag labels for your project.
+paths:
+  /accounts/{account_id}/projects/{project_id}/tags:
+    post:
+      operationId: getTagsList
+      summary: List tags within a project
+      description: 'Retrieves a list of all tags defined for a specific project.
+
+        Tags are keywords used to categorize and organize experiences, goals, audiences, etc., for easier management and filtering.
+
+        The Knowledge Base article "Adding tags to your Experiences" explains their use.
+
+        '
+      tags:
+      - Tags
+      parameters:
+      - name: account_id
+        in: path
+        required: true
+        description: ID of the account that owns the retrieved/saved data
+        schema:
+          type: integer
+      - name: project_id
+        description: ID of the project to which save/retrieved data is connected
+        in: path
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        $ref: '#/components/requestBodies/GetTagsRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/TagsListResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+  /accounts/{account_id}/projects/{project_id}/tags/{tag_id}:
+    get:
+      operationId: getTag
+      summary: Get details for a specific tag
+      description: 'Retrieves information about a single tag, identified by its `tag_id`.
+
+        This includes its name and description.
+
+        '
+      tags:
+      - Tags
+      parameters:
+      - name: account_id
+        in: path
+        required: true
+        description: ID of the account that owns the retrieved/saved data
+        schema:
+          type: integer
+      - name: project_id
+        in: path
+        required: true
+        description: ID of the project into which the tag is stored
+        schema:
+          type: integer
+      - name: tag_id
+        in: path
+        required: true
+        description: ID of the tag to be retrieve
+        schema:
+          type: integer
+      responses:
+        '200':
+          $ref: '#/components/responses/TagResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+  /accounts/{account_id}/projects/{project_id}/tags/add:
+    post:
+      operationId: createTag
+      summary: Create a new tag
+      description: 'Defines a new tag within a project. Requires a tag name and an optional description.
+
+        Tags can then be applied to experiences, goals, etc., to help organize them.
+
+        '
+      tags:
+      - Tags
+      parameters:
+      - name: account_id
+        in: path
+        required: true
+        description: ID of the account that owns the retrieved/saved data
+        schema:
+          type: integer
+      - name: project_id
+        in: path
+        required: true
+        description: ID of the project into which the tag is to be stored
+        schema:
+          type: integer
+      requestBody:
+        $ref: '#/components/requestBodies/CreateTagRequest'
+      responses:
+        '201':
+          $ref: '#/components/responses/TagResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+  /accounts/{account_id}/projects/{project_id}/tags/{tag_id}/update:
+    post:
+      operationId: updateTag
+      summary: Update an existing tag
+      description: 'Modifies the name or description of an existing tag.
+
+        '
+      tags:
+      - Tags
+      parameters:
+      - name: account_id
+        in: path
+        required: true
+        description: ID of the account that owns the retrieved/saved data
+        schema:
+          type: integer
+      - name: project_id
+        in: path
+        required: true
+        description: ID of the project into which the tag is to be stored
+        schema:
+          type: integer
+      - name: tag_id
+        in: path
+        required: true
+        description: ID of the tag to be updated
+        schema:
+          type: integer
+      requestBody:
+        $ref: '#/components/requestBodies/UpdateTagRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/TagResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+  /accounts/{account_id}/projects/{project_id}/tags/{tag_id}/delete:
+    delete:
+      operationId: deleteTag
+      summary: Delete a tag
+      description: 'Permanently removes a tag from a project.
+
+        This does not delete the items (experiences, goals, etc.) that were associated with the tag, but simply removes the tag association.
+
+        '
+      tags:
+      - Tags
+      parameters:
+      - name: account_id
+        in: path
+        required: true
+        description: ID of the account that owns the retrieved/saved data
+        schema:
+          type: integer
+      - name: project_id
+        in: path
+        required: true
+        description: ID of the project from which the tag is to be deleted
+        schema:
+          type: integer
+      - name: tag_id
+        in: path
+        required: true
+        description: ID of the tag to be deleted
+        schema:
+          type: integer
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+  /accounts/{account_id}/projects/{project_id}/tags/bulk-delete:
+    post:
+      operationId: bulkTagsDelete
+      summary: Delete multiple tags at once
+      description: 'Permanently removes multiple tags from a project in a single operation.
+
+        Requires a list of tag IDs.
+
+        '
+      tags:
+      - Tags
+      parameters:
+      - name: account_id
+        in: path
+        required: true
+        description: ID of the account that owns the retrieved/saved data
+        schema:
+          type: integer
+      - name: project_id
+        description: ID of the project to which save/retrieved data is connected
+        in: path
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        $ref: '#/components/requestBodies/BulkDeleteTagsRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/BulkSuccessResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+components:
+  schemas:
+    Extra:
+      type: object
+      properties:
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+    GetTagsListRequestData:
+      allOf:
+      - $ref: '#/components/schemas/TagsListDataOptions'
+      - $ref: '#/components/schemas/PageNumber'
+      - type: object
+        properties:
+          only:
+            description: 'Only retrieve tags with the given ids.
+
+              '
+            type: array
+            nullable: true
+            items:
+              type: integer
+            maxItems: 100
+          except:
+            description: 'Except tags with the given ids.
+
+              '
+            type: array
+            items:
+              type: integer
+            maxItems: 100
+          search:
+            type: string
+            maxLength: 100
+            nullable: true
+            description: A search string that would be used to search against Tag's name
+    TagToCreate:
+      allOf:
+      - $ref: '#/components/schemas/Tag'
+      required:
+      - name
+    CreateTagRequestData:
+      allOf:
+      - $ref: '#/components/schemas/TagToCreate'
+    BulkSuccessData:
+      allOf:
+      - $ref: '#/components/schemas/SuccessData'
+      - type: object
+        properties:
+          code:
+            type: integer
+            format: int32
+          errors:
+            type: array
+            description: List of unprocessed entities. Would be empty, if all passed entities processed
+            items:
+              $ref: '#/components/schemas/BulkEntityError'
+    Pagination:
+      type: object
+      properties:
+        current_page:
+          description: The current page number being displayed from the paginated set.
+          type: integer
+          minimum: 1
+        items_count:
+          description: The total number of items available across all pages for the current filter criteria.
+          type: integer
+          minimum: 0
+        items_per_page:
+          description: The number of items included in the current page of results (matches `results_per_page` from the request).
+          type: integer
+          minimum: 0
+        pages_count:
+          description: The total number of pages available for the current filter criteria and `results_per_page` setting.
+          type: integer
+          minimum: 0
+    BulkDeleteTagRequestData:
+      type: object
+      description: Request body for bulk deleting multiple tags. Contains a list of tag IDs to be permanently removed.
+      additionalProperties: false
+      properties:
+        id:
+          $ref: '#/components/schemas/BulkTagsIds'
+      required:
+      - id
+    TagsListDataOptions:
+      allOf:
+      - $ref: '#/components/schemas/ResultsPerPage'
+    PageNumber:
+      type: object
+      properties:
+        page:
+          type: integer
+          minimum: 1
+          description: 'The page number for paginated results. For example, if `results_per_page` is 30, `page: 2` will retrieve items 31-60.
+
+            Defaults to 1 if not specified.
+
+            '
+    BulkEntityError:
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          description: The unique identifier of the entity that could not be processed.
+        message:
+          type: string
+          description: A message explaining the reason for the failure for this specific entity.
+    UpdateTagRequestData:
+      allOf:
+      - $ref: '#/components/schemas/Tag'
+    ErrorData:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          oneOf:
+          - type: string
+          - type: array
+            items:
+              type: string
+        fields:
+          oneOf:
+          - type: string
+          - type: array
+            items:
+              type: string
+    BulkTagsIds:
+      type: array
+      description: A list of tag unique numerical identifiers to be affected by a bulk delete operation.
+      items:
+        type: integer
+      minItems: 1
+      maxItems: 100
+    TagsListResponseData:
+      type: object
+      description: Response containing a list of tags defined within a project, along with pagination details if applicable.
+      properties:
+        data:
+          $ref: '#/components/schemas/TagsList'
+        extra:
+          $ref: '#/components/schemas/Extra'
+    TagsList:
+      type: array
+      items:
+        $ref: '#/components/schemas/Tag'
+    ResultsPerPage:
+      type: object
+      properties:
+        results_per_page:
+          type: integer
+          nullable: true
+          minimum: 0
+          maximum: 50
+          default: 30
+          description: 'Specifies the maximum number of items to return in a single page of results.
+
+            Used for pagination. Default is 30, maximum is 50.
+
+            '
+    SuccessData:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+    Tag:
+      type: object
+      description: 'Represents a tag (keyword or label) that can be associated with various Convert entities like experiences, goals, audiences, hypotheses, and observations.
+
+        Tags help organize and categorize these entities for easier filtering, searching, and management.
+
+        Knowledge Base: "Adding tags to your Experiences".
+
+        '
+      properties:
+        id:
+          type: integer
+          readOnly: true
+          description: The unique numerical identifier for the tag.
+        name:
+          type: string
+          description: The user-defined name of the tag (e.g., "Q3 Campaigns", "Homepage Tests", "High Priority", "Mobile Specific"). This is the primary identifier shown in the UI.
+          maxLength: 100
+        description:
+          type: string
+          description: (Optional) A brief explanation of the tag's purpose or the criteria for its application.
+          maxLength: 200
+          nullable: true
+  responses:
+    SuccessResponse:
+      description: 'A generic success response, typically used for operations that don''t return specific data (like deletions or some updates). The `code` is usually 200, and `message` confirms the successful action.
+
+        '
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SuccessData'
+    TagsListResponse:
+      description: A list of tags defined within a project. Each tag has an `id`, `name`, and `description`. Tags are used for organizing entities like experiences or goals.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/TagsListResponseData'
+    TagResponse:
+      description: Details for a single tag, including its `id`, `name`, and `description`.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Tag'
+    ErrorResponse:
+      description: 'Indicates an error occurred while processing the request. The `code` provides an HTTP status code, `message` offers a human-readable explanation or an array of validation errors, and `fields` (if present) specifies which input fields were problematic.
+
+        '
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorData'
+    BulkSuccessResponse:
+      description: 'Indicates the outcome of a bulk operation (e.g., bulk update or delete). Provides a general success `message` and an `errors` array listing any entities that could not be processed, along with the reason for failure for each.
+
+        '
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BulkSuccessData'
+  requestBodies:
+    BulkDeleteTagsRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BulkDeleteTagRequestData'
+    GetTagsRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GetTagsListRequestData'
+      description: Optional filters for listing tags, primarily `search` for tag names and pagination parameters (`page`, `results_per_page`). Also supports `only`/`except` for specific tag IDs.
+    CreateTagRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CreateTagRequestData'
+      required: true
+    UpdateTagRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UpdateTagRequestData'
+      required: true
+  securitySchemes:
+    requestSigning:
+      type: apiKey
+      x-name-applicationId: Convert-Application-ID
+      x-name-expire: Expire
+      name: Authorization
+      in: header
+      description: 'See **[API Key Authentication](#tag/API-KEY-Authentication)** for more information.
+
+        '
+    secretKey:
+      type: http
+      scheme: bearer
+      description: 'See **[API Key Authentication](#tag/API-KEY-Authentication)** for more information.
+
+        '
+    cookieAuthentication:
+      type: apiKey
+      in: cookie
+      name: sid
+      description: Cookie authentication is used against Convert's own IdentityProvider  or third party identity providers and is described more in the "[Cookie Authentication](#tag/Cookie-Authentication)" section
+x-tagGroups:
+- name: Client Authentication
+  tags:
+  - API KEY Authentication
+  - Cookie Authentication
+  - OAuth Authorization
+- name: Common Parameters
+  tags:
+  - Optional Fields
+  - Expandable Fields
+- name: Requests
+  tags:
+  - User
+  - Accounts
+  - AI content
+  - Collaborators
+  - API Keys
+  - Projects
+  - SDK Keys
+  - Experiences
+  - Experience Variations
+  - Experience Sections
+  - Section Versions
+  - Version Changes
+  - Experiences Reports
+  - Experiences Heatmaps
+  - Goals
+  - Hypotheses
+  - Knowledge Bases
+  - Observations
+  - Locations
+  - Audiences
+  - Domains
+  - Cdn Images
+  - Files
+  - Tags
+  - Features
+  - Visitor Insights
+  - Visitors Data
+  - Visitor Data Placeholders
+  - OAuth

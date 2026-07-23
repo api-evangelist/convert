@@ -1,0 +1,1845 @@
+openapi: 3.1.0
+info:
+  title: Convert Accounts Experiences Reports API
+  description: 'Move your app forward with the Convert API. The Convert API allows
+
+    you to manage your Convert Experiences projects using code. The REST API is
+
+    an interface for managing and extending functionality of Convert. For
+
+    example, instead of creating and maintaining projects using the Convert
+
+    Experiences web dashboard you can create an experiment programmatically.
+
+    Additionally, if you prefer to run custom analysis on experiment results you
+
+    can leverage the API to pull data from Convert Experiences into your own
+
+    workflow. If you do not have a Convert account already, sign up for a free
+
+    developer account at https://www.convert.com/api/.
+
+
+    *[Convert API V1](/doc/v1) is still available and documentation can be found [here](/doc/v1) but using it is highly discouraged
+
+    as it will be phased out in the future*
+
+    '
+  version: 2.0.0
+servers:
+- url: https://api.convert.com/api/v2
+  description: Live API server
+- url: https://apidev.convert.com/api/v2
+  description: DEV API server
+- url: http://apidev.convert.com:5000/api/v2
+  description: DEV mocked API server
+tags:
+- name: Experiences Reports
+  description: Specification for different reports data that can be retrieved for experiences
+paths:
+  /accounts/{account_id}/projects/{project_id}/experiences/{experience_id}/report_settings:
+    get:
+      operationId: getExperienceReportSettings
+      summary: Get report settings for an experience
+      description: 'Retrieves the specific reporting settings for an experience. This includes configurations like confidence level,
+
+        statistical methodology (Frequentist/Bayesian), MAB strategy, primary metric, and outlier detection rules.
+
+        These settings govern how experiment results are calculated and displayed.
+
+        The Knowledge Base article "Experiment Report" (Stats Settings section) covers these.
+
+        '
+      tags:
+      - Experiences Reports
+      parameters:
+      - name: account_id
+        in: path
+        required: true
+        description: ID of the account that owns the retrieved/saved data
+        schema:
+          type: integer
+      - name: project_id
+        description: ID of the project to which save/retrieved data is connected
+        in: path
+        required: true
+        schema:
+          type: integer
+      - name: experience_id
+        in: path
+        required: true
+        description: ID of the experience
+        schema:
+          type: integer
+      - name: report_token
+        in: header
+        required: false
+        description: Token to access the experience report in read-only mode.
+        schema:
+          type: string
+      responses:
+        '200':
+          $ref: '#/components/responses/ExperienceReportSettingsResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+  /accounts/{account_id}/projects/{project_id}/experiences/{experience_id}/aggregated_report:
+    post:
+      operationId: getExperienceAggregatedReport
+      summary: Get aggregated performance report for an experience
+      description: 'Retrieves the main performance report for a specific experience.
+
+        This report shows aggregated data for each variation, including visitor counts, conversions, conversion rates, improvement percentages,
+
+        and statistical confidence (or chance to win for Bayesian). Data is provided for all goals attached to the experience.
+
+        Supports filtering by date range and segments.
+
+        The Knowledge Base article "Experiment Report" details the metrics shown.
+
+        '
+      tags:
+      - Experiences Reports
+      parameters:
+      - name: account_id
+        in: path
+        required: true
+        description: ID of the account that owns the retrieved/saved data
+        schema:
+          type: integer
+      - name: project_id
+        description: ID of the project to which save/retrieved data is connected
+        in: path
+        required: true
+        schema:
+          type: integer
+      - name: experience_id
+        in: path
+        required: true
+        description: ID of the experience
+        schema:
+          type: integer
+      - name: report_token
+        in: header
+        required: false
+        description: Token to access the experience report in read-only mode.
+        schema:
+          type: string
+      requestBody:
+        $ref: '#/components/requestBodies/GetExperienceAggregatedReportRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/ExperienceAggregatedReportResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+  /accounts/{account_id}/projects/{project_id}/experiences/{experience_id}/daily_report:
+    post:
+      operationId: getExperienceDailyReport
+      summary: Get daily performance report for an experience
+      description: 'Retrieves a day-by-day breakdown of performance metrics (visitors, conversions, conversion rate, etc.) for a specific experience and goal.
+
+        This allows trend analysis and observation of how an experiment performs over time.
+
+        Supports filtering by date range and segments, and can show cumulative or non-cumulative data.
+
+        The Knowledge Base article "Experiment Report" (Graphs section) visualizes this type of data.
+
+        '
+      tags:
+      - Experiences Reports
+      parameters:
+      - name: account_id
+        in: path
+        required: true
+        description: ID of the account that owns the retrieved/saved data
+        schema:
+          type: integer
+      - name: project_id
+        description: ID of the project to which save/retrieved data is connected
+        in: path
+        required: true
+        schema:
+          type: integer
+      - name: experience_id
+        in: path
+        required: true
+        description: ID of the experience
+        schema:
+          type: integer
+      - name: report_token
+        in: header
+        required: false
+        description: Token to access the experience report in read-only mode.
+        schema:
+          type: string
+      requestBody:
+        $ref: '#/components/requestBodies/GetExperienceDailyReportRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/ExperienceDailyReportResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+  /accounts/{account_id}/projects/{project_id}/experiences/{experience_id}/daily_traffic_allocation:
+    post:
+      operationId: getExperienceDailyTrafficAllocation
+      summary: Get daily traffic allocation report for an MAB experience
+      description: 'Retrieves the day-by-day traffic allocation percentages for each variation in an experience that uses Multi-Armed Bandit (MAB) or auto-allocation.
+
+        This shows how Convert dynamically shifted traffic towards better-performing variations over time.
+
+        The Knowledge Base article "Multi-Armed Bandit (MAB) & Auto-Allocation in Convert" explains this feature.
+
+        '
+      tags:
+      - Experiences Reports
+      parameters:
+      - name: account_id
+        in: path
+        required: true
+        description: ID of the account that owns the retrieved/saved data
+        schema:
+          type: integer
+      - name: project_id
+        description: ID of the project to which save/retrieved data is connected
+        in: path
+        required: true
+        schema:
+          type: integer
+      - name: experience_id
+        in: path
+        required: true
+        description: ID of the experience
+        schema:
+          type: integer
+      - name: report_token
+        in: header
+        required: false
+        description: Token to access the experience report in read-only mode.
+        schema:
+          type: string
+      requestBody:
+        $ref: '#/components/requestBodies/GetExperienceDailyTrafficAllocationRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/ExperienceDailyTrafficAllocationResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+  /accounts/{account_id}/projects/{project_id}/experiences/{experience_id}/reset_report:
+    post:
+      operationId: resetExperienceReport
+      summary: Reset report data for an experience
+      description: 'Clears all accumulated visitor and conversion data for an experience''s report, effectively resetting its statistics to zero.
+
+        The start date of the experiment is also reset. This is useful if you want to restart data collection after making significant changes or for QA purposes.
+
+        The Knowledge Base article "Reset Experiment Data" warns: "If you want to prevent [carry-over effects], it is suggested that you clone your experiment instead of resetting the report".
+
+        '
+      tags:
+      - Experiences Reports
+      parameters:
+      - name: account_id
+        in: path
+        required: true
+        description: ID of the account that owns the retrieved/saved data
+        schema:
+          type: integer
+      - name: project_id
+        description: ID of the project to which save/retrieved data is connected
+        in: path
+        required: true
+        schema:
+          type: integer
+      - name: experience_id
+        in: path
+        required: true
+        description: ID of the experience
+        schema:
+          type: integer
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+  /accounts/{account_id}/projects/{project_id}/experiences/{experience_id}/export_report:
+    post:
+      operationId: exportExperienceReport
+      summary: Export an experience report (CSV/PDF)
+      description: 'Generates an export of an experience''s performance report in either CSV (aggregated or daily) or PDF format.
+
+        Returns a downloadable link for the generated file. Useful for offline analysis or sharing with stakeholders.
+
+        The Knowledge Base article "Experiment Report" (Export & Download section) describes this.
+
+        '
+      tags:
+      - Experiences Reports
+      parameters:
+      - name: account_id
+        in: path
+        required: true
+        description: ID of the account that owns the retrieved/saved data
+        schema:
+          type: integer
+      - name: project_id
+        description: ID of the project to which save/retrieved data is connected
+        in: path
+        required: true
+        schema:
+          type: integer
+      - name: experience_id
+        in: path
+        required: true
+        description: ID of the experience
+        schema:
+          type: integer
+      requestBody:
+        $ref: '#/components/requestBodies/ExportExperienceReportRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/ExportExperienceReportResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+  /accounts/{account_id}/projects/{project_id}/experiences/{experience_id}/export_raw_data:
+    post:
+      operationId: exportExperienceRawData
+      summary: Export raw tracking data for an experience
+      description: 'Initiates a job to export the raw, event-level tracking data for a specific experience.
+
+        This data includes individual visitor bucketing events, conversions, and transactions.
+
+        The export is typically delivered as a link via email due to potential size.
+
+        Useful for in-depth custom analysis or importing into external data warehouses.
+
+        The Knowledge Base article "Experiment Report" (Export & Download section) mentions this.
+
+        '
+      tags:
+      - Experiences Reports
+      parameters:
+      - name: account_id
+        in: path
+        required: true
+        description: ID of the account that owns the retrieved/saved data
+        schema:
+          type: integer
+      - name: project_id
+        description: ID of the project to which save/retrieved data is connected
+        in: path
+        required: true
+        schema:
+          type: integer
+      - name: experience_id
+        in: path
+        required: true
+        description: ID of the experience
+        schema:
+          type: integer
+      requestBody:
+        $ref: '#/components/requestBodies/ExportExperienceRawDataRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/ExportExperienceRawDataResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+  /accounts/{account_id}/projects/{project_id}/experiences/{experience_id}/remove_report_data:
+    post:
+      operationId: removeExperienceReportData
+      summary: Remove specific data from an experience report
+      description: 'Allows for targeted deletion of report data for an experience based on date range and event type (view_experience, conversion, transaction).
+
+        For conversion and transaction events, specific goals can be targeted.
+
+        If `simulate` is true, returns a count of records that would be deleted without actual deletion. Otherwise, performs permanent deletion.
+
+        The Knowledge Base article "Remove Report Data Feature" details this.
+
+        '
+      tags:
+      - Experiences Reports
+      parameters:
+      - name: account_id
+        in: path
+        required: true
+        description: ID of the account that owns the retrieved/saved data
+        schema:
+          type: integer
+      - name: project_id
+        description: ID of the project to which save/retrieved data is connected
+        in: path
+        required: true
+        schema:
+          type: integer
+      - name: experience_id
+        in: path
+        required: true
+        description: ID of the experience
+        schema:
+          type: integer
+      requestBody:
+        $ref: '#/components/requestBodies/RemoveExperienceReportRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/RemoveExperienceReportResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+components:
+  schemas:
+    ReportingSegmentsCountry:
+      type: string
+      description: 'The two-letter ISO 3166-1 alpha-2 country code of the visitor, determined by IP geolocation.
+
+        Used for segmenting reports by country to analyze geographical performance.
+
+        Knowledge Base: "How Do I Target by Geographic Location Like City, Region or Country?".
+
+        '
+      maxLength: 2
+      minLength: 2
+    SE_ProcTypes:
+      type: string
+      description: 'The statistical methodology used for analyzing experiment results and determining winners.
+
+        - `frequentist`: Traditional hypothesis testing approach using p-values and confidence intervals (e.g., T-tests). KB: "Statistical Methods Used".
+
+        - `bayesian`: Bayesian statistical approach providing probabilities of one variation being better than another (e.g., Chance to Win). KB: "Statistical Models in Convert.com''s A/B Testing Platform".
+
+        '
+      enum:
+      - frequentist
+      - bayesian
+    RemoveExperienceReportResponseDataItem:
+      type: object
+      properties:
+        event:
+          $ref: '#/components/schemas/ExperienceReportRawDataEvents'
+        count:
+          type: integer
+          description: The number of records of this event type that were (or would be) deleted based on the request criteria.
+    ExportExperienceRawDataEvents:
+      description: 'Specifies the type of raw tracking events to be included in an export or targeted for removal.
+
+        - `view_experience`: Events logged when a visitor is first bucketed into an experience variation.
+
+        - `conversion`: Events logged when a visitor triggers a standard conversion goal.
+
+        - `transaction`: Events logged when a visitor triggers a revenue goal (includes transaction details).
+
+        '
+      type: string
+      enum:
+      - view_experience
+      - conversion
+      - transaction
+    ExperienceAggregatedReportResponseData:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/ExperienceAggregatedReport'
+    SE_ProcSettings:
+      description: Overall settings for the statistical engine processing results for this experience.
+      oneOf:
+      - $ref: '#/components/schemas/SE_ProcSettingsFrequentist'
+      - $ref: '#/components/schemas/SE_ProcSettingsBayesian'
+      discriminator:
+        propertyName: stats_type
+        mapping:
+          frequentist: '#/components/schemas/SE_ProcSettingsFrequentist'
+          bayesian: '#/components/schemas/SE_ProcSettingsBayesian'
+    ReportingSegmentsSource:
+      type: string
+      description: 'The traffic source that brought the visitor to the site (e.g., ''google'', ''facebook.com'', ''direct'', ''newsletter'').
+
+        Derived from `utm_source` URL parameters or the HTTP referrer. Enables report segmentation by traffic source.
+
+        Knowledge Base: "How Do You Fill Medium, Keyword and Source Name?".
+
+        '
+      enum:
+      - campaign
+      - search
+      - referral
+      - direct
+      - ai_tool
+    ReportingSegmentsFilters:
+      type: object
+      description: 'A collection of filters used to segment experience report data based on various visitor attributes and traffic sources.
+
+        Applying these filters allows for deeper analysis of how different user groups interact with experience variations.
+
+        Knowledge Base: "Using Basic and Advanced Post segmentation".
+
+        '
+      properties:
+        devices:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReportingSegmentsDeviceCategories'
+          nullable: true
+        browsers:
+          description: Filter report data for visitors using one or more specified web browsers.
+          type: array
+          items:
+            $ref: '#/components/schemas/ReportingSegmentsBrowser'
+          nullable: true
+        countries:
+          description: Filter report data for visitors from one or more specified countries (using 2-letter ISO codes).
+          type: array
+          items:
+            $ref: '#/components/schemas/ReportingSegmentsCountry'
+          nullable: true
+        visitor_types:
+          description: Filter report data for 'new' or 'returning' visitors.
+          type: array
+          items:
+            $ref: '#/components/schemas/ReportingSegmentsVisitorType'
+          nullable: true
+        campaigns:
+          description: Filter report data for visitors attributed to one or more specified marketing campaign names (from `utm_campaign`).
+          type: array
+          items:
+            $ref: '#/components/schemas/ReportingSegmentsCampaign'
+          nullable: true
+        custom_segments:
+          description: Filter report data for visitors belonging to one or more specified custom Convert Audience segments (by segment ID).
+          type: array
+          items:
+            $ref: '#/components/schemas/ReportingSegmentsCustomSegment'
+          nullable: true
+        sources:
+          description: Filter report data for visitors from one or more specified traffic sources (e.g., 'direct', 'search', 'referral').
+          type: array
+          items:
+            $ref: '#/components/schemas/ReportingSegmentsSource'
+          nullable: true
+    ExperienceDailyReportExtraDataItem:
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/ReportExtraStatsTypes'
+        stats:
+          type: array
+          description: An array of data points, each representing one day's aggregated value for this `type`.
+          items:
+            $ref: '#/components/schemas/StatsDataPoint'
+    ErrorData:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          oneOf:
+          - type: string
+          - type: array
+            items:
+              type: string
+        fields:
+          oneOf:
+          - type: string
+          - type: array
+            items:
+              type: string
+    GetExperienceDailyTrafficAllocationRequestData:
+      allOf:
+      - $ref: '#/components/schemas/TimeRangeRequestData'
+    GetExperienceAggregatedReportRequestData:
+      allOf:
+      - type: object
+        description: Parameters needed to drill down the report.
+        properties:
+          goals:
+            type: array
+            description: 'A list of goal Id''s for which to return the reporting data.
+
+
+              If no ID is provided, the list of goals attached to the experience is being used;
+
+              '
+            items:
+              type: integer
+            nullable: true
+          metrics:
+            description: The list of metrics to return. If not provided, all available metrics will be returned.
+            type: array
+            items:
+              $ref: '#/components/schemas/MetricTypes'
+            nullable: true
+      - $ref: '#/components/schemas/BaseReportRequestData'
+    ReportExtraStatsTypes:
+      description: Types of aggregated daily statistics that can be included in the 'extra' section of a daily report.
+      type: string
+      enum:
+      - total_visitors
+      - avg_conversion_rate
+      - avg_revenue_visitor
+      - avg_products_ordered
+    StatsDataPoint:
+      type: object
+      description: Represents a single data point in a time series, typically for a specific day.
+      properties:
+        timestamp:
+          description: Unix timestamp (UTC, seconds since epoch) representing the start of the day for this data point.
+          type: number
+        value:
+          description: The numerical value of the metric or statistic for this data point (e.g., daily conversion rate, daily visitor count).
+          type: number
+          format: double
+    ExperienceVariationStatuses:
+      type: string
+      enum:
+      - stopped
+      - running
+    ExperienceAggregatedReportBase:
+      type: object
+      properties:
+        stats_methodology:
+          $ref: '#/components/schemas/SE_ProcTypes'
+        variations_data:
+          $ref: '#/components/schemas/ExperienceReportVariationsData'
+    RemoveExperienceReportEventTypeTransaction:
+      description: 'Specifies deletion of ''transaction'' (revenue) events, optionally filtered by specific goals and revenue amounts.
+
+        '
+      type: object
+      properties:
+        type:
+          type: string
+          description: Must be 'transaction'.
+          enum:
+          - transaction
+        goals:
+          type: array
+          description: '(Optional) A list of Goal IDs. If provided, only transaction events for these specific revenue goals will be deleted.
+
+            '
+          items:
+            type: integer
+          nullable: true
+        revenue_start_value:
+          type: number
+          description: (Optional) Delete only transactions where the revenue amount is greater than or equal to this value.
+          nullable: true
+        revenue_end_value:
+          type: number
+          description: (Optional) Delete only transactions where the revenue amount is less than or equal to this value.
+          nullable: true
+      required:
+      - type
+    RemoveExperienceReportEventTypeConversion:
+      description: 'Specifies deletion of ''conversion'' events, optionally filtered by specific goals.
+
+        '
+      type: object
+      properties:
+        type:
+          type: string
+          description: Must be 'conversion'.
+          enum:
+          - conversion
+        goals:
+          type: array
+          description: '(Optional) A list of Goal IDs. If provided, only conversion events for these specific goals will be deleted.
+
+            If omitted, conversion events for all goals (matching other criteria like date range/segments) might be deleted.
+
+            '
+          items:
+            type: integer
+          nullable: true
+      required:
+      - type
+    RemoveExperienceReportRequestData:
+      allOf:
+      - $ref: '#/components/schemas/BaseReportRequestData'
+      - type: object
+        description: Parameters needed to drill down the report.
+        properties:
+          events:
+            type: array
+            description: List of the events that would be targeted by the delete operation. If not provided, all the events would be targeted.
+            items:
+              oneOf:
+              - $ref: '#/components/schemas/RemoveExperienceReportEventTypeViewExperience'
+              - $ref: '#/components/schemas/RemoveExperienceReportEventTypeConversion'
+              - $ref: '#/components/schemas/RemoveExperienceReportEventTypeTransaction'
+            minItems: 1
+          simulate:
+            type: boolean
+            default: true
+            description: When simulate - true is passed, it will only return back an object with the numbers of how many records will be deleted, instead of deleting any records
+      required:
+      - start_time
+      - end_time
+    ExperienceAggregatedMetricNoStatistics:
+      allOf:
+      - type: object
+        properties:
+          metric_type:
+            type: string
+            enum:
+            - average_order_value
+            - average_products_per_order
+        required:
+        - metric_type
+      - $ref: '#/components/schemas/BaseMetricNoStatistics'
+    ExportExperienceRawDataResponseData:
+      type: object
+      properties:
+        data:
+          description: Contains the ID of the asynchronous job processing the raw data export.
+          type: object
+          properties:
+            jobId:
+              description: 'A unique identifier for the background job that is preparing the raw data export.
+
+                The user is typically notified (e.g., via email) with a download link once the job is complete.
+
+                '
+              type: string
+    SimpleAudienceSegment:
+      type: object
+      properties:
+        id:
+          description: The unique numerical identifier of the segment (audience).
+          type: integer
+        name:
+          description: The user-defined, friendly name of the segment.
+          type: string
+    SE_ProcSettingsFrequentist:
+      allOf:
+      - $ref: '#/components/schemas/SE_ProcSettingsBase'
+      - type: object
+        description: Stats Engine Settings needed for the Frequentist processing
+        properties:
+          stats_type:
+            enum:
+            - frequentist
+          confidence:
+            description: Confidence value to be used (in percent)
+            type: number
+            minimum: 50
+            maximum: 99
+            multipleOf: 1
+          power:
+            description: Statistical power value to be used (in percent)
+            type: number
+            minimum: 10
+            maximum: 99
+            multipleOf: 1
+          test_type:
+            description: The type of test applied to the data
+            type: string
+            default: two_tails
+            enum:
+            - one_tail
+            - one_tail_left
+            - one_tail_right
+            - two_tails
+            - sequential
+          multiple_comparison_correction:
+            description: Multiple comparison correction
+            type: string
+            enum:
+            - none
+            - bonferroni
+            - sidak
+          power_calculation_type:
+            description: Power calculation type
+            type: string
+            default: dynamic_mde
+            enum:
+            - dynamic_mde
+            - fixed_mde
+          fixed_mde:
+            description: Fixed minimum detectable effect (corresponding to the relative improvement in percent)
+            type: number
+            minimum: 0
+            maximum: 10000
+          mab_settings:
+            allOf:
+            - $ref: '#/components/schemas/SE_MabSettings'
+            nullable: true
+    MetricTypes:
+      type: string
+      description: 'The primary types of performance metrics calculated by the reporting engine for each goal.
+
+        - `conversion_rate`: The percentage of visitors who completed the goal (Conversions / Visitors).
+
+        - `avg_revenue_visitor`: Average Revenue Per Visitor (RPV = Total Revenue / Total Visitors). Applicable for revenue goals.
+
+        - `avg_products_ordered_visitor`: Average Products Per Visitor (APPV = Total Products Ordered / Total Visitors). Applicable for revenue goals tracking product counts.
+
+        - `average_order_value`: Average Order Value (AOV = Total Revenue / Total Conversions). Applicable for revenue goals tracking order value.
+
+        - `average_products_per_order`: Average Products Per Order (APPO = Total Products Ordered Per Visitor / Total Conversions). Applicable for revenue goals tracking product counts.
+
+        Knowledge Base: "Understanding Report Metrics in Convert".
+
+        '
+      enum:
+      - conversion_rate
+      - avg_revenue_visitor
+      - avg_products_ordered_visitor
+      - average_order_value
+      - average_products_per_order
+    UTC_Offset:
+      type: integer
+      description: 'The time offset from Coordinated Universal Time (UTC) in seconds.
+
+        For example, UTC-5 (EST) would be -18000. UTC+2 would be 7200.
+
+        Used for interpreting or displaying date/time information according to a specific timezone.
+
+        '
+      default: 0
+      minimum: -43200
+      maximum: 50400
+    ExperienceAggregatedMetricReportFrequentist:
+      oneOf:
+      - $ref: '#/components/schemas/ExperienceAggregatedMetricFrequentist'
+      - $ref: '#/components/schemas/ExperienceAggregatedMetricNoStatistics'
+      discriminator:
+        propertyName: metric_type
+        mapping:
+          conversion_rate: '#/components/schemas/ExperienceAggregatedMetricFrequentist'
+          avg_revenue_visitor: '#/components/schemas/ExperienceAggregatedMetricFrequentist'
+          avg_products_ordered_visitor: '#/components/schemas/ExperienceAggregatedMetricFrequentist'
+          average_order_value: '#/components/schemas/ExperienceAggregatedMetricNoStatistics'
+          average_products_per_order: '#/components/schemas/ExperienceAggregatedMetricNoStatistics'
+    ExperienceVariationBase:
+      type: object
+      properties:
+        name:
+          description: A user-defined, friendly name for the variation (e.g., "Original Homepage", "Variation B - Green Button", "Personalized Offer for New Users"). This name appears in reports and the Convert UI.
+          type: string
+          maxLength: 200
+        description:
+          description: An optional, more detailed explanation of what this variation entails or what changes it implements compared to the original or other variations.
+          type: string
+          maxLength: 2000
+          nullable: true
+        is_baseline:
+          type: boolean
+          description: 'If `true`, this variation is considered the baseline (control) against which other variations in the experience are compared for performance.
+
+            Typically, the "Original" variation is the baseline. Only one variation per experience can be the baseline.
+
+            Knowledge Base: "What is a Baseline?"
+
+            '
+        traffic_distribution:
+          description: 'The percentage of eligible traffic allocated to this specific variation.
+
+            The sum of `traffic_distribution` for all active variations within an experience should ideally be 100% of the traffic allocated to the experience itself.
+
+            For Multi-Armed Bandit (MAB) experiences, this value may be dynamically adjusted by the system.
+
+            Knowledge Base: "What is an Traffic Distribution?"
+
+            '
+          type: number
+          minimum: 0
+          maximum: 100
+          multipleOf: 0.0001
+        key:
+          description: 'A unique, machine-readable key or identifier for this variation within the project.
+
+            Often auto-generated from the name if not specified, but can be user-defined for easier programmatic reference (e.g., in Full Stack SDKs).
+
+            Example: "control", "treatment_A".
+
+            '
+          type: string
+          maxLength: 32
+        concurrency_key:
+          $ref: '#/components/schemas/ConcurrencyKey'
+    ExperienceAggregatedReportFrequentist:
+      allOf:
+      - $ref: '#/components/schemas/ExperienceAggregatedReportBase'
+      - type: object
+        properties:
+          stats_methodology:
+            type: string
+            enum:
+            - frequentist
+          reportData:
+            type: array
+            description: List of data for each of the analyzed goals
+            items:
+              $ref: '#/components/schemas/ExperienceAggregatedGoalReportFrequentist'
+    BaseReportRequestData:
+      allOf:
+      - $ref: '#/components/schemas/TimeRangeRequestData'
+      - type: object
+        description: Base Parameters needed to drill down the reports.
+        properties:
+          segments:
+            $ref: '#/components/schemas/ReportingSegmentsFilters'
+          stats_engine_processing:
+            $ref: '#/components/schemas/SE_ProcSettings'
+    RemoveExperienceReportResponseData:
+      type: object
+      properties:
+        data:
+          description: An array detailing the number of records for each event type that were (or would be) deleted.
+          type: array
+          items:
+            $ref: '#/components/schemas/RemoveExperienceReportResponseDataItem'
+    ExperienceReportRawDataEvents:
+      $ref: '#/components/schemas/ExportExperienceRawDataEvents'
+    DailyReportTypes:
+      type: string
+      description: Determines how daily data is aggregated in time-series reports.
+      enum:
+      - cumulative
+      - non_cumulative
+    ConcurrencyKey:
+      type: string
+      nullable: true
+      description: A server-generated hash that represents the object's state at the time of retrieval. When included in an update request, the operation will only succeed if the object hasn't been modified since this key was obtained. If another update has occurred in the meantime, the request will fail with a conflict error, requiring you to fetch the latest version and retry your update with the new concurrency_key. This implements optimistic concurrency control to prevent lost updates in concurrent scenarios.
+    ExperienceAggregatedMetricFrequentist:
+      allOf:
+      - type: object
+        properties:
+          metric_type:
+            $ref: '#/components/schemas/MetricTypes'
+          confidence:
+            type: number
+            description: Observed statistical confidence value
+          statistically_significant:
+            type: boolean
+            description: Whether the observed change in conversion rate is statistically significant or not.
+          estimated_progress:
+            description: 'Estimated Test Progress in terms of relative remaining samples vs the total sample size needed to complete the test (at the current MDE).
+
+              '
+            type: number
+            nullable: true
+          remaining_samples:
+            description: Remaining needed samples
+            type: integer
+            nullable: true
+          normality_conditions_met:
+            deprecated: true
+            description: Normality Conditions Met
+            type: boolean
+          observed_power:
+            description: Observed Power
+            type: number
+            nullable: true
+          powerful:
+            description: Powerful
+            type: boolean
+            nullable: true
+          done:
+            description: Set to true when the tests conditions are met, mainly when the test is complete according to power calculations.
+            type: boolean
+          srm:
+            description: Sample Ratio Mismatch at the pairwise level (variant and control).
+            type: boolean
+            nullable: true
+          srm_pvalue:
+            description: P value for the Sample Ratio Mismatch test at the pairwise level.
+            type: number
+            nullable: true
+        required:
+        - metric_type
+      - $ref: '#/components/schemas/BaseMetric'
+    DailyReportMetrics:
+      type: string
+      description: The specific performance metric to be displayed in a daily report.
+      enum:
+      - conversion_rate
+      - avg_revenue_per_visitor
+      - avg_products_ordered_per_visitor
+      - average_order_value
+      - average_products_per_order
+    SuccessData:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+    ExperienceReportSettingsData:
+      description: Data structure containing the specific reporting settings configured for an experience.
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            campaigns:
+              description: A list of unique marketing campaign names (from `utm_campaign`) that brought visitors to this experience. Includes visitor counts per campaign. Useful for segmenting results.
+              type: array
+              readOnly: true
+              items:
+                type: object
+                properties:
+                  name:
+                    description: The campaign name.
+                    type: string
+                  visitors_count:
+                    description: The number of visitors in this experience attributed to this campaign.
+                    type: number
+            custom_segments:
+              description: A list of custom Convert Audience segments (of type 'segmentation') that visitors to this experience belonged to. Useful for post-test segmentation.
+              type: array
+              readOnly: true
+              items:
+                $ref: '#/components/schemas/SimpleAudienceSegment'
+    GetExperienceDailyReportRequestData:
+      allOf:
+      - type: object
+        description: Parameters needed to drill down the report.
+        properties:
+          goal:
+            type: number
+            description: Goal's ID for which to return the reporting data
+          report_type:
+            $ref: '#/components/schemas/DailyReportTypes'
+          metric:
+            $ref: '#/components/schemas/DailyReportMetrics'
+          segments:
+            $ref: '#/components/schemas/ReportingSegmentsFilters'
+      - $ref: '#/components/schemas/BaseReportRequestData'
+    ExperienceAggregatedReport:
+      oneOf:
+      - $ref: '#/components/schemas/ExperienceAggregatedReportFrequentist'
+      - $ref: '#/components/schemas/ExperienceAggregatedReportBayesian'
+      discriminator:
+        propertyName: stats_methodology
+        mapping:
+          frequentist: '#/components/schemas/ExperienceAggregatedReportFrequentist'
+          bayesian: '#/components/schemas/ExperienceAggregatedReportBayesian'
+    ExportExperienceReportRequestData:
+      allOf:
+      - type: object
+        description: Parameters needed to drill down the report.
+        properties:
+          report_type:
+            type: string
+            default: csv_aggregated
+            description: 'Type of the exported report:
+
+              - csv_aggregated - export in CSV format the number of visitors and metrics values aggregated per variation for the whole reported period
+
+              - csv_aggregated_tabular - export in CSV format same as above but with headings tabular for export
+
+              - csv_daily - export in CSV format the number of visitors and metrics values per day, per variation for the whole reported period
+
+              - csv_daily_tabular - export in CSV format same as above but with headings tabular for export
+
+              '
+            enum:
+            - csv_aggregated
+            - csv_aggregated_tabular
+            - csv_daily
+            - csv_daily_tabular
+          data_type:
+            type: string
+            default: non_cumulative
+            description: 'Type of data the exported report (csv_daily only)
+
+              '
+            enum:
+            - cumulative
+            - non_cumulative
+            nullable: true
+          goals:
+            type: array
+            description: 'A list of goal Id''s for which to return the reporting data.
+
+
+              If no ID is provided, the list of goals attached to the experience is being used.
+
+
+              Max 10 goals at one time available for csv_daily type.
+
+              '
+            items:
+              type: integer
+            nullable: true
+      - $ref: '#/components/schemas/BaseReportRequestData'
+    ExportExperienceRawDataRequestData:
+      allOf:
+      - type: object
+        description: Parameters needed to generate the export.
+        properties:
+          events:
+            type: array
+            description: List of events to export
+            items:
+              $ref: '#/components/schemas/ExportExperienceRawDataEvents'
+          goals:
+            type: array
+            description: 'A list of goal Id''s for which to return the tracking data.
+
+
+              If no ID is provided, the list of goals attached to the experience is being used.
+
+              '
+            items:
+              type: integer
+            nullable: true
+      - $ref: '#/components/schemas/BaseReportRequestData'
+    BaseMetric:
+      allOf:
+      - $ref: '#/components/schemas/BaseMetricNoStatistics'
+      - type: object
+        properties:
+          metric_interval:
+            type: number
+            description: 'The half-width of the confidence (Frequentist) or credible (Bayesian) interval for the `metric_value` or `metric_change`.
+
+              For example, if `metric_value` is 0.05 and `metric_interval` is 0.01, the interval is [0.04, 0.06].
+
+              This represents the range within which the true value of the metric likely lies.
+
+              '
+    SE_ProcSettingsBase:
+      type: object
+      properties:
+        stats_type:
+          $ref: '#/components/schemas/SE_ProcTypes'
+    ExperienceVariationBaseExtended:
+      allOf:
+      - type: object
+        properties:
+          id:
+            description: Variation unique ID
+            type: integer
+            readOnly: true
+      - $ref: '#/components/schemas/ExperienceVariationBase'
+      - type: object
+        properties:
+          status:
+            $ref: '#/components/schemas/ExperienceVariationStatuses'
+    ExperienceDailyTrafficAllocationResponseData:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/ExperienceDailyTrafficAllocationReport'
+    ExperienceDailyReportResponseData:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/ExperienceDailyReport'
+    ExperienceDailyReport:
+      type: object
+      properties:
+        variations_data:
+          $ref: '#/components/schemas/ExperienceReportVariationsData'
+        reportData:
+          type: object
+          description: Contains the daily statistics for the requested goal and metric.
+          properties:
+            variations:
+              type: array
+              description: A list, where each item contains the daily performance data for one variation.
+              items:
+                type: object
+                description: Daily statistics for a single variation.
+                properties:
+                  id:
+                    description: The unique numerical identifier of the variation.
+                    type: number
+                  stats:
+                    type: array
+                    description: An array of data points, each representing one day's performance for this variation.
+                    items:
+                      allOf:
+                      - $ref: '#/components/schemas/StatsDataPoint'
+                      - type: object
+                        properties:
+                          totals:
+                            description: 'Total number of conversions/sum of revenue/products ordered for this variation, depending on the
+
+                              reporting metric as follows:
+
+                              - **conversion_rate requested** - this value will hold the number of conversions
+
+                              - **avg_revenue_per_visitor** - this value will hold the sum of the revenue
+
+                              - **avg_products_ordered_per_visitor** - this value will hold the sum of the number of ordered products
+
+                              - **average_order_value** - this value will hold the sum of the average order value
+
+                              - **average_products_per_order** - this value will hold the sum of the average products per order
+
+                              '
+                            type: number
+                          visitors:
+                            description: Count of visitors that saw this variation
+                            type: number
+            extra:
+              type: array
+              description: Additional daily statistics aggregated across all variations for comparison (e.g., total daily visitors for the whole experiment).
+              items:
+                $ref: '#/components/schemas/ExperienceDailyReportExtraDataItem'
+    ExperienceAggregatedGoalReportBase:
+      type: object
+      properties:
+        goal_id:
+          type: integer
+          description: The unique numerical identifier of the conversion goal for which these metrics are reported.
+        srm:
+          description: 'Sample Ratio Mismatch flag for this goal across all variations.
+
+            `true` if a statistically significant mismatch in visitor distribution was detected compared to the intended traffic allocation, potentially indicating an issue with the experiment setup or tracking for this goal.
+
+            KB: "What is SRM?".
+
+            '
+          type: boolean
+          nullable: true
+        srm_pvalue:
+          description: 'The p-value from the Chi-square test used to detect Sample Ratio Mismatch for this goal.
+
+            A low p-value (e.g., < 0.01 or < 0.05) suggests a significant mismatch.
+
+            KB: "What is SRM?" - "Understanding SRM p-values".
+
+            '
+          type: number
+          nullable: true
+        variations:
+          type: array
+          description: An array containing detailed performance metrics for each variation specifically for this goal.
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                description: The unique numerical identifier of the variation.
+              visitors:
+                type: integer
+                description: The number of unique visitors who were exposed to this variation and were eligible to convert on this goal.
+              conversion_data:
+                type: object
+                deprecated: true
+                description: (Deprecated) Data for conversion rate metric. Use the `metrics` array instead.
+                properties:
+                  conversions:
+                    type: integer
+                    description: Number of recorded conversions for the variation
+                  conversion_rate:
+                    type: number
+                    description: Observed Conversion rate
+                  conversion_rate_change:
+                    type: number
+                    description: The observed difference in percentage between conversion rate of this variation and the one of the baseline
+                  conversion_rate_interval:
+                    type: number
+                    description: The estimated conversion rate interval represented by the value that needs to be added/substracted from the conversion rate in order to obtain the interval
+                  confidence:
+                    type: number
+                    description: Observed statistical confidence value
+                  statistically_significant:
+                    type: boolean
+                    description: Whether the observed change in conversion rate is statistically significant or not.
+              revenue_data:
+                type: object
+                deprecated: true
+                nullable: true
+                description: (Deprecated) Data for average revenue per visitor metric. Use the `metrics` array instead.
+                properties:
+                  revenue_per_visitor:
+                    type: number
+                    description: Observed average revenue per visitor
+                  total_revenue:
+                    type: number
+                    description: Total revenue tracked for this variation
+                  revenue_per_visitor_interval:
+                    type: number
+                    description: Value that needs to be added/substracted from the revenue_per_visitor in order to get the margins of the error interval
+                  confidence:
+                    type: number
+                    description: Observed statistical confidence value
+                  revenue_per_visitor_change:
+                    type: number
+                    description: The observed difference in percentage between revenue_per_visitor for this variation and the one for the baseline
+                  statistically_significant:
+                    type: boolean
+                    description: Whether the observed change in revenue_per_visitor rate is statistically significant or not.
+              products_data:
+                type: object
+                deprecated: true
+                nullable: true
+                description: (Deprecated) Data for average ordered products count per visitor. Use the `metrics` array instead.
+                properties:
+                  products_per_visitor:
+                    type: number
+                    description: Observed average products ordered per visitor
+                  total_products:
+                    type: number
+                    description: Total products ordered tracked for this variation
+                  products_per_visitor_interval:
+                    type: number
+                    description: Value that needs to be added/substracted from the products_per_visitor in order to get the margins of the error interval
+                  confidence:
+                    type: number
+                    description: Observed statistical confidence value
+                  products_per_visitor_change:
+                    type: number
+                    description: The observed difference in percentage between products_per_visitor for this variation and the one for the baseline
+                  statistically_significant:
+                    type: boolean
+                    description: Whether the observed change in products_per_visitor rate is statistically significant or not.
+              metrics:
+                type: array
+                description: 'A list of detailed metric calculations for this variation concerning this specific goal.
+
+                  Each object in the array corresponds to a primary metric type (e.g., ''conversion_rate'', ''avg_revenue_visitor'') and contains the relevant statistical values (e.g., observed value, change from baseline, confidence/chance_to_win, interval).
+
+                  The structure of each metric object depends on whether the report is Frequentist or Bayesian.
+
+                  '
+    SE_ProcSettingsBayesian:
+      allOf:
+      - $ref: '#/components/schemas/SE_ProcSettingsBase'
+      - type: object
+        description: Stats Engine Settings needed for the Bayesian processing
+        properties:
+          stats_type:
+            enum:
+            - bayesian
+          decision_threshold:
+            description: Threshold after which a decision can be made
+            type: number
+            minimum: 50
+            maximum: 99
+            multipleOf: 1
+          risk_threshold:
+            description: The maximum acceptable level of potential loss if the chosen variant turns out to be worse than the control. It represents the threshold below which the relative risk of preferring a variant over the control must fall to consider the variant as a strong and relatively safe choice.
+            type: number
+            minimum: 1
+            maximum: 100
+            multipleOf: 1
+          mab_settings:
+            allOf:
+            - $ref: '#/components/schemas/SE_MabSettings'
+            nullable: true
+    ExperienceAggregatedGoalBayesian:
+      allOf:
+      - $ref: '#/components/schemas/ExperienceAggregatedGoalReportBase'
+      - type: object
+        properties:
+          variations:
+            type: array
+            items:
+              type: object
+              properties:
+                metrics:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/ExperienceAggregatedMetricReportBayesian'
+    BaseMetricNoStatistics:
+      type: object
+      properties:
+        metric_total:
+          type: integer
+          description: 'The total sum contributing to this metric for this variation and goal.
+
+            - For `conversion_rate`: Total number of conversions.
+
+            - For `avg_revenue_visitor`: Total revenue recorded.
+
+            - For `avg_products_ordered_visitor`: Total number of products ordered.
+
+            - For `average_order_value`: Total revenue recorded.
+
+            - For `average_products_per_order`: Total number of products ordered.
+
+            '
+        metric_value:
+          type: number
+          description: The observed value of this metric (e.g., 0.05 for a 5% conversion rate, 2.50 for $2.50 RPV).
+        metric_change:
+          type: number
+          description: 'The percentage difference in this metric''s value for the current variation compared to the baseline variation.
+
+            Positive indicates improvement, negative indicates decline. (e.g., 0.20 for a 20% improvement).
+
+            Knowledge Base: "Understanding Report Metrics in Convert" - "Improvement".
+
+            '
+    ExperienceReportExportResponseData:
+      type: object
+      properties:
+        data:
+          description: Contains the URL from which the generated report file can be downloaded and its expiration time.
+          type: object
+          properties:
+            download_url:
+              description: A temporary, secure URL to download the generated report file (e.g., CSV, PDF).
+              type: string
+            expire_at:
+              description: Unix timestamp (UTC) indicating when the `download_url` will expire and the file will no longer be accessible.
+              type: number
+    ExperienceDailyTrafficAllocationReport:
+      type: object
+      description: Provides a day-by-day breakdown of traffic allocation percentages for each variation in an experience, typically used for MAB experiments.
+      properties:
+        variations_data:
+          $ref: '#/components/schemas/ExperienceReportVariationsData'
+        reportData:
+          type: object
+          description: Contains the daily traffic allocation data.
+          properties:
+            variations:
+              type: array
+              description: A list, where each item contains the daily traffic allocation data for one variation.
+              items:
+                type: object
+                description: Daily traffic allocation for a single variation.
+                properties:
+                  id:
+                    description: The unique numerical identifier of the variation.
+                    type: number
+                  stats:
+                    type: array
+                    description: An array of data points, each representing the traffic allocation percentage for this variation on a specific day.
+                    items:
+                      $ref: '#/components/schemas/StatsDataPoint'
+    ExperienceReportVariationsData:
+      type: array
+      description: An array containing basic identifying information for each variation in the experience (ID, name, baseline status, traffic distribution).
+      items:
+        $ref: '#/components/schemas/ExperienceVariationBaseExtended'
+    ReportingSegmentsCustomSegment:
+      description: 'The numerical ID of a custom Convert Audience (of type ''segmentation'') that the visitor is a member of.
+
+        Allows report segmentation based on predefined custom segments (e.g., "High-Value Customers", "Engaged Users").
+
+        Knowledge Base: "Create Custom Segments".
+
+        '
+      type: integer
+    ReportingSegmentsDeviceCategories:
+      type: string
+      description: 'The category of device used by the visitor. Enables report segmentation by device type.
+
+        - `iPhone`, `other_phones`, `all_phones`: Mobile phone categories.
+
+        - `desktop`: Desktop or laptop computer.
+
+        - `iPad`, `other_tablets`, `all_tablets`: Tablet categories.
+
+        Note: Some devices might fall into multiple categories (e.g., an iPhone is both ''iPhone'' and ''all_phones'').
+
+        Knowledge Base: "Targeting Mobile, Tablet, and Desktop".
+
+        '
+      enum:
+      - iPhone
+      - all_phones
+      - other_phones
+      - desktop
+      - iPad
+      - all_tablets
+      - other_tablets
+    SE_MabSettings:
+      type: object
+      description: 'Configuration for Multi-Armed Bandit (MAB) traffic allocation. If `null`, MAB is disabled and manual traffic allocation is used.
+
+        MAB dynamically allocates more traffic to better-performing variations based on the `primary_metric` of the `primary_goal`.
+
+        KB: "Multi-Armed Bandit (MAB) & Auto-Allocation in Convert".
+
+        '
+      properties:
+        strategy:
+          description: 'The MAB algorithm used for dynamic traffic allocation:
+
+            - `epsilon_greedy`: Mostly exploits the best-known variation, but explores others with a small probability (epsilon).
+
+            - `ucb`: Upper Confidence Bound, balances exploration and exploitation based on uncertainty and potential.
+
+            - `thompson_sampling`: (Default) A Bayesian approach that samples from posterior distributions to choose variations.
+
+            '
+          type: string
+          enum:
+          - epsilon_greedy
+          - ucb
+          - thompson_sampling
+          default: thompson_sampling
+        exploration_rate:
+          description: 'For `epsilon_greedy` strategy, this is the ''epsilon'' value (0 to 1) representing the probability of choosing a random variation for exploration instead of the current best-performing one.
+
+            A higher value means more exploration. Default is often 0.1 or 0.3.
+
+            '
+          type: number
+          minimum: 0
+          maximum: 1
+          enum:
+          - 0
+          - 0.1
+          - 0.2
+          - 0.3
+          - 0.4
+          - 0.5
+          - 0.6
+          - 0.7
+          - 0.8
+          - 0.9
+          - 1
+          default: 0.3
+    ExperienceAggregatedGoalReportFrequentist:
+      allOf:
+      - $ref: '#/components/schemas/ExperienceAggregatedGoalReportBase'
+      - type: object
+        properties:
+          variations:
+            type: array
+            items:
+              type: object
+              properties:
+                metrics:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/ExperienceAggregatedMetricReportFrequentist'
+    TimeRangeRequestData:
+      type: object
+      description: Parameters for defining a specific time range for report data retrieval.
+      properties:
+        utc_offset:
+          $ref: '#/components/schemas/UTC_Offset'
+        start_time:
+          type: number
+          nullable: true
+          description: Unix timestamp (seconds since epoch) for the beginning of the reporting period. If null, data from the experience start is typically used. Should be interpreted with `utc_offset`.
+        end_time:
+          type: number
+          nullable: true
+          description: Unix timestamp (seconds since epoch) for the end of thereporting period. If null, data up to the current time is typically used. Should be interpreted with `utc_offset`.
+    RemoveExperienceReportEventTypeViewExperience:
+      description: 'Specifies deletion of ''view_experience'' events.
+
+        '
+      type: object
+      properties:
+        type:
+          type: string
+          description: Must be 'view_experience'.
+          enum:
+          - view_experience
+      required:
+      - type
+    ExperienceAggregatedMetricBayesian:
+      allOf:
+      - type: object
+        properties:
+          metric_type:
+            $ref: '#/components/schemas/MetricTypes'
+          chance_to_win:
+            description: Chance to win as a number 0-100
+            type: number
+          expected:
+            description: Expected
+            type: number
+            nullable: true
+          risk:
+            description: Risk
+            type: array
+            items:
+              type: number
+            nullable: true
+          estimated_progress:
+            description: 'Estimated Test Progress in terms of relative remaining samples vs the total sample size needed to complete the test (at the current MDE).
+
+              '
+            type: number
+            nullable: true
+          done:
+            description: Set to true when the posterior both exceeds the decision threshold in its 'chance to win' and remains below the risk threshold in its relative risk assessment, indicating a strong and acceptably safe performance.
+            type: boolean
+          srm:
+            description: Sample Ratio Mismatch at the pairwise level (variant and control).
+            type: boolean
+            nullable: true
+          srm_pvalue:
+            description: P value for the Sample Ratio Mismatch test at the pairwise level.
+            type: number
+            nullable: true
+        required:
+        - metric_type
+      - $ref: '#/components/schemas/BaseMetric'
+    ReportingSegmentsVisitorType:
+      type: string
+      description: 'Classifies the visitor as either ''new'' or ''returning'' based on their site visit history (tracked by Convert cookies).
+
+        - `new`: First-time visitor to the site (or no existing Convert cookie).
+
+        - `returning`: Visitor has been to the site before.
+
+        Allows report segmentation to compare behavior of new vs. returning users.
+
+        Knowledge Base: "What is a New/Returning Visitor as Defined in an Experiment''s Audience?".
+
+        '
+      enum:
+      - new
+      - returning
+    ExperienceAggregatedReportBayesian:
+      allOf:
+      - $ref: '#/components/schemas/ExperienceAggregatedReportBase'
+      - type: object
+        properties:
+          stats_methodology:
+            type: string
+            enum:
+            - bayesian
+          reportData:
+            type: array
+            description: List of data for each of the analyzed goals
+            items:
+              $ref: '#/components/schemas/ExperienceAggregatedGoalBayesian'
+    ReportingSegmentsBrowser:
+      type: string
+      description: 'The web browser used by the visitor. Used for segmenting reports to understand how experiences perform across different browsers.
+
+        Knowledge Base: "Using Basic and Advanced Post segmentation".
+
+        '
+      enum:
+      - internet_explorer
+      - chrome
+      - firefox
+      - safari
+      - edge
+      - other
+    ExperienceAggregatedMetricReportBayesian:
+      oneOf:
+      - $ref: '#/components/schemas/ExperienceAggregatedMetricBayesian'
+      - $ref: '#/components/schemas/ExperienceAggregatedMetricNoStatistics'
+      discriminator:
+        propertyName: metric_type
+        mapping:
+          conversion_rate: '#/components/schemas/ExperienceAggregatedMetricBayesian'
+          avg_revenue_visitor: '#/components/schemas/ExperienceAggregatedMetricBayesian'
+          avg_products_ordered_visitor: '#/components/schemas/ExperienceAggregatedMetricBayesian'
+          average_order_value: '#/components/schemas/ExperienceAggregatedMetricNoStatistics'
+          average_products_per_order: '#/components/schemas/ExperienceAggregatedMetricNoStatistics'
+    ReportingSegmentsCampaign:
+      type: string
+      description: 'The campaign name associated with the visitor''s session, typically derived from `utm_campaign` URL parameters.
+
+        Allows report segmentation by marketing campaign.
+
+        Knowledge Base: "How Do You Fill Medium, Keyword and Source Name?".
+
+        '
+  responses:
+    ErrorResponse:
+      description: 'Indicates an error occurred while processing the request. The `code` provides an HTTP status code, `message` offers a human-readable explanation or an array of validation errors, and `fields` (if present) specifies which input fields were problematic.
+
+        '
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorData'
+    ExperienceAggregatedReportResponse:
+      description: The main performance report for an experience, showing aggregated data (visitors, conversions, conversion rate, improvement, confidence/chance to win) for each variation, broken down by all attached goals.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ExperienceAggregatedReportResponseData'
+    ExperienceDailyTrafficAllocationResponse:
+      description: For experiences using Multi-Armed Bandit (MAB), this shows the daily percentage of traffic allocated to each variation over time, illustrating how the MAB strategy adapted.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ExperienceDailyTrafficAllocationResponseData'
+    ExportExperienceRawDataResponse:
+      description: Contains a `jobId` for the asynchronous raw data export process. The actual data link is typically sent via email upon job completion.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ExportExperienceRawDataResponseData'
+    ExportExperienceReportResponse:
+      description: Contains a `download_url` for the generated experience report (CSV or PDF) and an `expire_at` timestamp for the URL.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ExperienceReportExportResponseData'
+    ExperienceDailyReportResponse:
+      description: A day-by-day breakdown of performance metrics for an experience, specific to a single goal and metric (e.g., daily conversion rate for "Purchases"). Includes data for each variation.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ExperienceDailyReportResponseData'
+    SuccessResponse:
+      description: 'A generic success response, typically used for operations that don''t return specific data (like deletions or some updates). The `code` is usually 200, and `message` confirms the successful action.
+
+        '
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SuccessData'
+    RemoveExperienceReportResponse:
+      description: If `simulate=true` was used in the request, this returns a count of data records per event type that *would have been* deleted. If `simulate=false`, confirms successful deletion (often via a general SuccessResponse).
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/RemoveExperienceReportResponseData'
+    ExperienceReportSettingsResponse:
+      description: The current reporting settings for an experience, such as `confidence_level`, `stats_methodology` (Frequentist/Bayesian), MAB strategy, `primary_metric`, and `outlier` detection rules.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ExperienceReportSettingsData'
+  requestBodies:
+    GetExperienceAggregatedReportRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GetExperienceAggregatedReportRequestData'
+      description: 'Parameters to customize the aggregated performance report for an experience. Key parameters include:
+
+        - `start_time`, `end_time`, `utc_offset`: Define the reporting period.
+
+        - `segments`: Apply filters based on visitor characteristics (e.g., device, browser, country, custom segments).
+
+        - `stats_engine_processing`: Configure statistical settings like confidence level, test type (one-tail/two-tails), MAB strategy, and MDE for Frequentist; or decision/risk thresholds for Bayesian.
+
+        - `goals`: (Optional) List of specific goal IDs to include in the report. If omitted, all goals attached to the experience are reported.
+
+        - `metrics`: (Optional) List of specific metrics (e.g., ''conversion_rate'', ''avg_revenue_visitor'') to calculate and display.
+
+        '
+    ExportExperienceRawDataRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ExportExperienceRawDataRequestData'
+      description: 'Parameters for requesting an export of raw, event-level tracking data. Requires:
+
+        - `events`: List of event types to include (e.g., ''view_experience'', ''conversion'', ''transaction'').
+
+        - `goals`: (Optional) List of goal IDs to filter conversion/transaction events.
+
+        Also supports `start_time`, `end_time`, `utc_offset`, and `segments`. The export is typically delivered via an emailed link.
+
+        '
+    RemoveExperienceReportRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/RemoveExperienceReportRequestData'
+      description: 'Parameters for removing specific data from an experience''s report. Requires:
+
+        - `start_time`, `end_time`: Defines the period for data deletion.
+
+        - `events`: An array specifying the types of events to delete (e.g., ''view_experience'', ''conversion'', ''transaction''). For ''conversion'' and ''transaction'', specific `goals` can be targeted. For ''transaction'', `revenue_start_value` and `revenue_end_value` can filter by revenue amount.
+
+        - `simulate`: If `true` (default), returns a count of records that *would be* deleted. If `false`, performs permanent deletion.
+
+        Also supports `utc_offset` and `segments`.
+
+        '
+    GetExperienceDailyReportRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GetExperienceDailyReportRequestData'
+      description: 'Parameters to customize the daily performance report. Requires:
+
+        - `goal`: The ID of the specific goal for which daily data is requested.
+
+        - `report_type`: ''cumulative'' or ''non_cumulative'' data.
+
+        - `metric`: The primary metric for the daily report (e.g., ''conversion_rate'', ''avg_revenue_per_visitor'').
+
+        Also supports `start_time`, `end_time`, `utc_offset`, and `segments` for filtering.
+
+        '
+    GetExperienceDailyTrafficAllocationRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GetExperienceDailyTrafficAllocationRequestData'
+      description: 'Parameters to specify the date range (`start_time`, `end_time`, `utc_offset`) for retrieving the daily traffic allocation data, typically for experiences using Multi-Armed Bandit (MAB) strategies.
+
+        '
+    ExportExperienceReportRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ExportExperienceReportRequestData'
+      description: 'Parameters for exporting an experience report. Requires:
+
+        - `report_type`: ''csv_aggregated'' (summary data per variation) or ''csv_daily'' (day-by-day data).
+
+        - `data_type`: (For csv_daily only) ''cumulative'' or ''non_cumulative''.
+
+        - `goals`: (Optional) List of goal IDs to include.
+
+        Also supports `start_time`, `end_time`, `utc_offset`, `segments`, and `stats_engine_processing` settings to match the online report.
+
+        '
+  securitySchemes:
+    requestSigning:
+      type: apiKey
+      x-name-applicationId: Convert-Application-ID
+      x-name-expire: Expire
+      name: Authorization
+      in: header
+      description: 'See **[API Key Authentication](#tag/API-KEY-Authentication)** for more information.
+
+        '
+    secretKey:
+      type: http
+      scheme: bearer
+      description: 'See **[API Key Authentication](#tag/API-KEY-Authentication)** for more information.
+
+        '
+    cookieAuthentication:
+      type: apiKey
+      in: cookie
+      name: sid
+      description: Cookie authentication is used against Convert's own IdentityProvider  or third party identity providers and is described more in the "[Cookie Authentication](#tag/Cookie-Authentication)" section
+x-tagGroups:
+- name: Client Authentication
+  tags:
+  - API KEY Authentication
+  - Cookie Authentication
+  - OAuth Authorization
+- name: Common Parameters
+  tags:
+  - Optional Fields
+  - Expandable Fields
+- name: Requests
+  tags:
+  - User
+  - Accounts
+  - AI content
+  - Collaborators
+  - API Keys
+  - Projects
+  - SDK Keys
+  - Experiences
+  - Experience Variations
+  - Experience Sections
+  - Section Versions
+  - Version Changes
+  - Experiences Reports
+  - Experiences Heatmaps
+  - Goals
+  - Hypotheses
+  - Knowledge Bases
+  - Observations
+  - Locations
+  - Audiences
+  - Domains
+  - Cdn Images
+  - Files
+  - Tags
+  - Features
+  - Visitor Insights
+  - Visitors Data
+  - Visitor Data Placeholders
+  - OAuth

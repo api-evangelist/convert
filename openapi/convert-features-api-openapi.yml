@@ -1,0 +1,871 @@
+openapi: 3.1.0
+info:
+  title: Convert Accounts Features API
+  description: 'Move your app forward with the Convert API. The Convert API allows
+
+    you to manage your Convert Experiences projects using code. The REST API is
+
+    an interface for managing and extending functionality of Convert. For
+
+    example, instead of creating and maintaining projects using the Convert
+
+    Experiences web dashboard you can create an experiment programmatically.
+
+    Additionally, if you prefer to run custom analysis on experiment results you
+
+    can leverage the API to pull data from Convert Experiences into your own
+
+    workflow. If you do not have a Convert account already, sign up for a free
+
+    developer account at https://www.convert.com/api/.
+
+
+    *[Convert API V1](/doc/v1) is still available and documentation can be found [here](/doc/v1) but using it is highly discouraged
+
+    as it will be phased out in the future*
+
+    '
+  version: 2.0.0
+servers:
+- url: https://api.convert.com/api/v2
+  description: Live API server
+- url: https://apidev.convert.com/api/v2
+  description: DEV API server
+- url: http://apidev.convert.com:5000/api/v2
+  description: DEV mocked API server
+tags:
+- name: Features
+  description: Features can be created only under **Fullstack** Projects
+paths:
+  /accounts/{account_id}/projects/{project_id}/features:
+    post:
+      operationId: getFeaturesList
+      summary: List features within a Full Stack project
+      description: 'Retrieves a list of all features defined for a specific Full Stack project.
+
+        Features are used for feature flagging and server-side experimentation, allowing control over functionality and variables.
+
+        Supports filtering by name, key, status, and pagination.
+
+        The Knowledge Base article "Full Stack Experiments on Convert" provides context.
+
+        '
+      tags:
+      - Features
+      parameters:
+      - name: account_id
+        in: path
+        required: true
+        description: ID of the account that owns the retrieved/saved data
+        schema:
+          type: integer
+      - name: project_id
+        description: ID of the project to which save/retrieved data is connected
+        in: path
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        $ref: '#/components/requestBodies/GetFeaturesListRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/FeaturesListResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+  /accounts/{account_id}/projects/{project_id}/features/{feature_id}:
+    get:
+      operationId: getFeature
+      summary: Get details for a specific feature
+      description: 'Retrieves detailed information about a single feature within a Full Stack project, identified by its `feature_id`.
+
+        This includes its name, key, status, description, and defined variables (with their types and default values).
+
+        '
+      tags:
+      - Features
+      parameters:
+      - name: account_id
+        in: path
+        required: true
+        description: ID of the account that owns the retrieved/saved data
+        schema:
+          type: integer
+      - name: project_id
+        description: ID of the project to which save/retrieved data is connected
+        in: path
+        required: true
+        schema:
+          type: integer
+      - name: feature_id
+        in: path
+        required: true
+        description: ID of the feature to be retrieved
+        schema:
+          type: integer
+      - name: include
+        description: 'Specifies the list of optional fields which would be included in the response.
+
+
+          Otherwise, the fields that can be passed through this parameter would not be included in the response.
+
+
+          Read more in the section related to [Optional Fields](#tag/Optional-Fields)
+
+          '
+        in: query
+        required: false
+        schema:
+          type: array
+          items:
+            $ref: '#/components/schemas/FeatureOptionalFields'
+      responses:
+        '200':
+          $ref: '#/components/responses/FeatureResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+  /accounts/{account_id}/projects/{project_id}/features/{feature_key}:
+    get:
+      operationId: getFeatureByKey
+      summary: Get feature details by its unique key
+      description: 'Retrieves detailed information about a single feature, identified by its user-defined `feature_key`.
+
+        Useful if you have a human-readable key for a feature. Otherwise, similar to getting a feature by ID.
+
+        '
+      tags:
+      - Features
+      parameters:
+      - name: account_id
+        in: path
+        required: true
+        description: ID of the account that owns the retrieved/saved data
+        schema:
+          type: integer
+      - name: project_id
+        description: ID of the project to which save/retrieved data is connected
+        in: path
+        required: true
+        schema:
+          type: integer
+      - name: feature_key
+        in: path
+        required: true
+        description: Key of the feature to be retrieved
+        schema:
+          type: string
+      - name: include
+        description: 'Specifies the list of optional fields which would be included in the response.
+
+
+          Otherwise, the fields that can be passed through this parameter would not be included in the response.
+
+
+          Read more in the section related to [Optional Fields](#tag/Optional-Fields)
+
+          '
+        in: query
+        required: false
+        schema:
+          type: array
+          items:
+            $ref: '#/components/schemas/FeatureOptionalFields'
+      responses:
+        '200':
+          $ref: '#/components/responses/FeatureResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+  /accounts/{account_id}/projects/{project_id}/features/add:
+    post:
+      operationId: createFeature
+      summary: Create a new feature for a Full Stack project
+      description: 'Defines a new feature within a Full Stack project.
+
+        Requires a name, a unique key, and a list of variables associated with the feature.
+
+        Each variable has a key, type (string, boolean, integer, float, json), and a default value.
+
+        Features are used in Full Stack experiments to control different code paths or configurations.
+
+        '
+      tags:
+      - Features
+      parameters:
+      - name: account_id
+        in: path
+        required: true
+        description: ID of the account that owns the retrieved/saved data
+        schema:
+          type: integer
+      - name: project_id
+        in: path
+        required: true
+        description: ID of the project into which the feature is to be stored
+        schema:
+          type: integer
+      requestBody:
+        $ref: '#/components/requestBodies/CreateFeatureRequest'
+      responses:
+        '201':
+          $ref: '#/components/responses/FeatureResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+  /accounts/{account_id}/projects/{project_id}/features/{feature_id}/update:
+    post:
+      operationId: updateFeature
+      summary: Update an existing feature
+      description: 'Modifies the configuration of an existing feature in a Full Stack project.
+
+        This can include changing its name, description, status (active/archived), or its associated variables (adding, removing, or modifying variables and their default values).
+
+        '
+      tags:
+      - Features
+      parameters:
+      - name: account_id
+        in: path
+        required: true
+        description: ID of the account that owns the retrieved/saved data
+        schema:
+          type: integer
+      - name: project_id
+        in: path
+        required: true
+        description: ID of the project to which save/retrieved data is connected
+        schema:
+          type: integer
+      - name: feature_id
+        in: path
+        required: true
+        description: ID of the feature to be updated
+        schema:
+          type: integer
+      requestBody:
+        $ref: '#/components/requestBodies/UpdateFeatureRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/FeatureResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+  /accounts/{account_id}/projects/{project_id}/features/{feature_id}/delete:
+    delete:
+      operationId: deleteFeature
+      summary: Delete a feature
+      description: 'Permanently removes a feature from a Full Stack project. This action is irreversible.
+
+        If the feature is in use by active experiments, consider its impact before deletion.
+
+        '
+      tags:
+      - Features
+      parameters:
+      - name: account_id
+        in: path
+        required: true
+        description: ID of the account that owns the retrieved/saved data
+        schema:
+          type: integer
+      - name: project_id
+        description: ID of the project to which save/retrieved data is connected
+        in: path
+        required: true
+        schema:
+          type: integer
+      - name: feature_id
+        in: path
+        required: true
+        description: ID of the feature to be deleted
+        schema:
+          type: integer
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+  /accounts/{account_id}/projects/{project_id}/features/bulk-update:
+    post:
+      operationId: bulkFeaturesUpdate
+      summary: Update multiple features at once
+      description: 'Allows for changing the status (e.g., active, archived) of multiple features within a Full Stack project simultaneously.
+
+        Requires a list of feature IDs and the target status.
+
+        '
+      tags:
+      - Features
+      parameters:
+      - name: account_id
+        in: path
+        required: true
+        description: ID of the account that owns the retrieved/saved data
+        schema:
+          type: integer
+      - name: project_id
+        description: ID of the project to which save/retrieved data is connected
+        in: path
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        $ref: '#/components/requestBodies/BulkUpdateFeaturesRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/BulkSuccessResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+  /accounts/{account_id}/projects/{project_id}/features/bulk-delete:
+    post:
+      operationId: bulkFeaturesDelete
+      summary: Delete multiple features at once
+      description: 'Permanently removes multiple features from a Full Stack project in a single operation.
+
+        Requires a list of feature IDs. This action is irreversible.
+
+        '
+      tags:
+      - Features
+      parameters:
+      - name: account_id
+        in: path
+        required: true
+        description: ID of the account that owns the retrieved/saved data
+        schema:
+          type: integer
+      - name: project_id
+        description: ID of the project to which save/retrieved data is connected
+        in: path
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        $ref: '#/components/requestBodies/BulkDeleteFeaturesRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/BulkSuccessResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+components:
+  responses:
+    FeatureResponse:
+      description: Detailed information for a single feature in a Full Stack project, including its name, key, status, description, and an array of its `variables` (each with a key, type, and default value).
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Feature'
+    SuccessResponse:
+      description: 'A generic success response, typically used for operations that don''t return specific data (like deletions or some updates). The `code` is usually 200, and `message` confirms the successful action.
+
+        '
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SuccessData'
+    FeaturesListResponse:
+      description: A list of features defined within a Full Stack project. Each feature entry includes its ID, name, key, status, and potentially usage statistics if requested.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/FeaturesListResponseData'
+    ErrorResponse:
+      description: 'Indicates an error occurred while processing the request. The `code` provides an HTTP status code, `message` offers a human-readable explanation or an array of validation errors, and `fields` (if present) specifies which input fields were problematic.
+
+        '
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorData'
+    BulkSuccessResponse:
+      description: 'Indicates the outcome of a bulk operation (e.g., bulk update or delete). Provides a general success `message` and an `errors` array listing any entities that could not be processed, along with the reason for failure for each.
+
+        '
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BulkSuccessData'
+  schemas:
+    FeaturesList:
+      type: array
+      description: A list of feature objects.
+      items:
+        $ref: '#/components/schemas/Feature'
+    FeatureVariableBase:
+      type: object
+      description: Base properties for a variable within a feature. Each variable has a key, a type, and a default value.
+      properties:
+        key:
+          type: string
+          description: 'A unique, machine-readable string key for this variable within the feature (e.g., "buttonColor", "discountPercentage", "showHeader").
+
+            This key is used by SDKs to retrieve the variable''s value for the active variation.
+
+            '
+          maxLength: 32
+        type:
+          type: string
+          description: 'The data type of the variable. This determines the kind of values it can hold and how it''s treated by the SDKs.
+
+            - `json`: A JSON object or array.
+
+            - `string`: A text string.
+
+            - `boolean`: A true/false value.
+
+            - `float`: A floating-point number.
+
+            - `integer`: A whole number.
+
+            '
+        default_value:
+          description: 'The default value for this variable. This value is used if the feature is not part of an active experiment for a user, or if no specific value is set for the variation a user is bucketed into.
+
+            The type of `default_value` must match the specified `type` of the variable.
+
+            '
+          nullable: true
+      required:
+      - key
+      - type
+    Extra:
+      type: object
+      properties:
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+    FeatureVariableNumeric:
+      allOf:
+      - $ref: '#/components/schemas/FeatureVariableBase'
+      - type: object
+        properties:
+          type:
+            enum:
+            - float
+            - integer
+          default_value:
+            type: number
+            nullable: true
+    GetFeaturesListRequestData:
+      allOf:
+      - $ref: '#/components/schemas/OnlyCount'
+      - $ref: '#/components/schemas/FeaturesListFilteringOptions'
+      - $ref: '#/components/schemas/PageNumber'
+      - type: object
+        properties:
+          include:
+            description: Specifies the list of fields to be included in the response, which otherwise would not be sent.
+            type: array
+            items:
+              $ref: '#/components/schemas/FeatureOptionalFields'
+    BulkSuccessData:
+      allOf:
+      - $ref: '#/components/schemas/SuccessData'
+      - type: object
+        properties:
+          code:
+            type: integer
+            format: int32
+          errors:
+            type: array
+            description: List of unprocessed entities. Would be empty, if all passed entities processed
+            items:
+              $ref: '#/components/schemas/BulkEntityError'
+    Feature:
+      type: object
+      description: 'Represents a feature flag or a set of configurable variables within a Full Stack project.
+
+        Features are used in ''a/b_fullstack'' or ''feature_rollout'' experiences to control application behavior or content dynamically, often from the server-side or within client-side applications using an SDK.
+
+        Each feature has a unique `key` for programmatic access and a list of `variables` whose values can be altered per experience variation.
+
+        Knowledge Base: "Full Stack Experiments on Convert".
+
+        '
+      properties:
+        id:
+          description: The unique numerical identifier for the feature.
+          type: integer
+          readOnly: true
+        name:
+          description: A user-defined, friendly name for the feature (e.g., "New Checkout Process", "Beta User Dashboard"). This name appears in the Convert UI.
+          type: string
+          maxLength: 100
+        status:
+          $ref: '#/components/schemas/FeatureStatuses'
+        key:
+          description: 'A unique, machine-readable string key for this feature (e.g., "new_checkout_flow", "beta_dashboard_enabled").
+
+            This key is used by the SDKs to identify and retrieve the feature''s configuration and variable values.
+
+            It''s typically auto-generated from the name if not specified, but can be user-defined.
+
+            '
+          type: string
+          maxLength: 32
+        stats:
+          $ref: '#/components/schemas/FeatureStats'
+        description:
+          description: An optional, more detailed explanation of the feature's purpose, what it controls, or its intended use cases.
+          type: string
+          maxLength: 200
+        variables:
+          type: array
+          description: 'An array of `FeatureVariable` objects that define the configurable parameters associated with this feature.
+
+            For example, a feature "Button Customization" might have variables like "buttonColor" (string), "buttonText" (string), and "isEnabled" (boolean).
+
+            The values of these variables can be different for each variation of an experience that uses this feature.
+
+            '
+          items:
+            $ref: '#/components/schemas/FeatureVariable'
+    BulkFeaturesIds:
+      type: array
+      description: A list of feature unique numerical identifiers to be affected by a bulk operation.
+      items:
+        type: integer
+      minItems: 1
+      maxItems: 100
+    Pagination:
+      type: object
+      properties:
+        current_page:
+          description: The current page number being displayed from the paginated set.
+          type: integer
+          minimum: 1
+        items_count:
+          description: The total number of items available across all pages for the current filter criteria.
+          type: integer
+          minimum: 0
+        items_per_page:
+          description: The number of items included in the current page of results (matches `results_per_page` from the request).
+          type: integer
+          minimum: 0
+        pages_count:
+          description: The total number of pages available for the current filter criteria and `results_per_page` setting.
+          type: integer
+          minimum: 0
+    PageNumber:
+      type: object
+      properties:
+        page:
+          type: integer
+          minimum: 1
+          description: 'The page number for paginated results. For example, if `results_per_page` is 30, `page: 2` will retrieve items 31-60.
+
+            Defaults to 1 if not specified.
+
+            '
+    FeatureVariable:
+      oneOf:
+      - $ref: '#/components/schemas/FeatureVariableString'
+      - $ref: '#/components/schemas/FeatureVariableBool'
+      - $ref: '#/components/schemas/FeatureVariableNumeric'
+      discriminator:
+        propertyName: type
+        mapping:
+          boolean: '#/components/schemas/FeatureVariableBool'
+          float: '#/components/schemas/FeatureVariableNumeric'
+          json: '#/components/schemas/FeatureVariableString'
+          integer: '#/components/schemas/FeatureVariableNumeric'
+          string: '#/components/schemas/FeatureVariableString'
+    BulkEntityError:
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          description: The unique identifier of the entity that could not be processed.
+        message:
+          type: string
+          description: A message explaining the reason for the failure for this specific entity.
+    FeatureVariableBool:
+      allOf:
+      - $ref: '#/components/schemas/FeatureVariableBase'
+      - type: object
+        properties:
+          type:
+            enum:
+            - boolean
+          default_value:
+            type: boolean
+            nullable: true
+    UpdateFeatureRequestData:
+      allOf:
+      - type: object
+        properties:
+          id:
+            description: Feature ID
+            type: integer
+      - $ref: '#/components/schemas/Feature'
+    FeatureStatuses:
+      type: string
+      description: 'The current status of a feature:
+
+        - `active`: The feature is active and can be used in Full Stack experiments. Its variables can be controlled by experiences.
+
+        - `archived`: The feature is archived and no longer available for new experiments. Existing experiments using it might behave based on last known configuration or default values.
+
+        '
+      enum:
+      - active
+      - archived
+      default: active
+    CreateFeatureRequestData:
+      allOf:
+      - $ref: '#/components/schemas/Feature'
+      required:
+      - name
+      - variables
+    FeatureVariableString:
+      allOf:
+      - $ref: '#/components/schemas/FeatureVariableBase'
+      - type: object
+        properties:
+          type:
+            enum:
+            - json
+            - string
+          default_value:
+            type: string
+            nullable: true
+    SortDirection:
+      type: object
+      properties:
+        sort_direction:
+          type: string
+          nullable: true
+          default: desc
+          description: 'The direction for sorting the list results, based on the `sort_by` field.
+
+            - `asc`: Ascending order (e.g., A-Z, 1-10, oldest to newest).
+
+            - `desc`: Descending order (e.g., Z-A, 10-1, newest to oldest).
+
+            Defaults to `desc` (newest/highest first) if not specified.
+
+            '
+          enum:
+          - asc
+          - desc
+    FeatureOptionalFields:
+      type: string
+      enum:
+      - stats
+    ErrorData:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          oneOf:
+          - type: string
+          - type: array
+            items:
+              type: string
+        fields:
+          oneOf:
+          - type: string
+          - type: array
+            items:
+              type: string
+    BulkUpdateFeatureRequestData:
+      type: object
+      description: Request body for bulk updating the status of multiple features.
+      additionalProperties: false
+      properties:
+        id:
+          $ref: '#/components/schemas/BulkFeaturesIds'
+        status:
+          $ref: '#/components/schemas/FeatureStatuses'
+      required:
+      - id
+      - status
+    FeatureStats:
+      type: object
+      readOnly: true
+      properties:
+        times_used:
+          type: integer
+          description: The number of currently active experiences (e.g., 'a/b_fullstack', 'feature_rollout') that are using this feature to control variations.
+    FeaturesListResponseData:
+      type: object
+      description: Response containing a list of features defined within a Full Stack project, along with pagination details if applicable.
+      properties:
+        data:
+          $ref: '#/components/schemas/FeaturesList'
+        extra:
+          $ref: '#/components/schemas/Extra'
+    BulkDeleteFeatureRequestData:
+      type: object
+      description: Request body for bulk deleting multiple features. Contains a list of feature IDs to be permanently removed.
+      additionalProperties: false
+      properties:
+        id:
+          $ref: '#/components/schemas/BulkFeaturesIds'
+      required:
+      - id
+    FeaturesListFilteringOptions:
+      allOf:
+      - $ref: '#/components/schemas/ResultsPerPage'
+      - $ref: '#/components/schemas/SortDirection'
+      - type: object
+        properties:
+          search:
+            type: string
+            maxLength: 100
+            description: A search string that would be used to search against Feature's id, name, key and description
+            nullable: true
+          only:
+            description: 'Only retrieve features with the given ids.
+
+              '
+            type: array
+            nullable: true
+            items:
+              type: integer
+            maxItems: 100
+          except:
+            description: 'Except features with the given ids.
+
+              '
+            type: array
+            items:
+              type: integer
+            maxItems: 100
+          sort_by:
+            type: string
+            description: 'A value to sort features by specific field
+
+
+              Defaults to **id** if not provided
+
+              '
+            enum:
+            - id
+            - name
+            - key
+            - status
+            nullable: true
+            default: id
+    OnlyCount:
+      type: object
+      properties:
+        onlyCount:
+          type: boolean
+          description: 'If set to `true` in a list request, the response will only contain the total count of matching items (`extra.pagination.items_count`)
+
+            and will not include the actual item data. Useful for quickly getting totals without fetching full datasets.
+
+            '
+    ResultsPerPage:
+      type: object
+      properties:
+        results_per_page:
+          type: integer
+          nullable: true
+          minimum: 0
+          maximum: 50
+          default: 30
+          description: 'Specifies the maximum number of items to return in a single page of results.
+
+            Used for pagination. Default is 30, maximum is 50.
+
+            '
+    SuccessData:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+  requestBodies:
+    BulkUpdateFeaturesRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BulkUpdateFeatureRequestData'
+      description: Contains a list of feature `id`s and the target `status` (e.g., 'active', 'archived') to apply to all of them.
+      required: true
+    UpdateFeatureRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UpdateFeatureRequestData'
+      required: true
+    CreateFeatureRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CreateFeatureRequestData'
+      required: true
+    BulkDeleteFeaturesRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BulkDeleteFeatureRequestData'
+    GetFeaturesListRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GetFeaturesListRequestData'
+  securitySchemes:
+    requestSigning:
+      type: apiKey
+      x-name-applicationId: Convert-Application-ID
+      x-name-expire: Expire
+      name: Authorization
+      in: header
+      description: 'See **[API Key Authentication](#tag/API-KEY-Authentication)** for more information.
+
+        '
+    secretKey:
+      type: http
+      scheme: bearer
+      description: 'See **[API Key Authentication](#tag/API-KEY-Authentication)** for more information.
+
+        '
+    cookieAuthentication:
+      type: apiKey
+      in: cookie
+      name: sid
+      description: Cookie authentication is used against Convert's own IdentityProvider  or third party identity providers and is described more in the "[Cookie Authentication](#tag/Cookie-Authentication)" section
+x-tagGroups:
+- name: Client Authentication
+  tags:
+  - API KEY Authentication
+  - Cookie Authentication
+  - OAuth Authorization
+- name: Common Parameters
+  tags:
+  - Optional Fields
+  - Expandable Fields
+- name: Requests
+  tags:
+  - User
+  - Accounts
+  - AI content
+  - Collaborators
+  - API Keys
+  - Projects
+  - SDK Keys
+  - Experiences
+  - Experience Variations
+  - Experience Sections
+  - Section Versions
+  - Version Changes
+  - Experiences Reports
+  - Experiences Heatmaps
+  - Goals
+  - Hypotheses
+  - Knowledge Bases
+  - Observations
+  - Locations
+  - Audiences
+  - Domains
+  - Cdn Images
+  - Files
+  - Tags
+  - Features
+  - Visitor Insights
+  - Visitors Data
+  - Visitor Data Placeholders
+  - OAuth

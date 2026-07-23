@@ -1,0 +1,413 @@
+openapi: 3.1.0
+info:
+  title: Convert Accounts Visitor Data Placeholders API
+  description: 'Move your app forward with the Convert API. The Convert API allows
+
+    you to manage your Convert Experiences projects using code. The REST API is
+
+    an interface for managing and extending functionality of Convert. For
+
+    example, instead of creating and maintaining projects using the Convert
+
+    Experiences web dashboard you can create an experiment programmatically.
+
+    Additionally, if you prefer to run custom analysis on experiment results you
+
+    can leverage the API to pull data from Convert Experiences into your own
+
+    workflow. If you do not have a Convert account already, sign up for a free
+
+    developer account at https://www.convert.com/api/.
+
+
+    *[Convert API V1](/doc/v1) is still available and documentation can be found [here](/doc/v1) but using it is highly discouraged
+
+    as it will be phased out in the future*
+
+    '
+  version: 2.0.0
+servers:
+- url: https://api.convert.com/api/v2
+  description: Live API server
+- url: https://apidev.convert.com/api/v2
+  description: DEV API server
+- url: http://apidev.convert.com:5000/api/v2
+  description: DEV mocked API server
+tags:
+- name: Visitor Data Placeholders
+  description: 'Endpoints for managing visitor data placeholders personalization data. Visitor data placeholders define dynamic content that can be personalized for individual visitors or groups.
+
+    '
+paths:
+  /accounts/{account_id}/projects/{project_id}/visitors-data/placeholders:
+    post:
+      operationId: getVisitorsDataPlaceholdersList
+      summary: List Placeholders
+      description: Returns a list of visitors data placeholders defined in the project
+      tags:
+      - Visitor Data Placeholders
+      parameters:
+      - $ref: '#/components/parameters/AccountId'
+      - $ref: '#/components/parameters/ProjectId'
+      requestBody:
+        $ref: '#/components/requestBodies/GetVisitorDataPlaceholdersListRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/VisitorDataPlaceholdersListResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+  /accounts/{account_id}/projects/{project_id}/visitors-data/placeholders/add:
+    post:
+      operationId: createVisitorsDataPlaceholder
+      summary: Create Placeholder
+      description: Creates a new visitors data placeholder
+      tags:
+      - Visitor Data Placeholders
+      parameters:
+      - $ref: '#/components/parameters/AccountId'
+      - $ref: '#/components/parameters/ProjectId'
+      requestBody:
+        $ref: '#/components/requestBodies/CreateVisitorDataPlaceholderRequest'
+      responses:
+        '201':
+          $ref: '#/components/responses/VisitorDataPlaceholderResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+  /accounts/{account_id}/projects/{project_id}/visitors-data/placeholders/{placeholderId}/update:
+    post:
+      operationId: updateVisitorsDataPlaceholder
+      summary: Update Placeholder
+      description: Updates an existing visitors data placeholder
+      tags:
+      - Visitor Data Placeholders
+      parameters:
+      - $ref: '#/components/parameters/AccountId'
+      - $ref: '#/components/parameters/ProjectId'
+      - $ref: '#/components/parameters/PlaceholderId'
+      requestBody:
+        $ref: '#/components/requestBodies/UpdateVisitorDataPlaceholderRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/VisitorDataPlaceholderResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+  /accounts/{account_id}/projects/{project_id}/visitors-data/placeholders/{placeholderId}/delete:
+    delete:
+      operationId: deleteVisitorsDataPlaceholder
+      summary: Delete Placeholder
+      description: Deletes a visitors data placeholder
+      tags:
+      - Visitor Data Placeholders
+      parameters:
+      - $ref: '#/components/parameters/AccountId'
+      - $ref: '#/components/parameters/ProjectId'
+      - $ref: '#/components/parameters/PlaceholderId'
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+  /accounts/{account_id}/projects/{project_id}/visitors-data/placeholders/{placeholder_id}:
+    get:
+      operationId: getVisitorsDataPlaceholder
+      summary: Get Placeholder
+      description: Returns a single visitors data placeholder by ID.
+      tags:
+      - Visitor Data Placeholders
+      parameters:
+      - $ref: '#/components/parameters/AccountId'
+      - $ref: '#/components/parameters/ProjectId'
+      - $ref: '#/components/parameters/PlaceholderId'
+      responses:
+        '200':
+          $ref: '#/components/responses/VisitorDataPlaceholderResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+components:
+  schemas:
+    PlaceholdersList:
+      type: array
+      description: List of visitor data placeholders
+      items:
+        $ref: '#/components/schemas/VisitorDataPlaceholder'
+    Extra:
+      type: object
+      properties:
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+    Pagination:
+      type: object
+      properties:
+        current_page:
+          description: The current page number being displayed from the paginated set.
+          type: integer
+          minimum: 1
+        items_count:
+          description: The total number of items available across all pages for the current filter criteria.
+          type: integer
+          minimum: 0
+        items_per_page:
+          description: The number of items included in the current page of results (matches `results_per_page` from the request).
+          type: integer
+          minimum: 0
+        pages_count:
+          description: The total number of pages available for the current filter criteria and `results_per_page` setting.
+          type: integer
+          minimum: 0
+    PageNumber:
+      type: object
+      properties:
+        page:
+          type: integer
+          minimum: 1
+          description: 'The page number for paginated results. For example, if `results_per_page` is 30, `page: 2` will retrieve items 31-60.
+
+            Defaults to 1 if not specified.
+
+            '
+    VisitorDataPlaceholder:
+      type: object
+      description: Base Visitor Data Placeholder Object
+      properties:
+        id:
+          description: Placeholder ID
+          readOnly: true
+          type: integer
+        placeholder:
+          description: A unique per project level identifier for the placeholder. Used in {{placeholder}} syntax.
+          type: string
+          maxLength: 128
+        default_value:
+          description: Default value to use when no personalization data is found
+          type: string
+          maxLength: 10000
+        created_at:
+          description: Unix timestamp (UTC) indicating when the placeholder was created
+          type: integer
+          readOnly: true
+    UpdatePlaceholderRequestData:
+      type: object
+      description: Request body for updating a visitor data placeholder.
+      properties:
+        default_value:
+          description: Default value to use when no personalization data is found
+          type: string
+          maxLength: 10000
+        placeholder:
+          description: A unique per project level identifier for the placeholder. Used in {{placeholder}} syntax.
+          type: string
+          maxLength: 128
+    GetPlaceholdersListRequestData:
+      allOf:
+      - $ref: '#/components/schemas/OnlyCount'
+      - $ref: '#/components/schemas/ResultsPerPage'
+      - $ref: '#/components/schemas/PageNumber'
+      - type: object
+        properties:
+          search:
+            type: string
+            maxLength: 200
+            nullable: true
+            description: 'A search query used to filter placeholders. Matches are case-insensitive and return results where
+
+              the `placeholder` value contains the given string.
+
+              '
+    PlaceholdersListResponseData:
+      type: object
+      description: Response containing list of visitor data placeholders and extra list metadata
+      properties:
+        data:
+          $ref: '#/components/schemas/PlaceholdersList'
+        extra:
+          $ref: '#/components/schemas/Extra'
+    CreatePlaceholderRequestData:
+      allOf:
+      - $ref: '#/components/schemas/VisitorDataPlaceholder'
+      required:
+      - placeholder
+    ErrorData:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          oneOf:
+          - type: string
+          - type: array
+            items:
+              type: string
+        fields:
+          oneOf:
+          - type: string
+          - type: array
+            items:
+              type: string
+    OnlyCount:
+      type: object
+      properties:
+        onlyCount:
+          type: boolean
+          description: 'If set to `true` in a list request, the response will only contain the total count of matching items (`extra.pagination.items_count`)
+
+            and will not include the actual item data. Useful for quickly getting totals without fetching full datasets.
+
+            '
+    ResultsPerPage:
+      type: object
+      properties:
+        results_per_page:
+          type: integer
+          nullable: true
+          minimum: 0
+          maximum: 50
+          default: 30
+          description: 'Specifies the maximum number of items to return in a single page of results.
+
+            Used for pagination. Default is 30, maximum is 50.
+
+            '
+    SuccessData:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+  responses:
+    SuccessResponse:
+      description: 'A generic success response, typically used for operations that don''t return specific data (like deletions or some updates). The `code` is usually 200, and `message` confirms the successful action.
+
+        '
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SuccessData'
+    ErrorResponse:
+      description: 'Indicates an error occurred while processing the request. The `code` provides an HTTP status code, `message` offers a human-readable explanation or an array of validation errors, and `fields` (if present) specifies which input fields were problematic.
+
+        '
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorData'
+    VisitorDataPlaceholdersListResponse:
+      description: Response object containing the list of visitor data placeholders defined in the project
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/PlaceholdersListResponseData'
+    VisitorDataPlaceholderResponse:
+      description: Response object containing a single visitor data placeholder
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/VisitorDataPlaceholder'
+  requestBodies:
+    CreateVisitorDataPlaceholderRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CreatePlaceholderRequestData'
+      description: Create visitor data placeholder schema
+      required: true
+    GetVisitorDataPlaceholdersListRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GetPlaceholdersListRequestData'
+      description: Filter visitor data placeholders list
+      required: false
+    UpdateVisitorDataPlaceholderRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UpdatePlaceholderRequestData'
+      description: Update visitor data placeholder schema
+      required: true
+  parameters:
+    AccountId:
+      name: account_id
+      in: path
+      required: true
+      description: ID of the account that owns the retrieved/saved data
+      schema:
+        type: integer
+    ProjectId:
+      name: project_id
+      in: path
+      required: true
+      description: ID of the project to be retrieved
+      schema:
+        type: integer
+    PlaceholderId:
+      name: placeholder_id
+      in: path
+      required: true
+      description: ID of the placeholder to be retrieved/updated/deleted
+      schema:
+        type: integer
+  securitySchemes:
+    requestSigning:
+      type: apiKey
+      x-name-applicationId: Convert-Application-ID
+      x-name-expire: Expire
+      name: Authorization
+      in: header
+      description: 'See **[API Key Authentication](#tag/API-KEY-Authentication)** for more information.
+
+        '
+    secretKey:
+      type: http
+      scheme: bearer
+      description: 'See **[API Key Authentication](#tag/API-KEY-Authentication)** for more information.
+
+        '
+    cookieAuthentication:
+      type: apiKey
+      in: cookie
+      name: sid
+      description: Cookie authentication is used against Convert's own IdentityProvider  or third party identity providers and is described more in the "[Cookie Authentication](#tag/Cookie-Authentication)" section
+x-tagGroups:
+- name: Client Authentication
+  tags:
+  - API KEY Authentication
+  - Cookie Authentication
+  - OAuth Authorization
+- name: Common Parameters
+  tags:
+  - Optional Fields
+  - Expandable Fields
+- name: Requests
+  tags:
+  - User
+  - Accounts
+  - AI content
+  - Collaborators
+  - API Keys
+  - Projects
+  - SDK Keys
+  - Experiences
+  - Experience Variations
+  - Experience Sections
+  - Section Versions
+  - Version Changes
+  - Experiences Reports
+  - Experiences Heatmaps
+  - Goals
+  - Hypotheses
+  - Knowledge Bases
+  - Observations
+  - Locations
+  - Audiences
+  - Domains
+  - Cdn Images
+  - Files
+  - Tags
+  - Features
+  - Visitor Insights
+  - Visitors Data
+  - Visitor Data Placeholders
+  - OAuth

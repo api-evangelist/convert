@@ -1,0 +1,281 @@
+openapi: 3.1.0
+info:
+  title: Convert Accounts OAuth Authorization API
+  description: 'Move your app forward with the Convert API. The Convert API allows
+
+    you to manage your Convert Experiences projects using code. The REST API is
+
+    an interface for managing and extending functionality of Convert. For
+
+    example, instead of creating and maintaining projects using the Convert
+
+    Experiences web dashboard you can create an experiment programmatically.
+
+    Additionally, if you prefer to run custom analysis on experiment results you
+
+    can leverage the API to pull data from Convert Experiences into your own
+
+    workflow. If you do not have a Convert account already, sign up for a free
+
+    developer account at https://www.convert.com/api/.
+
+
+    *[Convert API V1](/doc/v1) is still available and documentation can be found [here](/doc/v1) but using it is highly discouraged
+
+    as it will be phased out in the future*
+
+    '
+  version: 2.0.0
+servers:
+- url: https://api.convert.com/api/v2
+  description: Live API server
+- url: https://apidev.convert.com/api/v2
+  description: DEV API server
+- url: http://apidev.convert.com:5000/api/v2
+  description: DEV mocked API server
+tags:
+- name: OAuth Authorization
+  description: 'Delegated authorization endpoints for third-party OAuth clients.
+
+
+    Typical flow:
+
+    * OAuth client initiates GET request in browser (`/oauth/authorize`) with `client_id` + `response_type=code` + `scope` + `state` + `code_challenge` (PKCE)
+
+    * While generating `code_challenge` — don''t forget to store the `code_verifier` which will be used to obtain the access token
+
+    * User authenticates in Convert and approves scope in consent UI
+
+    * OAuth client exchanges one-time code (`/auth/oauth/token`) for a scoped bearer session token
+
+    * User can list/revoke authorized OAuth sessions (`/auth/oauth/sessions*`)
+
+
+    Scopes: `selected_accounts_projects`
+
+
+    Example:
+
+    ```
+
+    https://app.convert.com/auth/oauth/authorize?client_id=1111111&state=randomstring&scope=selected_accounts_projects&response_type=code&code_challenge=generatedCodeChallenge
+
+    ```
+
+    '
+paths:
+  /auth/oauth/token:
+    post:
+      operationId: requestOauthToken
+      summary: Exchange OAuth code for session token
+      description: 'Public endpoint used by OAuth clients to exchange a one-time authorization code for a scoped bearer session token.
+
+        Enforces PKCE binding.
+
+        '
+      tags:
+      - OAuth Authorization
+      requestBody:
+        $ref: '#/components/requestBodies/OAuthTokenRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/OAuthTokenResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+components:
+  schemas:
+    OAuthTokenResponseData:
+      type: object
+      required:
+      - access_token
+      - token_type
+      - expires_at
+      - scope
+      properties:
+        access_token:
+          description: Opaque OAuth session bearer token.
+          type: string
+        token_type:
+          type: string
+          enum:
+          - Bearer
+        expires_at:
+          type: integer
+          description: Absolute expiration timestamp (unix seconds).
+        scope:
+          $ref: '#/components/schemas/OAuthScopeResponse'
+    OAuthTokenRequestData:
+      type: object
+      required:
+      - grant_type
+      - code
+      - client_id
+      - code_verifier
+      properties:
+        grant_type:
+          description: Authorization grant type.
+          type: string
+          enum:
+          - authorization_code
+          default: authorization_code
+        code:
+          description: One-time authorization code from consent redirect.
+          type: string
+          minLength: 1
+        client_id:
+          description: Identifier of the OAuth client application that initiated the authorization request.
+          type: string
+        code_verifier:
+          description: PKCE verifier for code challenge validation.
+          type: string
+          minLength: 43
+          maxLength: 128
+          pattern: ^[A-Za-z0-9\-._~]+$
+    OAuthScopeMode:
+      type: string
+      enum:
+      - selected_accounts_projects
+    OAuthScopeProject:
+      type: object
+      required:
+      - project_id
+      - role
+      properties:
+        project_id:
+          type: integer
+          minimum: 1
+        role:
+          description: User's role for this project.
+          type: string
+        name:
+          description: Display name of the project.
+          type: string
+    ErrorData:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          oneOf:
+          - type: string
+          - type: array
+            items:
+              type: string
+        fields:
+          oneOf:
+          - type: string
+          - type: array
+            items:
+              type: string
+    OAuthScopeAccountResponse:
+      type: object
+      required:
+      - account_id
+      properties:
+        account_id:
+          type: integer
+          minimum: 1
+        name:
+          description: Display name of the account.
+          type: string
+        projects:
+          type: array
+          items:
+            $ref: '#/components/schemas/OAuthScopeProject'
+    OAuthScopeResponse:
+      type: object
+      required:
+      - mode
+      properties:
+        mode:
+          $ref: '#/components/schemas/OAuthScopeMode'
+        accounts:
+          type: array
+          items:
+            $ref: '#/components/schemas/OAuthScopeAccountResponse'
+  responses:
+    ErrorResponse:
+      description: 'Indicates an error occurred while processing the request. The `code` provides an HTTP status code, `message` offers a human-readable explanation or an array of validation errors, and `fields` (if present) specifies which input fields were problematic.
+
+        '
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorData'
+    OAuthTokenResponse:
+      description: One-time code exchanged for a scoped OAuth bearer session token.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/OAuthTokenResponseData'
+  requestBodies:
+    OAuthTokenRequest:
+      required: true
+      description: Exchanges a one-time authorization code for an OAuth bearer session token.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/OAuthTokenRequestData'
+  securitySchemes:
+    requestSigning:
+      type: apiKey
+      x-name-applicationId: Convert-Application-ID
+      x-name-expire: Expire
+      name: Authorization
+      in: header
+      description: 'See **[API Key Authentication](#tag/API-KEY-Authentication)** for more information.
+
+        '
+    secretKey:
+      type: http
+      scheme: bearer
+      description: 'See **[API Key Authentication](#tag/API-KEY-Authentication)** for more information.
+
+        '
+    cookieAuthentication:
+      type: apiKey
+      in: cookie
+      name: sid
+      description: Cookie authentication is used against Convert's own IdentityProvider  or third party identity providers and is described more in the "[Cookie Authentication](#tag/Cookie-Authentication)" section
+x-tagGroups:
+- name: Client Authentication
+  tags:
+  - API KEY Authentication
+  - Cookie Authentication
+  - OAuth Authorization
+- name: Common Parameters
+  tags:
+  - Optional Fields
+  - Expandable Fields
+- name: Requests
+  tags:
+  - User
+  - Accounts
+  - AI content
+  - Collaborators
+  - API Keys
+  - Projects
+  - SDK Keys
+  - Experiences
+  - Experience Variations
+  - Experience Sections
+  - Section Versions
+  - Version Changes
+  - Experiences Reports
+  - Experiences Heatmaps
+  - Goals
+  - Hypotheses
+  - Knowledge Bases
+  - Observations
+  - Locations
+  - Audiences
+  - Domains
+  - Cdn Images
+  - Files
+  - Tags
+  - Features
+  - Visitor Insights
+  - Visitors Data
+  - Visitor Data Placeholders
+  - OAuth

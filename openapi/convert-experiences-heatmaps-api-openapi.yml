@@ -1,0 +1,292 @@
+openapi: 3.1.0
+info:
+  title: Convert Accounts Experiences Heatmaps API
+  description: 'Move your app forward with the Convert API. The Convert API allows
+
+    you to manage your Convert Experiences projects using code. The REST API is
+
+    an interface for managing and extending functionality of Convert. For
+
+    example, instead of creating and maintaining projects using the Convert
+
+    Experiences web dashboard you can create an experiment programmatically.
+
+    Additionally, if you prefer to run custom analysis on experiment results you
+
+    can leverage the API to pull data from Convert Experiences into your own
+
+    workflow. If you do not have a Convert account already, sign up for a free
+
+    developer account at https://www.convert.com/api/.
+
+
+    *[Convert API V1](/doc/v1) is still available and documentation can be found [here](/doc/v1) but using it is highly discouraged
+
+    as it will be phased out in the future*
+
+    '
+  version: 2.0.0
+servers:
+- url: https://api.convert.com/api/v2
+  description: Live API server
+- url: https://apidev.convert.com/api/v2
+  description: DEV API server
+- url: http://apidev.convert.com:5000/api/v2
+  description: DEV mocked API server
+tags:
+- name: Experiences Heatmaps
+  description: Endpoints to retrieve heatmap background and overlay images (Convert Signals™). Filters such as device and interaction type are passed in the request body.
+paths:
+  /accounts/{account_id}/projects/{project_id}/experiences/{experience_id}/heatmaps/{heatmap_id}/background:
+    post:
+      operationId: getExperienceHeatmapBackground
+      summary: Get heatmap background image
+      description: 'Retrieves the background image for a specific heatmap and device.
+
+        '
+      tags:
+      - Experiences Heatmaps
+      parameters:
+      - $ref: '#/components/parameters/AccountId'
+      - $ref: '#/components/parameters/ProjectId'
+      - $ref: '#/components/parameters/ExperienceId'
+      - $ref: '#/components/parameters/HeatmapId'
+      requestBody:
+        $ref: '#/components/requestBodies/GetExperienceHeatmapBackgroundRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/ExperienceHeatmapBackgroundResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+  /accounts/{account_id}/projects/{project_id}/experiences/{experience_id}/heatmaps/{heatmap_id}/overlay:
+    post:
+      operationId: getExperienceHeatmapOverlay
+      summary: Get heatmap overlay (interaction) image
+      description: 'Retrieves the overlay image for a specific heatmap, device, and interaction type.
+
+        '
+      tags:
+      - Experiences Heatmaps
+      parameters:
+      - $ref: '#/components/parameters/AccountId'
+      - $ref: '#/components/parameters/ProjectId'
+      - $ref: '#/components/parameters/ExperienceId'
+      - $ref: '#/components/parameters/HeatmapId'
+      requestBody:
+        $ref: '#/components/requestBodies/GetExperienceHeatmapOverlayRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/ExperienceHeatmapOverlayResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+components:
+  parameters:
+    ProjectId:
+      name: project_id
+      in: path
+      required: true
+      description: ID of the project to be retrieved
+      schema:
+        type: integer
+    ExperienceId:
+      name: experience_id
+      in: path
+      required: true
+      description: ID of the experience
+      schema:
+        type: integer
+    AccountId:
+      name: account_id
+      in: path
+      required: true
+      description: ID of the account that owns the retrieved/saved data
+      schema:
+        type: integer
+    HeatmapId:
+      name: heatmap_id
+      in: path
+      required: true
+      description: ID of the heatmap.
+      schema:
+        type: string
+  schemas:
+    GetExperienceHeatmapOverlayRequestData:
+      type: object
+      description: Optional filters for the heatmap overlay (interaction) image.
+      properties:
+        device:
+          $ref: '#/components/schemas/HeatmapDevices'
+        interaction:
+          $ref: '#/components/schemas/HeatmapInteractions'
+    HeatmapInteractions:
+      type: string
+      enum:
+      - click
+      - scroll
+      - move
+      default: click
+      description: Interaction type for the heatmap overlay.
+    GetExperienceHeatmapBackgroundRequestData:
+      type: object
+      description: Optional filters for the heatmap background image.
+      properties:
+        device:
+          $ref: '#/components/schemas/HeatmapDevices'
+    ExperienceHeatmapBackgroundResponseData:
+      type: object
+      description: Response for POST heatmap background by heatmap id.
+      properties:
+        data:
+          type: object
+          properties:
+            heatmap_id:
+              type: string
+            device:
+              $ref: '#/components/schemas/HeatmapDevices'
+            background:
+              type: string
+              format: byte
+              nullable: true
+              description: Base64-encoded background image. Null when available is false.
+    HeatmapDevices:
+      type: string
+      enum:
+      - desktop
+      - tablet
+      - mobile
+      default: desktop
+      description: Device type for the heatmap image.
+    ExperienceHeatmapOverlayResponseData:
+      type: object
+      description: Response for POST heatmap overlay by heatmap id.
+      properties:
+        data:
+          type: object
+          properties:
+            heatmap_id:
+              type: string
+            device:
+              $ref: '#/components/schemas/HeatmapDevices'
+            interaction:
+              $ref: '#/components/schemas/HeatmapInteractions'
+            overlay:
+              type: string
+              format: byte
+              nullable: true
+              description: Base64-encoded overlay image. Null when available is false.
+    ErrorData:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          oneOf:
+          - type: string
+          - type: array
+            items:
+              type: string
+        fields:
+          oneOf:
+          - type: string
+          - type: array
+            items:
+              type: string
+  requestBodies:
+    GetExperienceHeatmapOverlayRequest:
+      description: Optional filters for the heatmap overlay image (e.g. device, interaction type). Passed in body for extensibility.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GetExperienceHeatmapOverlayRequestData'
+      required: false
+    GetExperienceHeatmapBackgroundRequest:
+      description: Optional filters for the heatmap background image (e.g. device). Passed in body for extensibility.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GetExperienceHeatmapBackgroundRequestData'
+      required: false
+  responses:
+    ErrorResponse:
+      description: 'Indicates an error occurred while processing the request. The `code` provides an HTTP status code, `message` offers a human-readable explanation or an array of validation errors, and `fields` (if present) specifies which input fields were problematic.
+
+        '
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorData'
+    ExperienceHeatmapOverlayResponse:
+      description: Heatmap overlay (interaction) image for the given heatmap id, device, and interaction type.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ExperienceHeatmapOverlayResponseData'
+    ExperienceHeatmapBackgroundResponse:
+      description: Heatmap background image for the given heatmap id and device.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ExperienceHeatmapBackgroundResponseData'
+  securitySchemes:
+    requestSigning:
+      type: apiKey
+      x-name-applicationId: Convert-Application-ID
+      x-name-expire: Expire
+      name: Authorization
+      in: header
+      description: 'See **[API Key Authentication](#tag/API-KEY-Authentication)** for more information.
+
+        '
+    secretKey:
+      type: http
+      scheme: bearer
+      description: 'See **[API Key Authentication](#tag/API-KEY-Authentication)** for more information.
+
+        '
+    cookieAuthentication:
+      type: apiKey
+      in: cookie
+      name: sid
+      description: Cookie authentication is used against Convert's own IdentityProvider  or third party identity providers and is described more in the "[Cookie Authentication](#tag/Cookie-Authentication)" section
+x-tagGroups:
+- name: Client Authentication
+  tags:
+  - API KEY Authentication
+  - Cookie Authentication
+  - OAuth Authorization
+- name: Common Parameters
+  tags:
+  - Optional Fields
+  - Expandable Fields
+- name: Requests
+  tags:
+  - User
+  - Accounts
+  - AI content
+  - Collaborators
+  - API Keys
+  - Projects
+  - SDK Keys
+  - Experiences
+  - Experience Variations
+  - Experience Sections
+  - Section Versions
+  - Version Changes
+  - Experiences Reports
+  - Experiences Heatmaps
+  - Goals
+  - Hypotheses
+  - Knowledge Bases
+  - Observations
+  - Locations
+  - Audiences
+  - Domains
+  - Cdn Images
+  - Files
+  - Tags
+  - Features
+  - Visitor Insights
+  - Visitors Data
+  - Visitor Data Placeholders
+  - OAuth

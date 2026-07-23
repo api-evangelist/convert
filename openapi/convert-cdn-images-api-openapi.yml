@@ -1,0 +1,332 @@
+openapi: 3.1.0
+info:
+  title: Convert Accounts Cdn Images API
+  description: 'Move your app forward with the Convert API. The Convert API allows
+
+    you to manage your Convert Experiences projects using code. The REST API is
+
+    an interface for managing and extending functionality of Convert. For
+
+    example, instead of creating and maintaining projects using the Convert
+
+    Experiences web dashboard you can create an experiment programmatically.
+
+    Additionally, if you prefer to run custom analysis on experiment results you
+
+    can leverage the API to pull data from Convert Experiences into your own
+
+    workflow. If you do not have a Convert account already, sign up for a free
+
+    developer account at https://www.convert.com/api/.
+
+
+    *[Convert API V1](/doc/v1) is still available and documentation can be found [here](/doc/v1) but using it is highly discouraged
+
+    as it will be phased out in the future*
+
+    '
+  version: 2.0.0
+servers:
+- url: https://api.convert.com/api/v2
+  description: Live API server
+- url: https://apidev.convert.com/api/v2
+  description: DEV API server
+- url: http://apidev.convert.com:5000/api/v2
+  description: DEV mocked API server
+tags:
+- name: Cdn Images
+  description: Various endpoints that allow Image Assets loaded through Convert's CDN to be managed
+paths:
+  /accounts/{account_id}/projects/{project_id}/images:
+    post:
+      operationId: getCdnImagesList
+      summary: List uploaded images for a project
+      description: 'Retrieves a list of images that have been uploaded to the Convert CDN for a specific project.
+
+        These images can be used in experience variations. Supports pagination.
+
+        The Knowledge Base article "Image Upload Guidelines for Convert Visual Editor" mentions image upload limits.
+
+        '
+      tags:
+      - Cdn Images
+      parameters:
+      - name: account_id
+        in: path
+        required: true
+        description: ID of the account that owns the retrieved/saved data
+        schema:
+          type: integer
+      - name: project_id
+        in: path
+        required: true
+        description: ID of the project to be retrieved
+        schema:
+          type: integer
+      requestBody:
+        $ref: '#/components/requestBodies/GetCdnImagesListRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/CdnImagesListResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+  /accounts/{account_id}/projects/{project_id}/images/add:
+    post:
+      operationId: uploadCdnImage
+      summary: Upload an image to the project's CDN storage
+      tags:
+      - Cdn Images
+      parameters:
+      - name: account_id
+        in: path
+        required: true
+        description: ID of the account that owns the retrieved/saved data
+        schema:
+          type: integer
+      - name: project_id
+        in: path
+        required: true
+        description: ID of the project to be retrieved
+        schema:
+          type: integer
+      requestBody:
+        $ref: '#/components/requestBodies/UploadImageRequest'
+      responses:
+        '201':
+          $ref: '#/components/responses/ImageCdnResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+  /accounts/{account_id}/projects/{project_id}/images/{image_key}/delete:
+    delete:
+      operationId: deleteCdnImage
+      summary: Delete an image from the project's CDN storage
+      tags:
+      - Cdn Images
+      parameters:
+      - name: account_id
+        in: path
+        required: true
+        description: ID of the account that owns the retrieved/saved data
+        schema:
+          type: integer
+      - name: project_id
+        in: path
+        required: true
+        description: ID of the project to be retrieved
+        schema:
+          type: integer
+      - name: image_key
+        in: path
+        required: true
+        description: The key of the image file to be deleted
+        schema:
+          type: string
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+components:
+  schemas:
+    SuccessData:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+    GetCdnImagesListRequestData:
+      type: object
+      description: Parameters for listing images uploaded to a project's CDN storage. Supports pagination.
+      properties:
+        start_from:
+          description: 'The `key` (filename on CDN) of an image from which to start listing.
+
+            The returned list will include images lexicographically after this key. Used for pagination.
+
+            '
+          type: string
+        max_results:
+          type: integer
+          nullable: true
+          minimum: 0
+          maximum: 100
+          default: 50
+          description: 'The maximum number of images to return in this request. Used for pagination. Default is 50.
+
+            '
+    CdnImage:
+      type: object
+      description: Represents an image file hosted on Convert's CDN, typically used in experience variations.
+      properties:
+        cdn_url:
+          description: The publicly accessible URL of the image on the Content Delivery Network (CDN). This URL can be used directly in `<img>` tags or CSS.
+          type: string
+        key:
+          description: 'The unique key or path identifier for this image within Convert''s CDN storage for the project (e.g., "project_images/my_hero_image.jpg").
+
+            This key is used for managing the image (e.g., deletion) and can be used for pagination (`start_from`).
+
+            '
+          type: string
+    ErrorData:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          oneOf:
+          - type: string
+          - type: array
+            items:
+              type: string
+        fields:
+          oneOf:
+          - type: string
+          - type: array
+            items:
+              type: string
+    CdnImagesListResponseData:
+      type: object
+      description: Response containing a list of images hosted on Convert's CDN for the project.
+      properties:
+        data:
+          $ref: '#/components/schemas/CdnImagesList'
+    CdnImagesList:
+      type: array
+      description: A list of CDN image objects.
+      items:
+        $ref: '#/components/schemas/CdnImage'
+    UploadCdnImageRequestData:
+      type: object
+      description: 'Request body for uploading an image to the project''s CDN storage. Uses multipart/form-data.
+
+        Supported image types: JPEG, PNG, GIF, WEBP, SVG.
+
+        Maximum file size: 2MB. Maximum 50 images per hour per account-project.
+
+        Knowledge Base: "Image Upload Guidelines for Convert Visual Editor".
+
+        '
+      properties:
+        image_name:
+          description: The desired filename (including extension, e.g., "new_banner.png", "logo_variant.svg") for the image as it will be stored on the CDN.
+          type: string
+          maxLength: 200
+        image:
+          description: 'The binary image file content to be uploaded.
+
+            Constraints: Max 2MB; JPEG, PNG, GIF, WEBP, SVG.
+
+            '
+          type: string
+          format: binary
+      required:
+      - image_name
+      - image
+  responses:
+    ImageCdnResponse:
+      description: Details of a single image uploaded to the CDN, including its `cdn_url` and `key`.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CdnImage'
+    ErrorResponse:
+      description: 'Indicates an error occurred while processing the request. The `code` provides an HTTP status code, `message` offers a human-readable explanation or an array of validation errors, and `fields` (if present) specifies which input fields were problematic.
+
+        '
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorData'
+    CdnImagesListResponse:
+      description: A list of images uploaded to the Convert CDN for a project. Each entry provides the `cdn_url` for accessing the image and its `key` (filename).
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CdnImagesListResponseData'
+    SuccessResponse:
+      description: 'A generic success response, typically used for operations that don''t return specific data (like deletions or some updates). The `code` is usually 200, and `message` confirms the successful action.
+
+        '
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SuccessData'
+  requestBodies:
+    UploadImageRequest:
+      content:
+        multipart/form-data:
+          schema:
+            $ref: '#/components/schemas/UploadCdnImageRequestData'
+    GetCdnImagesListRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GetCdnImagesListRequestData'
+      description: Optional parameters to control pagination for the list of CDN images. Use `start_from` with an image key (filename) to list images after that specific one, and `max_results` to limit the number of images returned per request.
+      required: false
+  securitySchemes:
+    requestSigning:
+      type: apiKey
+      x-name-applicationId: Convert-Application-ID
+      x-name-expire: Expire
+      name: Authorization
+      in: header
+      description: 'See **[API Key Authentication](#tag/API-KEY-Authentication)** for more information.
+
+        '
+    secretKey:
+      type: http
+      scheme: bearer
+      description: 'See **[API Key Authentication](#tag/API-KEY-Authentication)** for more information.
+
+        '
+    cookieAuthentication:
+      type: apiKey
+      in: cookie
+      name: sid
+      description: Cookie authentication is used against Convert's own IdentityProvider  or third party identity providers and is described more in the "[Cookie Authentication](#tag/Cookie-Authentication)" section
+x-tagGroups:
+- name: Client Authentication
+  tags:
+  - API KEY Authentication
+  - Cookie Authentication
+  - OAuth Authorization
+- name: Common Parameters
+  tags:
+  - Optional Fields
+  - Expandable Fields
+- name: Requests
+  tags:
+  - User
+  - Accounts
+  - AI content
+  - Collaborators
+  - API Keys
+  - Projects
+  - SDK Keys
+  - Experiences
+  - Experience Variations
+  - Experience Sections
+  - Section Versions
+  - Version Changes
+  - Experiences Reports
+  - Experiences Heatmaps
+  - Goals
+  - Hypotheses
+  - Knowledge Bases
+  - Observations
+  - Locations
+  - Audiences
+  - Domains
+  - Cdn Images
+  - Files
+  - Tags
+  - Features
+  - Visitor Insights
+  - Visitors Data
+  - Visitor Data Placeholders
+  - OAuth

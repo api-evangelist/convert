@@ -1,0 +1,520 @@
+openapi: 3.1.0
+info:
+  title: Convert Accounts Visitors Data API
+  description: 'Move your app forward with the Convert API. The Convert API allows
+
+    you to manage your Convert Experiences projects using code. The REST API is
+
+    an interface for managing and extending functionality of Convert. For
+
+    example, instead of creating and maintaining projects using the Convert
+
+    Experiences web dashboard you can create an experiment programmatically.
+
+    Additionally, if you prefer to run custom analysis on experiment results you
+
+    can leverage the API to pull data from Convert Experiences into your own
+
+    workflow. If you do not have a Convert account already, sign up for a free
+
+    developer account at https://www.convert.com/api/.
+
+
+    *[Convert API V1](/doc/v1) is still available and documentation can be found [here](/doc/v1) but using it is highly discouraged
+
+    as it will be phased out in the future*
+
+    '
+  version: 2.0.0
+servers:
+- url: https://api.convert.com/api/v2
+  description: Live API server
+- url: https://apidev.convert.com/api/v2
+  description: DEV API server
+- url: http://apidev.convert.com:5000/api/v2
+  description: DEV mocked API server
+tags:
+- name: Visitors Data
+paths:
+  /accounts/{account_id}/projects/{project_id}/visitors-data:
+    post:
+      operationId: getVisitorData
+      summary: Get Visitors Data
+      description: 'Get visitors data for a project
+
+        '
+      tags:
+      - Visitors Data
+      parameters:
+      - $ref: '#/components/parameters/AccountId'
+      - $ref: '#/components/parameters/ProjectId'
+      requestBody:
+        $ref: '#/components/requestBodies/GetVisitorDataListRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/VisitorsDataListResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+  /accounts/{account_id}/projects/{project_id}/visitors-data/add:
+    post:
+      operationId: createVisitorDataItem
+      summary: Create Visitor Data Item
+      description: Creates a new visitor data item. Fails if visitor_id already exists.
+      tags:
+      - Visitors Data
+      parameters:
+      - $ref: '#/components/parameters/AccountId'
+      - $ref: '#/components/parameters/ProjectId'
+      requestBody:
+        $ref: '#/components/requestBodies/CreateVisitorDataItemRequest'
+      responses:
+        '201':
+          $ref: '#/components/responses/VisitorDataItemResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+  /accounts/{account_id}/projects/{project_id}/visitors-data/{visitor_id}:
+    get:
+      operationId: getVisitorDataItem
+      summary: Get Visitor Data Item
+      description: Returns a single visitor data item by visitor_id.
+      tags:
+      - Visitors Data
+      parameters:
+      - $ref: '#/components/parameters/AccountId'
+      - $ref: '#/components/parameters/ProjectId'
+      - $ref: '#/components/parameters/VisitorId'
+      responses:
+        '200':
+          $ref: '#/components/responses/VisitorDataItemResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+  /accounts/{account_id}/projects/{project_id}/visitors-data/{visitor_id}/update:
+    post:
+      operationId: updateVisitorDataItem
+      summary: Update Visitor Data Item
+      description: Updates an existing visitor data item by visitor_id.
+      tags:
+      - Visitors Data
+      parameters:
+      - $ref: '#/components/parameters/AccountId'
+      - $ref: '#/components/parameters/ProjectId'
+      - $ref: '#/components/parameters/VisitorId'
+      requestBody:
+        $ref: '#/components/requestBodies/UpdateVisitorDataItemRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/VisitorDataItemResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+  /accounts/{account_id}/projects/{project_id}/visitors-data/{visitor_id}/delete:
+    delete:
+      operationId: deleteVisitorDataItem
+      summary: Delete Visitor Data Item
+      description: Deletes a visitor data item identified by visitor_id.
+      tags:
+      - Visitors Data
+      parameters:
+      - $ref: '#/components/parameters/AccountId'
+      - $ref: '#/components/parameters/ProjectId'
+      - $ref: '#/components/parameters/VisitorId'
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+  /accounts/{account_id}/projects/{project_id}/visitors-data/import:
+    post:
+      operationId: importVisitorsDataCsv
+      summary: Import Visitors Data Csv
+      description: 'Imports visitors data into the project from a CSV file
+
+        '
+      tags:
+      - Visitors Data
+      parameters:
+      - $ref: '#/components/parameters/AccountId'
+      - $ref: '#/components/parameters/ProjectId'
+      requestBody:
+        $ref: '#/components/requestBodies/ImportVisitorsDataCsvRequest'
+      responses:
+        '201':
+          $ref: '#/components/responses/SuccessResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+  /accounts/{account_id}/projects/{project_id}/visitors-data/push:
+    post:
+      operationId: pushVisitorsData
+      summary: Import Visitors Data Push
+      description: 'push endpoint for visitors data import from the third party service
+
+        '
+      tags:
+      - Visitors Data
+      parameters:
+      - $ref: '#/components/parameters/AccountId'
+      - $ref: '#/components/parameters/ProjectId'
+      requestBody:
+        $ref: '#/components/requestBodies/ImportVisitorsDataPushRequest'
+      responses:
+        '201':
+          $ref: '#/components/responses/SuccessResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+components:
+  schemas:
+    ImportVisitorsDataPushRequestData:
+      type: object
+      properties:
+        source:
+          $ref: '#/components/schemas/ImportVisitorsDataPushSource'
+        data:
+          type: array
+          description: The visitor data list of objects. visitor_id is required for each item in the list.
+          items:
+            $ref: '#/components/schemas/ImportVisitorsDataPushItem'
+      required:
+      - source
+      - data
+    Extra:
+      type: object
+      properties:
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+    VisitorDataItem:
+      allOf:
+      - $ref: '#/components/schemas/BaseVisitorData'
+      - type: object
+        properties:
+          source:
+            type: string
+            description: The source of imported visitor data
+            example: csv
+          created_at:
+            type: integer
+            readOnly: true
+            description: Unix timestamp (UTC) indicating when this visitor data was created in the system.
+            example: 1753821567
+    VisitorDataList:
+      type: array
+      description: List of visitor data items
+      items:
+        $ref: '#/components/schemas/VisitorDataItem'
+    BaseVisitorData:
+      type: object
+      properties:
+        visitor_id:
+          type: string
+          description: The visitor ID
+          example: '123456'
+        data:
+          $ref: '#/components/schemas/BaseDataItem'
+    ImportVisitorsDataCsvRequestData:
+      type: object
+      properties:
+        source:
+          type: string
+          readOnly: true
+          description: The source of the visitor data
+          default: csv
+        file:
+          type: string
+          format: binary
+          description: 'The CSV file to import. The file must be in the following format:
+
+
+            **Required columns:** Either `visitor_id` must be present and non-empty.
+
+
+            **Column validation:**
+
+            - `visitor_id`: Must be an string when provided
+
+            - Other columns: Should match placeholder names defined for the project
+
+
+            **Example format:**
+
+            ```csv
+
+            visitor_id,name,email,age,location
+
+            12345,John Doe,john@example.com,30,New York
+
+            67890,Jane Smith,jane@example.com,25,Los Angeles
+
+            54321,Bob Johnson,bob@example.com,35,Chicago
+
+            ```
+
+            '
+      required:
+      - file
+    Pagination:
+      type: object
+      properties:
+        current_page:
+          description: The current page number being displayed from the paginated set.
+          type: integer
+          minimum: 1
+        items_count:
+          description: The total number of items available across all pages for the current filter criteria.
+          type: integer
+          minimum: 0
+        items_per_page:
+          description: The number of items included in the current page of results (matches `results_per_page` from the request).
+          type: integer
+          minimum: 0
+        pages_count:
+          description: The total number of pages available for the current filter criteria and `results_per_page` setting.
+          type: integer
+          minimum: 0
+    PageNumber:
+      type: object
+      properties:
+        page:
+          type: integer
+          minimum: 1
+          description: 'The page number for paginated results. For example, if `results_per_page` is 30, `page: 2` will retrieve items 31-60.
+
+            Defaults to 1 if not specified.
+
+            '
+    VisitorDataListResponseData:
+      type: object
+      description: Response containing list of visitor data and extra list metadata
+      properties:
+        data:
+          $ref: '#/components/schemas/VisitorDataList'
+        extra:
+          $ref: '#/components/schemas/Extra'
+    GetVisitorDataListRequestData:
+      allOf:
+      - $ref: '#/components/schemas/OnlyCount'
+      - $ref: '#/components/schemas/PageNumber'
+      - $ref: '#/components/schemas/ResultsPerPage'
+      - type: object
+        properties:
+          search:
+            type: string
+            maxLength: 200
+            nullable: true
+            description: A search string that would be used to search against visitor data
+    ErrorData:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          oneOf:
+          - type: string
+          - type: array
+            items:
+              type: string
+        fields:
+          oneOf:
+          - type: string
+          - type: array
+            items:
+              type: string
+    ImportVisitorsDataPushItem:
+      $ref: '#/components/schemas/BaseVisitorData'
+    BaseDataItem:
+      type: object
+      description: The visitor data as key-value pairs containing placeholder data
+      additionalProperties: true
+      example:
+        placeholder: testing
+        location: New York
+    OnlyCount:
+      type: object
+      properties:
+        onlyCount:
+          type: boolean
+          description: 'If set to `true` in a list request, the response will only contain the total count of matching items (`extra.pagination.items_count`)
+
+            and will not include the actual item data. Useful for quickly getting totals without fetching full datasets.
+
+            '
+    ResultsPerPage:
+      type: object
+      properties:
+        results_per_page:
+          type: integer
+          nullable: true
+          minimum: 0
+          maximum: 50
+          default: 30
+          description: 'Specifies the maximum number of items to return in a single page of results.
+
+            Used for pagination. Default is 30, maximum is 50.
+
+            '
+    SuccessData:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+    ImportVisitorsDataPushSource:
+      type: string
+      description: The source of the visitor data - can be any string value
+  parameters:
+    VisitorId:
+      name: visitor_id
+      in: path
+      required: true
+      description: The visitor identifier for visitor data operations
+      schema:
+        type: string
+    AccountId:
+      name: account_id
+      in: path
+      required: true
+      description: ID of the account that owns the retrieved/saved data
+      schema:
+        type: integer
+    ProjectId:
+      name: project_id
+      in: path
+      required: true
+      description: ID of the project to be retrieved
+      schema:
+        type: integer
+  responses:
+    SuccessResponse:
+      description: 'A generic success response, typically used for operations that don''t return specific data (like deletions or some updates). The `code` is usually 200, and `message` confirms the successful action.
+
+        '
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SuccessData'
+    ErrorResponse:
+      description: 'Indicates an error occurred while processing the request. The `code` provides an HTTP status code, `message` offers a human-readable explanation or an array of validation errors, and `fields` (if present) specifies which input fields were problematic.
+
+        '
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorData'
+    VisitorDataItemResponse:
+      description: Single visitor data item.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/VisitorDataItem'
+    VisitorsDataListResponse:
+      description: A list of visitors data for a project
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/VisitorDataListResponseData'
+  requestBodies:
+    GetVisitorDataListRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GetVisitorDataListRequestData'
+      description: Optional filters for listing visitor data. You can search by visitor_id, or general search term. Also supports pagination (page, results_per_page) and sorting (sort_by, sort_direction).
+      required: false
+    CreateVisitorDataItemRequest:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              visitor_id:
+                type: string
+              source:
+                type: string
+              data:
+                $ref: '#/components/schemas/BaseDataItem'
+    ImportVisitorsDataPushRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ImportVisitorsDataPushRequestData'
+      description: Import Visitor Data Push Request
+      required: true
+    ImportVisitorsDataCsvRequest:
+      content:
+        multipart/form-data:
+          schema:
+            $ref: '#/components/schemas/ImportVisitorsDataCsvRequestData'
+      description: Import Visitors Data Csv
+      required: true
+    UpdateVisitorDataItemRequest:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                $ref: '#/components/schemas/BaseDataItem'
+  securitySchemes:
+    requestSigning:
+      type: apiKey
+      x-name-applicationId: Convert-Application-ID
+      x-name-expire: Expire
+      name: Authorization
+      in: header
+      description: 'See **[API Key Authentication](#tag/API-KEY-Authentication)** for more information.
+
+        '
+    secretKey:
+      type: http
+      scheme: bearer
+      description: 'See **[API Key Authentication](#tag/API-KEY-Authentication)** for more information.
+
+        '
+    cookieAuthentication:
+      type: apiKey
+      in: cookie
+      name: sid
+      description: Cookie authentication is used against Convert's own IdentityProvider  or third party identity providers and is described more in the "[Cookie Authentication](#tag/Cookie-Authentication)" section
+x-tagGroups:
+- name: Client Authentication
+  tags:
+  - API KEY Authentication
+  - Cookie Authentication
+  - OAuth Authorization
+- name: Common Parameters
+  tags:
+  - Optional Fields
+  - Expandable Fields
+- name: Requests
+  tags:
+  - User
+  - Accounts
+  - AI content
+  - Collaborators
+  - API Keys
+  - Projects
+  - SDK Keys
+  - Experiences
+  - Experience Variations
+  - Experience Sections
+  - Section Versions
+  - Version Changes
+  - Experiences Reports
+  - Experiences Heatmaps
+  - Goals
+  - Hypotheses
+  - Knowledge Bases
+  - Observations
+  - Locations
+  - Audiences
+  - Domains
+  - Cdn Images
+  - Files
+  - Tags
+  - Features
+  - Visitor Insights
+  - Visitors Data
+  - Visitor Data Placeholders
+  - OAuth

@@ -1,0 +1,341 @@
+openapi: 3.1.0
+info:
+  title: Convert Accounts API Keys API
+  description: 'Move your app forward with the Convert API. The Convert API allows
+
+    you to manage your Convert Experiences projects using code. The REST API is
+
+    an interface for managing and extending functionality of Convert. For
+
+    example, instead of creating and maintaining projects using the Convert
+
+    Experiences web dashboard you can create an experiment programmatically.
+
+    Additionally, if you prefer to run custom analysis on experiment results you
+
+    can leverage the API to pull data from Convert Experiences into your own
+
+    workflow. If you do not have a Convert account already, sign up for a free
+
+    developer account at https://www.convert.com/api/.
+
+
+    *[Convert API V1](/doc/v1) is still available and documentation can be found [here](/doc/v1) but using it is highly discouraged
+
+    as it will be phased out in the future*
+
+    '
+  version: 2.0.0
+servers:
+- url: https://api.convert.com/api/v2
+  description: Live API server
+- url: https://apidev.convert.com/api/v2
+  description: DEV API server
+- url: http://apidev.convert.com:5000/api/v2
+  description: DEV mocked API server
+tags:
+- name: API Keys
+  description: 'API Keys are used to authenticate requests from Server side applications that access this API
+
+    '
+paths:
+  /accounts/{account_id}/api-keys:
+    get:
+      operationId: getApiKeysList
+      summary: List API keys for an account
+      description: 'Retrieves a list of all API keys configured for the specified account.
+
+        API keys are used for server-to-server authentication, allowing applications to interact with the Convert API programmatically.
+
+        Each key can be scoped to specific projects.
+
+        '
+      tags:
+      - API Keys
+      parameters:
+      - name: account_id
+        in: path
+        required: true
+        description: ID of the account that owns the retrieved/saved data
+        schema:
+          type: integer
+      responses:
+        '200':
+          $ref: '#/components/responses/ApiKeysListResponse'
+  /accounts/{account_id}/api-keys/add:
+    post:
+      operationId: createApiKey
+      summary: Create a new API key for an account
+      description: 'Generates a new API key and secret for the specified account.
+
+        The key can be named for easier identification and can be restricted to a list of project IDs.
+
+        If no projects are specified, the key grants access to all projects in the account.
+
+        The API secret is only shown at the time of creation and should be stored securely.
+
+        '
+      tags:
+      - API Keys
+      parameters:
+      - name: account_id
+        in: path
+        required: true
+        description: ID of the account that owns the retrieved/saved data
+        schema:
+          type: integer
+      requestBody:
+        $ref: '#/components/requestBodies/CreateApiKeyRequest'
+      responses:
+        '201':
+          $ref: '#/components/responses/ApiKeyResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+  /accounts/{account_id}/api-keys/{key_id}/delete:
+    delete:
+      operationId: deleteApiKey
+      summary: Delete an API key
+      description: 'Permanently revokes an API key, identified by its `key_id`.
+
+        Once deleted, the key can no longer be used to authenticate API requests.
+
+        '
+      tags:
+      - API Keys
+      parameters:
+      - name: account_id
+        in: path
+        required: true
+        description: ID of the account that owns the retrieved/saved data
+        schema:
+          type: integer
+      - name: key_id
+        in: path
+        required: true
+        description: ID of the API key to be deleted
+        schema:
+          type: string
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+components:
+  schemas:
+    SuccessData:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+    AccessRoleNamesNoOwner:
+      type: string
+      description: Access roles that can be assigned to collaborators or API keys (excludes the 'owner' role, which is typically unique to the account creator).
+      enum:
+      - admin
+      - account_manager
+      - browse
+      - edit
+      - publish
+      - review
+    ApiKeysListResponse:
+      type: object
+      description: Response containing a list of API keys defined for a specific account, used for server-to-server authentication.
+      properties:
+        data:
+          $ref: '#/components/schemas/ApiKeysList'
+    ApiKeyAuthTypes:
+      type: string
+      description: 'The authentication type for this API key:
+
+        - requestSigning: Each request must be signed with the key and a hash sent in the header (most secure)
+
+        - secretKey: A simpler authentication method using the secret key as a Bearer token in the Authorization header (good security)
+
+        '
+      enum:
+      - requestSigning
+      - secretKey
+    ErrorData:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          oneOf:
+          - type: string
+          - type: array
+            items:
+              type: string
+        fields:
+          oneOf:
+          - type: string
+          - type: array
+            items:
+              type: string
+    ApiKey:
+      type: object
+      description: Defines an API key used for authenticating server-side requests to the Convert API.
+      properties:
+        name:
+          type: string
+          description: A user-defined, friendly name for the API key to help identify its purpose or the application using it (e.g., "Reporting Dashboard Integration", "Nightly Data Sync Script").
+          maxLength: 100
+        auth_type:
+          $ref: '#/components/schemas/ApiKeyAuthTypes'
+        projects:
+          description: 'An optional list of project IDs that this API key is authorized to access.
+
+            If null or an empty list, the key typically grants access to all projects within the account it belongs to.
+
+            This allows for granular control over API key permissions.
+
+            '
+          nullable: true
+          type: array
+          items:
+            type: number
+        key_id:
+          type: string
+          description: The public identifier part of the API key pair (ApplicationID). This is sent in the `Convert-Application-ID` header.
+          readOnly: true
+        key_secret:
+          description: 'The secret part of the API key pair (ApplicationSecretKey). This is used to sign API requests and is critical for authentication.
+
+            **Important:** The full `key_secret` is only returned at the time of API key creation. For security reasons, subsequent retrievals of this API key will show this field masked (e.g., with asterisks or partially hidden). Store the secret securely upon creation.
+
+            '
+          type: string
+          readOnly: true
+        role:
+          $ref: '#/components/schemas/ApiKeyRole'
+    ApiKeysList:
+      type: array
+      description: A list of API key objects.
+      items:
+        $ref: '#/components/schemas/ApiKey'
+    CreateApiKeyRequestData:
+      allOf:
+      - $ref: '#/components/schemas/ApiKey'
+      - type: object
+        properties:
+          auth_type:
+            type: string
+            default: requestSigning
+          role:
+            $ref: '#/components/schemas/ApiKeyRole'
+        required:
+        - name
+    ApiKeyRole:
+      allOf:
+      - $ref: '#/components/schemas/AccessRoleNamesNoOwner'
+      description: 'The role assigned to this API key, which determines its permissions.
+
+        Must have equal or lower permissions than the creator''s role when creating.
+
+        If not specified, inherits the creator''s role.For legacy keys, a default role of account_manager is returned.
+
+        '
+      example: browse
+  requestBodies:
+    CreateApiKeyRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CreateApiKeyRequestData'
+      description: Contains the `name` for the new API key for easy identification, and an optional list of `projects` (by ID) to which this key will grant access. If `projects` is omitted, the key typically grants access to all projects in the account.
+      required: true
+  responses:
+    ErrorResponse:
+      description: 'Indicates an error occurred while processing the request. The `code` provides an HTTP status code, `message` offers a human-readable explanation or an array of validation errors, and `fields` (if present) specifies which input fields were problematic.
+
+        '
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorData'
+    ApiKeyResponse:
+      description: Details of a single API key, including its name, ID, associated projects, and the API secret (only shown in full upon creation).
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiKey'
+    ApiKeysListResponse:
+      description: A list of API keys configured for the account. Each entry includes the key's name, its ID (part of the key itself), and the projects it's scoped to. The secret is masked for existing keys.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiKeysListResponse'
+    SuccessResponse:
+      description: 'A generic success response, typically used for operations that don''t return specific data (like deletions or some updates). The `code` is usually 200, and `message` confirms the successful action.
+
+        '
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SuccessData'
+  securitySchemes:
+    requestSigning:
+      type: apiKey
+      x-name-applicationId: Convert-Application-ID
+      x-name-expire: Expire
+      name: Authorization
+      in: header
+      description: 'See **[API Key Authentication](#tag/API-KEY-Authentication)** for more information.
+
+        '
+    secretKey:
+      type: http
+      scheme: bearer
+      description: 'See **[API Key Authentication](#tag/API-KEY-Authentication)** for more information.
+
+        '
+    cookieAuthentication:
+      type: apiKey
+      in: cookie
+      name: sid
+      description: Cookie authentication is used against Convert's own IdentityProvider  or third party identity providers and is described more in the "[Cookie Authentication](#tag/Cookie-Authentication)" section
+x-tagGroups:
+- name: Client Authentication
+  tags:
+  - API KEY Authentication
+  - Cookie Authentication
+  - OAuth Authorization
+- name: Common Parameters
+  tags:
+  - Optional Fields
+  - Expandable Fields
+- name: Requests
+  tags:
+  - User
+  - Accounts
+  - AI content
+  - Collaborators
+  - API Keys
+  - Projects
+  - SDK Keys
+  - Experiences
+  - Experience Variations
+  - Experience Sections
+  - Section Versions
+  - Version Changes
+  - Experiences Reports
+  - Experiences Heatmaps
+  - Goals
+  - Hypotheses
+  - Knowledge Bases
+  - Observations
+  - Locations
+  - Audiences
+  - Domains
+  - Cdn Images
+  - Files
+  - Tags
+  - Features
+  - Visitor Insights
+  - Visitors Data
+  - Visitor Data Placeholders
+  - OAuth

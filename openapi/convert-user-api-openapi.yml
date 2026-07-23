@@ -1,0 +1,3048 @@
+openapi: 3.1.0
+info:
+  title: Convert Accounts User API
+  description: 'Move your app forward with the Convert API. The Convert API allows
+
+    you to manage your Convert Experiences projects using code. The REST API is
+
+    an interface for managing and extending functionality of Convert. For
+
+    example, instead of creating and maintaining projects using the Convert
+
+    Experiences web dashboard you can create an experiment programmatically.
+
+    Additionally, if you prefer to run custom analysis on experiment results you
+
+    can leverage the API to pull data from Convert Experiences into your own
+
+    workflow. If you do not have a Convert account already, sign up for a free
+
+    developer account at https://www.convert.com/api/.
+
+
+    *[Convert API V1](/doc/v1) is still available and documentation can be found [here](/doc/v1) but using it is highly discouraged
+
+    as it will be phased out in the future*
+
+    '
+  version: 2.0.0
+servers:
+- url: https://api.convert.com/api/v2
+  description: Live API server
+- url: https://apidev.convert.com/api/v2
+  description: DEV API server
+- url: http://apidev.convert.com:5000/api/v2
+  description: DEV mocked API server
+tags:
+- name: User
+  description: Authenticated user related endpoints
+paths:
+  /access-roles:
+    get:
+      operationId: getAccessRoles
+      summary: List available user access roles
+      description: 'Retrieves a list of all predefined access roles within the Convert system (e.g., Owner, Admin, Editor, Reviewer, Browse).
+
+        Each role defines a set of permissions that dictate what actions a user can perform on accounts and projects.
+
+        This is useful for understanding permission levels when managing collaborators.
+
+        '
+      tags:
+      - User
+      responses:
+        '200':
+          $ref: '#/components/responses/AccessRolesListResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+  /user:
+    get:
+      operationId: getUserData
+      summary: Get current authenticated user's details
+      description: 'Retrieves the profile data, preferences, and settings for the currently authenticated user (via cookie).
+
+        This includes information like email, name, and UI preferences.
+
+        Note: This endpoint is for cookie-based authentication. For API key authentication, user context is tied to the key itself.
+
+        '
+      tags:
+      - User
+      responses:
+        '200':
+          $ref: '#/components/responses/UserDataResponse'
+    put:
+      operationId: updateUserProfileData
+      summary: Update current user's profile
+      description: 'Allows the authenticated user (via cookie) to update their profile information, such as name, email, or password.
+
+        Also used to manage Multi-Factor Authentication (MFA) settings.
+
+        User preferences (like UI display settings) are managed via a separate endpoint.
+
+        '
+      tags:
+      - User
+      requestBody:
+        $ref: '#/components/requestBodies/UserUpdateProfileDataRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/UserDataResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+  /user/confirm-email:
+    post:
+      operationId: confirmEmail
+      summary: Confirm user email address change
+      description: 'Finalizes an email address change request by submitting the confirmation code sent to the new email address.
+
+        Used in cookie-based authentication flows.
+
+        '
+      tags:
+      - User
+      requestBody:
+        $ref: '#/components/requestBodies/ConfirmEmailRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/UserDataResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+  /user/preferences:
+    post:
+      operationId: updateUserPreferences
+      summary: Update user's UI preferences
+      description: 'Allows the authenticated user (via cookie) to update their preferences for the Convert application UI,
+
+        such as default column visibility in tables or editor settings. These settings do not affect experiment behavior.
+
+        '
+      tags:
+      - User
+      requestBody:
+        $ref: '#/components/requestBodies/UserUpdatePreferencesRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/UserDataResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+  /user/mfa-secret:
+    post:
+      operationId: generateMfaSecret
+      summary: Generate MFA secret for authenticator app
+      description: 'Generates a new Multi-Factor Authentication (MFA) secret for the authenticated user (cookie-based).
+
+        This secret is used to set up an authenticator app (like Google Authenticator) for generating time-based one-time passwords (TOTPs).
+
+        '
+      tags:
+      - User
+      responses:
+        '200':
+          $ref: '#/components/responses/UserMfaSecretResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+  /user/accept-demo-project:
+    post:
+      operationId: acceptDemoProject
+      summary: Accept and create a demo project for the user
+      description: 'Allows a user to accept the creation of a pre-configured demo project in their account.
+
+        This is typically used for onboarding or trial experiences to showcase Convert''s features.
+
+        '
+      tags:
+      - User
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+  /user/sessions:
+    post:
+      operationId: listUserSessions
+      summary: List authorized sessions for the current user
+      description: 'Cookie-authenticated endpoint that returns all active authorized sessions for the current user,
+
+        including the current cookie-based session and any OAuth bearer-token sessions the user has approved.
+
+        '
+      tags:
+      - User
+      responses:
+        '200':
+          $ref: '#/components/responses/UserSessionsListResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+  /user/sessions/revoke:
+    post:
+      operationId: revokeUserSession
+      summary: Revoke User session
+      description: 'Cookie-authenticated endpoint that revokes a single session (cookie-based or OAuth) for the current user, identified by its sid.
+
+        '
+      tags:
+      - User
+      requestBody:
+        $ref: '#/components/requestBodies/UserSessionRevokeRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/UserSessionRevokeResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+  /user/sessions/revoke-all:
+    post:
+      operationId: revokeAllUserSessions
+      summary: Revoke all User sessions
+      description: 'Cookie-authenticated endpoint that revokes every active session (cookie-based and OAuth) for the current user.
+
+        '
+      tags:
+      - User
+      responses:
+        '200':
+          $ref: '#/components/responses/UserSessionRevokeAllResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+components:
+  schemas:
+    ProjectLiveDataPersistentOptions:
+      allOf:
+      - $ref: '#/components/schemas/ProjectLiveFilteringOptions'
+      - $ref: '#/components/schemas/LiveDataAutoRefreshSettings'
+      - type: object
+        properties:
+          columns:
+            type: array
+            nullable: true
+            description: 'Sorted list of columns to be displayed in the UI
+
+              '
+            items:
+              allOf:
+              - $ref: '#/components/schemas/ColumnPreference'
+              - type: object
+                properties:
+                  name:
+                    $ref: '#/components/schemas/ProjectLiveDataColumnNames'
+    AccountHistoryColumnNames:
+      type: string
+      description: Available columns for the account change history log in the UI.
+      enum:
+      - timestamp
+      - project_id
+      - event
+      - object
+      - method
+      - more_info
+    ReportingSegmentsCountry:
+      type: string
+      description: 'The two-letter ISO 3166-1 alpha-2 country code of the visitor, determined by IP geolocation.
+
+        Used for segmenting reports by country to analyze geographical performance.
+
+        Knowledge Base: "How Do I Target by Geographic Location Like City, Region or Country?".
+
+        '
+      maxLength: 2
+      minLength: 2
+    FeaturesListPersistentOptions:
+      allOf:
+      - $ref: '#/components/schemas/FeaturesListFilteringOptions'
+      - type: object
+        properties:
+          columns:
+            type: array
+            nullable: true
+            description: 'Sorted list of columns to be displayed in the UI
+
+              '
+            items:
+              allOf:
+              - $ref: '#/components/schemas/ColumnPreference'
+              - type: object
+                properties:
+                  name:
+                    $ref: '#/components/schemas/FeaturesListColumnNames'
+    CommonBasicPermissions:
+      type: object
+      properties:
+        add:
+          type: boolean
+        edit:
+          type: boolean
+        view:
+          type: boolean
+        delete:
+          type: boolean
+    ExperienceHistoryObjects:
+      type: string
+      enum:
+      - report
+      - variation
+      - change
+    LocationStatuses:
+      type: string
+      description: 'The current status of a location:
+
+        - `active`: The location is active and can be used for targeting experiences.
+
+        - `archived`: The location is archived and no longer available for new experiences, but its definition is preserved. Archived locations can often be cloned.
+
+        Knowledge Base: "Benefits of Archiving Unused Goals, Locations, and Audiences."
+
+        '
+      enum:
+      - active
+      - archived
+      default: active
+    CompassColumnsNames:
+      type: string
+      description: Available tabs for the compass list in the UI.
+      enum:
+      - observations
+      - hypotheses
+      - knowledge_base
+    TrackingScriptReleaseTypes:
+      type: string
+      description: 'Defines the update strategy for the project''s Convert tracking script:
+
+        - `manual`: (Default) The project remains on its current script version. Updates to newer versions must be initiated manually by an administrator. Allows for controlled rollouts and rollbacks to the immediate previous version.
+
+        - `latest`: The project''s tracking script will automatically update to the newest stable version as soon as Convert releases it. Ensures access to the latest features and fixes with minimal intervention.
+
+        - `scheduled`: Updates to the latest script version are automatically applied at a predefined day and time of the week, allowing updates during off-peak hours.
+
+        KB: "Tracking Script Version Management".
+
+        '
+      enum:
+      - manual
+      - latest
+      - scheduled
+    SignalSessionsListPersistentOptions:
+      allOf:
+      - $ref: '#/components/schemas/SignalSessionsListFilteringOptions'
+      - type: object
+        properties:
+          columns:
+            type: array
+            nullable: true
+            description: 'Sorted list of columns to be displayed in the UI
+
+              '
+            items:
+              allOf:
+              - $ref: '#/components/schemas/ColumnPreference'
+              - type: object
+                properties:
+                  name:
+                    $ref: '#/components/schemas/SignalSessionsListColumnNames'
+    LiveDataEventTypes:
+      type: string
+      enum:
+      - view_experience
+      - conversion
+      - transaction
+    ReportingSegmentsSource:
+      type: string
+      description: 'The traffic source that brought the visitor to the site (e.g., ''google'', ''facebook.com'', ''direct'', ''newsletter'').
+
+        Derived from `utm_source` URL parameters or the HTTP referrer. Enables report segmentation by traffic source.
+
+        Knowledge Base: "How Do You Fill Medium, Keyword and Source Name?".
+
+        '
+      enum:
+      - campaign
+      - search
+      - referral
+      - direct
+      - ai_tool
+    KnowledgeBasesListFilteringOptions:
+      allOf:
+      - $ref: '#/components/schemas/ResultsPerPage'
+      - $ref: '#/components/schemas/SortDirection'
+      - type: object
+        properties:
+          sort_by:
+            type: string
+            nullable: true
+            default: name
+            description: 'A value to sort knowledge bases by specific field(s)
+
+
+              Defaults to **name** if not provided
+
+              '
+            enum:
+            - name
+            - updated_at
+            - status
+          search:
+            type: string
+            maxLength: 200
+            nullable: true
+            description: A search string that would be used to search against knowledge bases name
+          status:
+            type: array
+            nullable: true
+            description: The status of the knowledge bases you'd like to be returned; one of the below can be provided
+            items:
+              $ref: '#/components/schemas/KnowledgeBaseStatuses'
+          tags:
+            type: array
+            nullable: true
+            description: The list of tag ID's used to filter the list of returned knowledge bases
+            items:
+              type: integer
+          only:
+            description: 'Only retrieve knowledge bases with the given ids.
+
+              '
+            type: array
+            nullable: true
+            items:
+              type: integer
+            maxItems: 100
+          except:
+            description: 'Except knowledge bases with the given ids.
+
+              '
+            type: array
+            items:
+              type: integer
+            maxItems: 100
+    HypothesesListPersistentOptions:
+      allOf:
+      - $ref: '#/components/schemas/HypothesesListFilteringOptions'
+      - type: object
+        properties:
+          columns:
+            type: array
+            nullable: true
+            description: 'Sorted list of columns to be displayed in the UI
+
+              '
+            items:
+              allOf:
+              - $ref: '#/components/schemas/ColumnPreference'
+              - type: object
+                properties:
+                  name:
+                    $ref: '#/components/schemas/HypothesesListColumnNames'
+    ProjectsListColumnNames:
+      type: string
+      description: Available columns for the projects list in the UI.
+      enum:
+      - id
+      - project_name
+      - project_type
+      - active_tests
+      - used_visitors
+      - status
+    ReportingSegmentsFilters:
+      type: object
+      description: 'A collection of filters used to segment experience report data based on various visitor attributes and traffic sources.
+
+        Applying these filters allows for deeper analysis of how different user groups interact with experience variations.
+
+        Knowledge Base: "Using Basic and Advanced Post segmentation".
+
+        '
+      properties:
+        devices:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReportingSegmentsDeviceCategories'
+          nullable: true
+        browsers:
+          description: Filter report data for visitors using one or more specified web browsers.
+          type: array
+          items:
+            $ref: '#/components/schemas/ReportingSegmentsBrowser'
+          nullable: true
+        countries:
+          description: Filter report data for visitors from one or more specified countries (using 2-letter ISO codes).
+          type: array
+          items:
+            $ref: '#/components/schemas/ReportingSegmentsCountry'
+          nullable: true
+        visitor_types:
+          description: Filter report data for 'new' or 'returning' visitors.
+          type: array
+          items:
+            $ref: '#/components/schemas/ReportingSegmentsVisitorType'
+          nullable: true
+        campaigns:
+          description: Filter report data for visitors attributed to one or more specified marketing campaign names (from `utm_campaign`).
+          type: array
+          items:
+            $ref: '#/components/schemas/ReportingSegmentsCampaign'
+          nullable: true
+        custom_segments:
+          description: Filter report data for visitors belonging to one or more specified custom Convert Audience segments (by segment ID).
+          type: array
+          items:
+            $ref: '#/components/schemas/ReportingSegmentsCustomSegment'
+          nullable: true
+        sources:
+          description: Filter report data for visitors from one or more specified traffic sources (e.g., 'direct', 'search', 'referral').
+          type: array
+          items:
+            $ref: '#/components/schemas/ReportingSegmentsSource'
+          nullable: true
+    UserSessionEntry:
+      type: object
+      properties:
+        sid:
+          description: Session identifier.
+          type: string
+        authorized_type:
+          description: Display name of type of how user was authorized.
+          type: string
+          enum:
+          - session_cookie
+          - oauth
+        client:
+          description: 'Name of the client that owns this session.
+
+            '
+          type: string
+        last_used_at:
+          description: Last authentication time (unix timestamp).
+          type: integer
+        expires_at:
+          description: Absolute session expiration (unix timestamp).
+          type: integer
+        created_at:
+          description: Session creation time (unix timestamp).
+          type: integer
+    ConfirmEmailRequestData:
+      type: object
+      description: Contains the confirmation code required to verify a new email address for a user account.
+      required:
+      - code
+      properties:
+        code:
+          type: string
+          description: The unique verification code sent to the user's new email address. Submitting this code confirms the email change.
+    ProjectsListPersistentOptions:
+      allOf:
+      - $ref: '#/components/schemas/ProjectsListFilteringOptions'
+      - type: object
+        properties:
+          columns:
+            type: array
+            nullable: true
+            description: 'Sorted list of columns to be displayed in the UI
+
+              '
+            items:
+              allOf:
+              - $ref: '#/components/schemas/ColumnPreference'
+              - type: object
+                properties:
+                  name:
+                    $ref: '#/components/schemas/ProjectsListColumnNames'
+    ExperienceLiveDataPersistentOptions:
+      allOf:
+      - $ref: '#/components/schemas/ExperienceLiveDataFilteringOptions'
+      - $ref: '#/components/schemas/LiveDataAutoRefreshSettings'
+      - type: object
+        properties:
+          columns:
+            type: array
+            nullable: true
+            description: 'Sorted list of columns to be displayed in the UI
+
+              '
+            items:
+              allOf:
+              - $ref: '#/components/schemas/ColumnPreference'
+              - type: object
+                properties:
+                  name:
+                    $ref: '#/components/schemas/ExperienceLiveDataColumnNames'
+    AudiencesListFilteringOptions:
+      allOf:
+      - $ref: '#/components/schemas/ResultsPerPage'
+      - $ref: '#/components/schemas/SortDirection'
+      - type: object
+        properties:
+          status:
+            type: array
+            nullable: true
+            description: List of audience statuses to be returned
+            items:
+              $ref: '#/components/schemas/AudienceStatuses'
+          search:
+            type: string
+            maxLength: 200
+            nullable: true
+            description: a search string that would be used to search against audience's name or description
+          is_default:
+            type: boolean
+            nullable: true
+            description: 'A flag to filter audiences by default status
+
+
+              If set to true, only default audiences will be returned, if not set, all audiences will be returned
+
+              '
+          sort_by:
+            type: string
+            nullable: true
+            default: id
+            description: 'A value to sort audiences by specific field
+
+
+              Defaults to **id** if not provided
+
+              '
+            enum:
+            - id
+            - type
+            - name
+            - usage
+            - status
+            - key
+          type:
+            allOf:
+            - $ref: '#/components/schemas/AudienceTypes'
+            nullable: true
+          experiences:
+            type: array
+            nullable: true
+            description: List of experiences to be returned
+            items:
+              type: integer
+            maxItems: 100
+          usage:
+            type: string
+            nullable: true
+            description: It indicates wherever retrieved audiences are used or not inside experiences
+            enum:
+            - used
+            - not_used
+    ErrorData:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          oneOf:
+          - type: string
+          - type: array
+            items:
+              type: string
+        fields:
+          oneOf:
+          - type: string
+          - type: array
+            items:
+              type: string
+    GoalsListPersistentOptions:
+      allOf:
+      - $ref: '#/components/schemas/GoalsListFilteringOptions'
+      - type: object
+        properties:
+          columns:
+            type: array
+            nullable: true
+            description: 'Sorted list of columns to be displayed in the UI
+
+              '
+            items:
+              allOf:
+              - $ref: '#/components/schemas/ColumnPreference'
+              - type: object
+                properties:
+                  name:
+                    $ref: '#/components/schemas/GoalsListColumnNames'
+    LiveDataAutoRefreshSettings:
+      type: object
+      properties:
+        auto_refresh:
+          type: object
+          nullable: true
+          properties:
+            speed:
+              type: integer
+              minimum: 0
+              maximum: 5
+            enabled:
+              type: boolean
+    mfaDisableRequest:
+      type: object
+      description: Request to disable Multi-Factor Authentication (MFA) for the user.
+      properties:
+        type:
+          type: string
+          enum:
+          - disable
+        password:
+          description: The user's current password, required to authorize disabling MFA.
+          type: string
+    LocationsListColumnNames:
+      type: string
+      description: Available columns for the locations list in the UI.
+      enum:
+      - name
+      - id
+      - usage
+      - status
+      - key
+    RolePermissions:
+      type: object
+      properties:
+        account:
+          type: object
+          properties:
+            manage_addons:
+              type: boolean
+            manage_sso:
+              type: boolean
+            manage_api_keys:
+              type: boolean
+            manage_blocked_ips:
+              type: boolean
+            edit:
+              type: boolean
+        billing:
+          type: object
+          properties:
+            managePlan:
+              type: boolean
+            manage_billing:
+              type: boolean
+            manage_payment:
+              type: boolean
+            request_payment:
+              type: boolean
+        feature:
+          $ref: '#/components/schemas/CommonBasicPermissions'
+        livedata:
+          type: object
+          properties:
+            view_account_livedata:
+              type: boolean
+            view_project_livedata:
+              type: boolean
+            view_experience_livedata:
+              type: boolean
+        history:
+          type: object
+          properties:
+            view_account_history:
+              type: boolean
+            view_project_history:
+              type: boolean
+            view_experience_history:
+              type: boolean
+        collaborator:
+          type: object
+          properties:
+            view:
+              type: boolean
+            crud:
+              type: boolean
+        project:
+          allOf:
+          - $ref: '#/components/schemas/CommonBasicPermissions'
+          - type: object
+            properties:
+              import:
+                type: boolean
+              export:
+                type: boolean
+        domain:
+          $ref: '#/components/schemas/CommonBasicPermissions'
+        tag:
+          $ref: '#/components/schemas/CommonBasicPermissions'
+        goal:
+          allOf:
+          - $ref: '#/components/schemas/CommonBasicPermissions'
+          - type: object
+            properties:
+              clone:
+                type: boolean
+        experience:
+          allOf:
+          - $ref: '#/components/schemas/CommonBasicPermissions'
+          - type: object
+            properties:
+              edit_running:
+                type: boolean
+              clone:
+                type: boolean
+              pauseplay:
+                type: boolean
+        location:
+          allOf:
+          - $ref: '#/components/schemas/CommonBasicPermissions'
+          - type: object
+            properties:
+              edit_running:
+                type: boolean
+        variation:
+          type: object
+          properties:
+            pauseplay:
+              type: boolean
+            changebaseline:
+              type: boolean
+        audience:
+          allOf:
+          - $ref: '#/components/schemas/CommonBasicPermissions'
+          - type: object
+            properties:
+              edit_running:
+                type: object
+        report:
+          type: object
+          properties:
+            view:
+              type: boolean
+            fulledit:
+              type: boolean
+            nochangeedit:
+              type: boolean
+        hypothesis:
+          allOf:
+          - $ref: '#/components/schemas/CommonBasicPermissions'
+          - type: object
+            properties:
+              convert:
+                type: boolean
+        knowledge_base:
+          $ref: '#/components/schemas/CommonBasicPermissions'
+        observation:
+          $ref: '#/components/schemas/CommonBasicPermissions'
+    AccountExperiencesListFilteringOptions:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/ResultsPerPage'
+      - $ref: '#/components/schemas/SortDirection'
+      - type: object
+        properties:
+          projects:
+            type: array
+            nullable: true
+            description: 'Project IDs list to be used to filter experiences
+
+              '
+            items:
+              type: integer
+          sort_by:
+            type: string
+            nullable: true
+            default: id
+            description: 'A value used to sort experiences by specific field
+
+
+              Defaults to **id** if not provided
+
+              '
+            enum:
+            - id
+            - conversions
+            - improvement
+            - name
+            - start_time
+            - end_time
+            - status
+            - project_id
+            - primary_goal
+          search:
+            type: string
+            nullable: true
+            description: A search string that would be used to search against Experience's name and description
+          type:
+            type: array
+            nullable: true
+            description: The type of the experiences to be returned; either of the below can be provided
+            items:
+              $ref: '#/components/schemas/ExperienceTypes'
+    UserSessionRevokeAllResponseData:
+      type: object
+      required:
+      - code
+      - message
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
+    ExperienceReportSecondViewPersistentOptions:
+      allOf:
+      - type: object
+        properties:
+          columns:
+            type: array
+            nullable: true
+            description: 'Sorted list of columns to be displayed in the UI
+
+              '
+            items:
+              allOf:
+              - $ref: '#/components/schemas/ColumnPreference'
+              - type: object
+                properties:
+                  name:
+                    $ref: '#/components/schemas/ExperienceReportSecondViewColumnNames'
+    ExperienceHistoryColumnNames:
+      type: string
+      description: Available columns for the experience change history log in the UI.
+      enum:
+      - timestamp
+      - event
+      - object
+      - object_id
+      - method
+      - more_info
+    HypothesisStatuses:
+      description: 'The current stage or outcome of a hypothesis in its lifecycle:
+
+        - `draft`: The hypothesis is still being formulated or refined; not yet ready for testing.
+
+        - `completed`: The hypothesis definition is finalized and it''s ready to be linked to an experiment or tested.
+
+        - `applied`: The hypothesis is currently being tested in one or more active experiences.
+
+        - `proven`: Testing has concluded, and the hypothesis was validated (i.e., the proposed change led to a positive, statistically significant outcome). Can be moved to Knowledge Base.
+
+        - `disproven`: Testing has concluded, and the hypothesis was invalidated (i.e., the proposed change did not lead to the expected positive outcome or had a negative impact). Can be moved to Knowledge Base.
+
+        - `archived`: The hypothesis is no longer active or relevant for current testing but is kept for historical records.
+
+        KB: "Hypotheses (Compass)" - "Status of Hypothesis".
+
+        '
+      type: string
+      enum:
+      - applied
+      - archived
+      - completed
+      - draft
+      - proven
+      - disproven
+    ObservationsListColumnNames:
+      type: string
+      description: Available columns for the observations list in the UI.
+      enum:
+      - name
+      - created_by
+      - created_at
+      - updated_at
+      - status
+    LocationsListFilteringOptions:
+      allOf:
+      - $ref: '#/components/schemas/ResultsPerPage'
+      - $ref: '#/components/schemas/SortDirection'
+      - type: object
+        properties:
+          status:
+            type: array
+            nullable: true
+            description: List of Location statuses to be returned
+            items:
+              $ref: '#/components/schemas/LocationStatuses'
+          is_default:
+            type: boolean
+            nullable: true
+            description: 'It indicates wherever retrieved locations are default or not
+
+
+              If not provided, it will return all locations. If not provided, it will return all locations
+
+              '
+          search:
+            type: string
+            maxLength: 200
+            nullable: true
+            description: a search string that would be used to search against Location's name or description
+          sort_by:
+            type: string
+            nullable: true
+            default: id
+            description: 'A value to sort Location by specific field
+
+
+              Defaults to **id** if not provided
+
+              '
+            enum:
+            - id
+            - name
+            - usage
+            - status
+            - key
+          usage:
+            type: string
+            nullable: true
+            description: It indicates wherever retrieved locations are used or not inside experiences
+            enum:
+            - used
+            - not_used
+    ColumnPreference:
+      type: object
+      description: Defines user preference for a single column in a UI list view (name and visibility).
+      properties:
+        visible:
+          type: boolean
+          description: If true, this column is visible in the user's list view. If false, it's hidden.
+        name:
+          type: string
+          description: The machine-readable name or key of the column (e.g., "id", "project_name", "status").
+    ObservationStatuses:
+      description: 'The current status of an observation in its lifecycle:
+
+        - `active`: The observation is current, under consideration, or being actively discussed. This is the default for new observations.
+
+        - `archived`: The observation has been reviewed and is no longer actively being pursued (e.g., deemed not actionable, superseded, or already addressed). It''s kept for historical records.
+
+        Knowledge Base: "Observations Feature Guide" - "Status Management".
+
+        '
+      type: string
+      enum:
+      - active
+      - archived
+      default: active
+    ExperienceReportSecondViewColumnNames:
+      type: string
+      description: Available columns for the variations-by-goals view in the experience report UI.
+      enum:
+      - variation_name
+      - improvement
+      - conversions
+      - visitors
+      - conversion_rate
+      - confidence
+      - confidence_interval
+      - observed_power
+      - status
+      - expected
+      - risk
+      - traffic
+      - average_order_value
+      - average_products_per_order
+    AccountLiveDataPersistentOptions:
+      allOf:
+      - $ref: '#/components/schemas/AccountLiveDataFilteringOptions'
+      - $ref: '#/components/schemas/LiveDataAutoRefreshSettings'
+      - type: object
+        properties:
+          columns:
+            type: array
+            description: 'Sorted list of columns to be displayed in the UI
+
+              '
+            items:
+              allOf:
+              - $ref: '#/components/schemas/ColumnPreference'
+              - type: object
+                properties:
+                  name:
+                    $ref: '#/components/schemas/AccountLiveDataColumnNames'
+    AccountExperiencesListPersistentOptions:
+      allOf:
+      - $ref: '#/components/schemas/AccountExperiencesListFilteringOptions'
+      - type: object
+        properties:
+          columns:
+            nullable: true
+            type: array
+            description: 'Sorted list of columns to be displayed in the UI
+
+              '
+            items:
+              allOf:
+              - $ref: '#/components/schemas/ColumnPreference'
+              - type: object
+                properties:
+                  name:
+                    $ref: '#/components/schemas/AccountExperiencesListColumnNames'
+    AccessRole:
+      type: object
+      properties:
+        name:
+          type: string
+        permissions:
+          $ref: '#/components/schemas/RolePermissions'
+    ChangeHistoryExpandFields:
+      type: string
+      enum:
+      - project
+    UTC_Offset:
+      type: integer
+      description: 'The time offset from Coordinated Universal Time (UTC) in seconds.
+
+        For example, UTC-5 (EST) would be -18000. UTC+2 would be 7200.
+
+        Used for interpreting or displaying date/time information according to a specific timezone.
+
+        '
+      default: 0
+      minimum: -43200
+      maximum: 50400
+    ProjectHistoryPersistentOptions:
+      allOf:
+      - $ref: '#/components/schemas/ProjectHistoryFilteringOptions'
+      - type: object
+        properties:
+          columns:
+            type: array
+            nullable: true
+            description: 'Sorted list of columns to be displayed in the UI
+
+              '
+            items:
+              allOf:
+              - $ref: '#/components/schemas/ColumnPreference'
+              - type: object
+                properties:
+                  name:
+                    $ref: '#/components/schemas/ProjectHistoryColumnNames'
+    UserPreferences:
+      type: object
+      description: A collection of user-specific settings that customize their experience within the Convert application UI. These preferences do not impact the execution or behavior of live experiments.
+      properties:
+        editorSettings:
+          type: object
+          properties:
+            codeOpen:
+              type: boolean
+              nullable: true
+              default: false
+              description: If true, the code editor panel in the Visual Editor is open by default.
+            codeBoxId:
+              type: string
+              nullable: true
+              description: The ID of the specific code editor tab (e.g., 'variationCode', 'variationJs', 'globalJs') that was last active or should be opened by default.
+              enum:
+              - variationCode
+              - variationJs
+              - variationCss
+              - globalJs
+            codeEditorMaximized:
+              type: boolean
+              nullable: true
+              default: false
+              description: If true, the code editor panel is maximized by default.
+            codeEditorHeight:
+              type: integer
+              nullable: true
+              default: 300
+              description: The default height (in pixels) of the code editor panel.
+            codeLinterOn:
+              type: boolean
+              default: false
+              nullable: true
+              description: If true, the JavaScript/CSS linter in the code editors is enabled by default.
+        displaySettings:
+          type: object
+          properties:
+            accountExperiencesList:
+              $ref: '#/components/schemas/AccountExperiencesListPersistentOptions'
+            accountLiveDataList:
+              $ref: '#/components/schemas/AccountLiveDataPersistentOptions'
+            accountHistoryList:
+              $ref: '#/components/schemas/AccountHistoryPersistentOptions'
+            projectsList:
+              $ref: '#/components/schemas/ProjectsListPersistentOptions'
+            projectExperiences:
+              $ref: '#/components/schemas/ExperiencesListPersistentOptions'
+            projectHypotheses:
+              $ref: '#/components/schemas/HypothesesListPersistentOptions'
+            projectKnowledgeBases:
+              $ref: '#/components/schemas/KnowledgeBasesListPersistentOptions'
+            projectObservations:
+              $ref: '#/components/schemas/ObservationsListPersistentOptions'
+            projectGoals:
+              $ref: '#/components/schemas/GoalsListPersistentOptions'
+            projectAudiences:
+              $ref: '#/components/schemas/AudiencesListPersistentOptions'
+            projectLocations:
+              $ref: '#/components/schemas/LocationsListPersistentOptions'
+            projectLiveData:
+              $ref: '#/components/schemas/ProjectLiveDataPersistentOptions'
+            projectHistoryList:
+              $ref: '#/components/schemas/ProjectHistoryPersistentOptions'
+            experienceLiveData:
+              $ref: '#/components/schemas/ExperienceLiveDataPersistentOptions'
+            experienceHistoryList:
+              $ref: '#/components/schemas/ExperienceHistoryPersistentOptions'
+            experienceReport:
+              $ref: '#/components/schemas/ExperienceReportPersistentOptions'
+            experienceReportFirstView:
+              $ref: '#/components/schemas/ExperienceReportFirstViewPersistentOptions'
+            experienceReportSecondView:
+              $ref: '#/components/schemas/ExperienceReportSecondViewPersistentOptions'
+            projectFeatures:
+              $ref: '#/components/schemas/FeaturesListPersistentOptions'
+            projectSdkKeys:
+              $ref: '#/components/schemas/SdkKeysListPersistentOptions'
+            projectSignalSessions:
+              $ref: '#/components/schemas/SignalSessionsListPersistentOptions'
+            projectCompass:
+              $ref: '#/components/schemas/CompassColumnsPersistentOptions'
+        uiSettings:
+          type: object
+          nullable: true
+          properties:
+            hide_demo_project:
+              type: boolean
+              description: If true, the option to create or view a demo project is hidden for this user.
+            onboard:
+              type: object
+              nullable: true
+              additionalProperties: false
+              properties:
+                remind_in:
+                  type: integer
+                  nullable: true
+                  description: Unix timestamp (UTC) indicating when the next onboarding reminder or step should be displayed to the user.
+        notificationsSeen:
+          type: array
+          items:
+            type: string
+            enum:
+            - TODO-define-it
+        generalSettings:
+          type: object
+          properties:
+            lastOpenAccount:
+              type: integer
+              nullable: true
+              description: The ID of the account that was last accessed by the user, used to default to this account on next login.
+            lastOpenProject:
+              type: integer
+              nullable: true
+              description: The ID of the project that was last accessed by the user.
+            frontendVersion:
+              type: string
+              default: v0
+              description: (Internal) Specifies which version of the Convert application frontend UI the user is currently experiencing (e.g., for phased rollouts of new UI designs).
+              enum:
+              - v0
+              - v1
+            convertLabsOptIn:
+              type: boolean
+              default: false
+              description: If true, the user has opted-in to access experimental or beta features ("Convert Labs") within the application.
+        mfaEnabled:
+          type: boolean
+          description: True if Multi-Factor Authentication (MFA) is currently enabled for this user's account.
+    UserSessionRevokeRequestData:
+      type: object
+      required:
+      - sid
+      properties:
+        sid:
+          description: Session identifier returned by POST /user/sessions.
+          type: string
+    TimeRange:
+      type: object
+      properties:
+        start_time:
+          type: number
+          nullable: true
+          description: Unix timestamp (seconds since epoch, UTC) marking the beginning of the time range. If null, implies from the beginning of data.
+        end_time:
+          type: number
+          nullable: true
+          description: Unix timestamp (seconds since epoch, UTC) marking the end of the time range. If null, implies up to the current time.
+        utc_offset:
+          $ref: '#/components/schemas/UTC_Offset'
+    AccessRolesListResponseData:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/AccessRolesList'
+    GoalsListFilteringOptions:
+      allOf:
+      - $ref: '#/components/schemas/ResultsPerPage'
+      - $ref: '#/components/schemas/SortDirection'
+      - type: object
+        properties:
+          status:
+            type: array
+            nullable: true
+            description: List of goal statuses to be returned
+            items:
+              $ref: '#/components/schemas/GoalStatuses'
+          is_default:
+            type: boolean
+            nullable: true
+            description: "A value that would be used to filter by default or not default goals. if not provided, all goals will be returned \n"
+          search:
+            type: string
+            maxLength: 200
+            nullable: true
+            description: A search string that would be used to search against Goal's name and description
+          tracking:
+            type: string
+            nullable: true
+            description: A value that would be used to filter by tracked or not tracked goals
+            enum:
+            - tracked
+            - not_tracked
+            - null
+          usage:
+            type: string
+            nullable: true
+            description: A value that would be used to filter by using in at least one experiment
+            enum:
+            - used
+            - not_used
+            - null
+          goal_type:
+            type: array
+            nullable: true
+            description: List of goal types to be returned
+            items:
+              $ref: '#/components/schemas/GoalTypes'
+          experiences:
+            type: array
+            nullable: true
+            description: List of experiences to be returned
+            items:
+              type: integer
+            maxItems: 100
+          sort_by:
+            type: string
+            nullable: true
+            default: id
+            description: 'A value to sort audiences by specific field
+
+
+              Defaults to **id** if not provided
+
+              '
+            enum:
+            - id
+            - goal_tracking_status
+            - name
+            - times_used
+            - type
+            - key
+            - status
+    LocationsListPersistentOptions:
+      allOf:
+      - $ref: '#/components/schemas/LocationsListFilteringOptions'
+      - type: object
+        properties:
+          columns:
+            type: array
+            nullable: true
+            description: 'Sorted list of columns to be displayed in the UI
+
+              '
+            items:
+              allOf:
+              - $ref: '#/components/schemas/ColumnPreference'
+              - type: object
+                properties:
+                  name:
+                    $ref: '#/components/schemas/LocationsListColumnNames'
+    AudiencesListColumnNames:
+      type: string
+      description: Available columns for the audiences list in the UI.
+      enum:
+      - name
+      - id
+      - type
+      - usage
+      - status
+      - key
+    KnowledgeBasesListPersistentOptions:
+      allOf:
+      - $ref: '#/components/schemas/KnowledgeBasesListFilteringOptions'
+      - type: object
+        properties:
+          columns:
+            type: array
+            nullable: true
+            description: 'Sorted list of columns to be displayed in the UI
+
+              '
+            items:
+              allOf:
+              - $ref: '#/components/schemas/ColumnPreference'
+              - type: object
+                properties:
+                  name:
+                    $ref: '#/components/schemas/KnowledgeBasesListColumnNames'
+    SignalSessionsListColumnNames:
+      type: string
+      description: Available columns for the Convert Signals™ sessions list in the UI.
+      enum:
+      - id
+      - duration
+      - visited_pages
+      - location
+      - date
+      - watched
+    HypothesesListFilteringOptions:
+      allOf:
+      - $ref: '#/components/schemas/ResultsPerPage'
+      - $ref: '#/components/schemas/SortDirection'
+      - type: object
+        properties:
+          sort_by:
+            type: string
+            nullable: true
+            default: id
+            description: 'A value to sort hypotheses by specific field(s)
+
+
+              Defaults to **id** if not provided
+
+              '
+            enum:
+            - id
+            - name
+            - score
+            - start_date
+            - status
+          scoreMax:
+            type: integer
+            nullable: true
+            default: 5
+            description: The maximum score for hypotheses which you would like to retrieve
+            enum:
+            - 0
+            - 1
+            - 2
+            - 3
+            - 4
+            - 5
+          scoreMin:
+            type: integer
+            default: 0
+            nullable: true
+            description: The minimum score for hypotheses which you would like to retrieve
+            enum:
+            - 0
+            - 1
+            - 2
+            - 3
+            - 4
+            - 5
+          search:
+            type: string
+            maxLength: 200
+            nullable: true
+            description: A search string that would be used to search against hypotheses's name or description
+          status:
+            type: array
+            nullable: true
+            description: The status of the hypotheses you'd like to be returned; one of the below can be provided
+            items:
+              $ref: '#/components/schemas/HypothesisStatuses'
+          experiences:
+            type: array
+            nullable: true
+            description: The list of experience ID's used to filter the list of returned hypotheses
+            items:
+              type: integer
+          tags:
+            type: array
+            nullable: true
+            description: The list of tag ID's used to filter the list of returned hypotheses
+            items:
+              type: integer
+          only:
+            description: 'Only retrieve hypotheses with the given ids.
+
+              '
+            type: array
+            nullable: true
+            items:
+              type: integer
+            maxItems: 100
+          except:
+            description: 'Except hypotheses with the given ids.
+
+              '
+            type: array
+            items:
+              type: integer
+            maxItems: 100
+    OnlyCount:
+      type: object
+      properties:
+        onlyCount:
+          type: boolean
+          description: 'If set to `true` in a list request, the response will only contain the total count of matching items (`extra.pagination.items_count`)
+
+            and will not include the actual item data. Useful for quickly getting totals without fetching full datasets.
+
+            '
+    ExperienceStatuses:
+      type: string
+      enum:
+      - draft
+      - active
+      - paused
+      - completed
+      - scheduled
+      - archived
+      - deleted
+    ChangeHistoryObjects:
+      type: string
+      enum:
+      - audience
+      - feature
+      - domain
+      - goal
+      - hypothesis
+      - experience
+      - tag
+      - location
+    UserSessionsListResponseData:
+      type: object
+      required:
+      - data
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserSessionEntry'
+    UserData:
+      type: object
+      description: Detailed information about an authenticated user, including their profile, UI preferences, and security settings.
+      properties:
+        profileData:
+          type: object
+          properties:
+            email:
+              type: string
+              description: The user's primary email address, used for login and communication.
+            firstName:
+              type: string
+              description: The user's first name.
+            lastName:
+              type: string
+              description: The user's last name.
+            login_provider:
+              $ref: '#/components/schemas/UserLoginProviders'
+            user_id:
+              type: string
+              readOnly: true
+              description: The unique system-generated identifier for this user within Convert.
+            intercom_user_jwt:
+              type: string
+              readOnly: true
+              description: (Internal) JWT used to authenticate the user in Intercom Messenger.
+            reditus_user_jwt:
+              type: string
+              readOnly: true
+              description: (Internal) JWT used to authenticate the user in Reditus.
+            canny_user_jwt:
+              type: string
+              readOnly: true
+              description: (Internal) JWT used to authenticate the user in Canny.
+            canSudo:
+              type: boolean
+              readOnly: true
+              description: (Internal) If true, this user has super-administrator privileges, allowing them to impersonate other users or access all accounts for support purposes.
+            onlyCollaborator:
+              type: boolean
+              readOnly: true
+              description: If true, this user does not own any accounts themselves but only has access to other accounts as a collaborator.
+            persona:
+              type: string
+              readOnly: true
+              description: (Internal) A classification of the user's persona (e.g., "Marketer", "Developer", "Agency") used by Convert to tailor the UI or offer relevant guidance.
+            techPerson:
+              type: boolean
+              readOnly: true
+              description: (Internal) If true, indicates the user is likely technically proficient, which might influence UI hints or available advanced features.
+        preferences:
+          $ref: '#/components/schemas/UserPreferences'
+        isSudo:
+          type: boolean
+          description: (Internal) If true, indicates the user is currently operating in "sudo" (super-administrator impersonation) mode.
+        mfa_backup_codes:
+          type: array
+          description: '(Not Implemented / For Future Use) A list of one-time backup codes for Multi-Factor Authentication (MFA).
+
+            These would be provided when MFA is enabled and can be used if the primary MFA device is unavailable.
+
+            '
+    GoalStatuses:
+      type: string
+      description: 'The current status of a goal:
+
+        - `active`: The goal is active and will track conversions for experiences it''s attached to.
+
+        - `archived`: The goal is archived and will not track new conversions. Its historical data remains accessible in reports for experiences that previously used it. Archived goals can often be cloned or unarchived.
+
+        Knowledge Base: "Benefits of Archiving Unused Goals, Locations, and Audiences."
+
+        '
+      enum:
+      - active
+      - archived
+    ExperiencesListColumnNames:
+      type: string
+      description: Available columns for the experiences list in the UI.
+      enum:
+      - name
+      - id
+      - improvement
+      - conversions
+      - primary_goal
+      - start_time
+      - end_time
+      - status
+      - key
+      - environment
+      - running_days
+      - traffic_allocation
+      - revenue_per_visitor
+    SuccessData:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+    ExperienceReportFirstViewColumnNames:
+      type: string
+      description: Available columns for the goals-by-variations view in the experience report UI.
+      enum:
+      - goal_name
+      - best_improvement
+      - conversions
+      - visitors
+      - conversion_rate
+      - confidence
+    ChangeHistoryMethods:
+      type: string
+      enum:
+      - api
+      - app
+    ObservationsListFilteringOptions:
+      allOf:
+      - $ref: '#/components/schemas/ResultsPerPage'
+      - $ref: '#/components/schemas/SortDirection'
+      - type: object
+        properties:
+          sort_by:
+            type: string
+            nullable: true
+            default: name
+            description: 'A value to sort observations by specific field(s)
+
+
+              Defaults to **name** if not provided
+
+              '
+            enum:
+            - name
+            - created_by
+            - date_added
+            - status
+          search:
+            type: string
+            maxLength: 200
+            nullable: true
+            description: A search string that would be used to search against observation's name or description
+          status:
+            type: array
+            nullable: true
+            description: The status of the observations you'd like to be returned; one of the below can be provided
+            items:
+              $ref: '#/components/schemas/ObservationStatuses'
+          tags:
+            type: array
+            nullable: true
+            description: The list of tag ID's used to filter the list of returned observations
+            items:
+              type: integer
+          only:
+            description: 'Only retrieve observations with the given ids.
+
+              '
+            type: array
+            nullable: true
+            items:
+              type: integer
+            maxItems: 100
+          except:
+            description: 'Except observations with the given ids.
+
+              '
+            type: array
+            items:
+              type: integer
+            maxItems: 100
+    UserSessionRevokeResponseData:
+      type: object
+      required:
+      - code
+      - message
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
+    ProjectHistoryFilteringOptions:
+      allOf:
+      - $ref: '#/components/schemas/SortDirection'
+      - $ref: '#/components/schemas/ResultsPerPage'
+      - type: object
+        properties:
+          methods:
+            type: array
+            nullable: true
+            items:
+              $ref: '#/components/schemas/ChangeHistoryMethods'
+          objects:
+            type: array
+            nullable: true
+            items:
+              $ref: '#/components/schemas/ChangeHistoryObjects'
+          audiences:
+            type: array
+            nullable: true
+            description: List of audiences id to get data by
+            maxItems: 100
+            items:
+              type: integer
+          goals:
+            type: array
+            nullable: true
+            description: List of goals id to get data by
+            maxItems: 100
+            items:
+              type: integer
+          locations:
+            type: array
+            nullable: true
+            description: List of locations id to get data by
+            maxItems: 100
+            items:
+              type: integer
+          hypotheses:
+            type: array
+            nullable: true
+            description: List of hypotheses id to get data by
+            maxItems: 100
+            items:
+              type: integer
+          domains:
+            type: array
+            nullable: true
+            description: List of domains id to get data by
+            maxItems: 100
+            items:
+              type: integer
+          tags:
+            type: array
+            nullable: true
+            description: List of tags id to get data by
+            maxItems: 100
+            items:
+              type: integer
+          experiences:
+            type: array
+            nullable: true
+            description: List of experiences id to get data by
+            maxItems: 100
+            items:
+              type: integer
+          sort_by:
+            type: string
+            nullable: true
+            default: timestamp
+            description: 'A value to sort history list by specific field(s)
+
+
+              Defaults to **timestamp** if not provided
+
+              '
+            enum:
+            - timestamp
+            - project_id
+            - event
+            - object
+      - $ref: '#/components/schemas/ChangeHistoryExpandParameter'
+    ChangeHistoryObjectTypes:
+      type: string
+      enum:
+      - account
+      - audience
+      - feature
+      - collaborator
+      - domain
+      - goal
+      - hypothesis
+      - experience
+      - report
+      - change
+      - variation
+      - project
+      - tag
+    ExperiencesListPersistentOptions:
+      allOf:
+      - $ref: '#/components/schemas/ExperiencesListFilteringOptions'
+      - type: object
+        properties:
+          columns:
+            type: array
+            nullable: true
+            description: 'Sorted list of columns to be displayed in the UI
+
+              '
+            items:
+              allOf:
+              - $ref: '#/components/schemas/ColumnPreference'
+              - type: object
+                properties:
+                  name:
+                    $ref: '#/components/schemas/ExperiencesListColumnNames'
+    CompassColumnsPersistentOptions:
+      type: object
+      properties:
+        columns:
+          type: array
+          nullable: true
+          description: 'Sorted list of tabs to be displayed in the UI
+
+            '
+          items:
+            allOf:
+            - $ref: '#/components/schemas/ColumnPreference'
+            - type: object
+              properties:
+                name:
+                  $ref: '#/components/schemas/CompassColumnsNames'
+    SdkKeysListPersistentOptions:
+      type: object
+      properties:
+        columns:
+          type: array
+          nullable: true
+          description: 'Sorted list of columns to be displayed in the UI
+
+            '
+          items:
+            allOf:
+            - $ref: '#/components/schemas/ColumnPreference'
+            - type: object
+              properties:
+                name:
+                  $ref: '#/components/schemas/SdkKeysListColumnNames'
+    ProjectLiveDataColumnNames:
+      type: string
+      description: Available columns for the project-level live data feed in the UI.
+      enum:
+      - time
+      - event
+      - experience
+      - variation
+      - more_info
+    ExperienceHistoryPersistentOptions:
+      allOf:
+      - $ref: '#/components/schemas/ExperienceHistoryFilteringOptions'
+      - type: object
+        properties:
+          columns:
+            type: array
+            nullable: true
+            description: 'Sorted list of columns to be displayed in the UI
+
+              '
+            items:
+              allOf:
+              - $ref: '#/components/schemas/ColumnPreference'
+              - type: object
+                properties:
+                  name:
+                    $ref: '#/components/schemas/ExperienceHistoryColumnNames'
+    AccessRolesList:
+      type: array
+      description: A list of access role objects, each detailing a role name and its associated permissions.
+      items:
+        $ref: '#/components/schemas/AccessRole'
+    GoalsListColumnNames:
+      type: string
+      description: Available columns for the goals list in the UI.
+      enum:
+      - name
+      - id
+      - type
+      - times_used
+      - goal_tracking_status
+      - status
+      - key
+    SortDirection:
+      type: object
+      properties:
+        sort_direction:
+          type: string
+          nullable: true
+          default: desc
+          description: 'The direction for sorting the list results, based on the `sort_by` field.
+
+            - `asc`: Ascending order (e.g., A-Z, 1-10, oldest to newest).
+
+            - `desc`: Descending order (e.g., Z-A, 10-1, newest to oldest).
+
+            Defaults to `desc` (newest/highest first) if not specified.
+
+            '
+          enum:
+          - asc
+          - desc
+    ChangeHistoryExpandParameter:
+      type: object
+      properties:
+        expand:
+          type: array
+          nullable: true
+          description: 'Specifies linked objects to expand in the response, e.g., ''project''.
+
+            Refer to the [Expanding Fields](#tag/Expandable-Fields) section.
+
+            '
+          items:
+            $ref: '#/components/schemas/ChangeHistoryExpandFields'
+    AudienceStatuses:
+      type: string
+      description: 'The status of an audience:
+
+        - `active`: The audience is currently active and can be used for targeting experiences.
+
+        - `archived`: The audience is no longer active and cannot be used for new experiences, but its definition and past usage data are preserved. Archived audiences can often be cloned.
+
+        Knowledge Base: "Benefits of Archiving Unused Goals, Locations, and Audiences."
+
+        '
+      enum:
+      - active
+      - archived
+    LiveDataExpandParameter:
+      type: object
+      properties:
+        expand:
+          type: array
+          nullable: true
+          description: 'Specifies linked objects to expand in the live data response.
+
+            Refer to the [Expanding Fields](#tag/Expandable-Fields) section.
+
+            '
+          items:
+            $ref: '#/components/schemas/LiveDataExpandFields'
+    ExperienceReportPersistentOptions:
+      type: object
+      properties:
+        sections:
+          type: array
+          nullable: true
+          description: 'Specifies which sections of the experience report (e.g., ''summary'', ''complete_overview'') are visible in the UI and their display order.
+
+            '
+          items:
+            allOf:
+            - $ref: '#/components/schemas/BaseUiSectionPreference'
+            - type: object
+              properties:
+                name:
+                  $ref: '#/components/schemas/ExperienceReportSectionNames'
+    SdkKeysListColumnNames:
+      type: string
+      description: Available columns for the sdk keys list in the UI.
+      enum:
+      - name
+      - sdk_key
+      - environment
+      - status
+    BaseUiSectionPreference:
+      type: object
+      description: Defines user preference for a section in a UI view (name and visibility).
+      properties:
+        visible:
+          type: boolean
+          description: If true, this UI section is visible/expanded by default for the user.
+        name:
+          type: string
+          description: The machine-readable name or key of the UI section.
+    FeaturesListFilteringOptions:
+      allOf:
+      - $ref: '#/components/schemas/ResultsPerPage'
+      - $ref: '#/components/schemas/SortDirection'
+      - type: object
+        properties:
+          search:
+            type: string
+            maxLength: 100
+            description: A search string that would be used to search against Feature's id, name, key and description
+            nullable: true
+          only:
+            description: 'Only retrieve features with the given ids.
+
+              '
+            type: array
+            nullable: true
+            items:
+              type: integer
+            maxItems: 100
+          except:
+            description: 'Except features with the given ids.
+
+              '
+            type: array
+            items:
+              type: integer
+            maxItems: 100
+          sort_by:
+            type: string
+            description: 'A value to sort features by specific field
+
+
+              Defaults to **id** if not provided
+
+              '
+            enum:
+            - id
+            - name
+            - key
+            - status
+            nullable: true
+            default: id
+    AccountLiveDataFilteringOptions:
+      allOf:
+      - type: object
+        properties:
+          event_types:
+            type: array
+            nullable: true
+            items:
+              $ref: '#/components/schemas/LiveDataEventTypes'
+          projects:
+            type: array
+            nullable: true
+            description: List of projects id to get data by
+            items:
+              type: integer
+          segments:
+            nullable: true
+            allOf:
+            - $ref: '#/components/schemas/ReportingSegmentsFilters'
+      - $ref: '#/components/schemas/LiveDataExpandParameter'
+    ProjectHistoryColumnNames:
+      type: string
+      description: Available columns for the project change history log in the UI.
+      enum:
+      - timestamp
+      - object_id
+      - event
+      - object
+      - method
+      - more_info
+    AudiencesListPersistentOptions:
+      allOf:
+      - $ref: '#/components/schemas/AudiencesListFilteringOptions'
+      - type: object
+        properties:
+          columns:
+            type: array
+            nullable: true
+            description: 'Sorted list of columns to be displayed in the UI
+
+              '
+            items:
+              allOf:
+              - $ref: '#/components/schemas/ColumnPreference'
+              - type: object
+                properties:
+                  name:
+                    $ref: '#/components/schemas/AudiencesListColumnNames'
+    AccountExperiencesListColumnNames:
+      type: string
+      description: Available columns for the account-wide experiences list in the UI.
+      enum:
+      - name
+      - id
+      - project_id
+      - improvement
+      - conversions
+      - primary_goal
+      - start_time
+      - end_time
+      - status
+      - key
+      - running_days
+      - traffic_allocation
+    UserProfileDataUpdate:
+      type: object
+      x-name-validation-pattern: ^(?!.*://)(?!.*@)(?!.*localhost\b)(?!\d{1,3}(\.\d{1,3}){3}\b)(?!\[[0-9a-fA-F:]+\])(?!.*xn--)(?!.*\.[A-Za-z0-9])(?!.*\[\.\])(?!.*\[[dD][oO][tT]\])(?!.*\[\.\]\w+)(?!.*\[[dD][oO][tT]\]\w+)(?!.*[．。｡﹒﹖﹑]).+$
+      properties:
+        firstName:
+          description: 'The user''s new first name. Must not contain URLs or domain-like content (e.g. `xyz.com`, `http://...`, `www.`).
+
+            '
+          type: string
+          maxLength: 200
+          pattern: ^(?!.*://)(?!.*@)(?!.*localhost\b)(?!\d{1,3}(\.\d{1,3}){3}\b)(?!\[[0-9a-fA-F:]+\])(?!.*xn--)(?!.*\.[A-Za-z0-9])(?!.*\[\.\])(?!.*\[[dD][oO][tT]\])(?!.*\[\.\]\w+)(?!.*\[[dD][oO][tT]\]\w+)(?!.*[．。｡﹒﹖﹑]).+$
+        lastName:
+          description: 'The user''s new last name. Must not contain URLs or domain-like content (e.g. `xyz.com`, `http://...`, `www.`).
+
+            '
+          type: string
+          maxLength: 200
+          pattern: ^(?!.*://)(?!.*@)(?!.*localhost\b)(?!\d{1,3}(\.\d{1,3}){3}\b)(?!\[[0-9a-fA-F:]+\])(?!.*xn--)(?!.*\.[A-Za-z0-9])(?!.*\[\.\])(?!.*\[[dD][oO][tT]\])(?!.*\[\.\]\w+)(?!.*\[[dD][oO][tT]\]\w+)(?!.*[．。｡﹒﹖﹑]).+$
+        currentPassword:
+          description: The user's current password. Required if changing email or password.
+          type: string
+          maxLength: 25
+        newPassword:
+          description: The new password chosen by the user. Required if changing password. Max 25 chars.
+          type: string
+          maxLength: 25
+        confirmPassword:
+          description: Confirmation of the new password. Must match `newPassword`. Required if changing password. Max 25 chars.
+          type: string
+          maxLength: 25
+        email:
+          description: The user's new email address. Requires `currentPassword` for verification.
+          type: string
+          maxLength: 100
+          format: email
+        mfa:
+          oneOf:
+          - $ref: '#/components/schemas/mfaEnableRequest'
+          - $ref: '#/components/schemas/mfaDisableRequest'
+          discriminator:
+            propertyName: type
+            mapping:
+              enable: '#/components/schemas/mfaEnableRequest'
+              disable: '#/components/schemas/mfaDisableRequest'
+    ExperienceTypes:
+      type: string
+      description: 'The type of optimization activity:
+
+        - `a/b`: Standard A/B test comparing an original page/element against one or more variations. Changes made via Visual Editor or code. KB: "What is an Experiment?".
+
+        - `a/a`: Tests the original page against an identical copy of itself to validate tracking setup and ensure no inherent bias. KB: "A/A Experiments".
+
+        - `mvt`: Multivariate test, testing combinations of changes across multiple sections of a page. KB: "Creating a Multivariate Experiment".
+
+        - `split_url`: Redirects traffic between different URLs to test entirely different page versions. KB: "How do Split URL Experiments work?".
+
+        - `multipage`: Tests a consistent set of changes across a sequence of pages (funnel). KB: "Create Multipage Experiences".
+
+        - `deploy`: Rolls out a specific set of changes to a targeted audience without A/B comparison reporting. KB: "What about Deployments?".
+
+        - `a/b_fullstack`: An A/B test conducted using a Full Stack SDK, potentially involving server-side changes. KB: "Full Stack Experiments on Convert".
+
+        - `feature_rollout`: A Full Stack experience for gradually rolling out a new feature, often using feature flags.
+
+        '
+      enum:
+      - a/b
+      - a/a
+      - mvt
+      - split_url
+      - multipage
+      - deploy
+      - a/b_fullstack
+      - feature_rollout
+    AccountHistoryFilteringOptions:
+      allOf:
+      - $ref: '#/components/schemas/SortDirection'
+      - $ref: '#/components/schemas/ResultsPerPage'
+      - type: object
+        properties:
+          methods:
+            type: array
+            nullable: true
+            items:
+              $ref: '#/components/schemas/ChangeHistoryMethods'
+          projects:
+            type: array
+            nullable: true
+            description: List of projects id to get data by
+            items:
+              type: integer
+          objects:
+            type: array
+            nullable: true
+            description: List of objects to get data by
+            items:
+              $ref: '#/components/schemas/ChangeHistoryObjectTypes'
+          sort_by:
+            type: string
+            nullable: true
+            default: timestamp
+            description: "A value to sort history list by specific field(s)\n\n  Defaults to **timestamp** if not provided\n"
+            enum:
+            - timestamp
+            - project_id
+            - event
+            - object
+      - $ref: '#/components/schemas/ChangeHistoryExpandParameter'
+    AccountHistoryPersistentOptions:
+      allOf:
+      - $ref: '#/components/schemas/AccountHistoryFilteringOptions'
+      - type: object
+        properties:
+          columns:
+            type: array
+            nullable: true
+            description: 'Sorted list of columns to be displayed in the UI
+
+              '
+            items:
+              allOf:
+              - $ref: '#/components/schemas/ColumnPreference'
+              - type: object
+                properties:
+                  name:
+                    $ref: '#/components/schemas/AccountHistoryColumnNames'
+    ReportingSegmentsCustomSegment:
+      description: 'The numerical ID of a custom Convert Audience (of type ''segmentation'') that the visitor is a member of.
+
+        Allows report segmentation based on predefined custom segments (e.g., "High-Value Customers", "Engaged Users").
+
+        Knowledge Base: "Create Custom Segments".
+
+        '
+      type: integer
+    AccountLiveDataColumnNames:
+      type: string
+      description: Available columns for the account-level live data feed in the UI.
+      enum:
+      - time
+      - project_id
+      - event
+      - experience
+      - variation
+      - more_info
+    SignalSessionsListFilteringOptions:
+      allOf:
+      - $ref: '#/components/schemas/TimeRange'
+      - $ref: '#/components/schemas/PageNumber'
+      - $ref: '#/components/schemas/ResultsPerPage'
+      - $ref: '#/components/schemas/OnlyCount'
+      - type: object
+        properties:
+          experience:
+            type: object
+            additionalProperties: false
+            nullable: true
+            properties:
+              id:
+                type: integer
+                description: The ID of the experience to filter by
+              variation_id:
+                type: integer
+                description: The ID of the variation to filter by
+          location_id:
+            type: integer
+            nullable: true
+            description: The ID of the location to filter by
+          starred:
+            type: string
+            nullable: true
+          watched:
+            type: string
+            nullable: true
+          country:
+            type: object
+            nullable: true
+            additionalProperties: false
+            properties:
+              is:
+                type: array
+                items:
+                  type: string
+              isNot:
+                type: array
+                items:
+                  type: string
+          os:
+            type: object
+            additionalProperties: false
+            nullable: true
+            properties:
+              is:
+                type: array
+                items:
+                  type: string
+              isNot:
+                type: array
+                items:
+                  type: string
+          browser:
+            type: object
+            nullable: true
+            additionalProperties: false
+            properties:
+              is:
+                type: array
+                items:
+                  type: string
+              isNot:
+                type: array
+                items:
+                  type: string
+          devices:
+            type: object
+            nullable: true
+            additionalProperties: false
+            properties:
+              is:
+                type: array
+                items:
+                  type: string
+              isNot:
+                type: array
+                items:
+                  type: string
+          containsPage:
+            type: string
+            nullable: true
+          notContainsPage:
+            type: string
+            nullable: true
+          duration:
+            type: object
+            nullable: true
+            additionalProperties: false
+            description: 'The duration of the signal session in seconds
+
+              '
+            properties:
+              min:
+                type: integer
+              max:
+                type: integer
+          pageCount:
+            type: object
+            nullable: true
+            additionalProperties: false
+            properties:
+              min:
+                type: integer
+              max:
+                type: integer
+          entryPage:
+            type: string
+            nullable: true
+          exitPage:
+            type: string
+            nullable: true
+          referrerURLs:
+            type: array
+            items:
+              type: string
+            nullable: true
+          trafficChannels:
+            type: array
+            items:
+              type: string
+            nullable: true
+          adCampaignLabels:
+            type: array
+            items:
+              type: string
+            nullable: true
+          recordingId:
+            type: string
+            nullable: true
+    ReportingSegmentsDeviceCategories:
+      type: string
+      description: 'The category of device used by the visitor. Enables report segmentation by device type.
+
+        - `iPhone`, `other_phones`, `all_phones`: Mobile phone categories.
+
+        - `desktop`: Desktop or laptop computer.
+
+        - `iPad`, `other_tablets`, `all_tablets`: Tablet categories.
+
+        Note: Some devices might fall into multiple categories (e.g., an iPhone is both ''iPhone'' and ''all_phones'').
+
+        Knowledge Base: "Targeting Mobile, Tablet, and Desktop".
+
+        '
+      enum:
+      - iPhone
+      - all_phones
+      - other_phones
+      - desktop
+      - iPad
+      - all_tablets
+      - other_tablets
+    ExperienceReportSectionNames:
+      type: string
+      description: Identifiers for the different collapsible/reorderable sections within the experience report UI.
+      enum:
+      - summary
+      - complete_overview
+      - quick_overview
+      - goal_details
+    mfaEnableRequest:
+      type: object
+      description: Request to enable Multi-Factor Authentication (MFA) for the user.
+      properties:
+        type:
+          type: string
+          enum:
+          - enable
+        mfaCode:
+          description: 'The Time-based One-Time Password (TOTP) generated by the user''s authenticator app after scanning the MFA secret (obtained via `generateMfaSecret` endpoint).
+
+            This code verifies the successful setup of the authenticator app.
+
+            '
+          type: string
+        password:
+          description: The user's current password, required to authorize enabling MFA.
+          type: string
+    HypothesesListColumnNames:
+      type: string
+      description: Available columns for the hypotheses list in the UI.
+      enum:
+      - id
+      - name
+      - start_date
+      - score
+      - status
+      - created_at
+      - updated_at
+      - created_by
+      - experience
+    ProjectLiveFilteringOptions:
+      type: object
+      description: Filters for the live data feed of a single project.
+      properties:
+        experiences:
+          type: array
+          nullable: true
+          description: A list of Experience IDs to filter events for. Only events related to these experiences will be returned.
+          items:
+            type: integer
+        event_types:
+          type: array
+          nullable: true
+          items:
+            $ref: '#/components/schemas/LiveDataEventTypes'
+        goals:
+          type: array
+          nullable: true
+          description: A list of Goal IDs to filter conversion/transaction events for.
+          maxItems: 20
+          items:
+            type: integer
+        segments:
+          nullable: true
+          allOf:
+          - $ref: '#/components/schemas/ReportingSegmentsFilters'
+    ExperienceLiveDataColumnNames:
+      type: string
+      description: Available columns for the experience-level live data feed in the UI.
+      enum:
+      - time
+      - event
+      - variation
+      - more_info
+    PageNumber:
+      type: object
+      properties:
+        page:
+          type: integer
+          minimum: 1
+          description: 'The page number for paginated results. For example, if `results_per_page` is 30, `page: 2` will retrieve items 31-60.
+
+            Defaults to 1 if not specified.
+
+            '
+    UserMfaSecret:
+      type: object
+      description: Contains the secret key required to set up Multi-Factor Authentication (MFA) with an authenticator app.
+      properties:
+        mfa_secret:
+          type: string
+          description: 'The MFA secret key (often in base32 format) generated by Convert.
+
+            This secret is typically displayed as a QR code or plain text for the user to enter into their authenticator app (e.g., Google Authenticator, Authy) to start generating time-based one-time passwords (TOTPs).
+
+            '
+    ExperienceHistoryFilteringOptions:
+      allOf:
+      - type: object
+        description: Filter Single Experience history list.
+        properties:
+          methods:
+            type: array
+            nullable: true
+            items:
+              $ref: '#/components/schemas/ChangeHistoryMethods'
+          objects:
+            type: array
+            nullable: true
+            items:
+              $ref: '#/components/schemas/ExperienceHistoryObjects'
+          sort_by:
+            type: string
+            nullable: true
+            default: timestamp
+            description: "A value to sort history list by specific field(s)\n\n  Defaults to **timestamp** if not provided\n"
+            enum:
+            - timestamp
+            - event
+            - object
+          variations:
+            description: List of variations ids
+            type: array
+            nullable: true
+            items:
+              type: number
+            maxItems: 100
+          changes:
+            description: List of changes ids
+            type: array
+            nullable: true
+            items:
+              type: number
+            maxItems: 100
+          author_id:
+            type: string
+            nullable: true
+            description: The id of the author who made changes
+      - $ref: '#/components/schemas/ChangeHistoryExpandParameter'
+      - $ref: '#/components/schemas/ResultsPerPage'
+      - $ref: '#/components/schemas/SortDirection'
+    KnowledgeBaseStatuses:
+      description: 'The status of a Knowledge Base entry:
+
+        - `active`: The entry is current and relevant.
+
+        - `archived`: The entry is kept for historical purposes but may no longer be considered current best practice or has been superseded by newer learnings.
+
+        '
+      type: string
+      enum:
+      - active
+      - archived
+      default: active
+    FeaturesListColumnNames:
+      type: string
+      description: Available columns for the features list in the UI.
+      enum:
+      - name
+      - id
+      - key
+      - status
+    LiveDataExpandFields:
+      type: string
+      enum:
+      - custom_segments
+      - experiences
+      - experiences.variation
+      - conversion.goals
+      - project
+    GoalTypes:
+      type: string
+      description: 'The type of user action or event that this goal tracks as a conversion.
+
+        - `advanced`: A goal defined by a complex set of custom rules using the Advanced Goal Editor (now represented by `triggering_rule`).
+
+        - `visits_page`: Tracks a conversion when a visitor views a specific page or set of pages matching URL criteria. KB: "Goals" - "Visit a specific page".
+
+        - `revenue`: Tracks e-commerce transactions, capturing revenue amount and product count. Can be manual or GA-integrated. KB: "Add Revenue Tracking to Your Site".
+
+        - `clicks_link`: Tracks clicks on specific hyperlinks (<a> tags) based on the link''s URL (`href` attribute). KB: "Goals" - "Click on a link".
+
+        - `submits_form`: Tracks submissions of HTML forms based on the form''s `action` URL. KB: "Goals" - "Submit a form".
+
+        - `clicks_element`: Tracks clicks on any HTML element identified by a CSS selector. KB: "Goals" - "Clicks something on a page".
+
+        - `dom_interaction`: (Newer type) Tracks various DOM events on specified elements (e.g., clicks, hovers, changes). More flexible than `clicks_element`.
+
+        - `scroll_percentage`: Tracks when a visitor scrolls to a certain percentage depth of a page (e.g., 25%, 50%, 75%, 100%). KB: "Measuring Page Scroll in Convert Experiences".
+
+        - `ga_import`: A goal imported from Google Analytics (Universal Analytics or GA4). Its triggering logic is based on the corresponding GA event/goal. KB: "How do I Import Goals from Google Analytics?".
+
+        - `code_trigger`: A goal that is triggered exclusively via a JavaScript call (`_conv_q.push(["triggerConversion", "GOAL_ID"])`). KB: "Custom Prebuilt Goals" - "Create a JS Goal".
+
+        '
+      enum:
+      - advanced
+      - visits_page
+      - revenue
+      - clicks_link
+      - submits_form
+      - clicks_element
+      - dom_interaction
+      - scroll_percentage
+      - ga_import
+      - code_trigger
+    KnowledgeBasesListColumnNames:
+      type: string
+      description: Available columns for the Knowledge Base list in the UI.
+      enum:
+      - name
+      - status
+      - created_by
+      - updated_at
+    ExperiencesListFilteringOptions:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/ResultsPerPage'
+      - $ref: '#/components/schemas/SortDirection'
+      - type: object
+        properties:
+          goal_id:
+            type: integer
+            nullable: true
+            description: 'Goal ID to be used for fetching experience''s stats. Only applicable for the experiences that have access to a report.  Defaults to primary experience''s goal if none given.
+
+              '
+          sort_by:
+            type: string
+            nullable: true
+            default: id
+            description: 'A value used to sort experiences by specific field
+
+
+              Defaults to **id** if not provided
+
+              '
+            enum:
+            - id
+            - conversions
+            - improvement
+            - name
+            - start_time
+            - end_time
+            - status
+            - primary_goal
+            - key
+            - environment
+          search:
+            type: string
+            maxLength: 200
+            nullable: true
+            description: A search string that would be used to search against Experience's name and description
+          status:
+            type: array
+            nullable: true
+            description: The status of the experiences to be returned; either of the below can be provided
+            items:
+              $ref: '#/components/schemas/ExperienceStatuses'
+          type:
+            type: array
+            nullable: true
+            description: The type of the experiences to be returned; either of the below can be provided
+            items:
+              $ref: '#/components/schemas/ExperienceTypes'
+          tags:
+            type: array
+            nullable: true
+            description: The list of tag ID's used to filter the list of returned experiences
+            items:
+              type: integer
+          audiences:
+            type: array
+            nullable: true
+            description: The list of audience ID's used to filter the list of returned experiences
+            items:
+              type: integer
+          goals:
+            type: array
+            nullable: true
+            description: The list of goal ID's used to filter the list of returned experiences
+            items:
+              type: integer
+          features:
+            type: array
+            nullable: true
+            description: The list of feature ID's used to filter the list of returned experiences
+            items:
+              type: integer
+          hypotheses:
+            type: array
+            nullable: true
+            description: The list of hypotheses ID's used to filter the list of returned experiences
+            items:
+              type: integer
+          locations:
+            type: array
+            nullable: true
+            description: The list of location ID's used to filter the list of returned experiences
+            items:
+              type: integer
+          environments:
+            type: array
+            nullable: true
+            description: The list of environments used to filter the list of returned experiences
+            items:
+              type: string
+    UserLoginProviders:
+      type: string
+      description: 'The identity provider used for user login:
+
+        - `convert`: Standard username/password authentication managed by Convert.
+
+        - `google`: Authentication via Google Sign-In (OAuth/OIDC).
+
+        '
+      enum:
+      - convert
+      - google
+    ProjectsListFilteringOptions:
+      allOf:
+      - $ref: '#/components/schemas/ResultsPerPage'
+      - $ref: '#/components/schemas/SortDirection'
+      - type: object
+        properties:
+          status:
+            type: array
+            nullable: true
+            items:
+              type: string
+              enum:
+              - active
+              - inactive
+            description: Filters projects by their status
+          search:
+            type: string
+            maxLength: 200
+            nullable: true
+            description: A search string that would be used to search against Project's name and description
+          legacy_script:
+            type: boolean
+            nullable: true
+            enum:
+            - true
+            - false
+            description: Filters projects based on whether they use the legacy script (`true`) or the new script (`false`).
+          tracking_script_release_type:
+            type: array
+            nullable: true
+            items:
+              $ref: '#/components/schemas/TrackingScriptReleaseTypes'
+            description: Filters projects by their tracking script release type.
+          tracking_script_version:
+            type: object
+            nullable: true
+            description: 'Filters projects by their tracking script version.
+
+              '
+            properties:
+              is:
+                type: string
+              isNot:
+                type: string
+          only:
+            description: 'Only retrieve projects with the given ids.
+
+              '
+            type: array
+            nullable: true
+            items:
+              type: integer
+            maxItems: 100
+          except:
+            description: 'Except projects with the given ids.
+
+              '
+            type: array
+            items:
+              type: integer
+            maxItems: 100
+          sort_by:
+            type: string
+            nullable: true
+            default: id
+            description: 'A value to sort projects by specific field(s)
+
+
+              Defaults to **id** if not provided
+
+              '
+            enum:
+            - id
+            - active_tests
+            - project_name
+            - project_type
+            - status
+            - used_visitors
+          project_type:
+            type: array
+            nullable: true
+            items:
+              type: string
+              enum:
+              - web
+              - fullstack
+            description: Filters projects by their type.
+    ExperienceLiveDataFilteringOptions:
+      type: object
+      description: Filters for the live data feed of a single experience.
+      properties:
+        event_types:
+          type: array
+          nullable: true
+          items:
+            $ref: '#/components/schemas/LiveDataEventTypes'
+        goals:
+          type: array
+          nullable: true
+          description: A list of Goal IDs to filter conversion/transaction events for.
+          maxItems: 20
+          items:
+            type: integer
+        segments:
+          nullable: true
+          allOf:
+          - $ref: '#/components/schemas/ReportingSegmentsFilters'
+    ReportingSegmentsVisitorType:
+      type: string
+      description: 'Classifies the visitor as either ''new'' or ''returning'' based on their site visit history (tracked by Convert cookies).
+
+        - `new`: First-time visitor to the site (or no existing Convert cookie).
+
+        - `returning`: Visitor has been to the site before.
+
+        Allows report segmentation to compare behavior of new vs. returning users.
+
+        Knowledge Base: "What is a New/Returning Visitor as Defined in an Experiment''s Audience?".
+
+        '
+      enum:
+      - new
+      - returning
+    ExperienceReportFirstViewPersistentOptions:
+      allOf:
+      - type: object
+        properties:
+          columns:
+            type: array
+            nullable: true
+            description: 'Sorted list of columns to be displayed in the UI
+
+              '
+            items:
+              allOf:
+              - $ref: '#/components/schemas/ColumnPreference'
+              - type: object
+                properties:
+                  name:
+                    $ref: '#/components/schemas/ExperienceReportFirstViewColumnNames'
+    AudienceTypes:
+      type: string
+      enum:
+      - segmentation
+      - permanent
+      - transient
+    ResultsPerPage:
+      type: object
+      properties:
+        results_per_page:
+          type: integer
+          nullable: true
+          minimum: 0
+          maximum: 50
+          default: 30
+          description: 'Specifies the maximum number of items to return in a single page of results.
+
+            Used for pagination. Default is 30, maximum is 50.
+
+            '
+    ReportingSegmentsBrowser:
+      type: string
+      description: 'The web browser used by the visitor. Used for segmenting reports to understand how experiences perform across different browsers.
+
+        Knowledge Base: "Using Basic and Advanced Post segmentation".
+
+        '
+      enum:
+      - internet_explorer
+      - chrome
+      - firefox
+      - safari
+      - edge
+      - other
+    ReportingSegmentsCampaign:
+      type: string
+      description: 'The campaign name associated with the visitor''s session, typically derived from `utm_campaign` URL parameters.
+
+        Allows report segmentation by marketing campaign.
+
+        Knowledge Base: "How Do You Fill Medium, Keyword and Source Name?".
+
+        '
+    ObservationsListPersistentOptions:
+      allOf:
+      - $ref: '#/components/schemas/ObservationsListFilteringOptions'
+      - type: object
+        properties:
+          columns:
+            type: array
+            nullable: true
+            description: 'Sorted list of columns to be displayed in the UI
+
+              '
+            items:
+              allOf:
+              - $ref: '#/components/schemas/ColumnPreference'
+              - type: object
+                properties:
+                  name:
+                    $ref: '#/components/schemas/ObservationsListColumnNames'
+  responses:
+    ErrorResponse:
+      description: 'Indicates an error occurred while processing the request. The `code` provides an HTTP status code, `message` offers a human-readable explanation or an array of validation errors, and `fields` (if present) specifies which input fields were problematic.
+
+        '
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorData'
+    UserSessionRevokeAllResponse:
+      description: All active user sessions were revoked.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UserSessionRevokeAllResponseData'
+    UserDataResponse:
+      description: Contains the profile data, UI preferences, and settings for the authenticated user (typically for cookie-based sessions).
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UserData'
+    UserSessionRevokeResponse:
+      description: User session revoked successfully.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UserSessionRevokeResponseData'
+    UserSessionsListResponse:
+      description: List of authorized sessions (cookie-based and OAuth) for the current user.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UserSessionsListResponseData'
+    SuccessResponse:
+      description: 'A generic success response, typically used for operations that don''t return specific data (like deletions or some updates). The `code` is usually 200, and `message` confirms the successful action.
+
+        '
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SuccessData'
+    UserMfaSecretResponse:
+      description: Contains the Multi-Factor Authentication (MFA) secret for the authenticated user. This secret is used to set up an authenticator app (like Google Authenticator) to generate time-based one-time passwords (TOTPs).
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UserMfaSecret'
+    AccessRolesListResponse:
+      description: A list of all available user access roles in the Convert system (e.g., Owner, Admin, Editor), detailing the permissions associated with each role.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/AccessRolesListResponseData'
+  requestBodies:
+    UserUpdatePreferencesRequest:
+      required: true
+      description: A JSON object specifying the user's UI preferences to be updated for cookie-based authenticated users, such as editor settings or default display options for lists. These do not affect experiment execution.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UserPreferences'
+    UserSessionRevokeRequest:
+      required: true
+      description: Identifies a single user session to revoke, using the session id returned by /user/sessions.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UserSessionRevokeRequestData'
+    ConfirmEmailRequest:
+      required: true
+      description: Contains the confirmation code sent to the user's new email address to verify and complete an email change request for cookie-based authenticated users.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ConfirmEmailRequestData'
+    UserUpdateProfileDataRequest:
+      required: true
+      description: Contains user profile fields to be updated for cookie-based authenticated users, such as first name, last name, email, current password (for verification), new password, or MFA settings.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UserProfileDataUpdate'
+  securitySchemes:
+    requestSigning:
+      type: apiKey
+      x-name-applicationId: Convert-Application-ID
+      x-name-expire: Expire
+      name: Authorization
+      in: header
+      description: 'See **[API Key Authentication](#tag/API-KEY-Authentication)** for more information.
+
+        '
+    secretKey:
+      type: http
+      scheme: bearer
+      description: 'See **[API Key Authentication](#tag/API-KEY-Authentication)** for more information.
+
+        '
+    cookieAuthentication:
+      type: apiKey
+      in: cookie
+      name: sid
+      description: Cookie authentication is used against Convert's own IdentityProvider  or third party identity providers and is described more in the "[Cookie Authentication](#tag/Cookie-Authentication)" section
+x-tagGroups:
+- name: Client Authentication
+  tags:
+  - API KEY Authentication
+  - Cookie Authentication
+  - OAuth Authorization
+- name: Common Parameters
+  tags:
+  - Optional Fields
+  - Expandable Fields
+- name: Requests
+  tags:
+  - User
+  - Accounts
+  - AI content
+  - Collaborators
+  - API Keys
+  - Projects
+  - SDK Keys
+  - Experiences
+  - Experience Variations
+  - Experience Sections
+  - Section Versions
+  - Version Changes
+  - Experiences Reports
+  - Experiences Heatmaps
+  - Goals
+  - Hypotheses
+  - Knowledge Bases
+  - Observations
+  - Locations
+  - Audiences
+  - Domains
+  - Cdn Images
+  - Files
+  - Tags
+  - Features
+  - Visitor Insights
+  - Visitors Data
+  - Visitor Data Placeholders
+  - OAuth

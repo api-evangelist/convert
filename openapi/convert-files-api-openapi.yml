@@ -1,0 +1,348 @@
+openapi: 3.1.0
+info:
+  title: Convert Accounts Files API
+  description: 'Move your app forward with the Convert API. The Convert API allows
+
+    you to manage your Convert Experiences projects using code. The REST API is
+
+    an interface for managing and extending functionality of Convert. For
+
+    example, instead of creating and maintaining projects using the Convert
+
+    Experiences web dashboard you can create an experiment programmatically.
+
+    Additionally, if you prefer to run custom analysis on experiment results you
+
+    can leverage the API to pull data from Convert Experiences into your own
+
+    workflow. If you do not have a Convert account already, sign up for a free
+
+    developer account at https://www.convert.com/api/.
+
+
+    *[Convert API V1](/doc/v1) is still available and documentation can be found [here](/doc/v1) but using it is highly discouraged
+
+    as it will be phased out in the future*
+
+    '
+  version: 2.0.0
+servers:
+- url: https://api.convert.com/api/v2
+  description: Live API server
+- url: https://apidev.convert.com/api/v2
+  description: DEV API server
+- url: http://apidev.convert.com:5000/api/v2
+  description: DEV mocked API server
+tags:
+- name: Files
+  description: Various endpoints that allow File Assets loaded through Convert's to be managed
+paths:
+  /accounts/{account_id}/projects/{project_id}/files/add:
+    post:
+      operationId: uploadFile
+      summary: Upload a generic file to project storage
+      tags:
+      - Files
+      parameters:
+      - name: account_id
+        in: path
+        required: true
+        description: ID of the account that owns the retrieved/saved data
+        schema:
+          type: integer
+      - name: project_id
+        in: path
+        required: true
+        description: ID of the project to be retrieved
+        schema:
+          type: integer
+      requestBody:
+        $ref: '#/components/requestBodies/UploadFileRequest'
+      responses:
+        '201':
+          $ref: '#/components/responses/FileResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+  /accounts/{account_id}/projects/{project_id}/files/{file_key}:
+    get:
+      operationId: getFile
+      summary: Get content of an uploaded file
+      description: 'Retrieves the content of a previously uploaded file, identified by its `file_key`.
+
+        The file content is returned base64 encoded.
+
+        '
+      tags:
+      - Files
+      parameters:
+      - name: account_id
+        in: path
+        required: true
+        description: ID of the account that owns the retrieved/saved data
+        schema:
+          type: integer
+      - name: project_id
+        in: path
+        required: true
+        description: ID of the project to be retrieved
+        schema:
+          type: integer
+      - name: file_key
+        in: path
+        required: true
+        description: The key of the file to retrieve
+        schema:
+          type: string
+      responses:
+        '200':
+          $ref: '#/components/responses/FileDataResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+  /accounts/{account_id}/projects/{project_id}/files/{file_key}/delete:
+    delete:
+      operationId: deleteFile
+      summary: Delete an uploaded file from project storage
+      tags:
+      - Files
+      parameters:
+      - name: account_id
+        in: path
+        required: true
+        description: ID of the account that owns the retrieved/saved data
+        schema:
+          type: integer
+      - name: project_id
+        in: path
+        required: true
+        description: ID of the project to be retrieved
+        schema:
+          type: integer
+      - name: file_key
+        in: path
+        required: true
+        description: The key of the file to be deleted
+        schema:
+          type: string
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+components:
+  schemas:
+    UploadFileRequestData:
+      type: object
+      description: 'Request body for uploading a generic file. Uses multipart/form-data.
+
+        Supported file types include PDF, DOC(X), XLS(X), PPT(X), TXT, CSV, and common image formats (JPG, PNG, GIF, WEBP, SVG).
+
+        Maximum file size is 5MB.
+
+        '
+      properties:
+        file_name:
+          description: The desired name for the file as it will be stored and identified in Convert (e.g., "campaign_brief.pdf", "logo_variation.svg"). Include the file extension.
+          type: string
+          maxLength: 200
+        file:
+          description: 'The actual binary file content to be uploaded.
+
+            Constraints:
+
+            - Maximum file size: 5MB.
+
+            - Supported types: PDF, DOC, DOCX, XLS, XLSX, PPT, PPTX, TXT, CSV, JPG, JPEG, BMP, GIF, PNG, WEBP, SVG.
+
+            '
+          type: string
+          format: binary
+      required:
+      - file_name
+      - file
+    FileBase:
+      type: object
+      description: Base properties common to an uploaded file in Convert's storage.
+      properties:
+        url:
+          description: The direct URL from which this file can be accessed or downloaded. This URL points to Convert's file storage.
+          type: string
+          example: https://api.convert.com/api/v2/accounts/{account_id}/projects/{project_id}/files/{fileKey}
+        key:
+          description: 'The unique storage key (often including the filename and a unique prefix/suffix) for this file within Convert''s system.
+
+            This key is used to retrieve or delete the file.
+
+            '
+          type: string
+          example: example_file_1234567890.jpg
+        file_name:
+          description: The original filename of the uploaded file, as provided by the user during upload (e.g., "annual_report.pdf", "user_avatar.png").
+          type: string
+          example: example.jpg
+        file_size:
+          description: The size of the file in bytes.
+          type: integer
+          example: 474702
+        mime_type:
+          description: The MIME type of the file (e.g., "application/pdf", "image/jpeg", "text/csv"), indicating its format.
+          type: string
+          example: image/jpeg
+        status:
+          description: Indicates the status of the file, primarily relevant during or immediately after an upload operation.
+          type: string
+          enum:
+          - success
+          - error
+        message:
+          description: A message related to the file's status, providing more details in case of an error during upload.
+          type: string
+    UploadedFile:
+      allOf:
+      - $ref: '#/components/schemas/FileBase'
+      - type: object
+        description: File Object in upload response with additional status fields
+        properties:
+          status:
+            description: Status of the file upload operation
+            type: string
+            enum:
+            - success
+            - error
+          message:
+            description: Message related to the file upload status
+            type: string
+    FileData:
+      allOf:
+      - $ref: '#/components/schemas/FileBase'
+      - type: object
+        description: File content object with base64 encoded data
+        properties:
+          content:
+            description: Base64 encoded content of the file
+            type: string
+            example: JVBERi0xLjMKJcTl8uXrp/Og0MTGCjQgMCBvYmoKPDwgL0xlbg...
+    ErrorData:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          oneOf:
+          - type: string
+          - type: array
+            items:
+              type: string
+        fields:
+          oneOf:
+          - type: string
+          - type: array
+            items:
+              type: string
+    SuccessData:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+  requestBodies:
+    UploadFileRequest:
+      content:
+        multipart/form-data:
+          schema:
+            $ref: '#/components/schemas/UploadFileRequestData'
+  responses:
+    ErrorResponse:
+      description: 'Indicates an error occurred while processing the request. The `code` provides an HTTP status code, `message` offers a human-readable explanation or an array of validation errors, and `fields` (if present) specifies which input fields were problematic.
+
+        '
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorData'
+    FileDataResponse:
+      description: Contains the base64 encoded `content` of a requested file, along with its metadata like `key`, `file_name`, and `mime_type`.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/FileData'
+    SuccessResponse:
+      description: 'A generic success response, typically used for operations that don''t return specific data (like deletions or some updates). The `code` is usually 200, and `message` confirms the successful action.
+
+        '
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SuccessData'
+    FileResponse:
+      description: Details of a single uploaded file, including its access `url`, storage `key`, original `file_name`, `file_size`, and `mime_type`.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UploadedFile'
+  securitySchemes:
+    requestSigning:
+      type: apiKey
+      x-name-applicationId: Convert-Application-ID
+      x-name-expire: Expire
+      name: Authorization
+      in: header
+      description: 'See **[API Key Authentication](#tag/API-KEY-Authentication)** for more information.
+
+        '
+    secretKey:
+      type: http
+      scheme: bearer
+      description: 'See **[API Key Authentication](#tag/API-KEY-Authentication)** for more information.
+
+        '
+    cookieAuthentication:
+      type: apiKey
+      in: cookie
+      name: sid
+      description: Cookie authentication is used against Convert's own IdentityProvider  or third party identity providers and is described more in the "[Cookie Authentication](#tag/Cookie-Authentication)" section
+x-tagGroups:
+- name: Client Authentication
+  tags:
+  - API KEY Authentication
+  - Cookie Authentication
+  - OAuth Authorization
+- name: Common Parameters
+  tags:
+  - Optional Fields
+  - Expandable Fields
+- name: Requests
+  tags:
+  - User
+  - Accounts
+  - AI content
+  - Collaborators
+  - API Keys
+  - Projects
+  - SDK Keys
+  - Experiences
+  - Experience Variations
+  - Experience Sections
+  - Section Versions
+  - Version Changes
+  - Experiences Reports
+  - Experiences Heatmaps
+  - Goals
+  - Hypotheses
+  - Knowledge Bases
+  - Observations
+  - Locations
+  - Audiences
+  - Domains
+  - Cdn Images
+  - Files
+  - Tags
+  - Features
+  - Visitor Insights
+  - Visitors Data
+  - Visitor Data Placeholders
+  - OAuth

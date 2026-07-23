@@ -1,0 +1,391 @@
+openapi: 3.1.0
+info:
+  title: Convert Accounts SDK Keys API
+  description: 'Move your app forward with the Convert API. The Convert API allows
+
+    you to manage your Convert Experiences projects using code. The REST API is
+
+    an interface for managing and extending functionality of Convert. For
+
+    example, instead of creating and maintaining projects using the Convert
+
+    Experiences web dashboard you can create an experiment programmatically.
+
+    Additionally, if you prefer to run custom analysis on experiment results you
+
+    can leverage the API to pull data from Convert Experiences into your own
+
+    workflow. If you do not have a Convert account already, sign up for a free
+
+    developer account at https://www.convert.com/api/.
+
+
+    *[Convert API V1](/doc/v1) is still available and documentation can be found [here](/doc/v1) but using it is highly discouraged
+
+    as it will be phased out in the future*
+
+    '
+  version: 2.0.0
+servers:
+- url: https://api.convert.com/api/v2
+  description: Live API server
+- url: https://apidev.convert.com/api/v2
+  description: DEV API server
+- url: http://apidev.convert.com:5000/api/v2
+  description: DEV mocked API server
+tags:
+- name: SDK Keys
+paths:
+  /accounts/{account_id}/projects/{project_id}/sdk-keys:
+    get:
+      operationId: getSdkKeysList
+      summary: List SDK keys for a project
+      description: 'Retrieves a list of SDK keys associated with a specific project.
+
+        SDK keys are used by Convert''s Full Stack SDKs (e.g., Node.js, JavaScript) to fetch experiment configurations and track events from server-side or client-side applications.
+
+        Each key is tied to a specific environment within the project (e.g., production, staging).
+
+        '
+      tags:
+      - SDK Keys
+      parameters:
+      - name: account_id
+        in: path
+        required: true
+        description: ID of the account that owns the retrieved/saved data
+        schema:
+          type: integer
+      - name: project_id
+        in: path
+        required: true
+        description: ID of the project to be retrieved
+        schema:
+          type: integer
+      responses:
+        '200':
+          $ref: '#/components/responses/SdkKeysListResponse'
+  /accounts/{account_id}/projects/{project_id}/sdk-keys/create:
+    post:
+      operationId: createSdkKey
+      summary: Create a new SDK key for a project
+      description: 'Generates a new SDK key and, optionally, a secret for a specified project and environment.
+
+        This key is then used by the Convert SDKs to authenticate and fetch project configurations.
+
+        If `has_secret` is true and no `sdk_secret` is provided, a secret will be auto-generated.
+
+        The SDK secret (if generated) is only shown at the time of creation.
+
+        '
+      tags:
+      - SDK Keys
+      parameters:
+      - name: account_id
+        in: path
+        required: true
+        description: ID of the account that owns the retrieved/saved data
+        schema:
+          type: integer
+      - name: project_id
+        in: path
+        required: true
+        description: ID of the project to be retrieved
+        schema:
+          type: integer
+      requestBody:
+        $ref: '#/components/requestBodies/CreateSdkKeyRequest'
+      responses:
+        '201':
+          $ref: '#/components/responses/SdkKeyResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+  /accounts/{account_id}/projects/{project_id}/sdk-keys/{sdk_key}/update:
+    post:
+      operationId: updateSdkKey
+      summary: Update SDK Key
+      description: 'Partially update an SDK key, modifying only the specific fields provided in the request.
+
+        '
+      tags:
+      - SDK Keys
+      parameters:
+      - name: account_id
+        in: path
+        required: true
+        description: ID of the account that owns the retrieved/saved data
+        schema:
+          type: integer
+      - name: project_id
+        in: path
+        required: true
+        description: ID of the project to be retrieved
+        schema:
+          type: integer
+      - name: sdk_key
+        in: path
+        required: true
+        description: ID of the SDK key to update
+        schema:
+          type: string
+      requestBody:
+        $ref: '#/components/requestBodies/UpdateSdkKeyRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/SdkKeyResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+  /accounts/{account_id}/projects/{project_id}/sdk-keys/{sdk_key}/delete:
+    delete:
+      operationId: deleteSdkKey
+      summary: Delete an SDK key
+      description: 'Permanently revokes an SDK key, identified by its `sdk_key` value.
+
+        Once deleted, SDKs using this key will no longer be able to fetch configurations or track events for the associated project and environment.
+
+        '
+      tags:
+      - SDK Keys
+      parameters:
+      - name: account_id
+        in: path
+        required: true
+        description: ID of the account that owns the retrieved/saved data
+        schema:
+          type: integer
+      - name: project_id
+        in: path
+        required: true
+        description: ID of the project to be retrieved
+        schema:
+          type: integer
+      - name: sdk_key
+        in: path
+        required: true
+        description: ID of the SDK key to be deleted
+        schema:
+          type: string
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+components:
+  schemas:
+    SuccessData:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+    CreateSdkKeyRequestData:
+      allOf:
+      - $ref: '#/components/schemas/SdkKey'
+      - type: object
+        required:
+        - name
+        - environment
+        description: 'Request payload for creating a new SDK key. The SDK key will be automatically generated upon creation and returned in the response.
+
+          Required fields must be provided to successfully create the key.
+
+          '
+        properties:
+          has_secret:
+            type: boolean
+            description: Whether the SDK key should have a secret key. When true, a secret key will be generated and returned in the response.
+            default: true
+            writeOnly: true
+    UpdateSdkKeyRequestData:
+      allOf:
+      - $ref: '#/components/schemas/SdkKey'
+      - description: 'Request payload for updating an existing SDK key. This endpoint supports partial updates, allowing you to modify specific fields while keeping others unchanged.
+
+          Only the fields you want to update need to be included in the request body.
+
+          '
+    SdkKey:
+      type: object
+      description: 'Defines an SDK key used by Convert''s Full Stack SDKs (e.g., Node.js, JavaScript) to securely fetch project configurations (features, experiments) and send tracking data from server-side applications or rich client-side apps.
+
+        Each SDK key is typically scoped to a specific `environment` within a Full Stack project.
+
+        Knowledge Base: "Full Stack Experiments on Convert", "Implementing Convert''s Full Stack JavaScript SDK: Real-World Examples".
+
+        '
+      properties:
+        name:
+          type: string
+          description: A user-defined, friendly name for the SDK key to help identify its purpose or the application/service using it (e.g., "Production Backend API", "Staging iOS App").
+          maxLength: 100
+        sdk_key:
+          type: string
+          description: "Unique identifier used to authenticate requests to Convert's serving API endpoints. This key is required to fetch experiments, personalizations and other serving data via the \nAPI (see /doc/serving). Generated automatically when creating a new SDK key.\n"
+          readOnly: true
+        sdk_secret:
+          type: string
+          description: "Secret key used for SDK authentication. This value is only returned in full when the SDK key is first created. \nIn subsequent GET requests, the secret will be partially redacted (e.g., \"abc12*****123\") for security purposes.\nWhen this is null, the SDK key can be used without authentication (public access).\n"
+          nullable: true
+          readOnly: true
+        environment:
+          type: string
+          description: 'The specific environment within the Full Stack project that this SDK key is associated with (e.g., "production", "development", "staging").
+
+            The SDK will fetch configurations relevant to this environment. This must match one of the environments defined at the project level.
+
+            KB: "The Environments Feature".
+
+            '
+        status:
+          $ref: '#/components/schemas/SdkKeyStatuses'
+        selected_default:
+          type: boolean
+          description: 'If true, this SDK key is marked as the default for its environment within the project. Only one SDK key can be default per project environment.
+
+            When a key is set as default, any previously default key for the same environment will be automatically unset.
+
+            '
+    SdkKeysListResponseData:
+      type: object
+      description: Response containing a list of SDK keys defined for a specific Full Stack project, along with pagination details if applicable.
+      properties:
+        data:
+          $ref: '#/components/schemas/SdkKeysList'
+    ErrorData:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          oneOf:
+          - type: string
+          - type: array
+            items:
+              type: string
+        fields:
+          oneOf:
+          - type: string
+          - type: array
+            items:
+              type: string
+    SdkKeyStatuses:
+      type: string
+      enum:
+      - enabled
+      - disabled
+      description: Indicates whether the SDK key is active and can be used for API authentication. When disabled, all requests using this key will be rejected.
+      default: enabled
+    SdkKeysList:
+      type: array
+      description: A list of SDK key objects.
+      items:
+        $ref: '#/components/schemas/SdkKey'
+  requestBodies:
+    CreateSdkKeyRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CreateSdkKeyRequestData'
+      description: Contains the `name` for the new SDK key, the target `environment` (e.g., 'production', 'staging') it applies to, and a boolean `has_secret` indicating if an SDK secret should be generated for secure SDK authentication.
+      required: true
+    UpdateSdkKeyRequest:
+      description: Payload to update an existing SDK key
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UpdateSdkKeyRequestData'
+  responses:
+    ErrorResponse:
+      description: 'Indicates an error occurred while processing the request. The `code` provides an HTTP status code, `message` offers a human-readable explanation or an array of validation errors, and `fields` (if present) specifies which input fields were problematic.
+
+        '
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorData'
+    SdkKeyResponse:
+      description: Details of a single SDK key, including its name, the key string itself, the environment it's for, and whether it uses a secret for authentication. The secret is only shown in full upon creation if auto-generated.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SdkKey'
+    SuccessResponse:
+      description: 'A generic success response, typically used for operations that don''t return specific data (like deletions or some updates). The `code` is usually 200, and `message` confirms the successful action.
+
+        '
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SuccessData'
+    SdkKeysListResponse:
+      description: A list of SDK keys defined for a project. Each key is associated with an environment (e.g., production, staging) and is used by Convert's Full Stack SDKs for authentication and configuration fetching.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SdkKeysListResponseData'
+  securitySchemes:
+    requestSigning:
+      type: apiKey
+      x-name-applicationId: Convert-Application-ID
+      x-name-expire: Expire
+      name: Authorization
+      in: header
+      description: 'See **[API Key Authentication](#tag/API-KEY-Authentication)** for more information.
+
+        '
+    secretKey:
+      type: http
+      scheme: bearer
+      description: 'See **[API Key Authentication](#tag/API-KEY-Authentication)** for more information.
+
+        '
+    cookieAuthentication:
+      type: apiKey
+      in: cookie
+      name: sid
+      description: Cookie authentication is used against Convert's own IdentityProvider  or third party identity providers and is described more in the "[Cookie Authentication](#tag/Cookie-Authentication)" section
+x-tagGroups:
+- name: Client Authentication
+  tags:
+  - API KEY Authentication
+  - Cookie Authentication
+  - OAuth Authorization
+- name: Common Parameters
+  tags:
+  - Optional Fields
+  - Expandable Fields
+- name: Requests
+  tags:
+  - User
+  - Accounts
+  - AI content
+  - Collaborators
+  - API Keys
+  - Projects
+  - SDK Keys
+  - Experiences
+  - Experience Variations
+  - Experience Sections
+  - Section Versions
+  - Version Changes
+  - Experiences Reports
+  - Experiences Heatmaps
+  - Goals
+  - Hypotheses
+  - Knowledge Bases
+  - Observations
+  - Locations
+  - Audiences
+  - Domains
+  - Cdn Images
+  - Files
+  - Tags
+  - Features
+  - Visitor Insights
+  - Visitors Data
+  - Visitor Data Placeholders
+  - OAuth

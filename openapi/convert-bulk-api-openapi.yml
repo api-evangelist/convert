@@ -1,0 +1,1274 @@
+openapi: 3.1.0
+info:
+  title: Convert Accounts Bulk API
+  description: 'Move your app forward with the Convert API. The Convert API allows
+
+    you to manage your Convert Experiences projects using code. The REST API is
+
+    an interface for managing and extending functionality of Convert. For
+
+    example, instead of creating and maintaining projects using the Convert
+
+    Experiences web dashboard you can create an experiment programmatically.
+
+    Additionally, if you prefer to run custom analysis on experiment results you
+
+    can leverage the API to pull data from Convert Experiences into your own
+
+    workflow. If you do not have a Convert account already, sign up for a free
+
+    developer account at https://www.convert.com/api/.
+
+
+    *[Convert API V1](/doc/v1) is still available and documentation can be found [here](/doc/v1) but using it is highly discouraged
+
+    as it will be phased out in the future*
+
+    '
+  version: 2.0.0
+servers:
+- url: https://api.convert.com/api/v2
+  description: Live API server
+- url: https://apidev.convert.com/api/v2
+  description: DEV API server
+- url: http://apidev.convert.com:5000/api/v2
+  description: DEV mocked API server
+tags:
+- name: Bulk
+paths:
+  /accounts/{account_id}/projects/bulk-update:
+    post:
+      operationId: bulkUpdateProjects
+      summary: Update multiple projects at once
+      description: 'Allows for updating settings (like tracking script version) for multiple projects simultaneously within an account.
+
+        Requires a list of project IDs and the settings to apply.
+
+        '
+      tags:
+      - Bulk
+      parameters:
+      - name: account_id
+        in: path
+        required: true
+        description: ID of the account that owns the retrieved/saved data.
+        schema:
+          type: integer
+      requestBody:
+        $ref: '#/components/requestBodies/BulkUpdateProjectsRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/BulkSuccessResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+  /accounts/{account_id}/projects/{project_id}/domains/bulk-delete:
+    post:
+      operationId: bulkDomainsDelete
+      summary: Remove multiple domains from a project
+      description: 'De-associates multiple domains from the specified project in a single operation.
+
+        Requires a list of domain IDs to be removed.
+
+        '
+      tags:
+      - Bulk
+      parameters:
+      - name: account_id
+        in: path
+        required: true
+        description: ID of the account that owns the retrieved/saved data
+        schema:
+          type: integer
+      - name: project_id
+        description: ID of the project to which save/retrieved data is connected
+        in: path
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        $ref: '#/components/requestBodies/BulkDeleteDomainsRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/BulkSuccessResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+  /accounts/{account_id}/projects/{project_id}/experiences/bulk-update:
+    post:
+      operationId: bulkExperiencesUpdate
+      summary: Update multiple experiences at once
+      description: 'Allows for changing the status (e.g., activate, pause, archive) of multiple experiences within a project simultaneously.
+
+        Requires a list of experience IDs and the target status.
+
+        The Knowledge Base article "Bulk Actions on Experiences" describes this UI feature.
+
+        '
+      tags:
+      - Bulk
+      parameters:
+      - name: account_id
+        in: path
+        required: true
+        description: ID of the account that owns the retrieved/saved data
+        schema:
+          type: integer
+      - name: project_id
+        description: ID of the project to which save/retrieved data is connected
+        in: path
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        $ref: '#/components/requestBodies/BulkUpdateExperiencesRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/BulkSuccessResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+  /accounts/{account_id}/projects/{project_id}/experiences/bulk-delete:
+    post:
+      operationId: bulkExperiencesDelete
+      summary: Delete multiple experiences at once
+      description: 'Permanently removes multiple experiences from a project in a single operation.
+
+        Requires a list of experience IDs. This action is irreversible.
+
+        The Knowledge Base article "Bulk Actions on Experiences" describes this UI feature.
+
+        '
+      tags:
+      - Bulk
+      parameters:
+      - name: account_id
+        in: path
+        required: true
+        description: ID of the account that owns the retrieved/saved data
+        schema:
+          type: integer
+      - name: project_id
+        description: ID of the project to which save/retrieved data is connected
+        in: path
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        $ref: '#/components/requestBodies/BulkDeleteExperiencesRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/BulkSuccessResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+  /accounts/{account_id}/projects/{project_id}/goals/bulk-update:
+    post:
+      operationId: bulkGoalsUpdate
+      summary: Update multiple goals at once
+      description: 'Allows for changing the status (e.g., active, archived) of multiple goals within a project simultaneously.
+
+        Requires a list of goal IDs and the target status.
+
+        '
+      tags:
+      - Bulk
+      parameters:
+      - name: account_id
+        in: path
+        required: true
+        description: ID of the account that owns the retrieved/saved data
+        schema:
+          type: integer
+      - name: project_id
+        description: ID of the project to which save/retrieved data is connected
+        in: path
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        $ref: '#/components/requestBodies/BulkUpdateGoalsRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/BulkSuccessResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+  /accounts/{account_id}/projects/{project_id}/goals/bulk-delete:
+    post:
+      operationId: bulkGoalsDelete
+      summary: Delete multiple goals at once
+      description: 'Permanently removes multiple goals from a project in a single operation.
+
+        Requires a list of goal IDs. This action is irreversible.
+
+        '
+      tags:
+      - Bulk
+      parameters:
+      - name: account_id
+        in: path
+        required: true
+        description: ID of the account that owns the retrieved/saved data
+        schema:
+          type: integer
+      - name: project_id
+        description: ID of the project to which save/retrieved data is connected
+        in: path
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        $ref: '#/components/requestBodies/BulkDeleteGoalsRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/BulkSuccessResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+  /accounts/{account_id}/projects/{project_id}/tags/bulk-delete:
+    post:
+      operationId: bulkTagsDelete
+      summary: Delete multiple tags at once
+      description: 'Permanently removes multiple tags from a project in a single operation.
+
+        Requires a list of tag IDs.
+
+        '
+      tags:
+      - Bulk
+      parameters:
+      - name: account_id
+        in: path
+        required: true
+        description: ID of the account that owns the retrieved/saved data
+        schema:
+          type: integer
+      - name: project_id
+        description: ID of the project to which save/retrieved data is connected
+        in: path
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        $ref: '#/components/requestBodies/BulkDeleteTagsRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/BulkSuccessResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+  /accounts/{account_id}/projects/{project_id}/hypotheses/bulk-update:
+    post:
+      operationId: bulkHypothesesUpdate
+      summary: Update multiple hypotheses at once
+      description: 'Allows for changing the status of multiple hypotheses within a project simultaneously.
+
+        Requires a list of hypothesis IDs and the target status.
+
+        '
+      tags:
+      - Bulk
+      parameters:
+      - name: account_id
+        in: path
+        required: true
+        description: ID of the account that owns the retrieved/saved data
+        schema:
+          type: integer
+      - name: project_id
+        description: ID of the project to which save/retrieved data is connected
+        in: path
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        $ref: '#/components/requestBodies/BulkUpdateHypothesesRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/BulkSuccessResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+  /accounts/{account_id}/projects/{project_id}/hypotheses/bulk-delete:
+    post:
+      operationId: bulkHypothesesDelete
+      summary: Delete multiple hypotheses at once
+      description: 'Permanently removes multiple hypotheses from a project in a single operation.
+
+        Requires a list of hypothesis IDs. This action is irreversible.
+
+        '
+      tags:
+      - Bulk
+      parameters:
+      - name: account_id
+        in: path
+        required: true
+        description: ID of the account that owns the retrieved/saved data
+        schema:
+          type: integer
+      - name: project_id
+        description: ID of the project to which save/retrieved data is connected
+        in: path
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        $ref: '#/components/requestBodies/BulkDeleteHypothesesRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/BulkSuccessResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+  /accounts/{account_id}/projects/{project_id}/knowledge-bases/bulk-update:
+    post:
+      operationId: bulkKnowledgeBasesUpdate
+      summary: Update multiple Knowledge Base entries at once
+      description: 'Allows for changing the status (e.g., active, archived) of multiple Knowledge Base entries within a project simultaneously.
+
+        Requires a list of Knowledge Base entry IDs and the target status.
+
+        '
+      tags:
+      - Bulk
+      parameters:
+      - name: account_id
+        in: path
+        required: true
+        description: ID of the account that owns the retrieved/saved data
+        schema:
+          type: integer
+      - name: project_id
+        description: ID of the project to which save/retrieved data is connected
+        in: path
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        $ref: '#/components/requestBodies/BulkUpdateKnowledgeBasesRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/BulkSuccessResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+  /accounts/{account_id}/projects/{project_id}/knowledge-bases/bulk-delete:
+    post:
+      operationId: bulkKnowledgeBasesDelete
+      summary: Delete multiple Knowledge Base entries at once
+      description: 'Permanently removes multiple Knowledge Base entries from a project in a single operation.
+
+        Requires a list of Knowledge Base entry IDs. This action is irreversible.
+
+        '
+      tags:
+      - Bulk
+      parameters:
+      - name: account_id
+        in: path
+        required: true
+        description: ID of the account that owns the retrieved/saved data
+        schema:
+          type: integer
+      - name: project_id
+        description: ID of the project to which save/retrieved data is connected
+        in: path
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        $ref: '#/components/requestBodies/BulkDeleteKnowledgeBasesRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/BulkSuccessResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+  /accounts/{account_id}/projects/{project_id}/observations/bulk-update:
+    post:
+      operationId: bulkObservationsUpdate
+      summary: Update multiple observations at once
+      description: 'Allows for changing the status (e.g., active, archived) of multiple observations within a project simultaneously.
+
+        Requires a list of observation IDs and the target status.
+
+        '
+      tags:
+      - Bulk
+      parameters:
+      - name: account_id
+        in: path
+        required: true
+        description: ID of the account that owns the retrieved/saved data
+        schema:
+          type: integer
+      - name: project_id
+        description: ID of the project to which save/retrieved data is connected
+        in: path
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        $ref: '#/components/requestBodies/BulkUpdateObservationsRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/BulkSuccessResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+  /accounts/{account_id}/projects/{project_id}/observations/bulk-delete:
+    post:
+      operationId: bulkObservationsDelete
+      summary: Delete multiple observations at once
+      description: 'Permanently removes multiple observations from a project in a single operation.
+
+        Requires a list of observation IDs. This action is irreversible.
+
+        '
+      tags:
+      - Bulk
+      parameters:
+      - name: account_id
+        in: path
+        required: true
+        description: ID of the account that owns the retrieved/saved data
+        schema:
+          type: integer
+      - name: project_id
+        description: ID of the project to which save/retrieved data is connected
+        in: path
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        $ref: '#/components/requestBodies/BulkDeleteObservationsRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/BulkSuccessResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+  /accounts/{account_id}/projects/{project_id}/locations/bulk-update:
+    post:
+      operationId: bulkLocationsUpdate
+      summary: Update multiple locations at once
+      description: 'Allows for changing the status (e.g., active, archived) of multiple locations within a project simultaneously.
+
+        Requires a list of location IDs and the target status.
+
+        '
+      tags:
+      - Bulk
+      parameters:
+      - name: account_id
+        in: path
+        required: true
+        description: ID of the account that owns the retrieved/saved data
+        schema:
+          type: integer
+      - name: project_id
+        description: ID of the project to which save/retrieved data is connected
+        in: path
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        $ref: '#/components/requestBodies/BulkUpdateLocationsRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/BulkSuccessResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+  /accounts/{account_id}/projects/{project_id}/locations/bulk-delete:
+    post:
+      operationId: bulkLocationsDelete
+      summary: Delete multiple locations at once
+      description: 'Permanently removes multiple locations from a project in a single operation.
+
+        Requires a list of location IDs. This action is irreversible.
+
+        '
+      tags:
+      - Bulk
+      parameters:
+      - name: account_id
+        in: path
+        required: true
+        description: ID of the account that owns the retrieved/saved data
+        schema:
+          type: integer
+      - name: project_id
+        description: ID of the project to which save/retrieved data is connected
+        in: path
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        $ref: '#/components/requestBodies/BulkDeleteLocationsRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/BulkSuccessResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+  /accounts/{account_id}/projects/{project_id}/audiences/bulk-update:
+    post:
+      operationId: bulkAudiencesUpdate
+      summary: Update multiple audiences at once
+      description: 'Allows for changing the status (e.g., active, archived) of multiple audiences within a project simultaneously.
+
+        Requires a list of audience IDs and the target status.
+
+        '
+      tags:
+      - Bulk
+      parameters:
+      - name: account_id
+        in: path
+        required: true
+        description: ID of the account that owns the retrieved/saved data
+        schema:
+          type: integer
+      - name: project_id
+        description: ID of the project to which save/retrieved data is connected
+        in: path
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        $ref: '#/components/requestBodies/BulkUpdateAudiencesRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/BulkSuccessResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+  /accounts/{account_id}/projects/{project_id}/audiences/bulk-delete:
+    post:
+      operationId: bulkAudiencesDelete
+      summary: Delete multiple audiences at once
+      description: 'Permanently removes multiple audiences from a project in a single operation.
+
+        Requires a list of audience IDs. This action is irreversible.
+
+        '
+      tags:
+      - Bulk
+      parameters:
+      - name: account_id
+        in: path
+        required: true
+        description: ID of the account that owns the retrieved/saved data
+        schema:
+          type: integer
+      - name: project_id
+        description: ID of the project to which save/retrieved data is connected
+        in: path
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        $ref: '#/components/requestBodies/BulkDeleteAudiencesRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/BulkSuccessResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+  /accounts/{account_id}/projects/{project_id}/features/bulk-update:
+    post:
+      operationId: bulkFeaturesUpdate
+      summary: Update multiple features at once
+      description: 'Allows for changing the status (e.g., active, archived) of multiple features within a Full Stack project simultaneously.
+
+        Requires a list of feature IDs and the target status.
+
+        '
+      tags:
+      - Bulk
+      parameters:
+      - name: account_id
+        in: path
+        required: true
+        description: ID of the account that owns the retrieved/saved data
+        schema:
+          type: integer
+      - name: project_id
+        description: ID of the project to which save/retrieved data is connected
+        in: path
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        $ref: '#/components/requestBodies/BulkUpdateFeaturesRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/BulkSuccessResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+  /accounts/{account_id}/projects/{project_id}/features/bulk-delete:
+    post:
+      operationId: bulkFeaturesDelete
+      summary: Delete multiple features at once
+      description: 'Permanently removes multiple features from a Full Stack project in a single operation.
+
+        Requires a list of feature IDs. This action is irreversible.
+
+        '
+      tags:
+      - Bulk
+      parameters:
+      - name: account_id
+        in: path
+        required: true
+        description: ID of the account that owns the retrieved/saved data
+        schema:
+          type: integer
+      - name: project_id
+        description: ID of the project to which save/retrieved data is connected
+        in: path
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        $ref: '#/components/requestBodies/BulkDeleteFeaturesRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/BulkSuccessResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+components:
+  requestBodies:
+    BulkUpdateAudiencesRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BulkUpdateAudienceRequestData'
+      description: Contains a list of audience `id`s and the target `status` (e.g., 'active', 'archived') to apply to all of them.
+      required: true
+    BulkUpdateObservationsRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BulkUpdateObservationsRequestData'
+      description: Contains a list of observation `id`s and the target `status` (e.g., 'active', 'archived') to apply to all of them.
+      required: true
+    BulkDeleteGoalsRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BulkDeleteGoalRequestData'
+    BulkUpdateKnowledgeBasesRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BulkUpdateKnowledgeBasesRequestData'
+      description: Contains a list of Knowledge Base entry `id`s and the target `status` to apply to all of them.
+      required: true
+    BulkDeleteTagsRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BulkDeleteTagRequestData'
+    BulkUpdateExperiencesRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BulkUpdateExperiencesRequestData'
+      description: Contains a list of experience `id`s and the target `status` (e.g., 'active', 'paused', 'archived') to apply to all of them. Useful for managing multiple experiments efficiently.
+      required: true
+    BulkDeleteHypothesesRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BulkDeleteHypothesesRequestData'
+      required: true
+    BulkUpdateFeaturesRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BulkUpdateFeatureRequestData'
+      description: Contains a list of feature `id`s and the target `status` (e.g., 'active', 'archived') to apply to all of them.
+      required: true
+    BulkDeleteObservationsRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BulkDeleteObservationsRequestData'
+      required: true
+    BulkUpdateProjectsRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BulkUpdateProjectsRequestData'
+      description: Contains a list of project `id`s and the `settings` (specifically `tracking_script.current_version`) to be applied to all specified projects. Useful for rolling out tracking script updates.
+      required: true
+    BulkDeleteAudiencesRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BulkDeleteAudienceRequestData'
+    BulkDeleteExperiencesRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BulkDeleteExperiencesRequestData'
+      required: true
+    BulkUpdateLocationsRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BulkUpdateLocationsRequestData'
+      description: Contains a list of location `id`s and the target `status` (e.g., 'active', 'archived') to apply to all of them.
+      required: true
+    BulkDeleteFeaturesRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BulkDeleteFeatureRequestData'
+    BulkUpdateGoalsRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BulkUpdateGoalRequestData'
+      description: Contains a list of goal `id`s and the target `status` (e.g., 'active', 'archived') to apply to all of them.
+      required: true
+    BulkDeleteLocationsRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BulkDeleteLocationsRequestData'
+    BulkUpdateHypothesesRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BulkUpdateHypothesesRequestData'
+      description: Contains a list of hypothesis `id`s and the target `status` to apply to all of them.
+      required: true
+    BulkDeleteKnowledgeBasesRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BulkDeleteKnowledgeBasesRequestData'
+      required: true
+    BulkDeleteDomainsRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BulkDeleteDomainRequestData'
+  schemas:
+    BulkDeleteKnowledgeBasesRequestData:
+      type: object
+      description: Request body for bulk deleting multiple Knowledge Base entries. Contains a list of entry IDs to be permanently removed.
+      additionalProperties: false
+      properties:
+        id:
+          $ref: '#/components/schemas/BulkKnowledgeBaseIds'
+      required:
+      - id
+    BulkDeleteDomainRequestData:
+      type: object
+      description: Bulk Delete provided domains
+      additionalProperties: false
+      properties:
+        id:
+          $ref: '#/components/schemas/BulkDomainsIds'
+      required:
+      - id
+    HypothesisStatuses:
+      description: 'The current stage or outcome of a hypothesis in its lifecycle:
+
+        - `draft`: The hypothesis is still being formulated or refined; not yet ready for testing.
+
+        - `completed`: The hypothesis definition is finalized and it''s ready to be linked to an experiment or tested.
+
+        - `applied`: The hypothesis is currently being tested in one or more active experiences.
+
+        - `proven`: Testing has concluded, and the hypothesis was validated (i.e., the proposed change led to a positive, statistically significant outcome). Can be moved to Knowledge Base.
+
+        - `disproven`: Testing has concluded, and the hypothesis was invalidated (i.e., the proposed change did not lead to the expected positive outcome or had a negative impact). Can be moved to Knowledge Base.
+
+        - `archived`: The hypothesis is no longer active or relevant for current testing but is kept for historical records.
+
+        KB: "Hypotheses (Compass)" - "Status of Hypothesis".
+
+        '
+      type: string
+      enum:
+      - applied
+      - archived
+      - completed
+      - draft
+      - proven
+      - disproven
+    BulkUpdateAudienceRequestData:
+      type: object
+      description: Request body for bulk updating the status of multiple audiences.
+      additionalProperties: false
+      properties:
+        id:
+          $ref: '#/components/schemas/BulkAudiencesIds'
+        status:
+          $ref: '#/components/schemas/AudienceStatuses'
+      required:
+      - id
+      - status
+    BulkSuccessData:
+      allOf:
+      - $ref: '#/components/schemas/SuccessData'
+      - type: object
+        properties:
+          code:
+            type: integer
+            format: int32
+          errors:
+            type: array
+            description: List of unprocessed entities. Would be empty, if all passed entities processed
+            items:
+              $ref: '#/components/schemas/BulkEntityError'
+    ObservationStatuses:
+      description: 'The current status of an observation in its lifecycle:
+
+        - `active`: The observation is current, under consideration, or being actively discussed. This is the default for new observations.
+
+        - `archived`: The observation has been reviewed and is no longer actively being pursued (e.g., deemed not actionable, superseded, or already addressed). It''s kept for historical records.
+
+        Knowledge Base: "Observations Feature Guide" - "Status Management".
+
+        '
+      type: string
+      enum:
+      - active
+      - archived
+      default: active
+    BulkLocationsIds:
+      type: array
+      description: A list of location unique numerical identifiers to be affected by a bulk operation.
+      items:
+        type: integer
+      minItems: 1
+      maxItems: 100
+    BulkFeaturesIds:
+      type: array
+      description: A list of feature unique numerical identifiers to be affected by a bulk operation.
+      items:
+        type: integer
+      minItems: 1
+      maxItems: 100
+    BulkUpdateLocationsRequestData:
+      type: object
+      description: Request body for bulk updating the status of multiple locations.
+      additionalProperties: false
+      properties:
+        id:
+          $ref: '#/components/schemas/BulkLocationsIds'
+        status:
+          $ref: '#/components/schemas/LocationStatuses'
+      required:
+      - id
+      - status
+    BulkUpdateHypothesesRequestData:
+      type: object
+      description: Request body for bulk updating the status of multiple hypotheses.
+      additionalProperties: false
+      properties:
+        id:
+          $ref: '#/components/schemas/BulkHypothesisIds'
+        status:
+          $ref: '#/components/schemas/HypothesisStatuses'
+      required:
+      - id
+      - status
+    LocationStatuses:
+      type: string
+      description: 'The current status of a location:
+
+        - `active`: The location is active and can be used for targeting experiences.
+
+        - `archived`: The location is archived and no longer available for new experiences, but its definition is preserved. Archived locations can often be cloned.
+
+        Knowledge Base: "Benefits of Archiving Unused Goals, Locations, and Audiences."
+
+        '
+      enum:
+      - active
+      - archived
+      default: active
+    BulkDeleteTagRequestData:
+      type: object
+      description: Request body for bulk deleting multiple tags. Contains a list of tag IDs to be permanently removed.
+      additionalProperties: false
+      properties:
+        id:
+          $ref: '#/components/schemas/BulkTagsIds'
+      required:
+      - id
+    BulkExperienceIds:
+      type: array
+      description: A list of unique numerical identifiers for experiences to be affected by a bulk operation.
+      items:
+        type: integer
+      minItems: 1
+      maxItems: 100
+    BulkGoalsIds:
+      type: array
+      description: The list of goals id to delete
+      items:
+        type: integer
+      minItems: 1
+      maxItems: 100
+    BulkEntityError:
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          description: The unique identifier of the entity that could not be processed.
+        message:
+          type: string
+          description: A message explaining the reason for the failure for this specific entity.
+    BulkDeleteAudienceRequestData:
+      type: object
+      description: Request body for bulk deleting multiple audiences. Contains a list of audience IDs to be permanently removed.
+      additionalProperties: false
+      properties:
+        id:
+          $ref: '#/components/schemas/BulkAudiencesIds'
+      required:
+      - id
+    FeatureStatuses:
+      type: string
+      description: 'The current status of a feature:
+
+        - `active`: The feature is active and can be used in Full Stack experiments. Its variables can be controlled by experiences.
+
+        - `archived`: The feature is archived and no longer available for new experiments. Existing experiments using it might behave based on last known configuration or default values.
+
+        '
+      enum:
+      - active
+      - archived
+      default: active
+    BulkUpdateGoalRequestData:
+      type: object
+      description: Request body for bulk updating the status of multiple goals.
+      additionalProperties: false
+      properties:
+        id:
+          $ref: '#/components/schemas/BulkGoalsIds'
+        status:
+          $ref: '#/components/schemas/GoalStatuses'
+      required:
+      - id
+      - status
+    KnowledgeBaseStatuses:
+      description: 'The status of a Knowledge Base entry:
+
+        - `active`: The entry is current and relevant.
+
+        - `archived`: The entry is kept for historical purposes but may no longer be considered current best practice or has been superseded by newer learnings.
+
+        '
+      type: string
+      enum:
+      - active
+      - archived
+      default: active
+    BulkHypothesisIds:
+      type: array
+      description: A list of hypothesis unique numerical identifiers to be affected by a bulk operation.
+      items:
+        type: integer
+      minItems: 1
+      maxItems: 100
+    BulkAudiencesIds:
+      type: array
+      description: A list of audience unique numerical identifiers to be affected by a bulk operation.
+      items:
+        type: integer
+      minItems: 1
+      maxItems: 100
+    BulkDeleteGoalRequestData:
+      type: object
+      description: Request body for bulk deleting multiple goals. Contains a list of goal IDs to be permanently removed.
+      additionalProperties: false
+      properties:
+        id:
+          $ref: '#/components/schemas/BulkGoalsIds'
+      required:
+      - id
+    AudienceStatuses:
+      type: string
+      description: 'The status of an audience:
+
+        - `active`: The audience is currently active and can be used for targeting experiences.
+
+        - `archived`: The audience is no longer active and cannot be used for new experiences, but its definition and past usage data are preserved. Archived audiences can often be cloned.
+
+        Knowledge Base: "Benefits of Archiving Unused Goals, Locations, and Audiences."
+
+        '
+      enum:
+      - active
+      - archived
+    BulkDomainsIds:
+      type: array
+      description: The list of domains id to delete
+      items:
+        type: integer
+      minItems: 1
+      maxItems: 100
+    BulkDeleteLocationsRequestData:
+      type: object
+      description: Request body for bulk deleting multiple locations. Contains a list of location IDs to be permanently removed.
+      additionalProperties: false
+      properties:
+        id:
+          $ref: '#/components/schemas/BulkLocationsIds'
+      required:
+      - id
+    BulkKnowledgeBaseIds:
+      type: array
+      description: A list of Knowledge Base entry unique numerical identifiers to be affected by a bulk operation.
+      items:
+        type: integer
+      minItems: 1
+      maxItems: 100
+    ErrorData:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          oneOf:
+          - type: string
+          - type: array
+            items:
+              type: string
+        fields:
+          oneOf:
+          - type: string
+          - type: array
+            items:
+              type: string
+    BulkUpdateFeatureRequestData:
+      type: object
+      description: Request body for bulk updating the status of multiple features.
+      additionalProperties: false
+      properties:
+        id:
+          $ref: '#/components/schemas/BulkFeaturesIds'
+        status:
+          $ref: '#/components/schemas/FeatureStatuses'
+      required:
+      - id
+      - status
+    BulkTagsIds:
+      type: array
+      description: A list of tag unique numerical identifiers to be affected by a bulk delete operation.
+      items:
+        type: integer
+      minItems: 1
+      maxItems: 100
+    BulkUpdateExperiencesRequestData:
+      type: object
+      description: Request body for bulk updating the status of multiple experiences.
+      additionalProperties: false
+      properties:
+        id:
+          $ref: '#/components/schemas/BulkExperienceIds'
+        status:
+          $ref: '#/components/schemas/BulkExperienceStatuses'
+      required:
+      - id
+      - status
+    BulkDeleteObservationsRequestData:
+      type: object
+      description: Request body for bulk deleting multiple observations. Contains a list of observation IDs to be permanently removed.
+      additionalProperties: false
+      properties:
+        id:
+          $ref: '#/components/schemas/BulkObservationIds'
+      required:
+      - id
+    BulkUpdateProjectsRequestData:
+      type: object
+      description: Request body for bulk updating settings (like tracking script version) for multiple projects.
+      additionalProperties: false
+      properties:
+        id:
+          $ref: '#/components/schemas/BulkProjectIds'
+        settings:
+          type: object
+          description: Project settings to be updated across the specified projects.
+          additionalProperties: false
+          properties:
+            tracking_script:
+              type: object
+              description: Tracking script settings to apply, specifically the `current_version`.
+              additionalProperties: false
+              properties:
+                current_version:
+                  type: string
+                  description: The target tracking script version string to apply to all selected projects.
+      required:
+      - id
+    BulkDeleteExperiencesRequestData:
+      type: object
+      description: Request body for bulk deleting multiple experiences. Contains a list of experience IDs to be permanently removed.
+      additionalProperties: false
+      properties:
+        id:
+          $ref: '#/components/schemas/BulkExperienceIds'
+      required:
+      - id
+    BulkObservationIds:
+      type: array
+      description: A list of observation unique numerical identifiers to be affected by a bulk operation.
+      items:
+        type: integer
+      minItems: 1
+      maxItems: 100
+    BulkDeleteFeatureRequestData:
+      type: object
+      description: Request body for bulk deleting multiple features. Contains a list of feature IDs to be permanently removed.
+      additionalProperties: false
+      properties:
+        id:
+          $ref: '#/components/schemas/BulkFeaturesIds'
+      required:
+      - id
+    BulkDeleteHypothesesRequestData:
+      type: object
+      description: Request body for bulk deleting multiple hypotheses. Contains a list of hypothesis IDs to be permanently removed.
+      additionalProperties: false
+      properties:
+        id:
+          $ref: '#/components/schemas/BulkHypothesisIds'
+      required:
+      - id
+    BulkExperienceStatuses:
+      type: string
+      enum:
+      - active
+      - paused
+      - archived
+    BulkUpdateObservationsRequestData:
+      type: object
+      description: Request body for bulk updating the status of multiple observations.
+      additionalProperties: false
+      properties:
+        id:
+          $ref: '#/components/schemas/BulkObservationIds'
+        status:
+          $ref: '#/components/schemas/ObservationStatuses'
+      required:
+      - id
+      - status
+    GoalStatuses:
+      type: string
+      description: 'The current status of a goal:
+
+        - `active`: The goal is active and will track conversions for experiences it''s attached to.
+
+        - `archived`: The goal is archived and will not track new conversions. Its historical data remains accessible in reports for experiences that previously used it. Archived goals can often be cloned or unarchived.
+
+        Knowledge Base: "Benefits of Archiving Unused Goals, Locations, and Audiences."
+
+        '
+      enum:
+      - active
+      - archived
+    BulkProjectIds:
+      type: array
+      description: A list of project unique numerical identifiers to be affected by a bulk operation.
+      items:
+        type: integer
+      minItems: 1
+      maxItems: 100
+    SuccessData:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+    BulkUpdateKnowledgeBasesRequestData:
+      type: object
+      description: Request body for bulk updating the status of multiple Knowledge Base entries.
+      additionalProperties: false
+      properties:
+        id:
+          $ref: '#/components/schemas/BulkKnowledgeBaseIds'
+        status:
+          $ref: '#/components/schemas/KnowledgeBaseStatuses'
+      required:
+      - id
+      - status
+  responses:
+    ErrorResponse:
+      description: 'Indicates an error occurred while processing the request. The `code` provides an HTTP status code, `message` offers a human-readable explanation or an array of validation errors, and `fields` (if present) specifies which input fields were problematic.
+
+        '
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorData'
+    BulkSuccessResponse:
+      description: 'Indicates the outcome of a bulk operation (e.g., bulk update or delete). Provides a general success `message` and an `errors` array listing any entities that could not be processed, along with the reason for failure for each.
+
+        '
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BulkSuccessData'
+  securitySchemes:
+    requestSigning:
+      type: apiKey
+      x-name-applicationId: Convert-Application-ID
+      x-name-expire: Expire
+      name: Authorization
+      in: header
+      description: 'See **[API Key Authentication](#tag/API-KEY-Authentication)** for more information.
+
+        '
+    secretKey:
+      type: http
+      scheme: bearer
+      description: 'See **[API Key Authentication](#tag/API-KEY-Authentication)** for more information.
+
+        '
+    cookieAuthentication:
+      type: apiKey
+      in: cookie
+      name: sid
+      description: Cookie authentication is used against Convert's own IdentityProvider  or third party identity providers and is described more in the "[Cookie Authentication](#tag/Cookie-Authentication)" section
+x-tagGroups:
+- name: Client Authentication
+  tags:
+  - API KEY Authentication
+  - Cookie Authentication
+  - OAuth Authorization
+- name: Common Parameters
+  tags:
+  - Optional Fields
+  - Expandable Fields
+- name: Requests
+  tags:
+  - User
+  - Accounts
+  - AI content
+  - Collaborators
+  - API Keys
+  - Projects
+  - SDK Keys
+  - Experiences
+  - Experience Variations
+  - Experience Sections
+  - Section Versions
+  - Version Changes
+  - Experiences Reports
+  - Experiences Heatmaps
+  - Goals
+  - Hypotheses
+  - Knowledge Bases
+  - Observations
+  - Locations
+  - Audiences
+  - Domains
+  - Cdn Images
+  - Files
+  - Tags
+  - Features
+  - Visitor Insights
+  - Visitors Data
+  - Visitor Data Placeholders
+  - OAuth
