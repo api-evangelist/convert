@@ -4,7 +4,20 @@ name: Convert
 kind: company
 description: >-
   Convert is an A/B testing and experimentation platform with privacy-first analytics and integrations for marketers and developers.
-image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+accessModel:
+  pricing: unknown
+  onboarding: self-serve
+  trial: false
+  try_now: false
+  public: false
+  label: Self-serve signup
+  confidence: high
+  source:
+  - plans
+  - authentication
+  generated: '2026-07-22'
+  method: derived
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/convert.png
 tags:
   - Experimentation
   - AB Testing
@@ -15,22 +28,425 @@ created: '2026-05-08'
 modified: '2026-05-08'
 specificationVersion: '0.19'
 apis:
-  - aid: convert:convert-rest-api
-    name: Convert Experiences REST API v2
-    description: >-
-      Convert Experiences REST API v2 manages accounts, projects, experiments, goals, audiences, locations, reports, and collaborators. Requests are signed via HMAC.
-    image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-    humanURL: https://api.convert.com/doc/v2/
-    baseURL: https://api.convert.com/api/v2
-    tags:
-      - Experimentation
-      - AB Testing
-      - REST
-    properties:
-      - type: Documentation
-        url: https://api.convert.com/doc/v2/
-      - type: Developers
-        url: https://www.convert.com/help/category/integrations/
+- aid: convert:convert-rest-api
+  name: Convert Experiences REST API v2
+  description: >-
+    Convert Experiences REST API v2 manages accounts, projects, experiments, goals, audiences, locations,
+    reports, and collaborators. Requests are signed via HMAC.
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://api.convert.com/doc/v2/
+  baseURL: https://api.convert.com/api/v2
+  tags:
+  - Experimentation
+  - AB Testing
+  - REST
+  properties:
+  - type: Documentation
+    url: https://api.convert.com/doc/v2/
+  - type: Developers
+    url: https://www.convert.com/help/category/integrations/
+- aid: convert:convert-accounts-api
+  name: Convert Accounts API
+  description: >-
+    Account is the entity that contains all data. An account is owned by an user and  in which more other
+    users can have different permissions, account wide or at project level
+  humanURL: https://api.convert.com/doc/v2/
+  baseURL: https://api.convert.com/api/v2
+  tags:
+  - Accounts
+  properties:
+  - type: OpenAPI
+    url: openapi/convert-accounts-api-openapi.yml
+- aid: convert:convert-ai-content-api
+  name: Convert AI content API
+  description: The AI content API from Convert — 2 operation(s) for ai content.
+  humanURL: https://api.convert.com/doc/v2/
+  baseURL: https://api.convert.com/api/v2
+  tags:
+  - AI content
+  properties:
+  - type: OpenAPI
+    url: openapi/convert-ai-content-api-openapi.yml
+- aid: convert:convert-api-keys-api
+  name: Convert API Keys API
+  description: >-
+    API Keys are used to authenticate requests from Server side applications that access this API
+  humanURL: https://api.convert.com/doc/v2/
+  baseURL: https://api.convert.com/api/v2
+  tags:
+  - API Keys
+  properties:
+  - type: OpenAPI
+    url: openapi/convert-api-keys-api-openapi.yml
+- aid: convert:convert-audiences-api
+  name: Convert Audiences API
+  description: >-
+    Audiences let you segment your users in the ways that are important to your business. You can segment
+    by event (e.g., session_start or level_up) and by user property (e.g., Browser/OS, Geo, Language),
+    and combine events, parameters, and properties to include practically any subset of users. Read more
+    information about <a href="https://support.convert.com/hc/en-us/articles/115000009891-Defining-Audiences-for-your-Experience">Audiences</a>.
+  humanURL: https://api.convert.com/doc/v2/
+  baseURL: https://api.convert.com/api/v2
+  tags:
+  - Audiences
+  properties:
+  - type: OpenAPI
+    url: openapi/convert-audiences-api-openapi.yml
+- aid: convert:convert-bulk-api
+  name: Convert Bulk API
+  description: The Bulk API from Convert — 19 operation(s) for bulk.
+  humanURL: https://api.convert.com/doc/v2/
+  baseURL: https://api.convert.com/api/v2
+  tags:
+  - Bulk
+  properties:
+  - type: OpenAPI
+    url: openapi/convert-bulk-api-openapi.yml
+- aid: convert:convert-cdn-images-api
+  name: Convert Cdn Images API
+  description: Various endpoints that allow Image Assets loaded through Convert's CDN to be managed
+  humanURL: https://api.convert.com/doc/v2/
+  baseURL: https://api.convert.com/api/v2
+  tags:
+  - Cdn Images
+  properties:
+  - type: OpenAPI
+    url: openapi/convert-cdn-images-api-openapi.yml
+- aid: convert:convert-collaborators-api
+  name: Convert Collaborators API
+  description: >-
+    Convert Experiences organizes customer data into Accounts(which are billable entities) and gives Users
+    access to accounts under different roles.  By default the **user that initially setups an account**,
+    will get access to that account as the **owner** of it.  Other users can be invited to get access
+    to specific/all projects inside that account becoming this way **Collaborators** of that **Account**
+  humanURL: https://api.convert.com/doc/v2/
+  baseURL: https://api.convert.com/api/v2
+  tags:
+  - Collaborators
+  properties:
+  - type: OpenAPI
+    url: openapi/convert-collaborators-api-openapi.yml
+- aid: convert:convert-cookie-authentication-api
+  name: Convert Cookie Authentication API
+  description: >-
+    In order to use the Convert app, user has two options to authenticate requests:
+
+    * Provide authorization token with each request works best for backend systems
+
+    * Authenticate once using username/password/IDP provider and than send session token together with
+    each request
+
+    These endpoints will handle second case.
+
+
+    **IMPORTANT:** currently this is available only for Convert.com's own clients, all other third party
+    clients need to authenticate using API KEY Authentication
+  humanURL: https://api.convert.com/doc/v2/
+  baseURL: https://api.convert.com/api/v2
+  tags:
+  - Cookie Authentication
+  properties:
+  - type: OpenAPI
+    url: openapi/convert-cookie-authentication-api-openapi.yml
+- aid: convert:convert-domains-api
+  name: Convert Domains API
+  description: Domains define websites which will be used in experiences in your projects.
+  humanURL: https://api.convert.com/doc/v2/
+  baseURL: https://api.convert.com/api/v2
+  tags:
+  - Domains
+  properties:
+  - type: OpenAPI
+    url: openapi/convert-domains-api-openapi.yml
+- aid: convert:convert-experience-sections-api
+  name: Convert Experience Sections API
+  description: Convert Experience's Sections provides API to update Sections of an experience.
+  humanURL: https://api.convert.com/doc/v2/
+  baseURL: https://api.convert.com/api/v2
+  tags:
+  - Experience Sections
+  properties:
+  - type: OpenAPI
+    url: openapi/convert-experience-sections-api-openapi.yml
+- aid: convert:convert-experience-variations-api
+  name: Convert Experience Variations API
+  description: >-
+    Each **Experience** has one or more **Variations** which are presented to different groups of visitor
+
+    in order to monitor the results of different changes or to personalize visitor's experience
+  humanURL: https://api.convert.com/doc/v2/
+  baseURL: https://api.convert.com/api/v2
+  tags:
+  - Experience Variations
+  properties:
+  - type: OpenAPI
+    url: openapi/convert-experience-variations-api-openapi.yml
+- aid: convert:convert-experiences-api
+  name: Convert Experiences API
+  description: >-
+    Convert Experiences provides a couple different experiences types. A/B, Split URL, Multivariate (MVT),
+    Deploys, A/A and Multi-page (funnel) testing. To learn more, see <a href="https://support.convert.com/hc/en-us/articles/204494049">Six
+    experience types in Convert Experiences.</a>
+  humanURL: https://api.convert.com/doc/v2/
+  baseURL: https://api.convert.com/api/v2
+  tags:
+  - Experiences
+  properties:
+  - type: OpenAPI
+    url: openapi/convert-experiences-api-openapi.yml
+- aid: convert:convert-experiences-heatmaps-api
+  name: Convert Experiences Heatmaps API
+  description: >-
+    Endpoints to retrieve heatmap background and overlay images (Convert Signals™). Filters such as device
+    and interaction type are passed in the request body.
+  humanURL: https://api.convert.com/doc/v2/
+  baseURL: https://api.convert.com/api/v2
+  tags:
+  - Experiences Heatmaps
+  properties:
+  - type: OpenAPI
+    url: openapi/convert-experiences-heatmaps-api-openapi.yml
+- aid: convert:convert-experiences-reports-api
+  name: Convert Experiences Reports API
+  description: Specification for different reports data that can be retrieved for experiences
+  humanURL: https://api.convert.com/doc/v2/
+  baseURL: https://api.convert.com/api/v2
+  tags:
+  - Experiences Reports
+  properties:
+  - type: OpenAPI
+    url: openapi/convert-experiences-reports-api-openapi.yml
+- aid: convert:convert-features-api
+  name: Convert Features API
+  description: Features can be created only under **Fullstack** Projects
+  humanURL: https://api.convert.com/doc/v2/
+  baseURL: https://api.convert.com/api/v2
+  tags:
+  - Features
+  properties:
+  - type: OpenAPI
+    url: openapi/convert-features-api-openapi.yml
+- aid: convert:convert-files-api
+  name: Convert Files API
+  description: Various endpoints that allow File Assets loaded through Convert's to be managed
+  humanURL: https://api.convert.com/doc/v2/
+  baseURL: https://api.convert.com/api/v2
+  tags:
+  - Files
+  properties:
+  - type: OpenAPI
+    url: openapi/convert-files-api-openapi.yml
+- aid: convert:convert-goals-api
+  name: Convert Goals API
+  description: >-
+    Goals measure how well your site fulfills your target objectives. A goal represents a completed activity,
+    called a conversion, that contributes to the success of your business. Examples of goals include making
+    a purchase (for an ecommerce site), completing a game level (for a mobile gaming site), or submitting
+    a contact information form (for a marketing or lead generation site). Read more information about
+    <a href="https://support.convert.com/hc/en-us/articles/204494109-Goals">Goals</a>.
+  humanURL: https://api.convert.com/doc/v2/
+  baseURL: https://api.convert.com/api/v2
+  tags:
+  - Goals
+  properties:
+  - type: OpenAPI
+    url: openapi/convert-goals-api-openapi.yml
+- aid: convert:convert-hypotheses-api
+  name: Convert Hypotheses API
+  description: >-
+    A hypothesis is an assumption that a proposed change in your website would lead to visitors taking
+    the action that you want them to. Read more information about <a href="https://support.convert.com/hc/en-us/articles/360037227891?_ga=2.37896292.616154853.1594029871-1191511577.1590603567">Hypotheses</a>.
+  humanURL: https://api.convert.com/doc/v2/
+  baseURL: https://api.convert.com/api/v2
+  tags:
+  - Hypotheses
+  properties:
+  - type: OpenAPI
+    url: openapi/convert-hypotheses-api-openapi.yml
+- aid: convert:convert-knowledge-bases-api
+  name: Convert Knowledge Bases API
+  description: The Knowledge Bases API from Convert — 7 operation(s) for knowledge bases.
+  humanURL: https://api.convert.com/doc/v2/
+  baseURL: https://api.convert.com/api/v2
+  tags:
+  - Knowledge Bases
+  properties:
+  - type: OpenAPI
+    url: openapi/convert-knowledge-bases-api-openapi.yml
+- aid: convert:convert-locations-api
+  name: Convert Locations API
+  description: >-
+    Locations let you target your experiences in the ways that are important to your business.
+  humanURL: https://api.convert.com/doc/v2/
+  baseURL: https://api.convert.com/api/v2
+  tags:
+  - Locations
+  properties:
+  - type: OpenAPI
+    url: openapi/convert-locations-api-openapi.yml
+- aid: convert:convert-oauth-api
+  name: Convert OAuth API
+  description: Manage OAuth clients and authorized sessions.
+  humanURL: https://api.convert.com/doc/v2/
+  baseURL: https://api.convert.com/api/v2
+  tags:
+  - OAuth
+  properties:
+  - type: OpenAPI
+    url: openapi/convert-oauth-api-openapi.yml
+- aid: convert:convert-oauth-authorization-api
+  name: Convert OAuth Authorization API
+  description: >-
+    Delegated authorization endpoints for third-party OAuth clients.
+
+
+    Typical flow:
+
+    * OAuth client initiates GET request in browser (`/oauth/authorize`) with `client_id` + `response_type=code`
+    + `scope` + `state` + `code_challenge` (PKCE)
+
+    * While generating `code_challenge` — don't forget to store the `code_verifier` which will be used
+    to obtain the access token
+
+    * User authenticates in Convert and approves scope in consent UI
+
+    * OAuth client exchanges one-time code (`/auth/oauth/token`) for a scoped bearer session token
+
+    * User can list/revoke authorized OAuth sessions (`/auth/oauth/sessions*`)
+
+
+    Scopes: `selected_accounts_projects`
+
+
+    Example:
+
+    ```
+
+    https://app.convert.com/auth/oauth/authorize?client_id=1111111&state=randomstring&scope=selected_accounts_projects&response_type=code&code_challenge=generatedCodeChallenge
+
+    ```
+  humanURL: https://api.convert.com/doc/v2/
+  baseURL: https://api.convert.com/api/v2
+  tags:
+  - OAuth Authorization
+  properties:
+  - type: OpenAPI
+    url: openapi/convert-oauth-authorization-api-openapi.yml
+- aid: convert:convert-observations-api
+  name: Convert Observations API
+  description: The Observations API from Convert — 7 operation(s) for observations.
+  humanURL: https://api.convert.com/doc/v2/
+  baseURL: https://api.convert.com/api/v2
+  tags:
+  - Observations
+  properties:
+  - type: OpenAPI
+    url: openapi/convert-observations-api-openapi.yml
+- aid: convert:convert-projects-api
+  name: Convert Projects API
+  description: >-
+    Once you start using Convert Experiences, you will have a growing number of experiences to manage.
+    Projects help you keep everything organized across multiple sites. Each project has its own tracking
+    code, set of experiences, and set of collaborators. For example, if you run experiences on multiple
+    domains, you can assign a unique project for each domain. Read <a href="https://support.convert.com/hc/en-us/articles/205150985-What-is-a-Project-">here</a>
+    some things you need to know about how a project behaves.
+  humanURL: https://api.convert.com/doc/v2/
+  baseURL: https://api.convert.com/api/v2
+  tags:
+  - Projects
+  properties:
+  - type: OpenAPI
+    url: openapi/convert-projects-api-openapi.yml
+- aid: convert:convert-sdk-keys-api
+  name: Convert SDK Keys API
+  description: The SDK Keys API from Convert — 4 operation(s) for sdk keys.
+  humanURL: https://api.convert.com/doc/v2/
+  baseURL: https://api.convert.com/api/v2
+  tags:
+  - SDK Keys
+  properties:
+  - type: OpenAPI
+    url: openapi/convert-sdk-keys-api-openapi.yml
+- aid: convert:convert-section-versions-api
+  name: Convert Section Versions API
+  description: >-
+    Convert Experience's Versions provides API to update Versions inside an experience's Section
+  humanURL: https://api.convert.com/doc/v2/
+  baseURL: https://api.convert.com/api/v2
+  tags:
+  - Section Versions
+  properties:
+  - type: OpenAPI
+    url: openapi/convert-section-versions-api-openapi.yml
+- aid: convert:convert-tags-api
+  name: Convert Tags API
+  description: Tags define tag labels for your project.
+  humanURL: https://api.convert.com/doc/v2/
+  baseURL: https://api.convert.com/api/v2
+  tags:
+  - Tags
+  properties:
+  - type: OpenAPI
+    url: openapi/convert-tags-api-openapi.yml
+- aid: convert:convert-user-api
+  name: Convert User API
+  description: Authenticated user related endpoints
+  humanURL: https://api.convert.com/doc/v2/
+  baseURL: https://api.convert.com/api/v2
+  tags:
+  - User
+  properties:
+  - type: OpenAPI
+    url: openapi/convert-user-api-openapi.yml
+- aid: convert:convert-version-changes-api
+  name: Convert Version Changes API
+  description: >-
+    Each **Experience's Variation** has one or more **Changes**; a change represent the actual modification
+    that
+
+    is applied to a visitor. It can be a piece of javascript or CSS code for web experiences or it can
+    be a string value for example
+
+    in case of a fullstack experience.
+  humanURL: https://api.convert.com/doc/v2/
+  baseURL: https://api.convert.com/api/v2
+  tags:
+  - Version Changes
+  properties:
+  - type: OpenAPI
+    url: openapi/convert-version-changes-api-openapi.yml
+- aid: convert:convert-visitor-data-placeholders-api
+  name: Convert Visitor Data Placeholders API
+  description: >-
+    Endpoints for managing visitor data placeholders personalization data. Visitor data placeholders define
+    dynamic content that can be personalized for individual visitors or groups.
+  humanURL: https://api.convert.com/doc/v2/
+  baseURL: https://api.convert.com/api/v2
+  tags:
+  - Visitor Data Placeholders
+  properties:
+  - type: OpenAPI
+    url: openapi/convert-visitor-data-placeholders-api-openapi.yml
+- aid: convert:convert-visitor-insights-api
+  name: Convert Visitor Insights API
+  description: Visitor Insights for the project
+  humanURL: https://api.convert.com/doc/v2/
+  baseURL: https://api.convert.com/api/v2
+  tags:
+  - Visitor Insights
+  properties:
+  - type: OpenAPI
+    url: openapi/convert-visitor-insights-api-openapi.yml
+- aid: convert:convert-visitors-data-api
+  name: Convert Visitors Data API
+  description: The Visitors Data API from Convert — 7 operation(s) for visitors data.
+  humanURL: https://api.convert.com/doc/v2/
+  baseURL: https://api.convert.com/api/v2
+  tags:
+  - Visitors Data
+  properties:
+  - type: OpenAPI
+    url: openapi/convert-visitors-data-api-openapi.yml
 common:
   - type: AgenticAccess
     url: agentic-access/convert-agentic-access.yml
