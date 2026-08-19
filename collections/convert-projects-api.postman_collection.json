@@ -1,0 +1,2051 @@
+{
+  "item": [
+    {
+      "id": "c1a08b3b-b5cb-4bd5-8043-cd1f833459e9",
+      "name": "Projects",
+      "description": {
+        "content": "Once you start using Convert Experiences, you will have a growing number of experiences to manage. Projects help you keep everything organized across multiple sites. Each project has its own tracking code, set of experiences, and set of collaborators. For example, if you run experiences on multiple domains, you can assign a unique project for each domain. Read <a href=\"https://support.convert.com/hc/en-us/articles/205150985-What-is-a-Project-\">here</a> some things you need to know about how a project behaves.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "646bd928-af37-4ab2-b372-9120c5b2f94e",
+          "name": "List projects within an account",
+          "request": {
+            "name": "List projects within an account",
+            "description": {
+              "content": "Retrieves a list of all projects belonging to the specified account that the authenticated user has access to.\nSupports filtering by project status, name/description search, and pagination.\nA project in Convert is a container for organizing experiences (A/B tests, personalizations), goals, audiences, and associated domains.\nAs per the Knowledge Base: \"Each project has its own tracking code, set of experiences, and set of collaborators.\"\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "accounts",
+                ":account_id",
+                "projects"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "account_id",
+                  "description": "(Required) ID of the account that owns the retrieved/saved data"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"onlyCount\": \"<boolean>\",\n  \"results_per_page\": 30,\n  \"sort_direction\": \"desc\",\n  \"status\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"search\": \"<string>\",\n  \"legacy_script\": \"<boolean>\",\n  \"tracking_script_release_type\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"tracking_script_version\": {\n    \"is\": \"<string>\",\n    \"isNot\": \"<string>\"\n  },\n  \"only\": [\n    \"<integer>\",\n    \"<integer>\"\n  ],\n  \"except\": [\n    \"<integer>\",\n    \"<integer>\"\n  ],\n  \"sort_by\": \"id\",\n  \"project_type\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"page\": \"<integer>\",\n  \"include\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"expand\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "c1adc581-979d-4ac1-92f2-65002cabfaf9",
+              "name": "A list of projects accessible to the user within an account. Each project entry includes its ID, name, type (web/fullstack), status, and potentially other summary information depending on `include` parameters.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "accounts",
+                    ":account_id",
+                    "projects"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "account_id",
+                      "description": "(Required) ID of the account that owns the retrieved/saved data"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": [\n    {\n      \"global_javascript\": \"string\",\n      \"name\": \"string\",\n      \"project_type\": \"web\",\n      \"reporting_settings\": {\n        \"tested_visitors_quota\": 5208,\n        \"currency_symbol\": \"string\",\n        \"blocked_ips\": {\n          \"single\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"range\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        \"stop_tracking_goals_after_days\": \"30 days\",\n        \"smart_recommendations\": true,\n        \"keep_running_until_confidence\": true,\n        \"primary_metric\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"stats_engine_processing\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"confidence\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"keep_winner\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"min_order_value\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"max_order_value\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"outliers\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"max_running_time\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"max_variation_visitors\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"max_experience_visitors\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"min_variation_conversions\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"min_conversion_value\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"min_running_time\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"min_variation_visitors\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"stop_loser\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"srm_check\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"visual_editor\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      },\n      \"settings\": {\n        \"allow_crossdomain_tracking\": false,\n        \"allow_gdpr\": false,\n        \"data_anonymization\": true,\n        \"do_not_track\": \"EEA ONLY\",\n        \"global_privacy_control\": \"EEA ONLY\",\n        \"include_jquery\": false,\n        \"include_jquery_v1\": false,\n        \"disable_spa_functionality\": false,\n        \"do_not_track_referral\": false,\n        \"time_zone\": \"string\",\n        \"utc_offset\": 0,\n        \"time_format\": \"24h\",\n        \"debug_token\": {\n          \"value\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"ttl\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        \"disable_default_config\": false,\n        \"include_experience_collaborators\": false,\n        \"version\": \"string\",\n        \"legacy_script\": false,\n        \"ignore_unused_locations\": false,\n        \"personalization\": {\n          \"enabled\": false\n        },\n        \"tracking_script\": {\n          \"current_version\": \"string\",\n          \"previous_version\": \"string\",\n          \"available_versions\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"release\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        \"visitor_insights\": {\n          \"id\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        }\n      },\n      \"integrations_settings\": {\n        \"crazyegg\": {\n          \"api_key\": \"string\",\n          \"api_secret\": \"string\"\n        },\n        \"google_analytics\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"kissmetrics\": {\n          \"enabled\": true\n        },\n        \"hotjar\": {\n          \"enabled\": true\n        }\n      },\n      \"status\": \"active\",\n      \"custom_domain\": {\n        \"domain\": \"umsf|+%/c.DO\\\"j/z85o<(\",\n        \"status\": \"active\",\n        \"ownership_verification\": [\n          {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        ],\n        \"version\": \"string\"\n      },\n      \"environments\": {\n        \"production\": {\n          \"label\": \"Production\",\n          \"is_default\": true\n        }\n      },\n      \"default_goals\": [\n        {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      ],\n      \"default_audiences\": [\n        {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      ],\n      \"default_locations\": [\n        {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      ],\n      \"id\": 8717,\n      \"accessRole\": \"account_manager\",\n      \"owner_email\": \"string\",\n      \"account_id\": 5471,\n      \"created_at\": 6822,\n      \"modified_at\": 8280,\n      \"tracking_snippet\": \"string\",\n      \"updateMetadata\": {\n        \"pendingChanges\": {\n          \"data\": false,\n          \"js\": true\n        },\n        \"lastInvalidation\": {\n          \"js\": 9644,\n          \"data\": 4089\n        },\n        \"nextInvalidation\": {\n          \"js\": 1469,\n          \"data\": 7\n        }\n      },\n      \"type\": \"own\",\n      \"stats\": {\n        \"visitor_data\": {\n          \"visitor_profiles_count\": 2688,\n          \"visitor_profiles_fields_count\": 9031,\n          \"active_personalised_experiences_count\": 2877\n        },\n        \"google_analytics\": {\n          \"used_slots\": [\n            1188,\n            8152\n          ],\n          \"used_dimensions\": [\n            2538,\n            4638\n          ]\n        },\n        \"usage\": {\n          \"used_tested_users\": 7256,\n          \"used_tested_visitors\": 2987\n        },\n        \"active_segments_count\": 1069,\n        \"segments_count\": 3111,\n        \"experiences_count\": 7312,\n        \"active_experiences_count\": 7594,\n        \"active_experiments_count\": 6546,\n        \"active_goals_count\": 6879,\n        \"visitor_insights\": {\n          \"usage\": 2515.5168761830914,\n          \"reset_at\": \"2000-02-05T03:39:33.564Z\"\n        }\n      },\n      \"domains\": [\n        {\n          \"id\": 5864,\n          \"url\": \"http://\",\n          \"code_installed\": false\n        },\n        {\n          \"id\": 174,\n          \"url\": \"https://\",\n          \"code_installed\": false\n        }\n      ],\n      \"sdk_key\": \"string\"\n    },\n    {\n      \"global_javascript\": \"string\",\n      \"name\": \"string\",\n      \"project_type\": \"web\",\n      \"reporting_settings\": {\n        \"tested_visitors_quota\": 8843,\n        \"currency_symbol\": \"string\",\n        \"blocked_ips\": {\n          \"single\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"range\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        \"stop_tracking_goals_after_days\": \"1 day\",\n        \"smart_recommendations\": true,\n        \"keep_running_until_confidence\": true,\n        \"primary_metric\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"stats_engine_processing\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"confidence\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"keep_winner\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"min_order_value\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"max_order_value\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"outliers\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"max_running_time\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"max_variation_visitors\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"max_experience_visitors\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"min_variation_conversions\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"min_conversion_value\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"min_running_time\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"min_variation_visitors\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"stop_loser\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"srm_check\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"visual_editor\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      },\n      \"settings\": {\n        \"allow_crossdomain_tracking\": true,\n        \"allow_gdpr\": false,\n        \"data_anonymization\": false,\n        \"do_not_track\": \"EU ONLY\",\n        \"global_privacy_control\": \"OFF\",\n        \"include_jquery\": true,\n        \"include_jquery_v1\": false,\n        \"disable_spa_functionality\": false,\n        \"do_not_track_referral\": false,\n        \"time_zone\": \"string\",\n        \"utc_offset\": 0,\n        \"time_format\": \"24h\",\n        \"debug_token\": {\n          \"value\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"ttl\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        \"disable_default_config\": false,\n        \"include_experience_collaborators\": false,\n        \"version\": \"string\",\n        \"legacy_script\": false,\n        \"ignore_unused_locations\": false,\n        \"personalization\": {\n          \"enabled\": false\n        },\n        \"tracking_script\": {\n          \"current_version\": \"string\",\n          \"previous_version\": \"string\",\n          \"available_versions\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"release\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        \"visitor_insights\": {\n          \"id\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        }\n      },\n      \"integrations_settings\": {\n        \"crazyegg\": {\n          \"api_key\": \"string\",\n          \"api_secret\": \"string\"\n        },\n        \"google_analytics\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"kissmetrics\": {\n          \"enabled\": false\n        },\n        \"hotjar\": {\n          \"enabled\": true\n        }\n      },\n      \"status\": \"suspended\",\n      \"custom_domain\": {\n        \"domain\": \"m^u.Q(XY/u'@#du\",\n        \"status\": \"pending\",\n        \"ownership_verification\": [\n          {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        ],\n        \"version\": \"string\"\n      },\n      \"environments\": {\n        \"production\": {\n          \"label\": \"Production\",\n          \"is_default\": true\n        }\n      },\n      \"default_goals\": [\n        {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      ],\n      \"default_audiences\": [\n        {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      ],\n      \"default_locations\": [\n        {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      ],\n      \"id\": 2735,\n      \"accessRole\": \"review\",\n      \"owner_email\": \"string\",\n      \"account_id\": 8716,\n      \"created_at\": 2358,\n      \"modified_at\": 9267,\n      \"tracking_snippet\": \"string\",\n      \"updateMetadata\": {\n        \"pendingChanges\": {\n          \"data\": false,\n          \"js\": true\n        },\n        \"lastInvalidation\": {\n          \"js\": 3322,\n          \"data\": 7048\n        },\n        \"nextInvalidation\": {\n          \"js\": 1707,\n          \"data\": 9355\n        }\n      },\n      \"type\": \"own\",\n      \"stats\": {\n        \"visitor_data\": {\n          \"visitor_profiles_count\": 9059,\n          \"visitor_profiles_fields_count\": 3901,\n          \"active_personalised_experiences_count\": 5666\n        },\n        \"google_analytics\": {\n          \"used_slots\": [\n            657,\n            2718\n          ],\n          \"used_dimensions\": [\n            5293,\n            9511\n          ]\n        },\n        \"usage\": {\n          \"used_tested_users\": 5017,\n          \"used_tested_visitors\": 8037\n        },\n        \"active_segments_count\": 7216,\n        \"segments_count\": 8347,\n        \"experiences_count\": 5512,\n        \"active_experiences_count\": 9112,\n        \"active_experiments_count\": 286,\n        \"active_goals_count\": 9623,\n        \"visitor_insights\": {\n          \"usage\": 5298.215148422993,\n          \"reset_at\": \"1964-09-11T01:13:21.135Z\"\n        }\n      },\n      \"domains\": [\n        {\n          \"id\": 5078,\n          \"url\": \"http://\",\n          \"code_installed\": false\n        },\n        {\n          \"id\": 4628,\n          \"url\": \"http://\",\n          \"code_installed\": false\n        }\n      ],\n      \"sdk_key\": \"string\"\n    }\n  ],\n  \"extra\": {\n    \"pagination\": {\n      \"current_page\": 4052,\n      \"items_count\": 2737,\n      \"items_per_page\": 9544,\n      \"pages_count\": 2562\n    }\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "44d68f43-161e-42a1-88bf-8e01514d4386",
+              "name": "Indicates an error occurred while processing the request. The `code` provides an HTTP status code, `message` offers a human-readable explanation or an array of validation errors, and `fields` (if present) specifies which input fields were problematic.\n",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "accounts",
+                    ":account_id",
+                    "projects"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "account_id",
+                      "description": "(Required) ID of the account that owns the retrieved/saved data"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 1797,\n  \"message\": \"string\",\n  \"fields\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "7dc8827d-5e01-4246-b138-98025c644b18",
+          "name": "Get change history for a specific project",
+          "request": {
+            "name": "Get change history for a specific project",
+            "description": {
+              "content": "Retrieves a historical log of changes made within a specific project.\nThis includes modifications to experiences, goals, audiences, locations, and project settings.\nProvides an audit trail for project-level activities, filterable by date, user, and event type.\nThe Knowledge Base states: \"Convert logs most actions that can be made in a Project; for example: creating an experiment, modifying a variation, adding and removing audiences, and more.\"\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "accounts",
+                ":account_id",
+                "projects",
+                ":project_id",
+                "change-history"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "account_id",
+                  "description": "(Required) ID of the account that owns the retrieved/saved data"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "project_id",
+                  "description": "(Required) ID of the project to be retrieved"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"onlyCount\": \"<boolean>\",\n  \"page\": \"<integer>\",\n  \"sort_direction\": \"desc\",\n  \"results_per_page\": 30,\n  \"methods\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"objects\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"audiences\": [\n    \"<integer>\",\n    \"<integer>\"\n  ],\n  \"goals\": [\n    \"<integer>\",\n    \"<integer>\"\n  ],\n  \"locations\": [\n    \"<integer>\",\n    \"<integer>\"\n  ],\n  \"hypotheses\": [\n    \"<integer>\",\n    \"<integer>\"\n  ],\n  \"domains\": [\n    \"<integer>\",\n    \"<integer>\"\n  ],\n  \"tags\": [\n    \"<integer>\",\n    \"<integer>\"\n  ],\n  \"experiences\": [\n    \"<integer>\",\n    \"<integer>\"\n  ],\n  \"sort_by\": \"timestamp\",\n  \"expand\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "189590d7-1dc7-4836-b302-2dae16313ac7",
+              "name": "A log of changes made within an account or project. Each entry details the `event` (e.g., 'create', 'update', 'delete'), the `object` changed (e.g., 'experience', 'goal'), `object_id`, `user` who made the change, `timestamp`, and `changes` (old and new values).",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "accounts",
+                    ":account_id",
+                    "projects",
+                    ":project_id",
+                    "change-history"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "account_id",
+                      "description": "(Required) ID of the account that owns the retrieved/saved data"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "project_id",
+                      "description": "(Required) ID of the project to be retrieved"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": [\n    {\n      \"event\": \"string\",\n      \"info\": {\n        \"isAdminChange\": true,\n        \"text\": \"string\"\n      },\n      \"changes\": {\n        \"old\": {},\n        \"new\": {}\n      },\n      \"method\": \"string\",\n      \"object\": \"string\",\n      \"object_id\": \"string\",\n      \"parent_object_id\": \"string\",\n      \"user\": \"string\",\n      \"timestamp\": 2917,\n      \"request_id\": \"string\",\n      \"project\": 4806\n    },\n    {\n      \"event\": \"string\",\n      \"info\": {\n        \"isAdminChange\": false,\n        \"text\": \"string\"\n      },\n      \"changes\": {\n        \"old\": {},\n        \"new\": {}\n      },\n      \"method\": \"string\",\n      \"object\": \"string\",\n      \"object_id\": \"string\",\n      \"parent_object_id\": \"string\",\n      \"user\": \"string\",\n      \"timestamp\": 6007,\n      \"request_id\": \"string\",\n      \"project\": 4730\n    }\n  ],\n  \"extra\": {\n    \"pagination\": {\n      \"current_page\": 5383,\n      \"items_count\": 1864,\n      \"items_per_page\": 5883,\n      \"pages_count\": 7315\n    }\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "baefcd05-f5c7-44a5-8cff-d2b1b846e2a2",
+              "name": "Indicates an error occurred while processing the request. The `code` provides an HTTP status code, `message` offers a human-readable explanation or an array of validation errors, and `fields` (if present) specifies which input fields were problematic.\n",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "accounts",
+                    ":account_id",
+                    "projects",
+                    ":project_id",
+                    "change-history"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "account_id",
+                      "description": "(Required) ID of the account that owns the retrieved/saved data"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "project_id",
+                      "description": "(Required) ID of the project to be retrieved"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 1797,\n  \"message\": \"string\",\n  \"fields\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "fd17c7ca-3185-4836-b6fa-59ec5a7a4213",
+          "name": "Get details for a specific project",
+          "request": {
+            "name": "Get details for a specific project",
+            "description": {
+              "content": "Retrieves comprehensive details for a single project, identified by its `project_id`.\nThis includes its name, type (web or fullstack), global JavaScript, settings (like time zone, jQuery inclusion), integrations, and optionally, associated domains and usage statistics.\nThe `include` parameter can fetch related data like `domains` or `stats.usage`. The `expand` parameter can provide full objects for linked entities.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "accounts",
+                ":account_id",
+                "projects",
+                ":project_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "include",
+                  "value": "<string>",
+                  "description": "Specifies the list of fields to be included in the response, which otherwise would not be sent.\n\nRead more in the section related to [Optional Fields](#tag/Optional-Fields)\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "include",
+                  "value": "<string>",
+                  "description": "Specifies the list of fields to be included in the response, which otherwise would not be sent.\n\nRead more in the section related to [Optional Fields](#tag/Optional-Fields)\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "expand",
+                  "value": "<string>",
+                  "description": "Specifies the list of objects which would be expanded in the response. Otherwise, only their id would be returned.\n\nRead more in the section related to [Expanding Fields](#tag/Expandable-Fields)\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "expand",
+                  "value": "<string>",
+                  "description": "Specifies the list of objects which would be expanded in the response. Otherwise, only their id would be returned.\n\nRead more in the section related to [Expanding Fields](#tag/Expandable-Fields)\n"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "account_id",
+                  "description": "(Required) ID of the account that owns the retrieved/saved data"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "project_id",
+                  "description": "(Required) ID of the project to be retrieved"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "f84c93bc-f04c-447b-8436-6418b928e246",
+              "name": "Detailed information for a single project, including its settings, associated domains, default goals/audiences/locations, integrations, and usage statistics (if requested via `include`).",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "accounts",
+                    ":account_id",
+                    "projects",
+                    ":project_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "include",
+                      "value": "domains"
+                    },
+                    {
+                      "key": "include",
+                      "value": "domains"
+                    },
+                    {
+                      "key": "expand",
+                      "value": "default_goals"
+                    },
+                    {
+                      "key": "expand",
+                      "value": "default_audiences"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "account_id",
+                      "description": "(Required) ID of the account that owns the retrieved/saved data"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "project_id",
+                      "description": "(Required) ID of the project to be retrieved"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"global_javascript\": \"string\",\n  \"name\": \"string\",\n  \"project_type\": \"web\",\n  \"reporting_settings\": {\n    \"tested_visitors_quota\": 5728,\n    \"currency_symbol\": \"string\",\n    \"blocked_ips\": {\n      \"single\": [\n        {\n          \"value\": \"string\",\n          \"name\": \"string\"\n        },\n        {\n          \"value\": \"string\",\n          \"name\": \"string\"\n        }\n      ],\n      \"range\": [\n        {\n          \"start\": \"string\",\n          \"end\": \"string\",\n          \"name\": \"string\"\n        },\n        {\n          \"start\": \"string\",\n          \"end\": \"string\",\n          \"name\": \"string\"\n        }\n      ]\n    },\n    \"stop_tracking_goals_after_days\": \"60 days\",\n    \"smart_recommendations\": true,\n    \"keep_running_until_confidence\": false,\n    \"primary_metric\": \"conversion_rate\",\n    \"stats_engine_processing\": {\n      \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n    },\n    \"confidence\": 1433.582424337384,\n    \"keep_winner\": true,\n    \"min_order_value\": 8652.055257922888,\n    \"max_order_value\": 1163.579974978113,\n    \"outliers\": {\n      \"order_value\": {\n        \"description\": \"Outlier detection settings for the monetary value of orders.\",\n        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n      },\n      \"products_ordered_count\": {\n        \"description\": \"Outlier detection settings for the number of products in an order.\",\n        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n      }\n    },\n    \"max_running_time\": 648,\n    \"max_variation_visitors\": 4559,\n    \"max_experience_visitors\": 8185,\n    \"min_variation_conversions\": 6845,\n    \"min_conversion_value\": 312,\n    \"min_running_time\": 562,\n    \"min_variation_visitors\": 3193,\n    \"stop_loser\": false,\n    \"srm_check\": true,\n    \"visual_editor\": {\n      \"selector_blacklist\": \"string\",\n      \"screen_width\": 6566.844747951974,\n      \"user_agent\": \"edge_tablet\"\n    }\n  },\n  \"settings\": {\n    \"allow_crossdomain_tracking\": true,\n    \"allow_gdpr\": true,\n    \"data_anonymization\": true,\n    \"do_not_track\": \"EEA ONLY\",\n    \"global_privacy_control\": \"EEA ONLY\",\n    \"include_jquery\": true,\n    \"include_jquery_v1\": false,\n    \"disable_spa_functionality\": false,\n    \"do_not_track_referral\": false,\n    \"time_zone\": \"string\",\n    \"utc_offset\": 0,\n    \"time_format\": \"24h\",\n    \"debug_token\": {\n      \"value\": \"string\",\n      \"ttl\": 8591\n    },\n    \"disable_default_config\": false,\n    \"include_experience_collaborators\": false,\n    \"version\": \"string\",\n    \"legacy_script\": false,\n    \"ignore_unused_locations\": false,\n    \"personalization\": {\n      \"enabled\": false\n    },\n    \"tracking_script\": {\n      \"current_version\": \"string\",\n      \"previous_version\": \"string\",\n      \"available_versions\": [\n        {\n          \"version\": \"string\",\n          \"changelog\": \"string\",\n          \"released_date\": 6692,\n          \"apply_date\": 5619\n        },\n        {\n          \"version\": \"string\",\n          \"changelog\": \"string\",\n          \"released_date\": 7700,\n          \"apply_date\": 3694\n        }\n      ],\n      \"release\": {\n        \"type\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      }\n    },\n    \"visitor_insights\": {\n      \"enabled\": true,\n      \"obfuscate_text\": true,\n      \"sampling_rate\": 5,\n      \"id\": \"string\"\n    }\n  },\n  \"integrations_settings\": {\n    \"crazyegg\": {\n      \"api_key\": \"string\",\n      \"api_secret\": \"string\"\n    },\n    \"google_analytics\": {\n      \"type\": {\n        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n      },\n      \"property_UA\": {\n        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n      }\n    },\n    \"kissmetrics\": {\n      \"enabled\": true\n    },\n    \"hotjar\": {\n      \"enabled\": false\n    }\n  },\n  \"status\": \"inactive\",\n  \"custom_domain\": {\n    \"domain\": \"YE..B}XZW1n3gC[\",\n    \"status\": \"active\",\n    \"ownership_verification\": [\n      {\n        \"name\": \"string\",\n        \"type\": \"CNAME\",\n        \"value\": \"string\"\n      },\n      {\n        \"name\": \"string\",\n        \"type\": \"CNAME\",\n        \"value\": \"string\"\n      }\n    ],\n    \"version\": \"string\"\n  },\n  \"environments\": {\n    \"production\": {\n      \"label\": \"Production\",\n      \"is_default\": true\n    }\n  },\n  \"default_goals\": [\n    7436,\n    7749\n  ],\n  \"default_audiences\": [\n    3758,\n    244\n  ],\n  \"default_locations\": [\n    5923,\n    2105\n  ],\n  \"id\": 7873,\n  \"accessRole\": \"owner\",\n  \"owner_email\": \"string\",\n  \"account_id\": 5062,\n  \"created_at\": 1508,\n  \"modified_at\": 403,\n  \"tracking_snippet\": \"string\",\n  \"updateMetadata\": {\n    \"pendingChanges\": {\n      \"data\": true,\n      \"js\": true\n    },\n    \"lastInvalidation\": {\n      \"js\": 8691,\n      \"data\": 3068\n    },\n    \"nextInvalidation\": {\n      \"js\": 3260,\n      \"data\": 9392\n    }\n  },\n  \"type\": \"shared\",\n  \"stats\": {\n    \"visitor_data\": {\n      \"visitor_profiles_count\": 1099,\n      \"visitor_profiles_fields_count\": 6000,\n      \"active_personalised_experiences_count\": 6872\n    },\n    \"google_analytics\": {\n      \"used_slots\": [\n        4867,\n        7198\n      ],\n      \"used_dimensions\": [\n        2085,\n        7402\n      ]\n    },\n    \"usage\": {\n      \"used_tested_users\": 1233,\n      \"used_tested_visitors\": 4337\n    },\n    \"active_segments_count\": 7840,\n    \"segments_count\": 4604,\n    \"experiences_count\": 1674,\n    \"active_experiences_count\": 7593,\n    \"active_experiments_count\": 4814,\n    \"active_goals_count\": 2086,\n    \"visitor_insights\": {\n      \"usage\": 563.2240518257859,\n      \"reset_at\": \"2002-06-30T05:07:59.231Z\"\n    }\n  },\n  \"domains\": [\n    {\n      \"id\": 9624,\n      \"url\": \"https://\",\n      \"code_installed\": false\n    },\n    {\n      \"id\": 7668,\n      \"url\": \"https://\",\n      \"code_installed\": false\n    }\n  ],\n  \"sdk_key\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "b3dccb7d-ddeb-4603-a155-2c6bfcf71092",
+              "name": "Indicates an error occurred while processing the request. The `code` provides an HTTP status code, `message` offers a human-readable explanation or an array of validation errors, and `fields` (if present) specifies which input fields were problematic.\n",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "accounts",
+                    ":account_id",
+                    "projects",
+                    ":project_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "include",
+                      "value": "domains"
+                    },
+                    {
+                      "key": "include",
+                      "value": "domains"
+                    },
+                    {
+                      "key": "expand",
+                      "value": "default_goals"
+                    },
+                    {
+                      "key": "expand",
+                      "value": "default_audiences"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "account_id",
+                      "description": "(Required) ID of the account that owns the retrieved/saved data"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "project_id",
+                      "description": "(Required) ID of the project to be retrieved"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 1797,\n  \"message\": \"string\",\n  \"fields\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "f4d69d8e-551e-45df-aca1-ef8bcd87b649",
+          "name": "Create a new project",
+          "request": {
+            "name": "Create a new project",
+            "description": {},
+            "url": {
+              "path": [
+                "accounts",
+                ":account_id",
+                "projects",
+                "add"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "account_id",
+                  "description": "(Required) ID of the account that owns the retrieved/saved data"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"<string>\",\n  \"global_javascript\": \"<string>\",\n  \"project_type\": \"web\",\n  \"reporting_settings\": {\n    \"tested_visitors_quota\": \"<integer>\",\n    \"currency_symbol\": \"<string>\",\n    \"blocked_ips\": {\n      \"single\": [\n        {\n          \"value\": \"<ip-address>\",\n          \"name\": \"<string>\"\n        },\n        {\n          \"value\": \"<ip-address>\",\n          \"name\": \"<string>\"\n        }\n      ],\n      \"range\": [\n        {\n          \"start\": \"<ip-address>\",\n          \"end\": \"<ip-address>\",\n          \"name\": \"<string>\"\n        },\n        {\n          \"start\": \"<ip-address>\",\n          \"end\": \"<ip-address>\",\n          \"name\": \"<string>\"\n        }\n      ]\n    },\n    \"stop_tracking_goals_after_days\": \"<string>\",\n    \"smart_recommendations\": true,\n    \"keep_running_until_confidence\": \"<boolean>\",\n    \"primary_metric\": \"conversion_rate\",\n    \"stats_engine_processing\": {\n      \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n    },\n    \"confidence\": \"<number>\",\n    \"keep_winner\": \"<boolean>\",\n    \"min_order_value\": \"<number>\",\n    \"max_order_value\": \"<number>\",\n    \"outliers\": {\n      \"order_value\": {\n        \"description\": \"Outlier detection settings for the monetary value of orders.\",\n        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n      },\n      \"products_ordered_count\": {\n        \"description\": \"Outlier detection settings for the number of products in an order.\",\n        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n      }\n    },\n    \"max_running_time\": \"<integer>\",\n    \"max_variation_visitors\": \"<integer>\",\n    \"max_experience_visitors\": \"<integer>\",\n    \"min_variation_conversions\": \"<integer>\",\n    \"min_conversion_value\": \"<integer>\",\n    \"min_running_time\": \"<integer>\",\n    \"min_variation_visitors\": \"<integer>\",\n    \"stop_loser\": \"<boolean>\",\n    \"srm_check\": \"<boolean>\",\n    \"visual_editor\": {\n      \"selector_blacklist\": \"<string>\",\n      \"screen_width\": \"<number>\",\n      \"user_agent\": \"<string>\"\n    }\n  },\n  \"settings\": {\n    \"allow_crossdomain_tracking\": \"<boolean>\",\n    \"allow_gdpr\": \"<boolean>\",\n    \"data_anonymization\": \"<boolean>\",\n    \"do_not_track\": \"<string>\",\n    \"global_privacy_control\": \"<string>\",\n    \"include_jquery\": \"<boolean>\",\n    \"include_jquery_v1\": false,\n    \"disable_spa_functionality\": false,\n    \"do_not_track_referral\": false,\n    \"time_zone\": \"<string>\",\n    \"utc_offset\": 0,\n    \"time_format\": \"<string>\",\n    \"debug_token\": {\n      \"value\": \"<string>\",\n      \"ttl\": \"<integer>\"\n    },\n    \"disable_default_config\": false,\n    \"include_experience_collaborators\": false,\n    \"legacy_script\": false,\n    \"ignore_unused_locations\": false,\n    \"personalization\": {\n      \"enabled\": false\n    },\n    \"tracking_script\": {\n      \"current_version\": \"<string>\",\n      \"available_versions\": [\n        {\n          \"version\": \"<string>\",\n          \"changelog\": \"<string>\",\n          \"released_date\": \"<long>\",\n          \"apply_date\": \"<long>\"\n        },\n        {\n          \"version\": \"<string>\",\n          \"changelog\": \"<string>\",\n          \"released_date\": \"<long>\",\n          \"apply_date\": \"<long>\"\n        }\n      ],\n      \"release\": {\n        \"type\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      }\n    },\n    \"visitor_insights\": {\n      \"enabled\": \"<boolean>\",\n      \"obfuscate_text\": true,\n      \"sampling_rate\": 5\n    }\n  },\n  \"integrations_settings\": {\n    \"crazyegg\": {\n      \"api_key\": \"<string>\",\n      \"api_secret\": \"<string>\"\n    },\n    \"google_analytics\": {\n      \"type\": {\n        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n      },\n      \"property_UA\": {\n        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n      }\n    },\n    \"kissmetrics\": {\n      \"enabled\": \"<boolean>\"\n    },\n    \"hotjar\": {\n      \"enabled\": \"<boolean>\"\n    }\n  },\n  \"status\": \"<string>\",\n  \"custom_domain\": {\n    \"domain\": \"<string>\"\n  },\n  \"environments\": {\n    \"production\": {\n      \"label\": \"Production\",\n      \"is_default\": true\n    }\n  },\n  \"default_goals\": [\n    \"<integer>\",\n    \"<integer>\"\n  ],\n  \"default_audiences\": [\n    \"<integer>\",\n    \"<integer>\"\n  ],\n  \"default_locations\": [\n    \"<integer>\",\n    \"<integer>\"\n  ],\n  \"domains\": [\n    {\n      \"url\": \"<string>\",\n      \"code_installed\": false\n    },\n    {\n      \"url\": \"<string>\",\n      \"code_installed\": false\n    }\n  ],\n  \"include\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"expand\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "479ec272-5332-4693-b976-0c708422de71",
+              "name": "Detailed information for a single project, including its settings, associated domains, default goals/audiences/locations, integrations, and usage statistics (if requested via `include`).",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "accounts",
+                    ":account_id",
+                    "projects",
+                    "add"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "account_id",
+                      "description": "(Required) ID of the account that owns the retrieved/saved data"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"global_javascript\": \"string\",\n  \"name\": \"string\",\n  \"project_type\": \"web\",\n  \"reporting_settings\": {\n    \"tested_visitors_quota\": 8523,\n    \"currency_symbol\": \"string\",\n    \"blocked_ips\": {\n      \"single\": [\n        {\n          \"value\": \"string\",\n          \"name\": \"string\"\n        },\n        {\n          \"value\": \"string\",\n          \"name\": \"string\"\n        }\n      ],\n      \"range\": [\n        {\n          \"start\": \"string\",\n          \"end\": \"string\",\n          \"name\": \"string\"\n        },\n        {\n          \"start\": \"string\",\n          \"end\": \"string\",\n          \"name\": \"string\"\n        }\n      ]\n    },\n    \"stop_tracking_goals_after_days\": \"60 days\",\n    \"smart_recommendations\": true,\n    \"keep_running_until_confidence\": false,\n    \"primary_metric\": \"conversion_rate\",\n    \"stats_engine_processing\": {\n      \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n    },\n    \"confidence\": 4138.930571627865,\n    \"keep_winner\": true,\n    \"min_order_value\": 5454.760319524934,\n    \"max_order_value\": 4322.862344303256,\n    \"outliers\": {\n      \"order_value\": {\n        \"description\": \"Outlier detection settings for the monetary value of orders.\",\n        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n      },\n      \"products_ordered_count\": {\n        \"description\": \"Outlier detection settings for the number of products in an order.\",\n        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n      }\n    },\n    \"max_running_time\": 898,\n    \"max_variation_visitors\": 4121,\n    \"max_experience_visitors\": 6221,\n    \"min_variation_conversions\": 9092,\n    \"min_conversion_value\": 8462,\n    \"min_running_time\": 461,\n    \"min_variation_visitors\": 3907,\n    \"stop_loser\": true,\n    \"srm_check\": false,\n    \"visual_editor\": {\n      \"selector_blacklist\": \"string\",\n      \"screen_width\": 3077.332594093617,\n      \"user_agent\": \"safari_iphone\"\n    }\n  },\n  \"settings\": {\n    \"allow_crossdomain_tracking\": false,\n    \"allow_gdpr\": false,\n    \"data_anonymization\": false,\n    \"do_not_track\": \"EEA ONLY\",\n    \"global_privacy_control\": \"OFF\",\n    \"include_jquery\": false,\n    \"include_jquery_v1\": false,\n    \"disable_spa_functionality\": false,\n    \"do_not_track_referral\": false,\n    \"time_zone\": \"string\",\n    \"utc_offset\": 0,\n    \"time_format\": \"24h\",\n    \"debug_token\": {\n      \"value\": \"string\",\n      \"ttl\": 1119\n    },\n    \"disable_default_config\": false,\n    \"include_experience_collaborators\": false,\n    \"version\": \"string\",\n    \"legacy_script\": false,\n    \"ignore_unused_locations\": false,\n    \"personalization\": {\n      \"enabled\": false\n    },\n    \"tracking_script\": {\n      \"current_version\": \"string\",\n      \"previous_version\": \"string\",\n      \"available_versions\": [\n        {\n          \"version\": \"string\",\n          \"changelog\": \"string\",\n          \"released_date\": 5970,\n          \"apply_date\": 2771\n        },\n        {\n          \"version\": \"string\",\n          \"changelog\": \"string\",\n          \"released_date\": 6556,\n          \"apply_date\": 9434\n        }\n      ],\n      \"release\": {\n        \"type\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      }\n    },\n    \"visitor_insights\": {\n      \"enabled\": false,\n      \"obfuscate_text\": true,\n      \"sampling_rate\": 5,\n      \"id\": \"string\"\n    }\n  },\n  \"integrations_settings\": {\n    \"crazyegg\": {\n      \"api_key\": \"string\",\n      \"api_secret\": \"string\"\n    },\n    \"google_analytics\": {\n      \"type\": {\n        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n      },\n      \"property_UA\": {\n        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n      }\n    },\n    \"kissmetrics\": {\n      \"enabled\": true\n    },\n    \"hotjar\": {\n      \"enabled\": true\n    }\n  },\n  \"status\": \"inactive\",\n  \"custom_domain\": {\n    \"domain\": \"]6a^.}V< 5mfn@\",\n    \"status\": \"pending\",\n    \"ownership_verification\": [\n      {\n        \"name\": \"string\",\n        \"type\": \"CNAME\",\n        \"value\": \"string\"\n      },\n      {\n        \"name\": \"string\",\n        \"type\": \"CNAME\",\n        \"value\": \"string\"\n      }\n    ],\n    \"version\": \"string\"\n  },\n  \"environments\": {\n    \"production\": {\n      \"label\": \"Production\",\n      \"is_default\": true\n    }\n  },\n  \"default_goals\": [\n    7518,\n    650\n  ],\n  \"default_audiences\": [\n    2482,\n    9485\n  ],\n  \"default_locations\": [\n    907,\n    2597\n  ],\n  \"id\": 8109,\n  \"accessRole\": \"owner\",\n  \"owner_email\": \"string\",\n  \"account_id\": 1243,\n  \"created_at\": 8968,\n  \"modified_at\": 3793,\n  \"tracking_snippet\": \"string\",\n  \"updateMetadata\": {\n    \"pendingChanges\": {\n      \"data\": true,\n      \"js\": false\n    },\n    \"lastInvalidation\": {\n      \"js\": 9286,\n      \"data\": 2709\n    },\n    \"nextInvalidation\": {\n      \"js\": 4314,\n      \"data\": 2536\n    }\n  },\n  \"type\": \"shared\",\n  \"stats\": {\n    \"visitor_data\": {\n      \"visitor_profiles_count\": 7517,\n      \"visitor_profiles_fields_count\": 3744,\n      \"active_personalised_experiences_count\": 8239\n    },\n    \"google_analytics\": {\n      \"used_slots\": [\n        2240,\n        1950\n      ],\n      \"used_dimensions\": [\n        1385,\n        6777\n      ]\n    },\n    \"usage\": {\n      \"used_tested_users\": 1375,\n      \"used_tested_visitors\": 7239\n    },\n    \"active_segments_count\": 1560,\n    \"segments_count\": 1450,\n    \"experiences_count\": 4047,\n    \"active_experiences_count\": 3234,\n    \"active_experiments_count\": 3779,\n    \"active_goals_count\": 1170,\n    \"visitor_insights\": {\n      \"usage\": 7751.241894711998,\n      \"reset_at\": \"1974-12-30T06:59:40.528Z\"\n    }\n  },\n  \"domains\": [\n    {\n      \"id\": 1008,\n      \"url\": \"http://\",\n      \"code_installed\": false\n    },\n    {\n      \"id\": 1118,\n      \"url\": \"https://\",\n      \"code_installed\": false\n    }\n  ],\n  \"sdk_key\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "ff5ea42e-1ac3-45d2-a204-339ddd02401c",
+              "name": "Indicates an error occurred while processing the request. The `code` provides an HTTP status code, `message` offers a human-readable explanation or an array of validation errors, and `fields` (if present) specifies which input fields were problematic.\n",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "accounts",
+                    ":account_id",
+                    "projects",
+                    "add"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "account_id",
+                      "description": "(Required) ID of the account that owns the retrieved/saved data"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 1797,\n  \"message\": \"string\",\n  \"fields\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "ddfccc96-093f-4528-a8b4-a4d5f30ffbaa",
+          "name": "Update an existing project",
+          "request": {
+            "name": "Update an existing project",
+            "description": {
+              "content": "Modifies the settings of an existing project.\nThis can include changing its name, global JavaScript, time zone, active domains, integration settings, or GDPR compliance options.\nThe list of domains provided in the request will replace the existing list.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "accounts",
+                ":account_id",
+                "projects",
+                ":project_id",
+                "update"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "account_id",
+                  "description": "(Required) ID of the account that owns the retrieved/saved data"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "project_id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"global_javascript\": \"<string>\",\n  \"name\": \"<string>\",\n  \"project_type\": \"web\",\n  \"reporting_settings\": {\n    \"tested_visitors_quota\": \"<integer>\",\n    \"currency_symbol\": \"<string>\",\n    \"blocked_ips\": {\n      \"single\": [\n        {\n          \"value\": \"<ip-address>\",\n          \"name\": \"<string>\"\n        },\n        {\n          \"value\": \"<ip-address>\",\n          \"name\": \"<string>\"\n        }\n      ],\n      \"range\": [\n        {\n          \"start\": \"<ip-address>\",\n          \"end\": \"<ip-address>\",\n          \"name\": \"<string>\"\n        },\n        {\n          \"start\": \"<ip-address>\",\n          \"end\": \"<ip-address>\",\n          \"name\": \"<string>\"\n        }\n      ]\n    },\n    \"stop_tracking_goals_after_days\": \"<string>\",\n    \"smart_recommendations\": true,\n    \"keep_running_until_confidence\": \"<boolean>\",\n    \"primary_metric\": \"conversion_rate\",\n    \"stats_engine_processing\": {\n      \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n    },\n    \"confidence\": \"<number>\",\n    \"keep_winner\": \"<boolean>\",\n    \"min_order_value\": \"<number>\",\n    \"max_order_value\": \"<number>\",\n    \"outliers\": {\n      \"order_value\": {\n        \"description\": \"Outlier detection settings for the monetary value of orders.\",\n        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n      },\n      \"products_ordered_count\": {\n        \"description\": \"Outlier detection settings for the number of products in an order.\",\n        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n      }\n    },\n    \"max_running_time\": \"<integer>\",\n    \"max_variation_visitors\": \"<integer>\",\n    \"max_experience_visitors\": \"<integer>\",\n    \"min_variation_conversions\": \"<integer>\",\n    \"min_conversion_value\": \"<integer>\",\n    \"min_running_time\": \"<integer>\",\n    \"min_variation_visitors\": \"<integer>\",\n    \"stop_loser\": \"<boolean>\",\n    \"srm_check\": \"<boolean>\",\n    \"visual_editor\": {\n      \"selector_blacklist\": \"<string>\",\n      \"screen_width\": \"<number>\",\n      \"user_agent\": \"<string>\"\n    }\n  },\n  \"settings\": {\n    \"allow_crossdomain_tracking\": \"<boolean>\",\n    \"allow_gdpr\": \"<boolean>\",\n    \"data_anonymization\": \"<boolean>\",\n    \"do_not_track\": \"<string>\",\n    \"global_privacy_control\": \"<string>\",\n    \"include_jquery\": \"<boolean>\",\n    \"include_jquery_v1\": false,\n    \"disable_spa_functionality\": false,\n    \"do_not_track_referral\": false,\n    \"time_zone\": \"<string>\",\n    \"utc_offset\": 0,\n    \"time_format\": \"<string>\",\n    \"debug_token\": {\n      \"value\": \"<string>\",\n      \"ttl\": \"<integer>\"\n    },\n    \"disable_default_config\": false,\n    \"include_experience_collaborators\": false,\n    \"legacy_script\": false,\n    \"ignore_unused_locations\": false,\n    \"personalization\": {\n      \"enabled\": false\n    },\n    \"tracking_script\": {\n      \"current_version\": \"<string>\",\n      \"available_versions\": [\n        {\n          \"version\": \"<string>\",\n          \"changelog\": \"<string>\",\n          \"released_date\": \"<long>\",\n          \"apply_date\": \"<long>\"\n        },\n        {\n          \"version\": \"<string>\",\n          \"changelog\": \"<string>\",\n          \"released_date\": \"<long>\",\n          \"apply_date\": \"<long>\"\n        }\n      ],\n      \"release\": {\n        \"type\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      }\n    },\n    \"visitor_insights\": {\n      \"enabled\": \"<boolean>\",\n      \"obfuscate_text\": true,\n      \"sampling_rate\": 5\n    }\n  },\n  \"integrations_settings\": {\n    \"crazyegg\": {\n      \"api_key\": \"<string>\",\n      \"api_secret\": \"<string>\"\n    },\n    \"google_analytics\": {\n      \"type\": {\n        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n      },\n      \"property_UA\": {\n        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n      }\n    },\n    \"kissmetrics\": {\n      \"enabled\": \"<boolean>\"\n    },\n    \"hotjar\": {\n      \"enabled\": \"<boolean>\"\n    }\n  },\n  \"status\": \"<string>\",\n  \"custom_domain\": {\n    \"domain\": \"<string>\"\n  },\n  \"environments\": {\n    \"production\": {\n      \"label\": \"Production\",\n      \"is_default\": true\n    }\n  },\n  \"default_goals\": [\n    \"<integer>\",\n    \"<integer>\"\n  ],\n  \"default_audiences\": [\n    \"<integer>\",\n    \"<integer>\"\n  ],\n  \"default_locations\": [\n    \"<integer>\",\n    \"<integer>\"\n  ],\n  \"domains\": [\n    \"<integer>\",\n    \"<integer>\"\n  ],\n  \"include\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"expand\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "aee2cf99-dc5a-4330-9bd3-da9cafd48703",
+              "name": "Detailed information for a single project, including its settings, associated domains, default goals/audiences/locations, integrations, and usage statistics (if requested via `include`).",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "accounts",
+                    ":account_id",
+                    "projects",
+                    ":project_id",
+                    "update"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "account_id",
+                      "description": "(Required) ID of the account that owns the retrieved/saved data"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "project_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"global_javascript\": \"string\",\n  \"name\": \"string\",\n  \"project_type\": \"web\",\n  \"reporting_settings\": {\n    \"tested_visitors_quota\": 8523,\n    \"currency_symbol\": \"string\",\n    \"blocked_ips\": {\n      \"single\": [\n        {\n          \"value\": \"string\",\n          \"name\": \"string\"\n        },\n        {\n          \"value\": \"string\",\n          \"name\": \"string\"\n        }\n      ],\n      \"range\": [\n        {\n          \"start\": \"string\",\n          \"end\": \"string\",\n          \"name\": \"string\"\n        },\n        {\n          \"start\": \"string\",\n          \"end\": \"string\",\n          \"name\": \"string\"\n        }\n      ]\n    },\n    \"stop_tracking_goals_after_days\": \"60 days\",\n    \"smart_recommendations\": true,\n    \"keep_running_until_confidence\": false,\n    \"primary_metric\": \"conversion_rate\",\n    \"stats_engine_processing\": {\n      \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n    },\n    \"confidence\": 4138.930571627865,\n    \"keep_winner\": true,\n    \"min_order_value\": 5454.760319524934,\n    \"max_order_value\": 4322.862344303256,\n    \"outliers\": {\n      \"order_value\": {\n        \"description\": \"Outlier detection settings for the monetary value of orders.\",\n        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n      },\n      \"products_ordered_count\": {\n        \"description\": \"Outlier detection settings for the number of products in an order.\",\n        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n      }\n    },\n    \"max_running_time\": 898,\n    \"max_variation_visitors\": 4121,\n    \"max_experience_visitors\": 6221,\n    \"min_variation_conversions\": 9092,\n    \"min_conversion_value\": 8462,\n    \"min_running_time\": 461,\n    \"min_variation_visitors\": 3907,\n    \"stop_loser\": true,\n    \"srm_check\": false,\n    \"visual_editor\": {\n      \"selector_blacklist\": \"string\",\n      \"screen_width\": 3077.332594093617,\n      \"user_agent\": \"safari_iphone\"\n    }\n  },\n  \"settings\": {\n    \"allow_crossdomain_tracking\": false,\n    \"allow_gdpr\": false,\n    \"data_anonymization\": false,\n    \"do_not_track\": \"EEA ONLY\",\n    \"global_privacy_control\": \"OFF\",\n    \"include_jquery\": false,\n    \"include_jquery_v1\": false,\n    \"disable_spa_functionality\": false,\n    \"do_not_track_referral\": false,\n    \"time_zone\": \"string\",\n    \"utc_offset\": 0,\n    \"time_format\": \"24h\",\n    \"debug_token\": {\n      \"value\": \"string\",\n      \"ttl\": 1119\n    },\n    \"disable_default_config\": false,\n    \"include_experience_collaborators\": false,\n    \"version\": \"string\",\n    \"legacy_script\": false,\n    \"ignore_unused_locations\": false,\n    \"personalization\": {\n      \"enabled\": false\n    },\n    \"tracking_script\": {\n      \"current_version\": \"string\",\n      \"previous_version\": \"string\",\n      \"available_versions\": [\n        {\n          \"version\": \"string\",\n          \"changelog\": \"string\",\n          \"released_date\": 5970,\n          \"apply_date\": 2771\n        },\n        {\n          \"version\": \"string\",\n          \"changelog\": \"string\",\n          \"released_date\": 6556,\n          \"apply_date\": 9434\n        }\n      ],\n      \"release\": {\n        \"type\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      }\n    },\n    \"visitor_insights\": {\n      \"enabled\": false,\n      \"obfuscate_text\": true,\n      \"sampling_rate\": 5,\n      \"id\": \"string\"\n    }\n  },\n  \"integrations_settings\": {\n    \"crazyegg\": {\n      \"api_key\": \"string\",\n      \"api_secret\": \"string\"\n    },\n    \"google_analytics\": {\n      \"type\": {\n        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n      },\n      \"property_UA\": {\n        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n      }\n    },\n    \"kissmetrics\": {\n      \"enabled\": true\n    },\n    \"hotjar\": {\n      \"enabled\": true\n    }\n  },\n  \"status\": \"inactive\",\n  \"custom_domain\": {\n    \"domain\": \"]6a^.}V< 5mfn@\",\n    \"status\": \"pending\",\n    \"ownership_verification\": [\n      {\n        \"name\": \"string\",\n        \"type\": \"CNAME\",\n        \"value\": \"string\"\n      },\n      {\n        \"name\": \"string\",\n        \"type\": \"CNAME\",\n        \"value\": \"string\"\n      }\n    ],\n    \"version\": \"string\"\n  },\n  \"environments\": {\n    \"production\": {\n      \"label\": \"Production\",\n      \"is_default\": true\n    }\n  },\n  \"default_goals\": [\n    7518,\n    650\n  ],\n  \"default_audiences\": [\n    2482,\n    9485\n  ],\n  \"default_locations\": [\n    907,\n    2597\n  ],\n  \"id\": 8109,\n  \"accessRole\": \"owner\",\n  \"owner_email\": \"string\",\n  \"account_id\": 1243,\n  \"created_at\": 8968,\n  \"modified_at\": 3793,\n  \"tracking_snippet\": \"string\",\n  \"updateMetadata\": {\n    \"pendingChanges\": {\n      \"data\": true,\n      \"js\": false\n    },\n    \"lastInvalidation\": {\n      \"js\": 9286,\n      \"data\": 2709\n    },\n    \"nextInvalidation\": {\n      \"js\": 4314,\n      \"data\": 2536\n    }\n  },\n  \"type\": \"shared\",\n  \"stats\": {\n    \"visitor_data\": {\n      \"visitor_profiles_count\": 7517,\n      \"visitor_profiles_fields_count\": 3744,\n      \"active_personalised_experiences_count\": 8239\n    },\n    \"google_analytics\": {\n      \"used_slots\": [\n        2240,\n        1950\n      ],\n      \"used_dimensions\": [\n        1385,\n        6777\n      ]\n    },\n    \"usage\": {\n      \"used_tested_users\": 1375,\n      \"used_tested_visitors\": 7239\n    },\n    \"active_segments_count\": 1560,\n    \"segments_count\": 1450,\n    \"experiences_count\": 4047,\n    \"active_experiences_count\": 3234,\n    \"active_experiments_count\": 3779,\n    \"active_goals_count\": 1170,\n    \"visitor_insights\": {\n      \"usage\": 7751.241894711998,\n      \"reset_at\": \"1974-12-30T06:59:40.528Z\"\n    }\n  },\n  \"domains\": [\n    {\n      \"id\": 1008,\n      \"url\": \"http://\",\n      \"code_installed\": false\n    },\n    {\n      \"id\": 1118,\n      \"url\": \"https://\",\n      \"code_installed\": false\n    }\n  ],\n  \"sdk_key\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "97be5a4b-3366-4f96-b723-b8b0dc739d5f",
+              "name": "Indicates an error occurred while processing the request. The `code` provides an HTTP status code, `message` offers a human-readable explanation or an array of validation errors, and `fields` (if present) specifies which input fields were problematic.\n",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "accounts",
+                    ":account_id",
+                    "projects",
+                    ":project_id",
+                    "update"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "account_id",
+                      "description": "(Required) ID of the account that owns the retrieved/saved data"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "project_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 1797,\n  \"message\": \"string\",\n  \"fields\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "b0a1c581-bd74-40bf-b655-29a2385b55ef",
+          "name": "Delete a project",
+          "request": {
+            "name": "Delete a project",
+            "description": {
+              "content": "Permanently removes an existing project and all its associated data (experiences, goals, audiences, reports) from the specified account.\nThis action is irreversible.\nThe Knowledge Base warns: \"When a project is deleted all data will be purged from our servers within 7 days and is unrecoverable after that time.\"\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "accounts",
+                ":account_id",
+                "projects",
+                ":project_id",
+                "delete"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "account_id",
+                  "description": "(Required) ID of the account that owns the retrieved/saved data"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "project_id",
+                  "description": "(Required) ID of the project to be deleted"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "DELETE",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "80f1b062-3985-4797-8cae-61583a7437e6",
+              "name": "A generic success response, typically used for operations that don't return specific data (like deletions or some updates). The `code` is usually 200, and `message` confirms the successful action.\n",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "accounts",
+                    ":account_id",
+                    "projects",
+                    ":project_id",
+                    "delete"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "account_id",
+                      "description": "(Required) ID of the account that owns the retrieved/saved data"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "project_id",
+                      "description": "(Required) ID of the project to be deleted"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 1424,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "a5912ec0-3617-480a-bce6-489023ce3632",
+              "name": "Indicates an error occurred while processing the request. The `code` provides an HTTP status code, `message` offers a human-readable explanation or an array of validation errors, and `fields` (if present) specifies which input fields were problematic.\n",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "accounts",
+                    ":account_id",
+                    "projects",
+                    ":project_id",
+                    "delete"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "account_id",
+                      "description": "(Required) ID of the account that owns the retrieved/saved data"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "project_id",
+                      "description": "(Required) ID of the project to be deleted"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 1797,\n  \"message\": \"string\",\n  \"fields\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "e5307ad4-197e-495a-8624-9b0cbf1eaa48",
+          "name": "Get live tracking events for a specific project",
+          "request": {
+            "name": "Get live tracking events for a specific project",
+            "description": {
+              "content": "Retrieves the last 100 tracking events (e.g., experiment views, goal conversions) specifically for the given project.\nUseful for real-time monitoring of a single project's activity. Supports filtering by event types, experiences, and goals.\nAs per the Knowledge Base: \"Live Logs in Convert track how end users are interacting with web pages and experiments...at a project and experiment level in real time.\"\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "accounts",
+                ":account_id",
+                "projects",
+                ":project_id",
+                "livedata"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "account_id",
+                  "description": "(Required) ID of the account that owns the retrieved/saved data"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "project_id",
+                  "description": "(Required) ID of the project for which live data is returned"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"experiences\": [\n    \"<integer>\",\n    \"<integer>\"\n  ],\n  \"event_types\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"goals\": [\n    \"<integer>\",\n    \"<integer>\"\n  ],\n  \"segments\": {\n    \"devices\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"browsers\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"countries\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"visitor_types\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"campaigns\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"custom_segments\": [\n      \"<integer>\",\n      \"<integer>\"\n    ],\n    \"sources\": [\n      \"<string>\",\n      \"<string>\"\n    ]\n  },\n  \"expand\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "3f9e8f65-7858-40d2-ae1e-9d00a06ca1be",
+              "name": "A list of recent live tracking events, each detailing the event type (view_experience, conversion, transaction), associated experience/variation, visitor segments (device, browser, country), and timestamp.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "accounts",
+                    ":account_id",
+                    "projects",
+                    ":project_id",
+                    "livedata"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "account_id",
+                      "description": "(Required) ID of the account that owns the retrieved/saved data"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "project_id",
+                      "description": "(Required) ID of the project for which live data is returned"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": [\n    {\n      \"devices\": [\n        \"iPad\",\n        \"all_phones\"\n      ],\n      \"browser\": \"firefox\",\n      \"country\": \"st\",\n      \"visitor_type\": \"returning\",\n      \"campaign\": \"string\",\n      \"custom_segments\": [\n        7132,\n        5415\n      ],\n      \"sources\": [\n        \"ai_tool\",\n        \"referral\"\n      ],\n      \"event_type\": \"view_experience\",\n      \"experiences\": [\n        {\n          \"id\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"variation\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        {\n          \"id\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"variation\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        }\n      ],\n      \"conversion\": {\n        \"goals\": [\n          3605,\n          248\n        ],\n        \"products_ordered_count\": 5789,\n        \"revenue\": 6833.554917780532\n      },\n      \"project\": 6105,\n      \"timestamp\": 1286\n    },\n    {\n      \"devices\": [\n        \"all_phones\",\n        \"other_tablets\"\n      ],\n      \"browser\": \"chrome\",\n      \"country\": \"st\",\n      \"visitor_type\": \"new\",\n      \"campaign\": \"string\",\n      \"custom_segments\": [\n        6063,\n        7102\n      ],\n      \"sources\": [\n        \"search\",\n        \"referral\"\n      ],\n      \"event_type\": \"view_experience\",\n      \"experiences\": [\n        {\n          \"id\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"variation\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        {\n          \"id\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"variation\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        }\n      ],\n      \"conversion\": {\n        \"goals\": [\n          7144,\n          910\n        ],\n        \"products_ordered_count\": 4519,\n        \"revenue\": 4540.766985165067\n      },\n      \"project\": 8963,\n      \"timestamp\": 7442\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "0bd47875-99c0-48de-9a7b-084bc24226eb",
+              "name": "Indicates an error occurred while processing the request. The `code` provides an HTTP status code, `message` offers a human-readable explanation or an array of validation errors, and `fields` (if present) specifies which input fields were problematic.\n",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "accounts",
+                    ":account_id",
+                    "projects",
+                    ":project_id",
+                    "livedata"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "account_id",
+                      "description": "(Required) ID of the account that owns the retrieved/saved data"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "project_id",
+                      "description": "(Required) ID of the project for which live data is returned"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 1797,\n  \"message\": \"string\",\n  \"fields\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "051d37f6-6580-43f0-abb8-b7c431a17162",
+          "name": "Update multiple projects at once",
+          "request": {
+            "name": "Update multiple projects at once",
+            "description": {
+              "content": "Allows for updating settings (like tracking script version) for multiple projects simultaneously within an account.\nRequires a list of project IDs and the settings to apply.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "accounts",
+                ":account_id",
+                "projects",
+                "bulk-update"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "account_id",
+                  "description": "(Required) ID of the account that owns the retrieved/saved data."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": [\n    \"<integer>\"\n  ],\n  \"settings\": {\n    \"tracking_script\": {\n      \"current_version\": \"<string>\"\n    }\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "67b71489-902b-462a-a72a-c517fdbbaad2",
+              "name": "Indicates the outcome of a bulk operation (e.g., bulk update or delete). Provides a general success `message` and an `errors` array listing any entities that could not be processed, along with the reason for failure for each.\n",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "accounts",
+                    ":account_id",
+                    "projects",
+                    "bulk-update"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "account_id",
+                      "description": "(Required) ID of the account that owns the retrieved/saved data."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 9306,\n  \"message\": \"string\",\n  \"errors\": [\n    {\n      \"id\": 3719,\n      \"message\": \"string\"\n    },\n    {\n      \"id\": 9043,\n      \"message\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "fce16900-996e-4a0d-90fe-0f523f36788a",
+              "name": "Indicates an error occurred while processing the request. The `code` provides an HTTP status code, `message` offers a human-readable explanation or an array of validation errors, and `fields` (if present) specifies which input fields were problematic.\n",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "accounts",
+                    ":account_id",
+                    "projects",
+                    "bulk-update"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "account_id",
+                      "description": "(Required) ID of the account that owns the retrieved/saved data."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 1797,\n  \"message\": \"string\",\n  \"fields\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "f1a17063-76e4-4e51-8cd1-6e33c81f870e",
+          "name": "Generate a debug token for a project",
+          "request": {
+            "name": "Generate a debug token for a project",
+            "description": {
+              "content": "Creates a temporary debug token for a project. This token can be used with the Convert tracking script\n(e.g., via the `convert-debug-token` header or query parameter) to preview draft or paused experiences,\nor to force specific variations for QA purposes without affecting live experiment data.\nThe token has a limited time-to-live (TTL).\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "accounts",
+                ":account_id",
+                "projects",
+                ":project_id",
+                "generate-debug-token"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "account_id",
+                  "description": "(Required) ID of the account that owns the retrieved/saved data"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "project_id",
+                  "description": "(Required) ID of the project"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "f810fe70-33bc-4fab-a454-2cc2de7521c8",
+              "name": "A response containing the generated `value` (the debug token itself) and its `ttl` (time-to-live as a Unix timestamp) for previewing and QAing experiences.\n",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "accounts",
+                    ":account_id",
+                    "projects",
+                    ":project_id",
+                    "generate-debug-token"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "account_id",
+                      "description": "(Required) ID of the account that owns the retrieved/saved data"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "project_id",
+                      "description": "(Required) ID of the project"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"value\": \"string\",\n    \"ttl\": 6519\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "b77897f1-dc44-4c0d-b649-5dc9c5c3e42c",
+              "name": "Indicates an error occurred while processing the request. The `code` provides an HTTP status code, `message` offers a human-readable explanation or an array of validation errors, and `fields` (if present) specifies which input fields were problematic.\n",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "accounts",
+                    ":account_id",
+                    "projects",
+                    ":project_id",
+                    "generate-debug-token"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "account_id",
+                      "description": "(Required) ID of the account that owns the retrieved/saved data"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "project_id",
+                      "description": "(Required) ID of the project"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 1797,\n  \"message\": \"string\",\n  \"fields\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "ca4d30be-0d37-4723-8e11-d96ea167e413",
+          "name": "Export project data as JSON",
+          "request": {
+            "name": "Export project data as JSON",
+            "description": {
+              "content": "Generates a JSON file containing all configuration data for a specific project.\nThis includes its experiences, goals, audiences, locations, hypotheses, and project settings.\nUseful for backing up project configurations or migrating them to another Convert account or instance.\nThe Knowledge Base mentions this feature for \"Save and Migrate Project Settings\" and \"Template Creation\".\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "accounts",
+                ":account_id",
+                "projects",
+                ":project_id",
+                "export"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "account_id",
+                  "description": "(Required) ID of the account that owns the retrieved/saved data"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "project_id",
+                  "description": "(Required) ID of the project"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "download/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"includeProject\": true,\n  \"experiences\": {\n    \"include\": [\n      \"<integer>\",\n      \"<integer>\"\n    ],\n    \"exclude\": [\n      \"<integer>\",\n      \"<integer>\"\n    ]\n  },\n  \"audiences\": {\n    \"include\": [\n      \"<integer>\",\n      \"<integer>\"\n    ],\n    \"exclude\": [\n      \"<integer>\",\n      \"<integer>\"\n    ]\n  },\n  \"locations\": {\n    \"include\": [\n      \"<integer>\",\n      \"<integer>\"\n    ],\n    \"exclude\": [\n      \"<integer>\",\n      \"<integer>\"\n    ]\n  },\n  \"goals\": {\n    \"include\": [\n      \"<integer>\",\n      \"<integer>\"\n    ],\n    \"exclude\": [\n      \"<integer>\",\n      \"<integer>\"\n    ]\n  },\n  \"hypothesis\": {\n    \"include\": [\n      \"<integer>\",\n      \"<integer>\"\n    ],\n    \"exclude\": [\n      \"<integer>\",\n      \"<integer>\"\n    ]\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "560af9e0-edb2-486a-93c3-9d4b41a86376",
+              "name": "A JSON file containing the exported data for a project, including its settings, experiences, goals, audiences, etc. This file can be used for backup or migration.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "accounts",
+                    ":account_id",
+                    "projects",
+                    ":project_id",
+                    "export"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "account_id",
+                      "description": "(Required) ID of the account that owns the retrieved/saved data"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "project_id",
+                      "description": "(Required) ID of the project"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "download/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "download/json"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "92ed8378-772e-48c5-a2ae-015198118f5f",
+              "name": "Indicates an error occurred while processing the request. The `code` provides an HTTP status code, `message` offers a human-readable explanation or an array of validation errors, and `fields` (if present) specifies which input fields were problematic.\n",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "accounts",
+                    ":account_id",
+                    "projects",
+                    ":project_id",
+                    "export"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "account_id",
+                      "description": "(Required) ID of the account that owns the retrieved/saved data"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "project_id",
+                      "description": "(Required) ID of the project"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 1797,\n  \"message\": \"string\",\n  \"fields\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "0586423a-e5b9-487e-9d1d-5ee0eb06583d",
+          "name": "Import project data from a JSON file",
+          "request": {
+            "name": "Import project data from a JSON file",
+            "description": {
+              "content": "Creates a new project or updates an existing one by importing data from a JSON file (previously exported from Convert).\nThis allows for restoring backups or replicating project setups.\nThe Knowledge Base mentions this for \"Save and Migrate Project Settings\" and \"Template Creation\".\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "accounts",
+                ":account_id",
+                "projects",
+                "import-project"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "account_id",
+                  "description": "(Required) ID of the account where the project will be stored."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "multipart/form-data"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "value": "<json>",
+                  "type": "text",
+                  "description": "undefined"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "c3fed555-1f14-47aa-8240-2fc155d60858",
+              "name": "A generic success response, typically used for operations that don't return specific data (like deletions or some updates). The `code` is usually 200, and `message` confirms the successful action.\n",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "accounts",
+                    ":account_id",
+                    "projects",
+                    "import-project"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "account_id",
+                      "description": "(Required) ID of the account where the project will be stored."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 1424,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "aec5fbcb-efbe-4bd4-a12a-fea20cf9100e",
+              "name": "Indicates an error occurred while processing the request. The `code` provides an HTTP status code, `message` offers a human-readable explanation or an array of validation errors, and `fields` (if present) specifies which input fields were problematic.\n",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "accounts",
+                    ":account_id",
+                    "projects",
+                    "import-project"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "account_id",
+                      "description": "(Required) ID of the account where the project will be stored."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 1797,\n  \"message\": \"string\",\n  \"fields\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "825cebdd-4083-45de-8097-67fc8f6dd22a",
+          "name": "Import associated data into an existing project",
+          "request": {
+            "name": "Import associated data into an existing project",
+            "description": {
+              "content": "Imports associated data (like experiences, goals, audiences) from a JSON file into an already existing project.\nThis is useful for selectively adding or updating components within a project from an export.\nThe Knowledge Base mentions \"Selective Import/Export: Choose to export/import entire projects or only selected goals, audiences, and locations.\"\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "accounts",
+                ":account_id",
+                "projects",
+                ":project_id",
+                "import-project-data"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "account_id",
+                  "description": "(Required) ID of the account where the project is stored."
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "project_id",
+                  "description": "(Required) ID of the project to which details will be attached."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "multipart/form-data"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "value": "<json>",
+                  "type": "text",
+                  "description": "undefined"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "488aacf1-2f4b-4b0a-bcd2-cc0f40c80b27",
+              "name": "Confirms successful import of project data. Includes a list of `imported` entities (experiences, audiences, locations, goals, hypotheses) with their newly assigned IDs in the target project.\n",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "accounts",
+                    ":account_id",
+                    "projects",
+                    ":project_id",
+                    "import-project-data"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "account_id",
+                      "description": "(Required) ID of the account where the project is stored."
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "project_id",
+                      "description": "(Required) ID of the project to which details will be attached."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 8453,\n  \"message\": \"string\",\n  \"imported\": {\n    \"experiences\": [\n      6139,\n      6787\n    ],\n    \"audiences\": [\n      7941,\n      36\n    ],\n    \"locations\": [\n      4033,\n      9161\n    ],\n    \"goals\": [\n      2197,\n      912\n    ],\n    \"hypothesis\": [\n      1886,\n      4268\n    ]\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "ce310387-c4be-41e6-9f04-22c5ed3c5a08",
+              "name": "Indicates an error occurred while processing the request. The `code` provides an HTTP status code, `message` offers a human-readable explanation or an array of validation errors, and `fields` (if present) specifies which input fields were problematic.\n",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "accounts",
+                    ":account_id",
+                    "projects",
+                    ":project_id",
+                    "import-project-data"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "account_id",
+                      "description": "(Required) ID of the account where the project is stored."
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "project_id",
+                      "description": "(Required) ID of the project to which details will be attached."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 1797,\n  \"message\": \"string\",\n  \"fields\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.convert.com/api/v2",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "ded56e5f-c07c-4083-8176-c813a95b32a6",
+    "name": "Convert Accounts Projects API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Move your app forward with the Convert API. The Convert API allows\nyou to manage your Convert Experiences projects using code. The REST API is\nan interface for managing and extending functionality of Convert. For\nexample, instead of creating and maintaining projects using the Convert\nExperiences web dashboard you can create an experiment programmatically.\nAdditionally, if you prefer to run custom analysis on experiment results you\ncan leverage the API to pull data from Convert Experiences into your own\nworkflow. If you do not have a Convert account already, sign up for a free\ndeveloper account at https://www.convert.com/api/.\n\n*[Convert API V1](/doc/v1) is still available and documentation can be found [here](/doc/v1) but using it is highly discouraged\nas it will be phased out in the future*\n",
+      "type": "text/plain"
+    }
+  }
+}

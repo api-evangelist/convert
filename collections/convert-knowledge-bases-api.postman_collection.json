@@ -1,0 +1,1411 @@
+{
+  "item": [
+    {
+      "id": "7c9405cf-4b21-4fc5-bc84-0d0ea75bf306",
+      "name": "Knowledge Bases",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "af4ed120-8a00-414c-a13a-9fc54cbba7ea",
+          "name": "List Knowledge Base entries within a project",
+          "request": {
+            "name": "List Knowledge Base entries within a project",
+            "description": {
+              "content": "Retrieves a list of all Knowledge Base entries for a specific project.\nThe Knowledge Base stores proven or disproven hypotheses and their outcomes, serving as a repository of experimental learnings.\nSupports filtering by status, name, and pagination.\nThe Knowledge Base article \"Observations Feature Guide\" explains: \"Knowledge Base - Convert proven hypotheses to serve as a historical record and knowledge resource.\"\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "accounts",
+                ":account_id",
+                "projects",
+                ":project_id",
+                "knowledge-bases"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "account_id",
+                  "description": "(Required) ID of the account that owns the retrieved/saved data"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "project_id",
+                  "description": "(Required) ID of the project to which save/retrieved data is connected"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"onlyCount\": \"<boolean>\",\n  \"results_per_page\": 30,\n  \"sort_direction\": \"desc\",\n  \"sort_by\": \"name\",\n  \"search\": \"<string>\",\n  \"status\": [\n    \"active\",\n    \"active\"\n  ],\n  \"tags\": [\n    \"<integer>\",\n    \"<integer>\"\n  ],\n  \"only\": [\n    \"<integer>\",\n    \"<integer>\"\n  ],\n  \"except\": [\n    \"<integer>\",\n    \"<integer>\"\n  ],\n  \"page\": \"<integer>\",\n  \"expand\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "90bb056b-5f7e-4bee-bd98-a61baf62a592",
+              "name": "A list of Knowledge Base entries within a project. Each entry represents a learning or outcome from a tested hypothesis, including its name, summary, status, and creator.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "accounts",
+                    ":account_id",
+                    "projects",
+                    ":project_id",
+                    "knowledge-bases"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "account_id",
+                      "description": "(Required) ID of the account that owns the retrieved/saved data"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "project_id",
+                      "description": "(Required) ID of the project to which save/retrieved data is connected"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": [\n    {\n      \"id\": 9287,\n      \"name\": \"string\",\n      \"project\": 4860,\n      \"status\": \"active\",\n      \"summary\": \"string\",\n      \"url\": \"string\",\n      \"objective\": \"string\",\n      \"start_date\": \"2018-03-18\",\n      \"end_date\": \"1977-07-08\",\n      \"prioritization_score_type\": \"string\",\n      \"prioritization_score_attributes\": {},\n      \"experiences\": [\n        {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      ],\n      \"description\": \"string\",\n      \"files\": [\n        {\n          \"key\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"name\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"url\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        {\n          \"key\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"name\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"url\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        }\n      ],\n      \"created_by\": \"string\",\n      \"updated_at\": 9890,\n      \"tags\": [\n        1225,\n        7673\n      ]\n    },\n    {\n      \"id\": 6511,\n      \"name\": \"string\",\n      \"project\": 3481,\n      \"status\": \"active\",\n      \"summary\": \"string\",\n      \"url\": \"string\",\n      \"objective\": \"string\",\n      \"start_date\": \"1957-05-11\",\n      \"end_date\": \"1993-04-18\",\n      \"prioritization_score_type\": \"string\",\n      \"prioritization_score_attributes\": {},\n      \"experiences\": [\n        {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      ],\n      \"description\": \"string\",\n      \"files\": [\n        {\n          \"key\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"name\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"url\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        {\n          \"key\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"name\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"url\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        }\n      ],\n      \"created_by\": \"string\",\n      \"updated_at\": 4926,\n      \"tags\": [\n        5559,\n        8129\n      ]\n    }\n  ],\n  \"extra\": {\n    \"pagination\": {\n      \"current_page\": 7087,\n      \"items_count\": 8106,\n      \"items_per_page\": 3798,\n      \"pages_count\": 4066\n    }\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "edcf5e06-205f-4d45-b3d5-fdf8a3b35c03",
+              "name": "Indicates an error occurred while processing the request. The `code` provides an HTTP status code, `message` offers a human-readable explanation or an array of validation errors, and `fields` (if present) specifies which input fields were problematic.\n",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "accounts",
+                    ":account_id",
+                    "projects",
+                    ":project_id",
+                    "knowledge-bases"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "account_id",
+                      "description": "(Required) ID of the account that owns the retrieved/saved data"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "project_id",
+                      "description": "(Required) ID of the project to which save/retrieved data is connected"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 9155,\n  \"message\": \"string\",\n  \"fields\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "f664bb4d-a7c4-49bf-b06b-378d0330de11",
+          "name": "Get details for a specific Knowledge Base entry",
+          "request": {
+            "name": "Get details for a specific Knowledge Base entry",
+            "description": {
+              "content": "Retrieves detailed information about a single Knowledge Base entry, identified by its `knowledge_base_id`.\nThis includes the original hypothesis name, summary of findings, status, and associated tags.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "accounts",
+                ":account_id",
+                "projects",
+                ":project_id",
+                "knowledge-bases",
+                ":knowledge_base_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "expand",
+                  "value": "<string>",
+                  "description": "Specifies the list of fields which would be expanded in the response. Otherwise, only their id would be returned.\n\nRead more in the section related to [Expanding Fields](#tag/Expandable-Fields)\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "expand",
+                  "value": "<string>",
+                  "description": "Specifies the list of fields which would be expanded in the response. Otherwise, only their id would be returned.\n\nRead more in the section related to [Expanding Fields](#tag/Expandable-Fields)\n"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "account_id",
+                  "description": "(Required) ID of the account that owns the retrieved/saved data"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "project_id",
+                  "description": "(Required) ID of the project into which the knowledge base is stored"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "knowledge_base_id",
+                  "description": "(Required) ID of the knowledge base to be retrieve"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "08c84ac2-c292-4670-bf6e-9cec0e3927ed",
+              "name": "Detailed information for a single Knowledge Base entry, including its name, summary of findings, status (active/archived), creator, and associated tags.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "accounts",
+                    ":account_id",
+                    "projects",
+                    ":project_id",
+                    "knowledge-bases",
+                    ":knowledge_base_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "expand",
+                      "value": "tags"
+                    },
+                    {
+                      "key": "expand",
+                      "value": "tags"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "account_id",
+                      "description": "(Required) ID of the account that owns the retrieved/saved data"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "project_id",
+                      "description": "(Required) ID of the project into which the knowledge base is stored"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "knowledge_base_id",
+                      "description": "(Required) ID of the knowledge base to be retrieve"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": 6920,\n  \"name\": \"string\",\n  \"project\": 9363,\n  \"status\": \"active\",\n  \"summary\": \"string\",\n  \"url\": \"string\",\n  \"objective\": \"string\",\n  \"start_date\": \"1992-04-09\",\n  \"end_date\": \"2013-01-15\",\n  \"prioritization_score_type\": \"string\",\n  \"prioritization_score_attributes\": {},\n  \"experiences\": [\n    9851,\n    2548\n  ],\n  \"description\": \"string\",\n  \"files\": [\n    {\n      \"key\": \"string\",\n      \"name\": \"string\",\n      \"url\": \"https://api.convert.com/api/v2/accounts/{account_id}/projects/{project_id}/files/{fileKey}\"\n    },\n    {\n      \"key\": \"string\",\n      \"name\": \"string\",\n      \"url\": \"https://api.convert.com/api/v2/accounts/{account_id}/projects/{project_id}/files/{fileKey}\"\n    }\n  ],\n  \"created_by\": \"string\",\n  \"updated_at\": 3898,\n  \"tags\": [\n    8809,\n    6248\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "09f86d70-4ada-4bf5-b109-224967e9873b",
+              "name": "Indicates an error occurred while processing the request. The `code` provides an HTTP status code, `message` offers a human-readable explanation or an array of validation errors, and `fields` (if present) specifies which input fields were problematic.\n",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "accounts",
+                    ":account_id",
+                    "projects",
+                    ":project_id",
+                    "knowledge-bases",
+                    ":knowledge_base_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "expand",
+                      "value": "tags"
+                    },
+                    {
+                      "key": "expand",
+                      "value": "tags"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "account_id",
+                      "description": "(Required) ID of the account that owns the retrieved/saved data"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "project_id",
+                      "description": "(Required) ID of the project into which the knowledge base is stored"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "knowledge_base_id",
+                      "description": "(Required) ID of the knowledge base to be retrieve"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 9155,\n  \"message\": \"string\",\n  \"fields\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "d1694372-7e96-4dbc-8599-855c2fa3bbde",
+          "name": "Create a new Knowledge Base entry",
+          "request": {
+            "name": "Create a new Knowledge Base entry",
+            "description": {
+              "content": "Adds a new entry to the Knowledge Base. This is typically done by converting a 'proven' or 'disproven' hypothesis,\nbut can also be used to manually add other experimental learnings.\nRequires a name, summary, and status.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "accounts",
+                ":account_id",
+                "projects",
+                ":project_id",
+                "knowledge-bases",
+                "add"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "expand",
+                  "value": "<string>",
+                  "description": "Specifies the list of objects which would be expanded in the response. Otherwise, only their id would be returned.\n\nRead more in the section related to [Expanding Fields](#tag/Expandable-Fields)\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "expand",
+                  "value": "<string>",
+                  "description": "Specifies the list of objects which would be expanded in the response. Otherwise, only their id would be returned.\n\nRead more in the section related to [Expanding Fields](#tag/Expandable-Fields)\n"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "account_id",
+                  "description": "(Required) ID of the account that owns the retrieved/saved data"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "project_id",
+                  "description": "(Required) ID of the project into which the knowledge base is to be stored"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"<string>\",\n  \"summary\": \"<string>\",\n  \"project\": \"<integer>\",\n  \"status\": \"active\",\n  \"url\": \"<string>\",\n  \"objective\": \"<string>\",\n  \"start_date\": \"<date>\",\n  \"end_date\": \"<date>\",\n  \"prioritization_score_type\": \"<string>\",\n  \"prioritization_score_attributes\": \"<object>\",\n  \"experiences\": [\n    \"<integer>\",\n    \"<integer>\"\n  ],\n  \"description\": \"<string>\",\n  \"files\": [\n    {\n      \"key\": \"<string>\",\n      \"name\": \"<string>\"\n    },\n    {\n      \"key\": \"<string>\",\n      \"name\": \"<string>\"\n    }\n  ],\n  \"tags\": [\n    \"<integer>\",\n    \"<integer>\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "6244adb8-8d47-4cb8-b81a-ed64136159e4",
+              "name": "Detailed information for a single Knowledge Base entry, including its name, summary of findings, status (active/archived), creator, and associated tags.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "accounts",
+                    ":account_id",
+                    "projects",
+                    ":project_id",
+                    "knowledge-bases",
+                    "add"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "expand",
+                      "value": "tags"
+                    },
+                    {
+                      "key": "expand",
+                      "value": "tags"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "account_id",
+                      "description": "(Required) ID of the account that owns the retrieved/saved data"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "project_id",
+                      "description": "(Required) ID of the project into which the knowledge base is to be stored"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": 2740,\n  \"name\": \"string\",\n  \"project\": 9541,\n  \"status\": \"active\",\n  \"summary\": \"string\",\n  \"url\": \"string\",\n  \"objective\": \"string\",\n  \"start_date\": \"1985-01-06\",\n  \"end_date\": \"1955-02-01\",\n  \"prioritization_score_type\": \"string\",\n  \"prioritization_score_attributes\": {},\n  \"experiences\": [\n    5740,\n    8823\n  ],\n  \"description\": \"string\",\n  \"files\": [\n    {\n      \"key\": \"string\",\n      \"name\": \"string\",\n      \"url\": \"https://api.convert.com/api/v2/accounts/{account_id}/projects/{project_id}/files/{fileKey}\"\n    },\n    {\n      \"key\": \"string\",\n      \"name\": \"string\",\n      \"url\": \"https://api.convert.com/api/v2/accounts/{account_id}/projects/{project_id}/files/{fileKey}\"\n    }\n  ],\n  \"created_by\": \"string\",\n  \"updated_at\": 7997,\n  \"tags\": [\n    1446,\n    1063\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "1f12605e-bfb4-480c-95e8-58465dc70df4",
+              "name": "Indicates an error occurred while processing the request. The `code` provides an HTTP status code, `message` offers a human-readable explanation or an array of validation errors, and `fields` (if present) specifies which input fields were problematic.\n",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "accounts",
+                    ":account_id",
+                    "projects",
+                    ":project_id",
+                    "knowledge-bases",
+                    "add"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "expand",
+                      "value": "tags"
+                    },
+                    {
+                      "key": "expand",
+                      "value": "tags"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "account_id",
+                      "description": "(Required) ID of the account that owns the retrieved/saved data"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "project_id",
+                      "description": "(Required) ID of the project into which the knowledge base is to be stored"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 9155,\n  \"message\": \"string\",\n  \"fields\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "14689047-c152-4b20-a9b7-b2adbe4a16b4",
+          "name": "Update the status of a Knowledge Base entry",
+          "request": {
+            "name": "Update the status of a Knowledge Base entry",
+            "description": {
+              "content": "Changes the status of an existing Knowledge Base entry (e.g., from 'active' to 'archived').\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "accounts",
+                ":account_id",
+                "projects",
+                ":project_id",
+                "knowledge-bases",
+                ":knowledge_base_id",
+                "update-status"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "expand",
+                  "value": "<string>",
+                  "description": "Specifies the list of fields which would be expanded in the response. Otherwise, only their id would be returned.\n\nRead more in the section related to [Expanding Fields](#tag/Expandable-Fields)\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "expand",
+                  "value": "<string>",
+                  "description": "Specifies the list of fields which would be expanded in the response. Otherwise, only their id would be returned.\n\nRead more in the section related to [Expanding Fields](#tag/Expandable-Fields)\n"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "account_id",
+                  "description": "(Required) ID of the account that owns the retrieved/saved data"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "project_id",
+                  "description": "(Required) ID of the project into which the knowledge base is to be updated"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "knowledge_base_id",
+                  "description": "(Required) ID of the knowledge base to be updated"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"active\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "9f7f65fe-8d54-464c-9590-21362287d778",
+              "name": "Detailed information for a single Knowledge Base entry, including its name, summary of findings, status (active/archived), creator, and associated tags.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "accounts",
+                    ":account_id",
+                    "projects",
+                    ":project_id",
+                    "knowledge-bases",
+                    ":knowledge_base_id",
+                    "update-status"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "expand",
+                      "value": "tags"
+                    },
+                    {
+                      "key": "expand",
+                      "value": "tags"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "account_id",
+                      "description": "(Required) ID of the account that owns the retrieved/saved data"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "project_id",
+                      "description": "(Required) ID of the project into which the knowledge base is to be updated"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "knowledge_base_id",
+                      "description": "(Required) ID of the knowledge base to be updated"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": 2740,\n  \"name\": \"string\",\n  \"project\": 9541,\n  \"status\": \"active\",\n  \"summary\": \"string\",\n  \"url\": \"string\",\n  \"objective\": \"string\",\n  \"start_date\": \"1985-01-06\",\n  \"end_date\": \"1955-02-01\",\n  \"prioritization_score_type\": \"string\",\n  \"prioritization_score_attributes\": {},\n  \"experiences\": [\n    5740,\n    8823\n  ],\n  \"description\": \"string\",\n  \"files\": [\n    {\n      \"key\": \"string\",\n      \"name\": \"string\",\n      \"url\": \"https://api.convert.com/api/v2/accounts/{account_id}/projects/{project_id}/files/{fileKey}\"\n    },\n    {\n      \"key\": \"string\",\n      \"name\": \"string\",\n      \"url\": \"https://api.convert.com/api/v2/accounts/{account_id}/projects/{project_id}/files/{fileKey}\"\n    }\n  ],\n  \"created_by\": \"string\",\n  \"updated_at\": 7997,\n  \"tags\": [\n    1446,\n    1063\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "fa8ec350-63b7-46c6-b81f-c7c63e2da3bd",
+              "name": "Indicates an error occurred while processing the request. The `code` provides an HTTP status code, `message` offers a human-readable explanation or an array of validation errors, and `fields` (if present) specifies which input fields were problematic.\n",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "accounts",
+                    ":account_id",
+                    "projects",
+                    ":project_id",
+                    "knowledge-bases",
+                    ":knowledge_base_id",
+                    "update-status"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "expand",
+                      "value": "tags"
+                    },
+                    {
+                      "key": "expand",
+                      "value": "tags"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "account_id",
+                      "description": "(Required) ID of the account that owns the retrieved/saved data"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "project_id",
+                      "description": "(Required) ID of the project into which the knowledge base is to be updated"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "knowledge_base_id",
+                      "description": "(Required) ID of the knowledge base to be updated"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 9155,\n  \"message\": \"string\",\n  \"fields\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "027cd059-774a-4de6-a0a4-4030242bf1d9",
+          "name": "Delete a Knowledge Base entry",
+          "request": {
+            "name": "Delete a Knowledge Base entry",
+            "description": {
+              "content": "Permanently removes a Knowledge Base entry from a project. This action is irreversible.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "accounts",
+                ":account_id",
+                "projects",
+                ":project_id",
+                "knowledge-bases",
+                ":knowledge_base_id",
+                "delete"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "account_id",
+                  "description": "(Required) ID of the account that owns the retrieved/saved data"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "project_id",
+                  "description": "(Required) ID of the project from which the knowledge base is to be deleted"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "knowledge_base_id",
+                  "description": "(Required) ID of the knowledge base to be deleted"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "DELETE",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "f7f484fa-794b-462c-a764-5824d1b71005",
+              "name": "Detailed information for a single Knowledge Base entry, including its name, summary of findings, status (active/archived), creator, and associated tags.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "accounts",
+                    ":account_id",
+                    "projects",
+                    ":project_id",
+                    "knowledge-bases",
+                    ":knowledge_base_id",
+                    "delete"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "account_id",
+                      "description": "(Required) ID of the account that owns the retrieved/saved data"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "project_id",
+                      "description": "(Required) ID of the project from which the knowledge base is to be deleted"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "knowledge_base_id",
+                      "description": "(Required) ID of the knowledge base to be deleted"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": 2740,\n  \"name\": \"string\",\n  \"project\": 9541,\n  \"status\": \"active\",\n  \"summary\": \"string\",\n  \"url\": \"string\",\n  \"objective\": \"string\",\n  \"start_date\": \"1985-01-06\",\n  \"end_date\": \"1955-02-01\",\n  \"prioritization_score_type\": \"string\",\n  \"prioritization_score_attributes\": {},\n  \"experiences\": [\n    5740,\n    8823\n  ],\n  \"description\": \"string\",\n  \"files\": [\n    {\n      \"key\": \"string\",\n      \"name\": \"string\",\n      \"url\": \"https://api.convert.com/api/v2/accounts/{account_id}/projects/{project_id}/files/{fileKey}\"\n    },\n    {\n      \"key\": \"string\",\n      \"name\": \"string\",\n      \"url\": \"https://api.convert.com/api/v2/accounts/{account_id}/projects/{project_id}/files/{fileKey}\"\n    }\n  ],\n  \"created_by\": \"string\",\n  \"updated_at\": 7997,\n  \"tags\": [\n    1446,\n    1063\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "a033ab6b-d949-4359-8a5a-ca555df4674f",
+              "name": "Indicates an error occurred while processing the request. The `code` provides an HTTP status code, `message` offers a human-readable explanation or an array of validation errors, and `fields` (if present) specifies which input fields were problematic.\n",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "accounts",
+                    ":account_id",
+                    "projects",
+                    ":project_id",
+                    "knowledge-bases",
+                    ":knowledge_base_id",
+                    "delete"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "account_id",
+                      "description": "(Required) ID of the account that owns the retrieved/saved data"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "project_id",
+                      "description": "(Required) ID of the project from which the knowledge base is to be deleted"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "knowledge_base_id",
+                      "description": "(Required) ID of the knowledge base to be deleted"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 9155,\n  \"message\": \"string\",\n  \"fields\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "42ca718a-09e3-4feb-a0ea-23be8bfab390",
+          "name": "Update multiple Knowledge Base entries at once",
+          "request": {
+            "name": "Update multiple Knowledge Base entries at once",
+            "description": {
+              "content": "Allows for changing the status (e.g., active, archived) of multiple Knowledge Base entries within a project simultaneously.\nRequires a list of Knowledge Base entry IDs and the target status.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "accounts",
+                ":account_id",
+                "projects",
+                ":project_id",
+                "knowledge-bases",
+                "bulk-update"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "account_id",
+                  "description": "(Required) ID of the account that owns the retrieved/saved data"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "project_id",
+                  "description": "(Required) ID of the project to which save/retrieved data is connected"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": [\n    \"<integer>\"\n  ],\n  \"status\": \"active\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "cbb79798-cba0-4454-bbec-61f1f75b6a21",
+              "name": "Indicates the outcome of a bulk operation (e.g., bulk update or delete). Provides a general success `message` and an `errors` array listing any entities that could not be processed, along with the reason for failure for each.\n",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "accounts",
+                    ":account_id",
+                    "projects",
+                    ":project_id",
+                    "knowledge-bases",
+                    "bulk-update"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "account_id",
+                      "description": "(Required) ID of the account that owns the retrieved/saved data"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "project_id",
+                      "description": "(Required) ID of the project to which save/retrieved data is connected"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 132,\n  \"message\": \"string\",\n  \"errors\": [\n    {\n      \"id\": 5488,\n      \"message\": \"string\"\n    },\n    {\n      \"id\": 5029,\n      \"message\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "19d8576a-9bf0-4c17-9672-e6a78276ee51",
+              "name": "Indicates an error occurred while processing the request. The `code` provides an HTTP status code, `message` offers a human-readable explanation or an array of validation errors, and `fields` (if present) specifies which input fields were problematic.\n",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "accounts",
+                    ":account_id",
+                    "projects",
+                    ":project_id",
+                    "knowledge-bases",
+                    "bulk-update"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "account_id",
+                      "description": "(Required) ID of the account that owns the retrieved/saved data"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "project_id",
+                      "description": "(Required) ID of the project to which save/retrieved data is connected"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 9155,\n  \"message\": \"string\",\n  \"fields\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "60a19f17-06ea-48da-8722-5256d64f1964",
+          "name": "Delete multiple Knowledge Base entries at once",
+          "request": {
+            "name": "Delete multiple Knowledge Base entries at once",
+            "description": {
+              "content": "Permanently removes multiple Knowledge Base entries from a project in a single operation.\nRequires a list of Knowledge Base entry IDs. This action is irreversible.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "accounts",
+                ":account_id",
+                "projects",
+                ":project_id",
+                "knowledge-bases",
+                "bulk-delete"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "account_id",
+                  "description": "(Required) ID of the account that owns the retrieved/saved data"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "project_id",
+                  "description": "(Required) ID of the project to which save/retrieved data is connected"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": [\n    \"<integer>\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "e34a3701-6040-42f5-93e2-e30f2d91542e",
+              "name": "Indicates the outcome of a bulk operation (e.g., bulk update or delete). Provides a general success `message` and an `errors` array listing any entities that could not be processed, along with the reason for failure for each.\n",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "accounts",
+                    ":account_id",
+                    "projects",
+                    ":project_id",
+                    "knowledge-bases",
+                    "bulk-delete"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "account_id",
+                      "description": "(Required) ID of the account that owns the retrieved/saved data"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "project_id",
+                      "description": "(Required) ID of the project to which save/retrieved data is connected"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 8937,\n  \"message\": \"string\",\n  \"errors\": [\n    {\n      \"id\": 6674,\n      \"message\": \"string\"\n    },\n    {\n      \"id\": 1038,\n      \"message\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "d4705ce3-4fb5-4457-b407-de7604395ba2",
+              "name": "Indicates an error occurred while processing the request. The `code` provides an HTTP status code, `message` offers a human-readable explanation or an array of validation errors, and `fields` (if present) specifies which input fields were problematic.\n",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "accounts",
+                    ":account_id",
+                    "projects",
+                    ":project_id",
+                    "knowledge-bases",
+                    "bulk-delete"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "account_id",
+                      "description": "(Required) ID of the account that owns the retrieved/saved data"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "project_id",
+                      "description": "(Required) ID of the project to which save/retrieved data is connected"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 9155,\n  \"message\": \"string\",\n  \"fields\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.convert.com/api/v2",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "7c504c04-a74d-447b-ad4a-6a8350b033b1",
+    "name": "Convert Accounts Knowledge Bases API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Move your app forward with the Convert API. The Convert API allows\nyou to manage your Convert Experiences projects using code. The REST API is\nan interface for managing and extending functionality of Convert. For\nexample, instead of creating and maintaining projects using the Convert\nExperiences web dashboard you can create an experiment programmatically.\nAdditionally, if you prefer to run custom analysis on experiment results you\ncan leverage the API to pull data from Convert Experiences into your own\nworkflow. If you do not have a Convert account already, sign up for a free\ndeveloper account at https://www.convert.com/api/.\n\n*[Convert API V1](/doc/v1) is still available and documentation can be found [here](/doc/v1) but using it is highly discouraged\nas it will be phased out in the future*\n",
+      "type": "text/plain"
+    }
+  }
+}

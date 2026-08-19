@@ -1,0 +1,144 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Convert Accounts User API",
+    "version": "2.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "User",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List available user access roles",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.convert.com/api/v2/access-roles"
+          },
+          "docs": "Retrieves a list of all predefined access roles within the Convert system (e.g., Owner, Admin, Editor, Reviewer, Browse).\nEach role defines a set of permissions that dictate what actions a user can perform on accounts and projects.\nThis is useful for understanding permission levels when managing collaborators.\n"
+        },
+        {
+          "info": {
+            "name": "Get current authenticated user's details",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.convert.com/api/v2/user"
+          },
+          "docs": "Retrieves the profile data, preferences, and settings for the currently authenticated user (via cookie).\nThis includes information like email, name, and UI preferences.\nNote: This endpoint is for cookie-based authentication. For API key authentication, user context is tied to the key itself.\n"
+        },
+        {
+          "info": {
+            "name": "Update current user's profile",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.convert.com/api/v2/user",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Allows the authenticated user (via cookie) to update their profile information, such as name, email, or password.\nAlso used to manage Multi-Factor Authentication (MFA) settings.\nUser preferences (like UI display settings) are managed via a separate endpoint.\n"
+        },
+        {
+          "info": {
+            "name": "Confirm user email address change",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.convert.com/api/v2/user/confirm-email",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Finalizes an email address change request by submitting the confirmation code sent to the new email address.\nUsed in cookie-based authentication flows.\n"
+        },
+        {
+          "info": {
+            "name": "Update user's UI preferences",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.convert.com/api/v2/user/preferences",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Allows the authenticated user (via cookie) to update their preferences for the Convert application UI,\nsuch as default column visibility in tables or editor settings. These settings do not affect experiment behavior.\n"
+        },
+        {
+          "info": {
+            "name": "Generate MFA secret for authenticator app",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.convert.com/api/v2/user/mfa-secret"
+          },
+          "docs": "Generates a new Multi-Factor Authentication (MFA) secret for the authenticated user (cookie-based).\nThis secret is used to set up an authenticator app (like Google Authenticator) for generating time-based one-time passwords (TOTPs).\n"
+        },
+        {
+          "info": {
+            "name": "Accept and create a demo project for the user",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.convert.com/api/v2/user/accept-demo-project"
+          },
+          "docs": "Allows a user to accept the creation of a pre-configured demo project in their account.\nThis is typically used for onboarding or trial experiences to showcase Convert's features.\n"
+        },
+        {
+          "info": {
+            "name": "List authorized sessions for the current user",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.convert.com/api/v2/user/sessions"
+          },
+          "docs": "Cookie-authenticated endpoint that returns all active authorized sessions for the current user,\nincluding the current cookie-based session and any OAuth bearer-token sessions the user has approved.\n"
+        },
+        {
+          "info": {
+            "name": "Revoke User session",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.convert.com/api/v2/user/sessions/revoke",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Cookie-authenticated endpoint that revokes a single session (cookie-based or OAuth) for the current user, identified by its sid.\n"
+        },
+        {
+          "info": {
+            "name": "Revoke all User sessions",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.convert.com/api/v2/user/sessions/revoke-all"
+          },
+          "docs": "Cookie-authenticated endpoint that revokes every active session (cookie-based and OAuth) for the current user.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

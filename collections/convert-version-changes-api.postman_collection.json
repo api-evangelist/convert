@@ -1,0 +1,471 @@
+{
+  "item": [
+    {
+      "id": "aec100e4-d001-44ea-801a-45ff9745a1dc",
+      "name": "Version Changes",
+      "description": {
+        "content": "Each **Experience's Variation** has one or more **Changes**; a change represent the actual modification that\nis applied to a visitor. It can be a piece of javascript or CSS code for web experiences or it can be a string value for example\nin case of a fullstack experience.\n",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "67e72312-093c-4b73-a526-cae214937e0f",
+          "name": "Get details of a specific change in a variation",
+          "request": {
+            "name": "Get details of a specific change in a variation",
+            "description": {
+              "content": "Retrieves the details of a single change applied within an experience's variation.\nA change can be CSS modifications, JavaScript code, HTML insertions, or configurations for Split URL redirects or Full Stack features.\nThe `data` field structure depends on the `type` of the change.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "accounts",
+                ":account_id",
+                "projects",
+                ":project_id",
+                "experiences",
+                ":experience_id",
+                "changes",
+                ":change_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "account_id",
+                  "description": "(Required) ID of the account that owns the retrieved/saved data"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "project_id",
+                  "description": "(Required) ID of the project to which save/retrieved data is connected"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "experience_id",
+                  "description": "(Required) ID of the experience"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "change_id",
+                  "description": "(Required) ID of the experience change to get/update"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "f8d6eade-6a70-4472-8bdd-261190afe821",
+              "name": "Details of a single change within an experience variation, including its `id`, `type` (e.g., 'defaultCode', 'customCode'), and the specific `data` (e.g., JS/CSS code, redirect patterns) for that change.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "accounts",
+                    ":account_id",
+                    "projects",
+                    ":project_id",
+                    "experiences",
+                    ":experience_id",
+                    "changes",
+                    ":change_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "account_id",
+                      "description": "(Required) ID of the account that owns the retrieved/saved data"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "project_id",
+                      "description": "(Required) ID of the project to which save/retrieved data is connected"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "experience_id",
+                      "description": "(Required) ID of the experience"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "change_id",
+                      "description": "(Required) ID of the experience change to get/update"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": 7073,\n  \"type\": \"defaultRedirect\",\n  \"data\": {\n    \"css\": \"string\",\n    \"js\": \"string\",\n    \"custom_js\": \"string\"\n  },\n  \"concurrency_key\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "a45642a1-26aa-44ca-a24f-31aa034bb310",
+              "name": "Indicates an error occurred while processing the request. The `code` provides an HTTP status code, `message` offers a human-readable explanation or an array of validation errors, and `fields` (if present) specifies which input fields were problematic.\n",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "accounts",
+                    ":account_id",
+                    "projects",
+                    ":project_id",
+                    "experiences",
+                    ":experience_id",
+                    "changes",
+                    ":change_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "account_id",
+                      "description": "(Required) ID of the account that owns the retrieved/saved data"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "project_id",
+                      "description": "(Required) ID of the project to which save/retrieved data is connected"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "experience_id",
+                      "description": "(Required) ID of the experience"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "change_id",
+                      "description": "(Required) ID of the experience change to get/update"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 2471,\n  \"message\": \"string\",\n  \"fields\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "afc7ab6b-0188-4371-bda5-e7446676c2dc",
+          "name": "Update a specific change in a variation",
+          "request": {
+            "name": "Update a specific change in a variation",
+            "description": {
+              "content": "Modifies the content or settings of an existing change within an experience's variation.\nFor example, updating the JavaScript code, CSS rules, or redirect pattern for a change.\nThe structure of the `data` field in the request body must match the `type` of the change being updated.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "accounts",
+                ":account_id",
+                "projects",
+                ":project_id",
+                "experiences",
+                ":experience_id",
+                "changes",
+                ":change_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "account_id",
+                  "description": "(Required) ID of the account that owns the retrieved/saved data"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "project_id",
+                  "description": "(Required) ID of the project to which save/retrieved data is connected"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "experience_id",
+                  "description": "(Required) ID of the experience"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "change_id",
+                  "description": "(Required) ID of the experience change to get/update"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PUT",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "<object>",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "a16727e9-1c42-4096-a10d-b948c3c2b421",
+              "name": "Details of a single change within an experience variation, including its `id`, `type` (e.g., 'defaultCode', 'customCode'), and the specific `data` (e.g., JS/CSS code, redirect patterns) for that change.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "accounts",
+                    ":account_id",
+                    "projects",
+                    ":project_id",
+                    "experiences",
+                    ":experience_id",
+                    "changes",
+                    ":change_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "account_id",
+                      "description": "(Required) ID of the account that owns the retrieved/saved data"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "project_id",
+                      "description": "(Required) ID of the project to which save/retrieved data is connected"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "experience_id",
+                      "description": "(Required) ID of the experience"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "change_id",
+                      "description": "(Required) ID of the experience change to get/update"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": 7073,\n  \"type\": \"defaultRedirect\",\n  \"data\": {\n    \"css\": \"string\",\n    \"js\": \"string\",\n    \"custom_js\": \"string\"\n  },\n  \"concurrency_key\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "f88f99e5-ad1e-4e45-bbc0-602af9c031a4",
+              "name": "Indicates an error occurred while processing the request. The `code` provides an HTTP status code, `message` offers a human-readable explanation or an array of validation errors, and `fields` (if present) specifies which input fields were problematic.\n",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "accounts",
+                    ":account_id",
+                    "projects",
+                    ":project_id",
+                    "experiences",
+                    ":experience_id",
+                    "changes",
+                    ":change_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "account_id",
+                      "description": "(Required) ID of the account that owns the retrieved/saved data"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "project_id",
+                      "description": "(Required) ID of the project to which save/retrieved data is connected"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "experience_id",
+                      "description": "(Required) ID of the experience"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "change_id",
+                      "description": "(Required) ID of the experience change to get/update"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 2471,\n  \"message\": \"string\",\n  \"fields\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.convert.com/api/v2",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "95c17f93-8d66-4270-bd05-47089ea016a7",
+    "name": "Convert Accounts Version Changes API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Move your app forward with the Convert API. The Convert API allows\nyou to manage your Convert Experiences projects using code. The REST API is\nan interface for managing and extending functionality of Convert. For\nexample, instead of creating and maintaining projects using the Convert\nExperiences web dashboard you can create an experiment programmatically.\nAdditionally, if you prefer to run custom analysis on experiment results you\ncan leverage the API to pull data from Convert Experiences into your own\nworkflow. If you do not have a Convert account already, sign up for a free\ndeveloper account at https://www.convert.com/api/.\n\n*[Convert API V1](/doc/v1) is still available and documentation can be found [here](/doc/v1) but using it is highly discouraged\nas it will be phased out in the future*\n",
+      "type": "text/plain"
+    }
+  }
+}

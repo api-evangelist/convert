@@ -1,0 +1,142 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Convert Accounts Collaborators API",
+    "version": "2.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Collaborators",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List users and their access permissions for an account",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/users-accesses",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              },
+              {
+                "name": "expand",
+                "value": "",
+                "type": "query",
+                "description": "Specifies the list of objects which would be expanded in the response. Otherwise, only their id would be returned.\n\nRead more in the section related to [Expanding Fields](#tag/Expandable-Fields)\n"
+              }
+            ]
+          },
+          "docs": "Retrieves a list of all users who have collaborator access to the specified account.\nFor each user, it details the projects they can access and their role within those projects (e.g., Admin, Editor).\nThe `expand` parameter can be used to get more details about the projects.\nAs per the Knowledge Base, \"Account owners can invite collaborators to projects and choose to give them varying privileges.\"\n"
+        },
+        {
+          "info": {
+            "name": "Update a user's access permissions for an account",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/users-accesses/update",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Modifies the access rights of an existing collaborator for the specified account.\nThis can involve changing their role for specific projects or altering which projects they can access.\nIdentifies the user by `user_id` (for active collaborators) or `email` (for pending invitations).\n"
+        },
+        {
+          "info": {
+            "name": "Invite a new collaborator to an account",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/users-accesses/add",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Sends an invitation to a user (identified by email) to become a collaborator on the specified account.\nThe request defines the initial set of projects and the role the user will have for those projects.\nThe user will receive an email to accept the invitation.\n"
+        },
+        {
+          "info": {
+            "name": "Remove a collaborator's access from an account",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/users-accesses/delete",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Revokes a user's collaborator access to specified projects within an account, or entirely from the account.\nIdentifies the user by `user_id` or `email`.\n"
+        },
+        {
+          "info": {
+            "name": "Check partner status for extended API access",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.convert.com/api/v2/check-partner",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Verifies if the provided email belongs to a registered partner, potentially enabling extended API functionalities.\nThis is an internal mechanism.\n"
+        },
+        {
+          "info": {
+            "name": "Accept a collaborator invitation",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.convert.com/api/v2/auth/accept-invitation",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Allows a user to accept an invitation to collaborate on an account using a unique hash token received via email.\nIf the user is new to Convert, this will also trigger account creation.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

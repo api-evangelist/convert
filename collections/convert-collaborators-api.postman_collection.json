@@ -1,0 +1,890 @@
+{
+  "item": [
+    {
+      "id": "79aa1a80-20f9-450a-805a-25b9ea6a0e7e",
+      "name": "Collaborators",
+      "description": {
+        "content": "Convert Experiences organizes customer data into Accounts(which are billable entities) and gives Users access to accounts under different roles.  By default the **user that initially setups an account**, will get access to that account as the **owner** of it.  Other users can be invited to get access to specific/all projects inside that account becoming this way **Collaborators** of that **Account**\n",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "961d7e7a-a172-4b99-84ca-a8cc1f132c20",
+          "name": "List users and their access permissions for an account",
+          "request": {
+            "name": "List users and their access permissions for an account",
+            "description": {
+              "content": "Retrieves a list of all users who have collaborator access to the specified account.\nFor each user, it details the projects they can access and their role within those projects (e.g., Admin, Editor).\nThe `expand` parameter can be used to get more details about the projects.\nAs per the Knowledge Base, \"Account owners can invite collaborators to projects and choose to give them varying privileges.\"\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "accounts",
+                ":account_id",
+                "users-accesses"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "expand",
+                  "value": "<string>",
+                  "description": "Specifies the list of objects which would be expanded in the response. Otherwise, only their id would be returned.\n\nRead more in the section related to [Expanding Fields](#tag/Expandable-Fields)\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "expand",
+                  "value": "<string>",
+                  "description": "Specifies the list of objects which would be expanded in the response. Otherwise, only their id would be returned.\n\nRead more in the section related to [Expanding Fields](#tag/Expandable-Fields)\n"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "account_id",
+                  "description": "(Required) ID of the account that owns the retrieved/saved data"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "808e7455-3e60-41e8-aa2c-a1b8dc7f6865",
+              "name": "A list of users who are collaborators on the specified account, detailing their names, emails, and the specific projects/roles they have access to.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "accounts",
+                    ":account_id",
+                    "users-accesses"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "expand",
+                      "value": "accesses.project"
+                    },
+                    {
+                      "key": "expand",
+                      "value": "accesses.project"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "account_id",
+                      "description": "(Required) ID of the account that owns the retrieved/saved data"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": [\n    {\n      \"first_name\": \"string\",\n      \"last_name\": \"string\",\n      \"accesses\": [\n        {\n          \"api_access\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"status\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"role\": \"owner\"\n        },\n        {\n          \"api_access\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"status\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"role\": \"browse\"\n        }\n      ],\n      \"email\": \"string\",\n      \"user_id\": \"string\"\n    },\n    {\n      \"first_name\": \"string\",\n      \"last_name\": \"string\",\n      \"accesses\": [\n        {\n          \"api_access\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"status\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"role\": \"publish\"\n        },\n        {\n          \"api_access\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"status\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"role\": \"admin\"\n        }\n      ],\n      \"email\": \"string\",\n      \"user_id\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "1e479357-8bfd-4f0a-862d-702c0ac98e35",
+              "name": "Indicates an error occurred while processing the request. The `code` provides an HTTP status code, `message` offers a human-readable explanation or an array of validation errors, and `fields` (if present) specifies which input fields were problematic.\n",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "accounts",
+                    ":account_id",
+                    "users-accesses"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "expand",
+                      "value": "accesses.project"
+                    },
+                    {
+                      "key": "expand",
+                      "value": "accesses.project"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "account_id",
+                      "description": "(Required) ID of the account that owns the retrieved/saved data"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 7361,\n  \"message\": \"string\",\n  \"fields\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "50c2aae4-2342-45bc-870e-2943f1cfa0f4",
+          "name": "Update a user's access permissions for an account",
+          "request": {
+            "name": "Update a user's access permissions for an account",
+            "description": {
+              "content": "Modifies the access rights of an existing collaborator for the specified account.\nThis can involve changing their role for specific projects or altering which projects they can access.\nIdentifies the user by `user_id` (for active collaborators) or `email` (for pending invitations).\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "accounts",
+                ":account_id",
+                "users-accesses",
+                "update"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "account_id",
+                  "description": "(Required) ID of the account that owns the retrieved/saved data"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PUT",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user_id\": \"<string>\",\n  \"first_name\": \"<string>\",\n  \"last_name\": \"<string>\",\n  \"accesses\": [\n    {\n      \"api_access\": \"<boolean>\",\n      \"project\": {\n        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n      },\n      \"role\": \"<string>\"\n    },\n    {\n      \"api_access\": \"<boolean>\",\n      \"project\": {\n        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n      },\n      \"role\": \"<string>\"\n    }\n  ],\n  \"custom_message\": \"<string>\",\n  \"expand\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "89bc3584-f32f-4505-a2ba-ada0342b562d",
+              "name": "Details the access permissions for a single user within a specific account, including their roles for various projects.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "accounts",
+                    ":account_id",
+                    "users-accesses",
+                    "update"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "account_id",
+                      "description": "(Required) ID of the account that owns the retrieved/saved data"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"first_name\": \"string\",\n    \"last_name\": \"string\",\n    \"accesses\": [\n      {\n        \"api_access\": true,\n        \"status\": {\n          \"readOnly\": true,\n          \"description\": \"Status of the access, if pending, it means invitation wasn't accepted yet by the receiver\",\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"project\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"role\": \"edit\"\n      },\n      {\n        \"api_access\": false,\n        \"status\": {\n          \"readOnly\": true,\n          \"description\": \"Status of the access, if pending, it means invitation wasn't accepted yet by the receiver\",\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"project\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"role\": \"browse\"\n      }\n    ],\n    \"email\": \"string\",\n    \"user_id\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "84c166e1-6695-424a-8219-c03b830c652a",
+              "name": "Indicates an error occurred while processing the request. The `code` provides an HTTP status code, `message` offers a human-readable explanation or an array of validation errors, and `fields` (if present) specifies which input fields were problematic.\n",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "accounts",
+                    ":account_id",
+                    "users-accesses",
+                    "update"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "account_id",
+                      "description": "(Required) ID of the account that owns the retrieved/saved data"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 7361,\n  \"message\": \"string\",\n  \"fields\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "d0de8618-8f7a-43a3-ae4f-0a579d6be2fd",
+          "name": "Invite a new collaborator to an account",
+          "request": {
+            "name": "Invite a new collaborator to an account",
+            "description": {
+              "content": "Sends an invitation to a user (identified by email) to become a collaborator on the specified account.\nThe request defines the initial set of projects and the role the user will have for those projects.\nThe user will receive an email to accept the invitation.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "accounts",
+                ":account_id",
+                "users-accesses",
+                "add"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "account_id",
+                  "description": "(Required) ID of the account that owns the retrieved/saved data"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "<object>",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "a3b164c7-f29e-4c03-b2ba-73be08428511",
+              "name": "Details the access permissions for a single user within a specific account, including their roles for various projects.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "accounts",
+                    ":account_id",
+                    "users-accesses",
+                    "add"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "account_id",
+                      "description": "(Required) ID of the account that owns the retrieved/saved data"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"first_name\": \"string\",\n    \"last_name\": \"string\",\n    \"accesses\": [\n      {\n        \"api_access\": true,\n        \"status\": {\n          \"readOnly\": true,\n          \"description\": \"Status of the access, if pending, it means invitation wasn't accepted yet by the receiver\",\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"project\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"role\": \"edit\"\n      },\n      {\n        \"api_access\": false,\n        \"status\": {\n          \"readOnly\": true,\n          \"description\": \"Status of the access, if pending, it means invitation wasn't accepted yet by the receiver\",\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"project\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"role\": \"browse\"\n      }\n    ],\n    \"email\": \"string\",\n    \"user_id\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "79a02f65-4903-4eaa-b6c9-d04d74e38677",
+              "name": "Indicates an error occurred while processing the request. The `code` provides an HTTP status code, `message` offers a human-readable explanation or an array of validation errors, and `fields` (if present) specifies which input fields were problematic.\n",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "accounts",
+                    ":account_id",
+                    "users-accesses",
+                    "add"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "account_id",
+                      "description": "(Required) ID of the account that owns the retrieved/saved data"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 7361,\n  \"message\": \"string\",\n  \"fields\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "7fc4ff0f-39f5-489c-b2e9-f75e7937cabd",
+          "name": "Remove a collaborator's access from an account",
+          "request": {
+            "name": "Remove a collaborator's access from an account",
+            "description": {
+              "content": "Revokes a user's collaborator access to specified projects within an account, or entirely from the account.\nIdentifies the user by `user_id` or `email`.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "accounts",
+                ":account_id",
+                "users-accesses",
+                "delete"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "account_id",
+                  "description": "(Required) ID of the account that owns the retrieved/saved data"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user_id\": \"<string>\",\n  \"accesses\": [\n    {\n      \"project\": \"<integer>\"\n    },\n    {\n      \"project\": \"<integer>\"\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "c87b6e58-574a-451c-b645-51f62585f1c4",
+              "name": "A generic success response, typically used for operations that don't return specific data (like deletions or some updates). The `code` is usually 200, and `message` confirms the successful action.\n",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "accounts",
+                    ":account_id",
+                    "users-accesses",
+                    "delete"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "account_id",
+                      "description": "(Required) ID of the account that owns the retrieved/saved data"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 3378,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "64a0d058-e727-4d2f-a46c-9ce69a2853c7",
+              "name": "Indicates an error occurred while processing the request. The `code` provides an HTTP status code, `message` offers a human-readable explanation or an array of validation errors, and `fields` (if present) specifies which input fields were problematic.\n",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "accounts",
+                    ":account_id",
+                    "users-accesses",
+                    "delete"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "account_id",
+                      "description": "(Required) ID of the account that owns the retrieved/saved data"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 7361,\n  \"message\": \"string\",\n  \"fields\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "87b8fc65-2120-41ae-9c4a-6a01ab118179",
+          "name": "Check partner status for extended API access",
+          "request": {
+            "name": "Check partner status for extended API access",
+            "description": {
+              "content": "Verifies if the provided email belongs to a registered partner, potentially enabling extended API functionalities.\nThis is an internal mechanism.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "check-partner"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "56bc3401-1b57-4634-8dc1-cf154ed68d1c",
+              "name": "Indicates whether the queried email `allowed` for extended partner API access and if this access was `alreadyGranted`.\n",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "check-partner"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"email\": \"string\",\n  \"allowed\": true,\n  \"alreadyGranted\": false\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "1816c1cd-71de-4e7f-8995-f2c18a6e8518",
+              "name": "Indicates an error occurred while processing the request. The `code` provides an HTTP status code, `message` offers a human-readable explanation or an array of validation errors, and `fields` (if present) specifies which input fields were problematic.\n",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "check-partner"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 7361,\n  \"message\": \"string\",\n  \"fields\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "f31f2336-9264-49f0-a252-a8692f8db1d1",
+          "name": "Accept a collaborator invitation",
+          "request": {
+            "name": "Accept a collaborator invitation",
+            "description": {
+              "content": "Allows a user to accept an invitation to collaborate on an account using a unique hash token received via email.\nIf the user is new to Convert, this will also trigger account creation.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "auth",
+                "accept-invitation"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"hash\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "0bf3da15-b1b5-403d-9a2d-2d24ca48fbec",
+              "name": "A generic success response, typically used for operations that don't return specific data (like deletions or some updates). The `code` is usually 200, and `message` confirms the successful action.\n",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "auth",
+                    "accept-invitation"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 3378,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "6e75e1d2-8fa9-4cbd-9c29-721073e46337",
+              "name": "Indicates an error occurred while processing the request. The `code` provides an HTTP status code, `message` offers a human-readable explanation or an array of validation errors, and `fields` (if present) specifies which input fields were problematic.\n",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "auth",
+                    "accept-invitation"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 7361,\n  \"message\": \"string\",\n  \"fields\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.convert.com/api/v2",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "1d93cf43-baaf-42cc-b27a-df3b4d221f93",
+    "name": "Convert Accounts Collaborators API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Move your app forward with the Convert API. The Convert API allows\nyou to manage your Convert Experiences projects using code. The REST API is\nan interface for managing and extending functionality of Convert. For\nexample, instead of creating and maintaining projects using the Convert\nExperiences web dashboard you can create an experiment programmatically.\nAdditionally, if you prefer to run custom analysis on experiment results you\ncan leverage the API to pull data from Convert Experiences into your own\nworkflow. If you do not have a Convert account already, sign up for a free\ndeveloper account at https://www.convert.com/api/.\n\n*[Convert API V1](/doc/v1) is still available and documentation can be found [here](/doc/v1) but using it is highly discouraged\nas it will be phased out in the future*\n",
+      "type": "text/plain"
+    }
+  }
+}

@@ -1,0 +1,1833 @@
+{
+  "item": [
+    {
+      "id": "d02c561b-8cdc-4cac-9e9d-d47fcabebc72",
+      "name": "Hypotheses",
+      "description": {
+        "content": "A hypothesis is an assumption that a proposed change in your website would lead to visitors taking the action that you want them to. Read more information about <a href=\"https://support.convert.com/hc/en-us/articles/360037227891?_ga=2.37896292.616154853.1594029871-1191511577.1590603567\">Hypotheses</a>.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "9f2826ac-d3c1-4286-b08e-bf5d625cfd86",
+          "name": "List hypotheses within a project",
+          "request": {
+            "name": "List hypotheses within a project",
+            "description": {
+              "content": "Retrieves a list of all hypotheses defined for a specific project.\nA hypothesis is an assumption about a proposed change and its expected impact, forming the basis for an experiment.\nSupports filtering by status, score, name, and pagination.\nThe Knowledge Base article \"Hypotheses (Compass)\" explains: \"A hypothesis is an assumption that a proposed change in your website would lead to visitors taking the action that you want them to.\"\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "accounts",
+                ":account_id",
+                "projects",
+                ":project_id",
+                "hypotheses"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "account_id",
+                  "description": "(Required) ID of the account that owns the retrieved/saved data"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "project_id",
+                  "description": "(Required) ID of the project to which save/retrieved data is connected"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"onlyCount\": \"<boolean>\",\n  \"results_per_page\": 30,\n  \"sort_direction\": \"desc\",\n  \"sort_by\": \"id\",\n  \"scoreMax\": 5,\n  \"scoreMin\": 0,\n  \"search\": \"<string>\",\n  \"status\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"experiences\": [\n    \"<integer>\",\n    \"<integer>\"\n  ],\n  \"tags\": [\n    \"<integer>\",\n    \"<integer>\"\n  ],\n  \"only\": [\n    \"<integer>\",\n    \"<integer>\"\n  ],\n  \"except\": [\n    \"<integer>\",\n    \"<integer>\"\n  ],\n  \"page\": \"<integer>\",\n  \"expand\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "624d6f8f-2c75-46ff-a089-4324df817fe8",
+              "name": "A list of hypotheses defined within a project. Each entry includes the hypothesis ID, name, objective, prioritization score, status, and associated experiences/tags.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "accounts",
+                    ":account_id",
+                    "projects",
+                    ":project_id",
+                    "hypotheses"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "account_id",
+                      "description": "(Required) ID of the account that owns the retrieved/saved data"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "project_id",
+                      "description": "(Required) ID of the project to which save/retrieved data is connected"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": [\n    {\n      \"prioritization_score_type\": {\n        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n      },\n      \"prioritization_score_attributes\": {\n        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n      },\n      \"experiences\": [\n        {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      ],\n      \"tags\": [\n        {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      ]\n    },\n    {\n      \"prioritization_score_type\": {\n        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n      },\n      \"prioritization_score_attributes\": {\n        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n      },\n      \"experiences\": [\n        {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      ],\n      \"tags\": [\n        {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      ]\n    }\n  ],\n  \"extra\": {\n    \"pagination\": {\n      \"current_page\": 4493,\n      \"items_count\": 198,\n      \"items_per_page\": 1058,\n      \"pages_count\": 1145\n    }\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "c77614c8-f457-4ca1-9188-65ce71b619a5",
+              "name": "Indicates an error occurred while processing the request. The `code` provides an HTTP status code, `message` offers a human-readable explanation or an array of validation errors, and `fields` (if present) specifies which input fields were problematic.\n",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "accounts",
+                    ":account_id",
+                    "projects",
+                    ":project_id",
+                    "hypotheses"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "account_id",
+                      "description": "(Required) ID of the account that owns the retrieved/saved data"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "project_id",
+                      "description": "(Required) ID of the project to which save/retrieved data is connected"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 4618,\n  \"message\": \"string\",\n  \"fields\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "c258daf5-1ea1-45fb-9f7d-ab2e12984547",
+          "name": "Get details for a specific hypothesis",
+          "request": {
+            "name": "Get details for a specific hypothesis",
+            "description": {
+              "content": "Retrieves detailed information about a single hypothesis, identified by its `hypothesis_id`.\nThis includes its name, objective, prioritization score (PIE or ICE), status, associated experiences, and tags.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "accounts",
+                ":account_id",
+                "projects",
+                ":project_id",
+                "hypotheses",
+                ":hypothesis_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "expand",
+                  "value": "<string>",
+                  "description": "Specifies the list of fields which would be expanded in the response. Otherwise, only their id would be returned.\n\nRead more in the section related to [Expanding Fields](#tag/Expandable-Fields)\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "expand",
+                  "value": "<string>",
+                  "description": "Specifies the list of fields which would be expanded in the response. Otherwise, only their id would be returned.\n\nRead more in the section related to [Expanding Fields](#tag/Expandable-Fields)\n"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "account_id",
+                  "description": "(Required) ID of the account that owns the retrieved/saved data"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "project_id",
+                  "description": "(Required) ID of the project into which the hypothesis is stored"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "hypothesis_id",
+                  "description": "(Required) ID of the hypothesis to be retrieve"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "9369e33d-7682-43fd-b173-04047c808941",
+              "name": "Detailed information for a single hypothesis, including its name, objective, prioritization model (PIE/ICE) and scores, status, start/end dates, summary, and links to associated experiences and tags.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "accounts",
+                    ":account_id",
+                    "projects",
+                    ":project_id",
+                    "hypotheses",
+                    ":hypothesis_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "expand",
+                      "value": "experiences"
+                    },
+                    {
+                      "key": "expand",
+                      "value": "tags"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "account_id",
+                      "description": "(Required) ID of the account that owns the retrieved/saved data"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "project_id",
+                      "description": "(Required) ID of the project into which the hypothesis is stored"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "hypothesis_id",
+                      "description": "(Required) ID of the hypothesis to be retrieve"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": 6910,\n  \"name\": \"string\",\n  \"url\": \"string\",\n  \"project\": 2058,\n  \"prioritization_score\": \"string\",\n  \"objective\": \"string\",\n  \"status\": \"proven\",\n  \"start_date\": \"2013-06-30\",\n  \"end_date\": \"1969-05-25\",\n  \"summary\": \"string\",\n  \"description\": \"string\",\n  \"files\": [\n    {\n      \"key\": {\n        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n      },\n      \"name\": {\n        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n      },\n      \"url\": {\n        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n      }\n    },\n    {\n      \"key\": {\n        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n      },\n      \"name\": {\n        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n      },\n      \"url\": {\n        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n      }\n    }\n  ],\n  \"created_at\": 3236,\n  \"updated_at\": 4157,\n  \"created_by\": \"string\",\n  \"prioritization_score_type\": \"PIE\",\n  \"prioritization_score_attributes\": {\n    \"potential\": 3,\n    \"importance\": 4,\n    \"ease\": 4\n  },\n  \"experiences\": [\n    3723,\n    4507\n  ],\n  \"tags\": [\n    9934,\n    5516\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "78911715-a2f7-4df3-bbbf-d3815cf12d66",
+              "name": "Indicates an error occurred while processing the request. The `code` provides an HTTP status code, `message` offers a human-readable explanation or an array of validation errors, and `fields` (if present) specifies which input fields were problematic.\n",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "accounts",
+                    ":account_id",
+                    "projects",
+                    ":project_id",
+                    "hypotheses",
+                    ":hypothesis_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "expand",
+                      "value": "experiences"
+                    },
+                    {
+                      "key": "expand",
+                      "value": "tags"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "account_id",
+                      "description": "(Required) ID of the account that owns the retrieved/saved data"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "project_id",
+                      "description": "(Required) ID of the project into which the hypothesis is stored"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "hypothesis_id",
+                      "description": "(Required) ID of the hypothesis to be retrieve"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 4618,\n  \"message\": \"string\",\n  \"fields\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "30b18f43-a96a-4b48-83b5-8efbf50a2553",
+          "name": "Create a new hypothesis",
+          "request": {
+            "name": "Create a new hypothesis",
+            "description": {
+              "content": "Defines a new hypothesis within a project.\nRequires a name, objective (problem and proposed solution), prioritization model (PIE or ICE) and its scores, status, and optionally, start/end dates, summary, associated experiences, and tags.\nThe Knowledge Base article \"Hypotheses (Compass)\" details the PIE (Potential, Importance, Ease) and ICE (Impact, Confidence, Ease) models.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "accounts",
+                ":account_id",
+                "projects",
+                ":project_id",
+                "hypotheses",
+                "add"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "expand",
+                  "value": "<string>",
+                  "description": "Specifies the list of objects which would be expanded in the response. Otherwise, only their id would be returned.\n\nRead more in the section related to [Expanding Fields](#tag/Expandable-Fields)\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "expand",
+                  "value": "<string>",
+                  "description": "Specifies the list of objects which would be expanded in the response. Otherwise, only their id would be returned.\n\nRead more in the section related to [Expanding Fields](#tag/Expandable-Fields)\n"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "account_id",
+                  "description": "(Required) ID of the account that owns the retrieved/saved data"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "project_id",
+                  "description": "(Required) ID of the project into which the hypothesis is to be stored"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"<string>\",\n  \"status\": {\n    \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n  },\n  \"prioritization_score_type\": \"<string>\",\n  \"prioritization_score_attributes\": {\n    \"potential\": {\n      \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n    },\n    \"importance\": {\n      \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n    },\n    \"ease\": {\n      \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n    }\n  },\n  \"url\": \"<string>\",\n  \"project\": {\n    \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n  },\n  \"objective\": \"<string>\",\n  \"start_date\": \"<date>\",\n  \"end_date\": \"<date>\",\n  \"summary\": \"<string>\",\n  \"description\": \"<string>\",\n  \"files\": [\n    {\n      \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n    },\n    {\n      \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n    }\n  ],\n  \"created_at\": \"<integer>\",\n  \"experiences\": [\n    \"<integer>\",\n    \"<integer>\"\n  ],\n  \"tags\": [\n    \"<integer>\",\n    \"<integer>\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "f6adecbf-e823-4051-9d13-ee7841a871af",
+              "name": "Detailed information for a single hypothesis, including its name, objective, prioritization model (PIE/ICE) and scores, status, start/end dates, summary, and links to associated experiences and tags.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "accounts",
+                    ":account_id",
+                    "projects",
+                    ":project_id",
+                    "hypotheses",
+                    "add"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "expand",
+                      "value": "experiences"
+                    },
+                    {
+                      "key": "expand",
+                      "value": "tags"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "account_id",
+                      "description": "(Required) ID of the account that owns the retrieved/saved data"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "project_id",
+                      "description": "(Required) ID of the project into which the hypothesis is to be stored"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": 6910,\n  \"name\": \"string\",\n  \"url\": \"string\",\n  \"project\": 2058,\n  \"prioritization_score\": \"string\",\n  \"objective\": \"string\",\n  \"status\": \"proven\",\n  \"start_date\": \"2013-06-30\",\n  \"end_date\": \"1969-05-25\",\n  \"summary\": \"string\",\n  \"description\": \"string\",\n  \"files\": [\n    {\n      \"key\": {\n        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n      },\n      \"name\": {\n        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n      },\n      \"url\": {\n        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n      }\n    },\n    {\n      \"key\": {\n        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n      },\n      \"name\": {\n        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n      },\n      \"url\": {\n        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n      }\n    }\n  ],\n  \"created_at\": 3236,\n  \"updated_at\": 4157,\n  \"created_by\": \"string\",\n  \"prioritization_score_type\": \"PIE\",\n  \"prioritization_score_attributes\": {\n    \"potential\": 3,\n    \"importance\": 4,\n    \"ease\": 4\n  },\n  \"experiences\": [\n    3723,\n    4507\n  ],\n  \"tags\": [\n    9934,\n    5516\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "b6322e8d-31d0-4772-b4c0-fb0b9d94c5ef",
+              "name": "Indicates an error occurred while processing the request. The `code` provides an HTTP status code, `message` offers a human-readable explanation or an array of validation errors, and `fields` (if present) specifies which input fields were problematic.\n",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "accounts",
+                    ":account_id",
+                    "projects",
+                    ":project_id",
+                    "hypotheses",
+                    "add"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "expand",
+                      "value": "experiences"
+                    },
+                    {
+                      "key": "expand",
+                      "value": "tags"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "account_id",
+                      "description": "(Required) ID of the account that owns the retrieved/saved data"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "project_id",
+                      "description": "(Required) ID of the project into which the hypothesis is to be stored"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 4618,\n  \"message\": \"string\",\n  \"fields\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "6ba6f46b-5973-45d9-b32c-6f67c0d33ebd",
+          "name": "Update an existing hypothesis",
+          "request": {
+            "name": "Update an existing hypothesis",
+            "description": {
+              "content": "Modifies the details of an existing hypothesis, such as its name, objective, prioritization scores, status, or associated experiences and tags.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "accounts",
+                ":account_id",
+                "projects",
+                ":project_id",
+                "hypotheses",
+                ":hypothesis_id",
+                "update"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "expand",
+                  "value": "<string>",
+                  "description": "Specifies the list of objects which would be expanded in the response. Otherwise, only their id would be returned.\n\nRead more in the section related to [Expanding Fields](#tag/Expandable-Fields)\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "expand",
+                  "value": "<string>",
+                  "description": "Specifies the list of objects which would be expanded in the response. Otherwise, only their id would be returned.\n\nRead more in the section related to [Expanding Fields](#tag/Expandable-Fields)\n"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "account_id",
+                  "description": "(Required) ID of the account that owns the retrieved/saved data"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "project_id",
+                  "description": "(Required) ID of the project into which the hypothesis is to be updated"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "hypothesis_id",
+                  "description": "(Required) ID of the hypothesis to be updated"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"<string>\",\n  \"url\": \"<string>\",\n  \"project\": {\n    \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n  },\n  \"objective\": \"<string>\",\n  \"status\": {\n    \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n  },\n  \"start_date\": \"<date>\",\n  \"end_date\": \"<date>\",\n  \"summary\": \"<string>\",\n  \"description\": \"<string>\",\n  \"files\": [\n    {\n      \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n    },\n    {\n      \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n    }\n  ],\n  \"created_at\": \"<integer>\",\n  \"prioritization_score_type\": \"<string>\",\n  \"prioritization_score_attributes\": {\n    \"potential\": {\n      \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n    },\n    \"importance\": {\n      \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n    },\n    \"ease\": {\n      \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n    }\n  },\n  \"experiences\": [\n    \"<integer>\",\n    \"<integer>\"\n  ],\n  \"tags\": [\n    \"<integer>\",\n    \"<integer>\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "ac8e63aa-5340-46a1-aa21-1da11e8e75e8",
+              "name": "Detailed information for a single hypothesis, including its name, objective, prioritization model (PIE/ICE) and scores, status, start/end dates, summary, and links to associated experiences and tags.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "accounts",
+                    ":account_id",
+                    "projects",
+                    ":project_id",
+                    "hypotheses",
+                    ":hypothesis_id",
+                    "update"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "expand",
+                      "value": "experiences"
+                    },
+                    {
+                      "key": "expand",
+                      "value": "tags"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "account_id",
+                      "description": "(Required) ID of the account that owns the retrieved/saved data"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "project_id",
+                      "description": "(Required) ID of the project into which the hypothesis is to be updated"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "hypothesis_id",
+                      "description": "(Required) ID of the hypothesis to be updated"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": 6910,\n  \"name\": \"string\",\n  \"url\": \"string\",\n  \"project\": 2058,\n  \"prioritization_score\": \"string\",\n  \"objective\": \"string\",\n  \"status\": \"proven\",\n  \"start_date\": \"2013-06-30\",\n  \"end_date\": \"1969-05-25\",\n  \"summary\": \"string\",\n  \"description\": \"string\",\n  \"files\": [\n    {\n      \"key\": {\n        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n      },\n      \"name\": {\n        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n      },\n      \"url\": {\n        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n      }\n    },\n    {\n      \"key\": {\n        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n      },\n      \"name\": {\n        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n      },\n      \"url\": {\n        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n      }\n    }\n  ],\n  \"created_at\": 3236,\n  \"updated_at\": 4157,\n  \"created_by\": \"string\",\n  \"prioritization_score_type\": \"PIE\",\n  \"prioritization_score_attributes\": {\n    \"potential\": 3,\n    \"importance\": 4,\n    \"ease\": 4\n  },\n  \"experiences\": [\n    3723,\n    4507\n  ],\n  \"tags\": [\n    9934,\n    5516\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "48c43dbc-4f20-4c85-9c5c-8ed1d1f18280",
+              "name": "Indicates an error occurred while processing the request. The `code` provides an HTTP status code, `message` offers a human-readable explanation or an array of validation errors, and `fields` (if present) specifies which input fields were problematic.\n",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "accounts",
+                    ":account_id",
+                    "projects",
+                    ":project_id",
+                    "hypotheses",
+                    ":hypothesis_id",
+                    "update"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "expand",
+                      "value": "experiences"
+                    },
+                    {
+                      "key": "expand",
+                      "value": "tags"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "account_id",
+                      "description": "(Required) ID of the account that owns the retrieved/saved data"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "project_id",
+                      "description": "(Required) ID of the project into which the hypothesis is to be updated"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "hypothesis_id",
+                      "description": "(Required) ID of the hypothesis to be updated"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 4618,\n  \"message\": \"string\",\n  \"fields\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "63c45936-5187-4cf2-9a4d-2026cceaee2f",
+          "name": "Update the status of a hypothesis",
+          "request": {
+            "name": "Update the status of a hypothesis",
+            "description": {
+              "content": "Changes the status of an existing hypothesis (e.g., from 'draft' to 'completed', 'applied', 'proven', 'disproven', or 'archived').\nThis helps track the lifecycle of a hypothesis from idea to tested outcome.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "accounts",
+                ":account_id",
+                "projects",
+                ":project_id",
+                "hypotheses",
+                ":hypothesis_id",
+                "update-status"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "expand",
+                  "value": "<string>",
+                  "description": "Specifies the list of objects which would be expanded in the response. Otherwise, only their id would be returned.\n\nRead more in the section related to [Expanding Fields](#tag/Expandable-Fields)\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "expand",
+                  "value": "<string>",
+                  "description": "Specifies the list of objects which would be expanded in the response. Otherwise, only their id would be returned.\n\nRead more in the section related to [Expanding Fields](#tag/Expandable-Fields)\n"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "account_id",
+                  "description": "(Required) ID of the account that owns the retrieved/saved data"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "project_id",
+                  "description": "(Required) ID of the project into which the hypothesis is stored"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "hypothesis_id",
+                  "description": "(Required) ID of the hypothesis to be updated"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "70c348f5-3486-47b2-9c6a-ad899eb66ca3",
+              "name": "Detailed information for a single hypothesis, including its name, objective, prioritization model (PIE/ICE) and scores, status, start/end dates, summary, and links to associated experiences and tags.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "accounts",
+                    ":account_id",
+                    "projects",
+                    ":project_id",
+                    "hypotheses",
+                    ":hypothesis_id",
+                    "update-status"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "expand",
+                      "value": "experiences"
+                    },
+                    {
+                      "key": "expand",
+                      "value": "tags"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "account_id",
+                      "description": "(Required) ID of the account that owns the retrieved/saved data"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "project_id",
+                      "description": "(Required) ID of the project into which the hypothesis is stored"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "hypothesis_id",
+                      "description": "(Required) ID of the hypothesis to be updated"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": 6910,\n  \"name\": \"string\",\n  \"url\": \"string\",\n  \"project\": 2058,\n  \"prioritization_score\": \"string\",\n  \"objective\": \"string\",\n  \"status\": \"proven\",\n  \"start_date\": \"2013-06-30\",\n  \"end_date\": \"1969-05-25\",\n  \"summary\": \"string\",\n  \"description\": \"string\",\n  \"files\": [\n    {\n      \"key\": {\n        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n      },\n      \"name\": {\n        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n      },\n      \"url\": {\n        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n      }\n    },\n    {\n      \"key\": {\n        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n      },\n      \"name\": {\n        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n      },\n      \"url\": {\n        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n      }\n    }\n  ],\n  \"created_at\": 3236,\n  \"updated_at\": 4157,\n  \"created_by\": \"string\",\n  \"prioritization_score_type\": \"PIE\",\n  \"prioritization_score_attributes\": {\n    \"potential\": 3,\n    \"importance\": 4,\n    \"ease\": 4\n  },\n  \"experiences\": [\n    3723,\n    4507\n  ],\n  \"tags\": [\n    9934,\n    5516\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "1310e029-a785-47d7-999a-d2b37c1be18b",
+              "name": "Indicates an error occurred while processing the request. The `code` provides an HTTP status code, `message` offers a human-readable explanation or an array of validation errors, and `fields` (if present) specifies which input fields were problematic.\n",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "accounts",
+                    ":account_id",
+                    "projects",
+                    ":project_id",
+                    "hypotheses",
+                    ":hypothesis_id",
+                    "update-status"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "expand",
+                      "value": "experiences"
+                    },
+                    {
+                      "key": "expand",
+                      "value": "tags"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "account_id",
+                      "description": "(Required) ID of the account that owns the retrieved/saved data"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "project_id",
+                      "description": "(Required) ID of the project into which the hypothesis is stored"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "hypothesis_id",
+                      "description": "(Required) ID of the hypothesis to be updated"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 4618,\n  \"message\": \"string\",\n  \"fields\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "c9c72faf-1440-44fc-8198-9fb65d0f5377",
+          "name": "Convert a proven/disproven hypothesis to a Knowledge Base entry",
+          "request": {
+            "name": "Convert a proven/disproven hypothesis to a Knowledge Base entry",
+            "description": {
+              "content": "Moves a hypothesis (typically one that is 'proven' or 'disproven' after testing) into the Knowledge Base.\nThis archives the learnings from the hypothesis for future reference and organizational learning.\nThe Knowledge Base article \"Hypotheses (Compass)\" mentions: \"Proven hypotheses can then be moved to the Knowledge Base\".\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "accounts",
+                ":account_id",
+                "projects",
+                ":project_id",
+                "hypotheses",
+                ":hypothesis_id",
+                "convert"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "account_id",
+                  "description": "(Required) ID of the account that owns the retrieved/saved data"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "project_id",
+                  "description": "(Required) ID of the project into which the hypothesis is going to be converted"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "hypothesis_id",
+                  "description": "(Required) ID of the hypothesis to be converted"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "59a1bc17-357d-4f61-8579-7a406bcefbe9",
+              "name": "Detailed information for a single Knowledge Base entry, including its name, summary of findings, status (active/archived), creator, and associated tags.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "accounts",
+                    ":account_id",
+                    "projects",
+                    ":project_id",
+                    "hypotheses",
+                    ":hypothesis_id",
+                    "convert"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "account_id",
+                      "description": "(Required) ID of the account that owns the retrieved/saved data"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "project_id",
+                      "description": "(Required) ID of the project into which the hypothesis is going to be converted"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "hypothesis_id",
+                      "description": "(Required) ID of the hypothesis to be converted"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": 5435,\n  \"name\": \"string\",\n  \"project\": 2122,\n  \"status\": \"active\",\n  \"summary\": \"string\",\n  \"url\": \"string\",\n  \"objective\": \"string\",\n  \"start_date\": \"1986-03-10\",\n  \"end_date\": \"1956-03-26\",\n  \"prioritization_score_type\": \"string\",\n  \"prioritization_score_attributes\": {},\n  \"experiences\": [\n    7464,\n    6749\n  ],\n  \"description\": \"string\",\n  \"files\": [\n    {\n      \"key\": \"string\",\n      \"name\": \"string\",\n      \"url\": \"https://api.convert.com/api/v2/accounts/{account_id}/projects/{project_id}/files/{fileKey}\"\n    },\n    {\n      \"key\": \"string\",\n      \"name\": \"string\",\n      \"url\": \"https://api.convert.com/api/v2/accounts/{account_id}/projects/{project_id}/files/{fileKey}\"\n    }\n  ],\n  \"created_by\": \"string\",\n  \"updated_at\": 7998,\n  \"tags\": [\n    1218,\n    2031\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "ede2a541-ad75-4827-9909-300cccf702cb",
+              "name": "Indicates an error occurred while processing the request. The `code` provides an HTTP status code, `message` offers a human-readable explanation or an array of validation errors, and `fields` (if present) specifies which input fields were problematic.\n",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "accounts",
+                    ":account_id",
+                    "projects",
+                    ":project_id",
+                    "hypotheses",
+                    ":hypothesis_id",
+                    "convert"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "account_id",
+                      "description": "(Required) ID of the account that owns the retrieved/saved data"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "project_id",
+                      "description": "(Required) ID of the project into which the hypothesis is going to be converted"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "hypothesis_id",
+                      "description": "(Required) ID of the hypothesis to be converted"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 4618,\n  \"message\": \"string\",\n  \"fields\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "644b4bf0-04d7-4e42-b7ae-ae21d83726e3",
+          "name": "Delete a hypothesis",
+          "request": {
+            "name": "Delete a hypothesis",
+            "description": {
+              "content": "Permanently removes a hypothesis from a project. This action is irreversible.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "accounts",
+                ":account_id",
+                "projects",
+                ":project_id",
+                "hypotheses",
+                ":hypothesis_id",
+                "delete"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "account_id",
+                  "description": "(Required) ID of the account that owns the retrieved/saved data"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "project_id",
+                  "description": "(Required) ID of the project from which the hypothesis is to be deleted"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "hypothesis_id",
+                  "description": "(Required) ID of the hypothesis to be deleted"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "DELETE",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "b049fe78-9e1a-4429-99bc-359f48eb72d3",
+              "name": "Detailed information for a single hypothesis, including its name, objective, prioritization model (PIE/ICE) and scores, status, start/end dates, summary, and links to associated experiences and tags.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "accounts",
+                    ":account_id",
+                    "projects",
+                    ":project_id",
+                    "hypotheses",
+                    ":hypothesis_id",
+                    "delete"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "account_id",
+                      "description": "(Required) ID of the account that owns the retrieved/saved data"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "project_id",
+                      "description": "(Required) ID of the project from which the hypothesis is to be deleted"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "hypothesis_id",
+                      "description": "(Required) ID of the hypothesis to be deleted"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": 6910,\n  \"name\": \"string\",\n  \"url\": \"string\",\n  \"project\": 2058,\n  \"prioritization_score\": \"string\",\n  \"objective\": \"string\",\n  \"status\": \"proven\",\n  \"start_date\": \"2013-06-30\",\n  \"end_date\": \"1969-05-25\",\n  \"summary\": \"string\",\n  \"description\": \"string\",\n  \"files\": [\n    {\n      \"key\": {\n        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n      },\n      \"name\": {\n        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n      },\n      \"url\": {\n        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n      }\n    },\n    {\n      \"key\": {\n        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n      },\n      \"name\": {\n        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n      },\n      \"url\": {\n        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n      }\n    }\n  ],\n  \"created_at\": 3236,\n  \"updated_at\": 4157,\n  \"created_by\": \"string\",\n  \"prioritization_score_type\": \"PIE\",\n  \"prioritization_score_attributes\": {\n    \"potential\": 3,\n    \"importance\": 4,\n    \"ease\": 4\n  },\n  \"experiences\": [\n    3723,\n    4507\n  ],\n  \"tags\": [\n    9934,\n    5516\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "76a98515-c3e8-4566-b09d-80c7bde7eb4c",
+              "name": "Indicates an error occurred while processing the request. The `code` provides an HTTP status code, `message` offers a human-readable explanation or an array of validation errors, and `fields` (if present) specifies which input fields were problematic.\n",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "accounts",
+                    ":account_id",
+                    "projects",
+                    ":project_id",
+                    "hypotheses",
+                    ":hypothesis_id",
+                    "delete"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "account_id",
+                      "description": "(Required) ID of the account that owns the retrieved/saved data"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "project_id",
+                      "description": "(Required) ID of the project from which the hypothesis is to be deleted"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "hypothesis_id",
+                      "description": "(Required) ID of the hypothesis to be deleted"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 4618,\n  \"message\": \"string\",\n  \"fields\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "3c286f42-f719-41f2-9259-ff03d1c676d2",
+          "name": "Update multiple hypotheses at once",
+          "request": {
+            "name": "Update multiple hypotheses at once",
+            "description": {
+              "content": "Allows for changing the status of multiple hypotheses within a project simultaneously.\nRequires a list of hypothesis IDs and the target status.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "accounts",
+                ":account_id",
+                "projects",
+                ":project_id",
+                "hypotheses",
+                "bulk-update"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "account_id",
+                  "description": "(Required) ID of the account that owns the retrieved/saved data"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "project_id",
+                  "description": "(Required) ID of the project to which save/retrieved data is connected"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": [\n    \"<integer>\"\n  ],\n  \"status\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "25859ebd-0b17-462f-88cc-284efc7a0baa",
+              "name": "Indicates the outcome of a bulk operation (e.g., bulk update or delete). Provides a general success `message` and an `errors` array listing any entities that could not be processed, along with the reason for failure for each.\n",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "accounts",
+                    ":account_id",
+                    "projects",
+                    ":project_id",
+                    "hypotheses",
+                    "bulk-update"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "account_id",
+                      "description": "(Required) ID of the account that owns the retrieved/saved data"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "project_id",
+                      "description": "(Required) ID of the project to which save/retrieved data is connected"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 226,\n  \"message\": \"string\",\n  \"errors\": [\n    {\n      \"id\": 8125,\n      \"message\": \"string\"\n    },\n    {\n      \"id\": 3480,\n      \"message\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "79e74472-9343-4c35-a356-a5fb3536cb35",
+              "name": "Indicates an error occurred while processing the request. The `code` provides an HTTP status code, `message` offers a human-readable explanation or an array of validation errors, and `fields` (if present) specifies which input fields were problematic.\n",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "accounts",
+                    ":account_id",
+                    "projects",
+                    ":project_id",
+                    "hypotheses",
+                    "bulk-update"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "account_id",
+                      "description": "(Required) ID of the account that owns the retrieved/saved data"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "project_id",
+                      "description": "(Required) ID of the project to which save/retrieved data is connected"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 4618,\n  \"message\": \"string\",\n  \"fields\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "53967806-dc14-4ee3-a402-20c04ddf576b",
+          "name": "Delete multiple hypotheses at once",
+          "request": {
+            "name": "Delete multiple hypotheses at once",
+            "description": {
+              "content": "Permanently removes multiple hypotheses from a project in a single operation.\nRequires a list of hypothesis IDs. This action is irreversible.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "accounts",
+                ":account_id",
+                "projects",
+                ":project_id",
+                "hypotheses",
+                "bulk-delete"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "account_id",
+                  "description": "(Required) ID of the account that owns the retrieved/saved data"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "project_id",
+                  "description": "(Required) ID of the project to which save/retrieved data is connected"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": [\n    \"<integer>\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "2d6afe61-95f5-47a5-bdf7-c1ef6a144786",
+              "name": "Indicates the outcome of a bulk operation (e.g., bulk update or delete). Provides a general success `message` and an `errors` array listing any entities that could not be processed, along with the reason for failure for each.\n",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "accounts",
+                    ":account_id",
+                    "projects",
+                    ":project_id",
+                    "hypotheses",
+                    "bulk-delete"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "account_id",
+                      "description": "(Required) ID of the account that owns the retrieved/saved data"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "project_id",
+                      "description": "(Required) ID of the project to which save/retrieved data is connected"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 5328,\n  \"message\": \"string\",\n  \"errors\": [\n    {\n      \"id\": 9666,\n      \"message\": \"string\"\n    },\n    {\n      \"id\": 361,\n      \"message\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "0bd7be16-3ae5-487c-a9c6-68f40ab4450e",
+              "name": "Indicates an error occurred while processing the request. The `code` provides an HTTP status code, `message` offers a human-readable explanation or an array of validation errors, and `fields` (if present) specifies which input fields were problematic.\n",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "accounts",
+                    ":account_id",
+                    "projects",
+                    ":project_id",
+                    "hypotheses",
+                    "bulk-delete"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "account_id",
+                      "description": "(Required) ID of the account that owns the retrieved/saved data"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "project_id",
+                      "description": "(Required) ID of the project to which save/retrieved data is connected"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 4618,\n  \"message\": \"string\",\n  \"fields\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.convert.com/api/v2",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "b0eb4c72-445a-4281-b356-8dc15caf6547",
+    "name": "Convert Accounts Hypotheses API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Move your app forward with the Convert API. The Convert API allows\nyou to manage your Convert Experiences projects using code. The REST API is\nan interface for managing and extending functionality of Convert. For\nexample, instead of creating and maintaining projects using the Convert\nExperiences web dashboard you can create an experiment programmatically.\nAdditionally, if you prefer to run custom analysis on experiment results you\ncan leverage the API to pull data from Convert Experiences into your own\nworkflow. If you do not have a Convert account already, sign up for a free\ndeveloper account at https://www.convert.com/api/.\n\n*[Convert API V1](/doc/v1) is still available and documentation can be found [here](/doc/v1) but using it is highly discouraged\nas it will be phased out in the future*\n",
+      "type": "text/plain"
+    }
+  }
+}

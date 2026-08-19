@@ -1,0 +1,86 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Convert Accounts OAuth API",
+    "version": "2.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "OAuth",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List OAuth clients",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.convert.com/api/v2/auth/oauth/clients"
+          },
+          "docs": "Cookie-authenticated endpoint that lists OAuth clients for the current user.\n"
+        },
+        {
+          "info": {
+            "name": "Create an OAuth client",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.convert.com/api/v2/auth/oauth/clients",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Cookie-authenticated endpoint to register a new OAuth client.\n"
+        },
+        {
+          "info": {
+            "name": "Update an OAuth client",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.convert.com/api/v2/auth/oauth/clients/:id/update",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "OAuth client id."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Cookie-authenticated endpoint to update an existing OAuth client.\n"
+        },
+        {
+          "info": {
+            "name": "Delete an OAuth client",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.convert.com/api/v2/auth/oauth/clients/:client_id",
+            "params": [
+              {
+                "name": "client_id",
+                "value": "",
+                "type": "path",
+                "description": "OAuth client id."
+              }
+            ]
+          },
+          "docs": "Cookie-authenticated endpoint to delete an OAuth client and all its sessions.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,173 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Convert Accounts Section Versions API",
+    "version": "2.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Section Versions",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Add a new version to an MVT section",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/projects/:project_id/experiences/:experience_id/sections/:section_id/versions/add",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              },
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the project to which save/retrieved data is connected"
+              },
+              {
+                "name": "experience_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the given experience"
+              },
+              {
+                "name": "section_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the section under which to create the version"
+              },
+              {
+                "name": "include",
+                "value": "",
+                "type": "query",
+                "description": "Array parameter that would mention extra fields to be included into the response; otherwise those fields would be excluded by default\n\nRead more in the section related to [Optional Fields](#tag/Optional-Fields)\n"
+              },
+              {
+                "name": "expand",
+                "value": "",
+                "type": "query",
+                "description": "Specifies the list of objects which would be expanded in the response. Otherwise, only their id would be returned.\n\nRead more in the section related to [Expanding Fields](#tag/Expandable-Fields)\n"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a new version (alternative) within a specific section of a multivariate (MVT) experience.\nRequires defining the version name and its associated changes (CSS, JS, etc.).\n"
+        },
+        {
+          "info": {
+            "name": "Update a version within an MVT section",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/projects/:project_id/experiences/:experience_id/sections/:section_id/versions/:version_id/update",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              },
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the project to which save/retrieved data is connected"
+              },
+              {
+                "name": "experience_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the given experience"
+              },
+              {
+                "name": "section_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the section under which the updated version exists"
+              },
+              {
+                "name": "version_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the updated version"
+              },
+              {
+                "name": "include",
+                "value": "",
+                "type": "query",
+                "description": "Array parameter that would mention extra fields to be included into the response; otherwise those fields would be excluded by default\n\nRead more in the section related to [Optional Fields](#tag/Optional-Fields)\n"
+              },
+              {
+                "name": "expand",
+                "value": "",
+                "type": "query",
+                "description": "Specifies the list of objects which would be expanded in the response. Otherwise, only their id would be returned.\n\nRead more in the section related to [Expanding Fields](#tag/Expandable-Fields)\n"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Modifies an existing version within a specific section of a multivariate (MVT) experience.\nThis can include changing the version's name or updating its associated changes.\n"
+        },
+        {
+          "info": {
+            "name": "Delete a version from an MVT section",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/projects/:project_id/experiences/:experience_id/sections/:section_id/versions/:version_id/delete",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              },
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the project to which save/retrieved data is connected"
+              },
+              {
+                "name": "experience_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the given experience"
+              },
+              {
+                "name": "section_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the section under which the updated version exists"
+              },
+              {
+                "name": "version_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the updated version"
+              }
+            ]
+          },
+          "docs": "Permanently removes a version from a specific section of a multivariate (MVT) experience.\nDeleting versions can affect the combinations tested and the statistical validity of an active MVT.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

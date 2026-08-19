@@ -1,0 +1,89 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Convert Accounts Cookie Authentication API",
+    "version": "2.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Cookie Authentication",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Authenticate user session (Cookie Based)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.convert.com/api/v2/auth",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Initiates or continues a cookie-based authentication flow.\nStarts with username/password. If successful and MFA is not required, returns user data and sets a session cookie.\nIf MFA is required, or a new password needs to be set, the response will indicate the next step and provide a sessionToken.\nThis is primarily for UI interaction, LLMs should typically use API Key Authentication.\n"
+        },
+        {
+          "info": {
+            "name": "Request password reset",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.convert.com/api/v2/auth/forgotpassword",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Sends an email with a password reset link to the user associated with the provided email address, if an account exists.\nThis is part of the cookie-based authentication flow.\n"
+        },
+        {
+          "info": {
+            "name": "Confirm new password after reset request",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.convert.com/api/v2/auth/confirmpasswordreset",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Completes the password reset process. The user provides the new password and the confirmation code received via email.\nThis is part of the cookie-based authentication flow.\n"
+        },
+        {
+          "info": {
+            "name": "Log out user session",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.convert.com/api/v2/auth/logout",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Invalidates the current authenticated user session (cookie-based).\nCan also be used to log out other or all sessions for the user.\n"
+        },
+        {
+          "info": {
+            "name": "Check authentication status",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.convert.com/api/v2/auth/status"
+          },
+          "docs": "Verifies if the current cookie-based session is still valid and authenticated.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,109 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Convert Accounts Files API",
+    "version": "2.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Files",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Upload a generic file to project storage",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/projects/:project_id/files/add",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              },
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the project to be retrieved"
+              }
+            ],
+            "body": {
+              "type": "multipart-form",
+              "data": []
+            }
+          },
+          "docs": "Upload a generic file to project storage"
+        },
+        {
+          "info": {
+            "name": "Get content of an uploaded file",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/projects/:project_id/files/:file_key",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              },
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the project to be retrieved"
+              },
+              {
+                "name": "file_key",
+                "value": "",
+                "type": "path",
+                "description": "The key of the file to retrieve"
+              }
+            ]
+          },
+          "docs": "Retrieves the content of a previously uploaded file, identified by its `file_key`.\nThe file content is returned base64 encoded.\n"
+        },
+        {
+          "info": {
+            "name": "Delete an uploaded file from project storage",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/projects/:project_id/files/:file_key/delete",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              },
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the project to be retrieved"
+              },
+              {
+                "name": "file_key",
+                "value": "",
+                "type": "path",
+                "description": "The key of the file to be deleted"
+              }
+            ]
+          },
+          "docs": "Delete an uploaded file from project storage"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

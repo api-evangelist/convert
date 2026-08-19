@@ -1,0 +1,107 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Convert Accounts Cdn Images API",
+    "version": "2.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Cdn Images",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List uploaded images for a project",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/projects/:project_id/images",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              },
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the project to be retrieved"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Retrieves a list of images that have been uploaded to the Convert CDN for a specific project.\nThese images can be used in experience variations. Supports pagination.\nThe Knowledge Base article \"Image Upload Guidelines for Convert Visual Editor\" mentions image upload limits.\n"
+        },
+        {
+          "info": {
+            "name": "Upload an image to the project's CDN storage",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/projects/:project_id/images/add",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              },
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the project to be retrieved"
+              }
+            ],
+            "body": {
+              "type": "multipart-form",
+              "data": []
+            }
+          },
+          "docs": "Upload an image to the project's CDN storage"
+        },
+        {
+          "info": {
+            "name": "Delete an image from the project's CDN storage",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/projects/:project_id/images/:image_key/delete",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              },
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the project to be retrieved"
+              },
+              {
+                "name": "image_key",
+                "value": "",
+                "type": "path",
+                "description": "The key of the image file to be deleted"
+              }
+            ]
+          },
+          "docs": "Delete an image from the project's CDN storage"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,299 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Convert Accounts Locations API",
+    "version": "2.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Locations",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List locations within a project",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/projects/:project_id/locations",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              },
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the project to which save/retrieved data is connected"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Retrieves a list of all locations defined for a specific project.\nLocations define *where* on a website an experience will run, based on URL patterns, page tags, or JavaScript conditions.\nSupports filtering by status, name, and pagination.\nThe Knowledge Base article \"Locations\" explains: \"Locations conditions include the pages on which the experiment will run.\"\n"
+        },
+        {
+          "info": {
+            "name": "Get details for a specific location",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/projects/:project_id/locations/:location_id",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              },
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the project into which the Location is stored"
+              },
+              {
+                "name": "location_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the Location to be retrieved"
+              },
+              {
+                "name": "include",
+                "value": "",
+                "type": "query",
+                "description": "Specifies the list of fields to be included in the response, which otherwise would not be sent.\n\nRead more in the section related to [Optional Fields](#tag/Optional-Fields)\n"
+              }
+            ]
+          },
+          "docs": "Retrieves detailed information about a single location, identified by its `location_id`.\nThis includes its name, status, triggering rules (e.g., URL matches, JS conditions), and the type of trigger (e.g., upon_run, manual, dom_element).\nThe `include` parameter can fetch additional data like usage statistics.\n"
+        },
+        {
+          "info": {
+            "name": "Create a new location",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/projects/:project_id/locations/add",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              },
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the project into which the location is to be stored"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Defines a new location within a project.\nRequires a name and a set of rules (e.g., URL contains 'product/', JS condition `window.userType === 'premium'`).\nAlso requires specifying the trigger type (e.g., 'upon_run' to activate when rules match on page load, or 'manual' to activate via JavaScript call).\nThe Knowledge Base article \"Creating Effective Experiences: A Guide to Location Setup\" describes different trigger options.\n"
+        },
+        {
+          "info": {
+            "name": "Update an existing location",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/projects/:project_id/locations/:location_id/update",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              },
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the project into which the location is stored"
+              },
+              {
+                "name": "location_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the location to be updated"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Modifies the configuration of an existing location.\nThis can include changing its name, status (active/archived), triggering rules, or trigger type.\n"
+        },
+        {
+          "info": {
+            "name": "Delete a location",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/projects/:project_id/locations/:location_id/delete",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              },
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the project to which save/retrieved data is connected"
+              },
+              {
+                "name": "location_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the location to be deleted"
+              }
+            ]
+          },
+          "docs": "Permanently removes a location from a project. This action is irreversible.\nIf the location is in use by active experiences, consider archiving it instead or unlinking it from experiences first.\n"
+        },
+        {
+          "info": {
+            "name": "Update multiple locations at once",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/projects/:project_id/locations/bulk-update",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              },
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the project to which save/retrieved data is connected"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Allows for changing the status (e.g., active, archived) of multiple locations within a project simultaneously.\nRequires a list of location IDs and the target status.\n"
+        },
+        {
+          "info": {
+            "name": "Delete multiple locations at once",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/projects/:project_id/locations/bulk-delete",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              },
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the project to which save/retrieved data is connected"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Permanently removes multiple locations from a project in a single operation.\nRequires a list of location IDs. This action is irreversible.\n"
+        },
+        {
+          "info": {
+            "name": "List predefined location templates (presets)",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/projects/:project_id/locations-presets",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              },
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the project to which save/retrieved data is connected"
+              }
+            ]
+          },
+          "docs": "Retrieves a list of predefined location templates (presets) available for use.\nThese presets offer common targeting configurations (e.g., \"All Pages\", \"Homepage\") to speed up location setup.\nThe Knowledge Base article \"Creating Effective Experiences: A Guide to Location Setup\" mentions \"Saved Locations\" which are user-created, these are system presets.\n"
+        },
+        {
+          "info": {
+            "name": "Clone an existing location",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/projects/:project_id/locations/:location_id/clone",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              },
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the project to which save/retrieved data is connected"
+              },
+              {
+                "name": "location_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the location to be deleted"
+              },
+              {
+                "name": "include",
+                "value": "",
+                "type": "query",
+                "description": "Specifies the list of fields to be included in the response, which otherwise would not be sent.\n\nRead more in the section related to [Optional Fields](#tag/Optional-Fields)\n"
+              }
+            ]
+          },
+          "docs": "Creates a new location as an identical copy of an existing one (specified by `location_id`).\nUseful for creating a similar location with minor modifications or for templating.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

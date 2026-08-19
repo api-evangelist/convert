@@ -1,0 +1,202 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Convert Accounts Tags API",
+    "version": "2.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Tags",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List tags within a project",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/projects/:project_id/tags",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              },
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the project to which save/retrieved data is connected"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Retrieves a list of all tags defined for a specific project.\nTags are keywords used to categorize and organize experiences, goals, audiences, etc., for easier management and filtering.\nThe Knowledge Base article \"Adding tags to your Experiences\" explains their use.\n"
+        },
+        {
+          "info": {
+            "name": "Get details for a specific tag",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/projects/:project_id/tags/:tag_id",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              },
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the project into which the tag is stored"
+              },
+              {
+                "name": "tag_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the tag to be retrieve"
+              }
+            ]
+          },
+          "docs": "Retrieves information about a single tag, identified by its `tag_id`.\nThis includes its name and description.\n"
+        },
+        {
+          "info": {
+            "name": "Create a new tag",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/projects/:project_id/tags/add",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              },
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the project into which the tag is to be stored"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Defines a new tag within a project. Requires a tag name and an optional description.\nTags can then be applied to experiences, goals, etc., to help organize them.\n"
+        },
+        {
+          "info": {
+            "name": "Update an existing tag",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/projects/:project_id/tags/:tag_id/update",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              },
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the project into which the tag is to be stored"
+              },
+              {
+                "name": "tag_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the tag to be updated"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Modifies the name or description of an existing tag.\n"
+        },
+        {
+          "info": {
+            "name": "Delete a tag",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/projects/:project_id/tags/:tag_id/delete",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              },
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the project from which the tag is to be deleted"
+              },
+              {
+                "name": "tag_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the tag to be deleted"
+              }
+            ]
+          },
+          "docs": "Permanently removes a tag from a project.\nThis does not delete the items (experiences, goals, etc.) that were associated with the tag, but simply removes the tag association.\n"
+        },
+        {
+          "info": {
+            "name": "Delete multiple tags at once",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/projects/:project_id/tags/bulk-delete",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              },
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the project to which save/retrieved data is connected"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Permanently removes multiple tags from a project in a single operation.\nRequires a list of tag IDs.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

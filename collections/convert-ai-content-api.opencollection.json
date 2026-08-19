@@ -1,0 +1,64 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Convert Accounts AI content API",
+    "version": "2.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "AI content",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Generate text variations using AI",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/ai/text",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account under which the api call executes"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Leverages Generative AI to create alternative text versions (variants) for a given piece of content.\nUsers can specify the number of variations, the original content, an AI model framework (e.g., Cialdini, AIDA), and a specific principle within that framework.\nThis helps in quickly generating creative options for A/B testing headlines, calls to action, or other textual elements.\nOptionally, an OpenAI Key can be provided for using more advanced models or larger context.\n"
+        },
+        {
+          "info": {
+            "name": "Generate code variation using AI",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/ai/code",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account under which the api call executes"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Leverages Generative AI to improve provided code.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

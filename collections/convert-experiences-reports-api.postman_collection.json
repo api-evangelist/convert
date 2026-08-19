@@ -1,0 +1,1694 @@
+{
+  "item": [
+    {
+      "id": "772fe97a-fcdb-4508-8115-7529820bc3b2",
+      "name": "Experiences Reports",
+      "description": {
+        "content": "Specification for different reports data that can be retrieved for experiences",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "b0b0c01f-f422-40f1-ab05-dca147bed0ae",
+          "name": "Get report settings for an experience",
+          "request": {
+            "name": "Get report settings for an experience",
+            "description": {
+              "content": "Retrieves the specific reporting settings for an experience. This includes configurations like confidence level,\nstatistical methodology (Frequentist/Bayesian), MAB strategy, primary metric, and outlier detection rules.\nThese settings govern how experiment results are calculated and displayed.\nThe Knowledge Base article \"Experiment Report\" (Stats Settings section) covers these.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "accounts",
+                ":account_id",
+                "projects",
+                ":project_id",
+                "experiences",
+                ":experience_id",
+                "report_settings"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "account_id",
+                  "description": "(Required) ID of the account that owns the retrieved/saved data"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "project_id",
+                  "description": "(Required) ID of the project to which save/retrieved data is connected"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "experience_id",
+                  "description": "(Required) ID of the experience"
+                }
+              ]
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "Token to access the experience report in read-only mode.",
+                "key": "report_token",
+                "value": "<string>"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "3292a419-2711-4f04-8a37-315974f1ea50",
+              "name": "The current reporting settings for an experience, such as `confidence_level`, `stats_methodology` (Frequentist/Bayesian), MAB strategy, `primary_metric`, and `outlier` detection rules.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "accounts",
+                    ":account_id",
+                    "projects",
+                    ":project_id",
+                    "experiences",
+                    ":experience_id",
+                    "report_settings"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "account_id",
+                      "description": "(Required) ID of the account that owns the retrieved/saved data"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "project_id",
+                      "description": "(Required) ID of the project to which save/retrieved data is connected"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "experience_id",
+                      "description": "(Required) ID of the experience"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "Token to access the experience report in read-only mode.",
+                    "key": "report_token",
+                    "value": "<string>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"campaigns\": [\n      {\n        \"name\": \"string\",\n        \"visitors_count\": 2816.3756776235905\n      },\n      {\n        \"name\": \"string\",\n        \"visitors_count\": 5640.194124510718\n      }\n    ],\n    \"custom_segments\": [\n      {\n        \"id\": 8904,\n        \"name\": \"string\"\n      },\n      {\n        \"id\": 5025,\n        \"name\": \"string\"\n      }\n    ]\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "fa2556e5-8e7e-4f7f-9ed2-93bc03a7b059",
+              "name": "Indicates an error occurred while processing the request. The `code` provides an HTTP status code, `message` offers a human-readable explanation or an array of validation errors, and `fields` (if present) specifies which input fields were problematic.\n",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "accounts",
+                    ":account_id",
+                    "projects",
+                    ":project_id",
+                    "experiences",
+                    ":experience_id",
+                    "report_settings"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "account_id",
+                      "description": "(Required) ID of the account that owns the retrieved/saved data"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "project_id",
+                      "description": "(Required) ID of the project to which save/retrieved data is connected"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "experience_id",
+                      "description": "(Required) ID of the experience"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "Token to access the experience report in read-only mode.",
+                    "key": "report_token",
+                    "value": "<string>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 6553,\n  \"message\": \"string\",\n  \"fields\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "ece7cbf1-fff3-4327-a15b-ca66e6196761",
+          "name": "Get aggregated performance report for an experience",
+          "request": {
+            "name": "Get aggregated performance report for an experience",
+            "description": {
+              "content": "Retrieves the main performance report for a specific experience.\nThis report shows aggregated data for each variation, including visitor counts, conversions, conversion rates, improvement percentages,\nand statistical confidence (or chance to win for Bayesian). Data is provided for all goals attached to the experience.\nSupports filtering by date range and segments.\nThe Knowledge Base article \"Experiment Report\" details the metrics shown.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "accounts",
+                ":account_id",
+                "projects",
+                ":project_id",
+                "experiences",
+                ":experience_id",
+                "aggregated_report"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "account_id",
+                  "description": "(Required) ID of the account that owns the retrieved/saved data"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "project_id",
+                  "description": "(Required) ID of the project to which save/retrieved data is connected"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "experience_id",
+                  "description": "(Required) ID of the experience"
+                }
+              ]
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "Token to access the experience report in read-only mode.",
+                "key": "report_token",
+                "value": "<string>"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"goals\": [\n    \"<integer>\",\n    \"<integer>\"\n  ],\n  \"metrics\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"utc_offset\": 0,\n  \"start_time\": \"<number>\",\n  \"end_time\": \"<number>\",\n  \"segments\": {\n    \"devices\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"browsers\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"countries\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"visitor_types\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"campaigns\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"custom_segments\": [\n      \"<integer>\",\n      \"<integer>\"\n    ],\n    \"sources\": [\n      \"<string>\",\n      \"<string>\"\n    ]\n  },\n  \"stats_engine_processing\": {\n    \"stats_type\": \"<string>\",\n    \"confidence\": \"<number>\",\n    \"power\": \"<number>\",\n    \"test_type\": \"two_tails\",\n    \"multiple_comparison_correction\": \"<string>\",\n    \"power_calculation_type\": \"dynamic_mde\",\n    \"fixed_mde\": \"<number>\",\n    \"mab_settings\": {\n      \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n    }\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "93df5195-725b-457e-8230-52e5fb3caae0",
+              "name": "The main performance report for an experience, showing aggregated data (visitors, conversions, conversion rate, improvement, confidence/chance to win) for each variation, broken down by all attached goals.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "accounts",
+                    ":account_id",
+                    "projects",
+                    ":project_id",
+                    "experiences",
+                    ":experience_id",
+                    "aggregated_report"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "account_id",
+                      "description": "(Required) ID of the account that owns the retrieved/saved data"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "project_id",
+                      "description": "(Required) ID of the project to which save/retrieved data is connected"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "experience_id",
+                      "description": "(Required) ID of the experience"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "Token to access the experience report in read-only mode.",
+                    "key": "report_token",
+                    "value": "<string>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"stats_methodology\": \"bayesian\",\n    \"variations_data\": [\n      {\n        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n      },\n      {\n        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n      }\n    ],\n    \"reportData\": [\n      {\n        \"variations\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      },\n      {\n        \"variations\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      }\n    ]\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "372d7813-b3f9-47ad-a576-cc0b221610ee",
+              "name": "Indicates an error occurred while processing the request. The `code` provides an HTTP status code, `message` offers a human-readable explanation or an array of validation errors, and `fields` (if present) specifies which input fields were problematic.\n",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "accounts",
+                    ":account_id",
+                    "projects",
+                    ":project_id",
+                    "experiences",
+                    ":experience_id",
+                    "aggregated_report"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "account_id",
+                      "description": "(Required) ID of the account that owns the retrieved/saved data"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "project_id",
+                      "description": "(Required) ID of the project to which save/retrieved data is connected"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "experience_id",
+                      "description": "(Required) ID of the experience"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "Token to access the experience report in read-only mode.",
+                    "key": "report_token",
+                    "value": "<string>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 6553,\n  \"message\": \"string\",\n  \"fields\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "ca512cde-b74f-4d75-884f-fcbb9aa40082",
+          "name": "Get daily performance report for an experience",
+          "request": {
+            "name": "Get daily performance report for an experience",
+            "description": {
+              "content": "Retrieves a day-by-day breakdown of performance metrics (visitors, conversions, conversion rate, etc.) for a specific experience and goal.\nThis allows trend analysis and observation of how an experiment performs over time.\nSupports filtering by date range and segments, and can show cumulative or non-cumulative data.\nThe Knowledge Base article \"Experiment Report\" (Graphs section) visualizes this type of data.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "accounts",
+                ":account_id",
+                "projects",
+                ":project_id",
+                "experiences",
+                ":experience_id",
+                "daily_report"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "account_id",
+                  "description": "(Required) ID of the account that owns the retrieved/saved data"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "project_id",
+                  "description": "(Required) ID of the project to which save/retrieved data is connected"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "experience_id",
+                  "description": "(Required) ID of the experience"
+                }
+              ]
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "Token to access the experience report in read-only mode.",
+                "key": "report_token",
+                "value": "<string>"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"goal\": \"<number>\",\n  \"report_type\": \"<string>\",\n  \"metric\": \"<string>\",\n  \"segments\": {\n    \"devices\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"browsers\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"countries\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"visitor_types\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"campaigns\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"custom_segments\": [\n      \"<integer>\",\n      \"<integer>\"\n    ],\n    \"sources\": [\n      \"<string>\",\n      \"<string>\"\n    ]\n  },\n  \"utc_offset\": 0,\n  \"start_time\": \"<number>\",\n  \"end_time\": \"<number>\",\n  \"stats_engine_processing\": {\n    \"stats_type\": \"<string>\",\n    \"confidence\": \"<number>\",\n    \"power\": \"<number>\",\n    \"test_type\": \"two_tails\",\n    \"multiple_comparison_correction\": \"<string>\",\n    \"power_calculation_type\": \"dynamic_mde\",\n    \"fixed_mde\": \"<number>\",\n    \"mab_settings\": {\n      \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n    }\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "bd5172b0-96b6-4bda-ba2e-8a3d2828c068",
+              "name": "A day-by-day breakdown of performance metrics for an experience, specific to a single goal and metric (e.g., daily conversion rate for \"Purchases\"). Includes data for each variation.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "accounts",
+                    ":account_id",
+                    "projects",
+                    ":project_id",
+                    "experiences",
+                    ":experience_id",
+                    "daily_report"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "account_id",
+                      "description": "(Required) ID of the account that owns the retrieved/saved data"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "project_id",
+                      "description": "(Required) ID of the project to which save/retrieved data is connected"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "experience_id",
+                      "description": "(Required) ID of the experience"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "Token to access the experience report in read-only mode.",
+                    "key": "report_token",
+                    "value": "<string>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"variations_data\": [\n      {\n        \"id\": 7552,\n        \"name\": \"string\",\n        \"description\": \"string\",\n        \"is_baseline\": false,\n        \"traffic_distribution\": 95.8695,\n        \"key\": \"string\",\n        \"concurrency_key\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"status\": \"stopped\"\n      },\n      {\n        \"id\": 170,\n        \"name\": \"string\",\n        \"description\": \"string\",\n        \"is_baseline\": false,\n        \"traffic_distribution\": 25.0222,\n        \"key\": \"string\",\n        \"concurrency_key\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"status\": \"stopped\"\n      }\n    ],\n    \"reportData\": {\n      \"variations\": [\n        {\n          \"id\": 4123.748080306777,\n          \"stats\": [\n            {\n              \"timestamp\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"value\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"totals\": 4053.0193698597127,\n              \"visitors\": 220.58899006961562\n            },\n            {\n              \"timestamp\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"value\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"totals\": 3263.4708346552934,\n              \"visitors\": 1158.2224409423259\n            }\n          ]\n        },\n        {\n          \"id\": 4966.524492792417,\n          \"stats\": [\n            {\n              \"timestamp\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"value\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"totals\": 3532.8150705189123,\n              \"visitors\": 962.1599018860594\n            },\n            {\n              \"timestamp\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"value\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"totals\": 8912.753166757388,\n              \"visitors\": 14.41668008432262\n            }\n          ]\n        }\n      ],\n      \"extra\": [\n        {\n          \"type\": \"avg_conversion_rate\",\n          \"stats\": [\n            {\n              \"timestamp\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"value\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            },\n            {\n              \"timestamp\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"value\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            }\n          ]\n        },\n        {\n          \"type\": \"total_visitors\",\n          \"stats\": [\n            {\n              \"timestamp\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"value\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            },\n            {\n              \"timestamp\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"value\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            }\n          ]\n        }\n      ]\n    }\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "f2006a08-6966-48cd-80a3-0f30ac4ab4a7",
+              "name": "Indicates an error occurred while processing the request. The `code` provides an HTTP status code, `message` offers a human-readable explanation or an array of validation errors, and `fields` (if present) specifies which input fields were problematic.\n",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "accounts",
+                    ":account_id",
+                    "projects",
+                    ":project_id",
+                    "experiences",
+                    ":experience_id",
+                    "daily_report"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "account_id",
+                      "description": "(Required) ID of the account that owns the retrieved/saved data"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "project_id",
+                      "description": "(Required) ID of the project to which save/retrieved data is connected"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "experience_id",
+                      "description": "(Required) ID of the experience"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "Token to access the experience report in read-only mode.",
+                    "key": "report_token",
+                    "value": "<string>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 6553,\n  \"message\": \"string\",\n  \"fields\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "49d64476-c29b-4802-a004-dc9cd09aa6dc",
+          "name": "Get daily traffic allocation report for an MAB experience",
+          "request": {
+            "name": "Get daily traffic allocation report for an MAB experience",
+            "description": {
+              "content": "Retrieves the day-by-day traffic allocation percentages for each variation in an experience that uses Multi-Armed Bandit (MAB) or auto-allocation.\nThis shows how Convert dynamically shifted traffic towards better-performing variations over time.\nThe Knowledge Base article \"Multi-Armed Bandit (MAB) & Auto-Allocation in Convert\" explains this feature.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "accounts",
+                ":account_id",
+                "projects",
+                ":project_id",
+                "experiences",
+                ":experience_id",
+                "daily_traffic_allocation"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "account_id",
+                  "description": "(Required) ID of the account that owns the retrieved/saved data"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "project_id",
+                  "description": "(Required) ID of the project to which save/retrieved data is connected"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "experience_id",
+                  "description": "(Required) ID of the experience"
+                }
+              ]
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "Token to access the experience report in read-only mode.",
+                "key": "report_token",
+                "value": "<string>"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"utc_offset\": 0,\n  \"start_time\": \"<number>\",\n  \"end_time\": \"<number>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "257abea9-422d-4f72-9d22-ad4c4655fcbb",
+              "name": "For experiences using Multi-Armed Bandit (MAB), this shows the daily percentage of traffic allocated to each variation over time, illustrating how the MAB strategy adapted.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "accounts",
+                    ":account_id",
+                    "projects",
+                    ":project_id",
+                    "experiences",
+                    ":experience_id",
+                    "daily_traffic_allocation"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "account_id",
+                      "description": "(Required) ID of the account that owns the retrieved/saved data"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "project_id",
+                      "description": "(Required) ID of the project to which save/retrieved data is connected"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "experience_id",
+                      "description": "(Required) ID of the experience"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "Token to access the experience report in read-only mode.",
+                    "key": "report_token",
+                    "value": "<string>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"variations_data\": [\n      {\n        \"id\": 6333,\n        \"name\": \"string\",\n        \"description\": \"string\",\n        \"is_baseline\": false,\n        \"traffic_distribution\": 95.59830000000001,\n        \"key\": \"string\",\n        \"concurrency_key\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"status\": \"stopped\"\n      },\n      {\n        \"id\": 2242,\n        \"name\": \"string\",\n        \"description\": \"string\",\n        \"is_baseline\": false,\n        \"traffic_distribution\": 34.0231,\n        \"key\": \"string\",\n        \"concurrency_key\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"status\": \"stopped\"\n      }\n    ],\n    \"reportData\": {\n      \"variations\": [\n        {\n          \"id\": 4259.806887674683,\n          \"stats\": [\n            {\n              \"timestamp\": 1371.1186282936806,\n              \"value\": 5945.827662779806\n            },\n            {\n              \"timestamp\": 8454.674399313113,\n              \"value\": 5677.421301541314\n            }\n          ]\n        },\n        {\n          \"id\": 3681.0054617654364,\n          \"stats\": [\n            {\n              \"timestamp\": 1493.0321102542864,\n              \"value\": 2618.681711519636\n            },\n            {\n              \"timestamp\": 747.7406426713784,\n              \"value\": 1866.8016021278565\n            }\n          ]\n        }\n      ]\n    }\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "4ee9ef25-03e4-4645-9ba5-7fcc976b22ab",
+              "name": "Indicates an error occurred while processing the request. The `code` provides an HTTP status code, `message` offers a human-readable explanation or an array of validation errors, and `fields` (if present) specifies which input fields were problematic.\n",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "accounts",
+                    ":account_id",
+                    "projects",
+                    ":project_id",
+                    "experiences",
+                    ":experience_id",
+                    "daily_traffic_allocation"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "account_id",
+                      "description": "(Required) ID of the account that owns the retrieved/saved data"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "project_id",
+                      "description": "(Required) ID of the project to which save/retrieved data is connected"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "experience_id",
+                      "description": "(Required) ID of the experience"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "Token to access the experience report in read-only mode.",
+                    "key": "report_token",
+                    "value": "<string>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 6553,\n  \"message\": \"string\",\n  \"fields\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "8c8a276a-c72a-4686-ae44-6b0b9b47e986",
+          "name": "Reset report data for an experience",
+          "request": {
+            "name": "Reset report data for an experience",
+            "description": {
+              "content": "Clears all accumulated visitor and conversion data for an experience's report, effectively resetting its statistics to zero.\nThe start date of the experiment is also reset. This is useful if you want to restart data collection after making significant changes or for QA purposes.\nThe Knowledge Base article \"Reset Experiment Data\" warns: \"If you want to prevent [carry-over effects], it is suggested that you clone your experiment instead of resetting the report\".\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "accounts",
+                ":account_id",
+                "projects",
+                ":project_id",
+                "experiences",
+                ":experience_id",
+                "reset_report"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "account_id",
+                  "description": "(Required) ID of the account that owns the retrieved/saved data"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "project_id",
+                  "description": "(Required) ID of the project to which save/retrieved data is connected"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "experience_id",
+                  "description": "(Required) ID of the experience"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "98d3014f-acd1-430f-a721-2a766c424975",
+              "name": "A generic success response, typically used for operations that don't return specific data (like deletions or some updates). The `code` is usually 200, and `message` confirms the successful action.\n",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "accounts",
+                    ":account_id",
+                    "projects",
+                    ":project_id",
+                    "experiences",
+                    ":experience_id",
+                    "reset_report"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "account_id",
+                      "description": "(Required) ID of the account that owns the retrieved/saved data"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "project_id",
+                      "description": "(Required) ID of the project to which save/retrieved data is connected"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "experience_id",
+                      "description": "(Required) ID of the experience"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 8796,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "81647cc1-770c-4baf-8e65-ad9c84295c9b",
+              "name": "Indicates an error occurred while processing the request. The `code` provides an HTTP status code, `message` offers a human-readable explanation or an array of validation errors, and `fields` (if present) specifies which input fields were problematic.\n",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "accounts",
+                    ":account_id",
+                    "projects",
+                    ":project_id",
+                    "experiences",
+                    ":experience_id",
+                    "reset_report"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "account_id",
+                      "description": "(Required) ID of the account that owns the retrieved/saved data"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "project_id",
+                      "description": "(Required) ID of the project to which save/retrieved data is connected"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "experience_id",
+                      "description": "(Required) ID of the experience"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 6553,\n  \"message\": \"string\",\n  \"fields\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "009b0ae5-08cd-4eb7-bff1-32357dbc23e8",
+          "name": "Export an experience report (CSV/PDF)",
+          "request": {
+            "name": "Export an experience report (CSV/PDF)",
+            "description": {
+              "content": "Generates an export of an experience's performance report in either CSV (aggregated or daily) or PDF format.\nReturns a downloadable link for the generated file. Useful for offline analysis or sharing with stakeholders.\nThe Knowledge Base article \"Experiment Report\" (Export & Download section) describes this.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "accounts",
+                ":account_id",
+                "projects",
+                ":project_id",
+                "experiences",
+                ":experience_id",
+                "export_report"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "account_id",
+                  "description": "(Required) ID of the account that owns the retrieved/saved data"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "project_id",
+                  "description": "(Required) ID of the project to which save/retrieved data is connected"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "experience_id",
+                  "description": "(Required) ID of the experience"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"report_type\": \"csv_aggregated\",\n  \"data_type\": \"non_cumulative\",\n  \"goals\": [\n    \"<integer>\",\n    \"<integer>\"\n  ],\n  \"utc_offset\": 0,\n  \"start_time\": \"<number>\",\n  \"end_time\": \"<number>\",\n  \"segments\": {\n    \"devices\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"browsers\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"countries\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"visitor_types\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"campaigns\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"custom_segments\": [\n      \"<integer>\",\n      \"<integer>\"\n    ],\n    \"sources\": [\n      \"<string>\",\n      \"<string>\"\n    ]\n  },\n  \"stats_engine_processing\": {\n    \"stats_type\": \"<string>\",\n    \"confidence\": \"<number>\",\n    \"power\": \"<number>\",\n    \"test_type\": \"two_tails\",\n    \"multiple_comparison_correction\": \"<string>\",\n    \"power_calculation_type\": \"dynamic_mde\",\n    \"fixed_mde\": \"<number>\",\n    \"mab_settings\": {\n      \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n    }\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "d9fd1a4a-682c-48bf-9924-1e0e5a5d142b",
+              "name": "Contains a `download_url` for the generated experience report (CSV or PDF) and an `expire_at` timestamp for the URL.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "accounts",
+                    ":account_id",
+                    "projects",
+                    ":project_id",
+                    "experiences",
+                    ":experience_id",
+                    "export_report"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "account_id",
+                      "description": "(Required) ID of the account that owns the retrieved/saved data"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "project_id",
+                      "description": "(Required) ID of the project to which save/retrieved data is connected"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "experience_id",
+                      "description": "(Required) ID of the experience"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"download_url\": \"string\",\n    \"expire_at\": 7054.010941012818\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "9b683910-bca1-4c5f-b97d-0aae412834cd",
+              "name": "Indicates an error occurred while processing the request. The `code` provides an HTTP status code, `message` offers a human-readable explanation or an array of validation errors, and `fields` (if present) specifies which input fields were problematic.\n",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "accounts",
+                    ":account_id",
+                    "projects",
+                    ":project_id",
+                    "experiences",
+                    ":experience_id",
+                    "export_report"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "account_id",
+                      "description": "(Required) ID of the account that owns the retrieved/saved data"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "project_id",
+                      "description": "(Required) ID of the project to which save/retrieved data is connected"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "experience_id",
+                      "description": "(Required) ID of the experience"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 6553,\n  \"message\": \"string\",\n  \"fields\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "a2f9246f-69ff-4f18-8c67-473a74f2f5ce",
+          "name": "Export raw tracking data for an experience",
+          "request": {
+            "name": "Export raw tracking data for an experience",
+            "description": {
+              "content": "Initiates a job to export the raw, event-level tracking data for a specific experience.\nThis data includes individual visitor bucketing events, conversions, and transactions.\nThe export is typically delivered as a link via email due to potential size.\nUseful for in-depth custom analysis or importing into external data warehouses.\nThe Knowledge Base article \"Experiment Report\" (Export & Download section) mentions this.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "accounts",
+                ":account_id",
+                "projects",
+                ":project_id",
+                "experiences",
+                ":experience_id",
+                "export_raw_data"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "account_id",
+                  "description": "(Required) ID of the account that owns the retrieved/saved data"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "project_id",
+                  "description": "(Required) ID of the project to which save/retrieved data is connected"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "experience_id",
+                  "description": "(Required) ID of the experience"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"events\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"goals\": [\n    \"<integer>\",\n    \"<integer>\"\n  ],\n  \"utc_offset\": 0,\n  \"start_time\": \"<number>\",\n  \"end_time\": \"<number>\",\n  \"segments\": {\n    \"devices\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"browsers\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"countries\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"visitor_types\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"campaigns\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"custom_segments\": [\n      \"<integer>\",\n      \"<integer>\"\n    ],\n    \"sources\": [\n      \"<string>\",\n      \"<string>\"\n    ]\n  },\n  \"stats_engine_processing\": {\n    \"stats_type\": \"<string>\",\n    \"confidence\": \"<number>\",\n    \"power\": \"<number>\",\n    \"test_type\": \"two_tails\",\n    \"multiple_comparison_correction\": \"<string>\",\n    \"power_calculation_type\": \"dynamic_mde\",\n    \"fixed_mde\": \"<number>\",\n    \"mab_settings\": {\n      \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n    }\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "2489a990-c54b-42da-b34a-5bb9709130aa",
+              "name": "Contains a `jobId` for the asynchronous raw data export process. The actual data link is typically sent via email upon job completion.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "accounts",
+                    ":account_id",
+                    "projects",
+                    ":project_id",
+                    "experiences",
+                    ":experience_id",
+                    "export_raw_data"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "account_id",
+                      "description": "(Required) ID of the account that owns the retrieved/saved data"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "project_id",
+                      "description": "(Required) ID of the project to which save/retrieved data is connected"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "experience_id",
+                      "description": "(Required) ID of the experience"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"jobId\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "56f638c3-da91-451b-b674-6a064d3ac48e",
+              "name": "Indicates an error occurred while processing the request. The `code` provides an HTTP status code, `message` offers a human-readable explanation or an array of validation errors, and `fields` (if present) specifies which input fields were problematic.\n",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "accounts",
+                    ":account_id",
+                    "projects",
+                    ":project_id",
+                    "experiences",
+                    ":experience_id",
+                    "export_raw_data"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "account_id",
+                      "description": "(Required) ID of the account that owns the retrieved/saved data"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "project_id",
+                      "description": "(Required) ID of the project to which save/retrieved data is connected"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "experience_id",
+                      "description": "(Required) ID of the experience"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 6553,\n  \"message\": \"string\",\n  \"fields\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "3945cbe8-88c4-4974-b3e4-e055e653a9fd",
+          "name": "Remove specific data from an experience report",
+          "request": {
+            "name": "Remove specific data from an experience report",
+            "description": {
+              "content": "Allows for targeted deletion of report data for an experience based on date range and event type (view_experience, conversion, transaction).\nFor conversion and transaction events, specific goals can be targeted.\nIf `simulate` is true, returns a count of records that would be deleted without actual deletion. Otherwise, performs permanent deletion.\nThe Knowledge Base article \"Remove Report Data Feature\" details this.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "accounts",
+                ":account_id",
+                "projects",
+                ":project_id",
+                "experiences",
+                ":experience_id",
+                "remove_report_data"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "account_id",
+                  "description": "(Required) ID of the account that owns the retrieved/saved data"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "project_id",
+                  "description": "(Required) ID of the project to which save/retrieved data is connected"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "experience_id",
+                  "description": "(Required) ID of the experience"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"start_time\": \"<number>\",\n  \"end_time\": \"<number>\",\n  \"utc_offset\": 0,\n  \"segments\": {\n    \"devices\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"browsers\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"countries\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"visitor_types\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"campaigns\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"custom_segments\": [\n      \"<integer>\",\n      \"<integer>\"\n    ],\n    \"sources\": [\n      \"<string>\",\n      \"<string>\"\n    ]\n  },\n  \"stats_engine_processing\": {\n    \"stats_type\": \"<string>\",\n    \"confidence\": \"<number>\",\n    \"power\": \"<number>\",\n    \"test_type\": \"two_tails\",\n    \"multiple_comparison_correction\": \"<string>\",\n    \"power_calculation_type\": \"dynamic_mde\",\n    \"fixed_mde\": \"<number>\",\n    \"mab_settings\": {\n      \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n    }\n  },\n  \"events\": [\n    {\n      \"type\": \"<string>\"\n    }\n  ],\n  \"simulate\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "863897ae-a016-4297-9f54-6481d418e846",
+              "name": "If `simulate=true` was used in the request, this returns a count of data records per event type that *would have been* deleted. If `simulate=false`, confirms successful deletion (often via a general SuccessResponse).",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "accounts",
+                    ":account_id",
+                    "projects",
+                    ":project_id",
+                    "experiences",
+                    ":experience_id",
+                    "remove_report_data"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "account_id",
+                      "description": "(Required) ID of the account that owns the retrieved/saved data"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "project_id",
+                      "description": "(Required) ID of the project to which save/retrieved data is connected"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "experience_id",
+                      "description": "(Required) ID of the experience"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": [\n    {\n      \"event\": \"transaction\",\n      \"count\": 3898\n    },\n    {\n      \"event\": \"conversion\",\n      \"count\": 4789\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "472444a5-78e3-4850-b5f4-401fa3a08b75",
+              "name": "Indicates an error occurred while processing the request. The `code` provides an HTTP status code, `message` offers a human-readable explanation or an array of validation errors, and `fields` (if present) specifies which input fields were problematic.\n",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "accounts",
+                    ":account_id",
+                    "projects",
+                    ":project_id",
+                    "experiences",
+                    ":experience_id",
+                    "remove_report_data"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "account_id",
+                      "description": "(Required) ID of the account that owns the retrieved/saved data"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "project_id",
+                      "description": "(Required) ID of the project to which save/retrieved data is connected"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "experience_id",
+                      "description": "(Required) ID of the experience"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 6553,\n  \"message\": \"string\",\n  \"fields\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.convert.com/api/v2",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "fb317fa3-3f28-49b7-a518-e192056b0333",
+    "name": "Convert Accounts Experiences Reports API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Move your app forward with the Convert API. The Convert API allows\nyou to manage your Convert Experiences projects using code. The REST API is\nan interface for managing and extending functionality of Convert. For\nexample, instead of creating and maintaining projects using the Convert\nExperiences web dashboard you can create an experiment programmatically.\nAdditionally, if you prefer to run custom analysis on experiment results you\ncan leverage the API to pull data from Convert Experiences into your own\nworkflow. If you do not have a Convert account already, sign up for a free\ndeveloper account at https://www.convert.com/api/.\n\n*[Convert API V1](/doc/v1) is still available and documentation can be found [here](/doc/v1) but using it is highly discouraged\nas it will be phased out in the future*\n",
+      "type": "text/plain"
+    }
+  }
+}

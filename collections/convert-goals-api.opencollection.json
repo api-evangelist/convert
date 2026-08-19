@@ -1,0 +1,311 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Convert Accounts Goals API",
+    "version": "2.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Goals",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List goals within a project",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/projects/:project_id/goals",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              },
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the project to which save/retrieved data is connected"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Retrieves a list of all conversion goals defined for a specific project.\nGoals are used to measure the success of experiences (e.g., purchases, sign-ups, page views).\nSupports filtering by status, type, name, and pagination.\nThe Knowledge Base article \"Goals\" describes various goal types like 'Visit a specific page', 'Revenue goal', 'Click on a link', etc.\n"
+        },
+        {
+          "info": {
+            "name": "Get details for a specific goal",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/projects/:project_id/goals/:goal_id",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              },
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the project to which save/retrieved data is connected"
+              },
+              {
+                "name": "goal_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the goal to be retrieved"
+              },
+              {
+                "name": "include",
+                "value": "",
+                "type": "query",
+                "description": "Specifies the list of optional fields which would be included in the response.\n\nOtherwise, the fields that can be passed through this parameter would not be included in the response.\n\nRead more in the section related to [Optional Fields](#tag/Optional-Fields)\n"
+              }
+            ]
+          },
+          "docs": "Retrieves detailed information about a single conversion goal, identified by its `goal_id`.\nThis includes its name, type (e.g., 'visits_page', 'revenue', 'clicks_link'), configuration settings (like URL for page visit goals, or CSS selector for click goals), and triggering rules.\nThe `include` parameter can fetch additional data like usage statistics.\n"
+        },
+        {
+          "info": {
+            "name": "Get goal details by its unique key",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/projects/:project_id/goals/:goal_key",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              },
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the project to which save/retrieved data is connected"
+              },
+              {
+                "name": "goal_key",
+                "value": "",
+                "type": "path",
+                "description": "Key of the goal to be retrieved"
+              },
+              {
+                "name": "include",
+                "value": "",
+                "type": "query",
+                "description": "Specifies the list of optional fields which would be included in the response.\n\nOtherwise, the fields that can be passed through this parameter would not be included in the response.\n\nRead more in the section related to [Optional Fields](#tag/Optional-Fields)\n"
+              }
+            ]
+          },
+          "docs": "Retrieves detailed information about a single conversion goal, identified by its user-defined `goal_key`.\nUseful if you have a human-readable key for a goal. Otherwise, similar to getting a goal by ID.\n"
+        },
+        {
+          "info": {
+            "name": "Create a new conversion goal",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/projects/:project_id/goals/add",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              },
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the project into which the goal is to be stored"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Defines a new conversion goal within a project.\nRequires specifying the goal name and type (e.g., 'visits_page', 'revenue', 'clicks_link', 'submits_form', 'code_trigger').\nDepending on the type, additional settings are needed, such as the target URL for a page visit goal, or the CSS selector for a click goal.\nThe Knowledge Base article \"Goals\" (Use a goal template section) lists various types.\n"
+        },
+        {
+          "info": {
+            "name": "Update an existing conversion goal",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/projects/:project_id/goals/:goal_id/update",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              },
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the project to which save/retrieved data is connected"
+              },
+              {
+                "name": "goal_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the goal to be updated"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Modifies the configuration of an existing conversion goal.\nThis can include changing its name, type, status (active/archived), or specific settings like the target URL or triggering rules.\n"
+        },
+        {
+          "info": {
+            "name": "Delete a conversion goal",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/projects/:project_id/goals/:goal_id/delete",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              },
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the project to which save/retrieved data is connected"
+              },
+              {
+                "name": "goal_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the goal to be deleted"
+              }
+            ]
+          },
+          "docs": "Permanently removes a conversion goal from a project.\nThis action is irreversible. If the goal is in use by active experiences, consider archiving it instead.\n"
+        },
+        {
+          "info": {
+            "name": "Update multiple goals at once",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/projects/:project_id/goals/bulk-update",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              },
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the project to which save/retrieved data is connected"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Allows for changing the status (e.g., active, archived) of multiple goals within a project simultaneously.\nRequires a list of goal IDs and the target status.\n"
+        },
+        {
+          "info": {
+            "name": "Delete multiple goals at once",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/projects/:project_id/goals/bulk-delete",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              },
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the project to which save/retrieved data is connected"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Permanently removes multiple goals from a project in a single operation.\nRequires a list of goal IDs. This action is irreversible.\n"
+        },
+        {
+          "info": {
+            "name": "Clone an existing conversion goal",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/projects/:project_id/goals/:goal_id/clone",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              },
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the project to which save/retrieved data is connected"
+              },
+              {
+                "name": "goal_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the goal to be deleted"
+              },
+              {
+                "name": "include",
+                "value": "",
+                "type": "query",
+                "description": "Specifies the list of optional fields which would be included in the response.\n\nOtherwise, the fields that can be passed through this parameter would not be included in the response.\n\nRead more in the section related to [Optional Fields](#tag/Optional-Fields)\n"
+              }
+            ]
+          },
+          "docs": "Creates a new goal as an identical copy of an existing one (specified by `goal_id`).\nUseful for creating a similar goal with minor modifications or for templating.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

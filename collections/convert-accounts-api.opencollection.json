@@ -1,0 +1,264 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Convert Accounts API",
+    "version": "2.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Accounts",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List accounts accessible to the user",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.convert.com/api/v2/accounts"
+          },
+          "docs": "Retrieves a list of all accounts the authenticated user has access to.\nIf using API key authentication, this typically returns the single account associated with the API key.\nIf using cookie-based authentication, it may return multiple accounts if the user is a collaborator on several.\nAn account is the top-level container for projects, billing, and user management.\n"
+        },
+        {
+          "info": {
+            "name": "List available billing plans",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.convert.com/api/v2/billing-plans"
+          },
+          "docs": "Retrieves a list of all active billing plans that an account can subscribe to.\nEach plan defines usage limits (e.g., tested visitors, number of projects) and available features.\n"
+        },
+        {
+          "info": {
+            "name": "Get live tracking events for an account",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/livedata",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account to be retrieved"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Retrieves the last 100 tracking events (e.g., experiment views, goal conversions) across all projects within the specified account.\nUseful for real-time monitoring of activity. Supports filtering by event types and specific projects.\nAs per the Knowledge Base, \"Live Logs in Convert track how end users are interacting with web pages and experiments...at a project and experiment level in real time.\"\n"
+        },
+        {
+          "info": {
+            "name": "Get change history for an account",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/change-history",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Retrieves a historical log of changes made within the specified account, such as modifications to account settings or billing.\nThis provides an audit trail for account-level activities.\nThe Knowledge Base states, \"The Change History shows a record of user activity for each of your projects.\" This extends to account changes.\n"
+        },
+        {
+          "info": {
+            "name": "List active and completed experiences for an account",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/experiences",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Retrieves a list of all active and completed experiences (A/B tests, personalizations, etc.) across all projects within the specified account.\nAllows filtering to narrow down results. Useful for an overview of ongoing and finished optimization activities at the account level.\n"
+        },
+        {
+          "info": {
+            "name": "Get details for a specific account",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/details",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              },
+              {
+                "name": "include",
+                "value": "",
+                "type": "query",
+                "description": "Specifies the list of fields to be included in the response, which otherwise would not be sent.\n\nRead more in the section related to [Optional Fields](#tag/Optional-Fields)\n"
+              }
+            ]
+          },
+          "docs": "Retrieves detailed information about a specific account, including its settings, billing status, and usage limits.\nThe `include` parameter can be used to fetch additional related data, like active project counts.\n"
+        },
+        {
+          "info": {
+            "name": "Update details for a specific account",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/details",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Modifies the settings or billing information for a specific account.\nThis can include updating company details, contact information, or billing preferences.\n"
+        },
+        {
+          "info": {
+            "name": "Create a new sub-account",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/sub-accounts/add",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the parent account under which the sub-account is being created."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a new sub-account under the specified parent main account.\nSub-accounts inherit certain properties and limits from the parent but can have their own users and projects.\nThis is typically used by agencies or larger organizations to manage client accounts or departmental usage separately.\n"
+        },
+        {
+          "info": {
+            "name": "Request add-ons for an account",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/addons",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account for which the addons will be requested"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Allows requesting specific add-on features or services for an account, such as premium support tiers or specialized training.\n"
+        },
+        {
+          "info": {
+            "name": "Initiate payment method setup",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/payment-setup",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account for which the payment setup will be started"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Starts a secure session with the payment provider (e.g., Stripe) to set up or update an account's payment method.\nReturns a client secret or token that the frontend UI uses to complete the payment setup process directly with the provider.\n"
+        },
+        {
+          "info": {
+            "name": "Get billing portal URL",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/billing-portal",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              }
+            ]
+          },
+          "docs": "Returns an authenticated Paddle billing portal URL for the given account.\n\nThe URL takes the customer to the Paddle billing portal where they can\ncheck subscriptions, view or download invoices.\n"
+        },
+        {
+          "info": {
+            "name": "Get users for billing plan setup notification",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/plan_setup/users",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account for which the plan setup users will be returned"
+              }
+            ]
+          },
+          "docs": "Retrieves a list of users associated with an account, typically for the purpose of notifying them about billing plan setup or changes.\nUsed internally for account management workflows.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

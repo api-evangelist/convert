@@ -1,0 +1,96 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Convert Accounts Version Changes API",
+    "version": "2.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Version Changes",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get details of a specific change in a variation",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/projects/:project_id/experiences/:experience_id/changes/:change_id",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              },
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the project to which save/retrieved data is connected"
+              },
+              {
+                "name": "experience_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the experience"
+              },
+              {
+                "name": "change_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the experience change to get/update"
+              }
+            ]
+          },
+          "docs": "Retrieves the details of a single change applied within an experience's variation.\nA change can be CSS modifications, JavaScript code, HTML insertions, or configurations for Split URL redirects or Full Stack features.\nThe `data` field structure depends on the `type` of the change.\n"
+        },
+        {
+          "info": {
+            "name": "Update a specific change in a variation",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/projects/:project_id/experiences/:experience_id/changes/:change_id",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              },
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the project to which save/retrieved data is connected"
+              },
+              {
+                "name": "experience_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the experience"
+              },
+              {
+                "name": "change_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the experience change to get/update"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Modifies the content or settings of an existing change within an experience's variation.\nFor example, updating the JavaScript code, CSS rules, or redirect pattern for a change.\nThe structure of the `data` field in the request body must match the `type` of the change being updated.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

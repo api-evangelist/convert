@@ -1,0 +1,173 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Convert Accounts Visitor Data Placeholders API",
+    "version": "2.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Visitor Data Placeholders",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List Placeholders",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/projects/:project_id/visitors-data/placeholders",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              },
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the project to be retrieved"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Returns a list of visitors data placeholders defined in the project"
+        },
+        {
+          "info": {
+            "name": "Create Placeholder",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/projects/:project_id/visitors-data/placeholders/add",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              },
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the project to be retrieved"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a new visitors data placeholder"
+        },
+        {
+          "info": {
+            "name": "Update Placeholder",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/projects/:project_id/visitors-data/placeholders/:placeholderId/update",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              },
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the project to be retrieved"
+              },
+              {
+                "name": "placeholder_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the placeholder to be retrieved/updated/deleted"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Updates an existing visitors data placeholder"
+        },
+        {
+          "info": {
+            "name": "Delete Placeholder",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/projects/:project_id/visitors-data/placeholders/:placeholderId/delete",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              },
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the project to be retrieved"
+              },
+              {
+                "name": "placeholder_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the placeholder to be retrieved/updated/deleted"
+              }
+            ]
+          },
+          "docs": "Deletes a visitors data placeholder"
+        },
+        {
+          "info": {
+            "name": "Get Placeholder",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/projects/:project_id/visitors-data/placeholders/:placeholder_id",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              },
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the project to be retrieved"
+              },
+              {
+                "name": "placeholder_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the placeholder to be retrieved/updated/deleted"
+              }
+            ]
+          },
+          "docs": "Returns a single visitors data placeholder by ID."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

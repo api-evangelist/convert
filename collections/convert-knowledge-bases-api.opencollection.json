@@ -1,0 +1,249 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Convert Accounts Knowledge Bases API",
+    "version": "2.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Knowledge Bases",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List Knowledge Base entries within a project",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/projects/:project_id/knowledge-bases",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              },
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the project to which save/retrieved data is connected"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Retrieves a list of all Knowledge Base entries for a specific project.\nThe Knowledge Base stores proven or disproven hypotheses and their outcomes, serving as a repository of experimental learnings.\nSupports filtering by status, name, and pagination.\nThe Knowledge Base article \"Observations Feature Guide\" explains: \"Knowledge Base - Convert proven hypotheses to serve as a historical record and knowledge resource.\"\n"
+        },
+        {
+          "info": {
+            "name": "Get details for a specific Knowledge Base entry",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/projects/:project_id/knowledge-bases/:knowledge_base_id",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              },
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the project into which the knowledge base is stored"
+              },
+              {
+                "name": "knowledge_base_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the knowledge base to be retrieve"
+              },
+              {
+                "name": "expand",
+                "value": "",
+                "type": "query",
+                "description": "Specifies the list of fields which would be expanded in the response. Otherwise, only their id would be returned.\n\nRead more in the section related to [Expanding Fields](#tag/Expandable-Fields)\n"
+              }
+            ]
+          },
+          "docs": "Retrieves detailed information about a single Knowledge Base entry, identified by its `knowledge_base_id`.\nThis includes the original hypothesis name, summary of findings, status, and associated tags.\n"
+        },
+        {
+          "info": {
+            "name": "Create a new Knowledge Base entry",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/projects/:project_id/knowledge-bases/add",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              },
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the project into which the knowledge base is to be stored"
+              },
+              {
+                "name": "expand",
+                "value": "",
+                "type": "query",
+                "description": "Specifies the list of objects which would be expanded in the response. Otherwise, only their id would be returned.\n\nRead more in the section related to [Expanding Fields](#tag/Expandable-Fields)\n"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Adds a new entry to the Knowledge Base. This is typically done by converting a 'proven' or 'disproven' hypothesis,\nbut can also be used to manually add other experimental learnings.\nRequires a name, summary, and status.\n"
+        },
+        {
+          "info": {
+            "name": "Update the status of a Knowledge Base entry",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/projects/:project_id/knowledge-bases/:knowledge_base_id/update-status",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              },
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the project into which the knowledge base is to be updated"
+              },
+              {
+                "name": "knowledge_base_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the knowledge base to be updated"
+              },
+              {
+                "name": "expand",
+                "value": "",
+                "type": "query",
+                "description": "Specifies the list of fields which would be expanded in the response. Otherwise, only their id would be returned.\n\nRead more in the section related to [Expanding Fields](#tag/Expandable-Fields)\n"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Changes the status of an existing Knowledge Base entry (e.g., from 'active' to 'archived').\n"
+        },
+        {
+          "info": {
+            "name": "Delete a Knowledge Base entry",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/projects/:project_id/knowledge-bases/:knowledge_base_id/delete",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              },
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the project from which the knowledge base is to be deleted"
+              },
+              {
+                "name": "knowledge_base_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the knowledge base to be deleted"
+              }
+            ]
+          },
+          "docs": "Permanently removes a Knowledge Base entry from a project. This action is irreversible.\n"
+        },
+        {
+          "info": {
+            "name": "Update multiple Knowledge Base entries at once",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/projects/:project_id/knowledge-bases/bulk-update",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              },
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the project to which save/retrieved data is connected"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Allows for changing the status (e.g., active, archived) of multiple Knowledge Base entries within a project simultaneously.\nRequires a list of Knowledge Base entry IDs and the target status.\n"
+        },
+        {
+          "info": {
+            "name": "Delete multiple Knowledge Base entries at once",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/projects/:project_id/knowledge-bases/bulk-delete",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              },
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the project to which save/retrieved data is connected"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Permanently removes multiple Knowledge Base entries from a project in a single operation.\nRequires a list of Knowledge Base entry IDs. This action is irreversible.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

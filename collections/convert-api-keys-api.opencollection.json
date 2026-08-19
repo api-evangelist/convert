@@ -1,0 +1,85 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Convert Accounts API Keys API",
+    "version": "2.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "API Keys",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List API keys for an account",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/api-keys",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              }
+            ]
+          },
+          "docs": "Retrieves a list of all API keys configured for the specified account.\nAPI keys are used for server-to-server authentication, allowing applications to interact with the Convert API programmatically.\nEach key can be scoped to specific projects.\n"
+        },
+        {
+          "info": {
+            "name": "Create a new API key for an account",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/api-keys/add",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Generates a new API key and secret for the specified account.\nThe key can be named for easier identification and can be restricted to a list of project IDs.\nIf no projects are specified, the key grants access to all projects in the account.\nThe API secret is only shown at the time of creation and should be stored securely.\n"
+        },
+        {
+          "info": {
+            "name": "Delete an API key",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/api-keys/:key_id/delete",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              },
+              {
+                "name": "key_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the API key to be deleted"
+              }
+            ]
+          },
+          "docs": "Permanently revokes an API key, identified by its `key_id`.\nOnce deleted, the key can no longer be used to authenticate API requests.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

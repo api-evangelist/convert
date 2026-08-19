@@ -1,0 +1,274 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Convert Accounts Features API",
+    "version": "2.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Features",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List features within a Full Stack project",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/projects/:project_id/features",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              },
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the project to which save/retrieved data is connected"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Retrieves a list of all features defined for a specific Full Stack project.\nFeatures are used for feature flagging and server-side experimentation, allowing control over functionality and variables.\nSupports filtering by name, key, status, and pagination.\nThe Knowledge Base article \"Full Stack Experiments on Convert\" provides context.\n"
+        },
+        {
+          "info": {
+            "name": "Get details for a specific feature",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/projects/:project_id/features/:feature_id",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              },
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the project to which save/retrieved data is connected"
+              },
+              {
+                "name": "feature_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the feature to be retrieved"
+              },
+              {
+                "name": "include",
+                "value": "",
+                "type": "query",
+                "description": "Specifies the list of optional fields which would be included in the response.\n\nOtherwise, the fields that can be passed through this parameter would not be included in the response.\n\nRead more in the section related to [Optional Fields](#tag/Optional-Fields)\n"
+              }
+            ]
+          },
+          "docs": "Retrieves detailed information about a single feature within a Full Stack project, identified by its `feature_id`.\nThis includes its name, key, status, description, and defined variables (with their types and default values).\n"
+        },
+        {
+          "info": {
+            "name": "Get feature details by its unique key",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/projects/:project_id/features/:feature_key",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              },
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the project to which save/retrieved data is connected"
+              },
+              {
+                "name": "feature_key",
+                "value": "",
+                "type": "path",
+                "description": "Key of the feature to be retrieved"
+              },
+              {
+                "name": "include",
+                "value": "",
+                "type": "query",
+                "description": "Specifies the list of optional fields which would be included in the response.\n\nOtherwise, the fields that can be passed through this parameter would not be included in the response.\n\nRead more in the section related to [Optional Fields](#tag/Optional-Fields)\n"
+              }
+            ]
+          },
+          "docs": "Retrieves detailed information about a single feature, identified by its user-defined `feature_key`.\nUseful if you have a human-readable key for a feature. Otherwise, similar to getting a feature by ID.\n"
+        },
+        {
+          "info": {
+            "name": "Create a new feature for a Full Stack project",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/projects/:project_id/features/add",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              },
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the project into which the feature is to be stored"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Defines a new feature within a Full Stack project.\nRequires a name, a unique key, and a list of variables associated with the feature.\nEach variable has a key, type (string, boolean, integer, float, json), and a default value.\nFeatures are used in Full Stack experiments to control different code paths or configurations.\n"
+        },
+        {
+          "info": {
+            "name": "Update an existing feature",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/projects/:project_id/features/:feature_id/update",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              },
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the project to which save/retrieved data is connected"
+              },
+              {
+                "name": "feature_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the feature to be updated"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Modifies the configuration of an existing feature in a Full Stack project.\nThis can include changing its name, description, status (active/archived), or its associated variables (adding, removing, or modifying variables and their default values).\n"
+        },
+        {
+          "info": {
+            "name": "Delete a feature",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/projects/:project_id/features/:feature_id/delete",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              },
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the project to which save/retrieved data is connected"
+              },
+              {
+                "name": "feature_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the feature to be deleted"
+              }
+            ]
+          },
+          "docs": "Permanently removes a feature from a Full Stack project. This action is irreversible.\nIf the feature is in use by active experiments, consider its impact before deletion.\n"
+        },
+        {
+          "info": {
+            "name": "Update multiple features at once",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/projects/:project_id/features/bulk-update",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              },
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the project to which save/retrieved data is connected"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Allows for changing the status (e.g., active, archived) of multiple features within a Full Stack project simultaneously.\nRequires a list of feature IDs and the target status.\n"
+        },
+        {
+          "info": {
+            "name": "Delete multiple features at once",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/projects/:project_id/features/bulk-delete",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              },
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the project to which save/retrieved data is connected"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Permanently removes multiple features from a Full Stack project in a single operation.\nRequires a list of feature IDs. This action is irreversible.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

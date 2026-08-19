@@ -1,0 +1,460 @@
+{
+  "item": [
+    {
+      "id": "82a97068-65f6-48a1-b280-c0c826913fd8",
+      "name": "Visitor Insights",
+      "description": {
+        "content": "Visitor Insights for the project",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "cc4957fe-177e-4e64-9fce-d6fa53f32087",
+          "name": "List recorded visitor sessions for a project",
+          "request": {
+            "name": "List recorded visitor sessions for a project",
+            "description": {
+              "content": "Retrieves a list of recorded visitor sessions for a specific project.\nThis endpoint is typically used for integrations that require access to raw session data.\nNote: This is different from Convert Signals. For frustration and usability insights, see the Signal Sessions endpoint.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "accounts",
+                ":account_id",
+                "projects",
+                ":project_id",
+                "sessions"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "account_id",
+                  "description": "(Required) ID of the account that owns the retrieved/saved data"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "project_id",
+                  "description": "(Required) ID of the project to be retrieved"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"start_time\": \"<number>\",\n  \"end_time\": \"<number>\",\n  \"utc_offset\": 0,\n  \"tags\": {\n    \"key_0\": \"<string>\",\n    \"key_1\": \"<string>\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "2ea22ac6-d7c2-4fd5-9238-6b3bac2146d7",
+              "name": "A list of recorded raw visitor sessions for a project, typically used for deep-dive analytics or integrations requiring session-level data.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "accounts",
+                    ":account_id",
+                    "projects",
+                    ":project_id",
+                    "sessions"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "account_id",
+                      "description": "(Required) ID of the account that owns the retrieved/saved data"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "project_id",
+                      "description": "(Required) ID of the project to be retrieved"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": [\n    {\n      \"id\": 5065\n    },\n    {\n      \"id\": 407\n    }\n  ],\n  \"extra\": {\n    \"tk\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "0133889d-13f9-4291-9394-cd1cb480f4ca",
+          "name": "List Convert Signals™ (visitor frustration sessions)",
+          "request": {
+            "name": "List Convert Signals™ (visitor frustration sessions)",
+            "description": {
+              "content": "Retrieves a list of Convert Signals™ sessions for a project.\nConvert Signals™ \"is a special anonymous and privacy oriented session recording feature...It shows only really clear frustrations, errors and usability signals of real users\".\nUse this to identify sessions where visitors experienced issues like rage clicks, dead clicks, or scroll stalls.\nSupports filtering by date, experience, variation, location, country, device, browser, and more.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "accounts",
+                ":account_id",
+                "projects",
+                ":project_id",
+                "signal_sessions"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "account_id",
+                  "description": "(Required) ID of the account that owns the retrieved/saved data"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "project_id",
+                  "description": "(Required) ID of the project to be retrieved"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"start_time\": \"<number>\",\n  \"end_time\": \"<number>\",\n  \"utc_offset\": 0,\n  \"page\": \"<integer>\",\n  \"results_per_page\": 30,\n  \"onlyCount\": \"<boolean>\",\n  \"experience\": {\n    \"id\": \"<integer>\",\n    \"variation_id\": \"<integer>\"\n  },\n  \"location_id\": \"<integer>\",\n  \"starred\": \"<string>\",\n  \"watched\": \"<string>\",\n  \"country\": {\n    \"is\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"isNot\": [\n      \"<string>\",\n      \"<string>\"\n    ]\n  },\n  \"os\": {\n    \"is\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"isNot\": [\n      \"<string>\",\n      \"<string>\"\n    ]\n  },\n  \"browser\": {\n    \"is\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"isNot\": [\n      \"<string>\",\n      \"<string>\"\n    ]\n  },\n  \"devices\": {\n    \"is\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"isNot\": [\n      \"<string>\",\n      \"<string>\"\n    ]\n  },\n  \"containsPage\": \"<string>\",\n  \"notContainsPage\": \"<string>\",\n  \"duration\": {\n    \"min\": \"<integer>\",\n    \"max\": \"<integer>\"\n  },\n  \"pageCount\": {\n    \"min\": \"<integer>\",\n    \"max\": \"<integer>\"\n  },\n  \"entryPage\": \"<string>\",\n  \"exitPage\": \"<string>\",\n  \"referrerURLs\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"trafficChannels\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"adCampaignLabels\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"recordingId\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "3a750c37-bb9c-4cc7-adab-40b46ba268b8",
+              "name": "A list of Convert Signals™ sessions, highlighting visitor interactions that indicate potential frustration or usability issues (e.g., rage clicks, dead clicks). Includes session duration, visited pages, location, and other metadata.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "accounts",
+                    ":account_id",
+                    "projects",
+                    ":project_id",
+                    "signal_sessions"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "account_id",
+                      "description": "(Required) ID of the account that owns the retrieved/saved data"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "project_id",
+                      "description": "(Required) ID of the project to be retrieved"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": [\n    {\n      \"id\": \"string\",\n      \"duration\": 624,\n      \"visited_pages\": [\n        {\n          \"url\": \"string\",\n          \"duration\": 6580,\n          \"timestamp\": 844\n        },\n        {\n          \"url\": \"string\",\n          \"duration\": 3423,\n          \"timestamp\": 5191\n        }\n      ],\n      \"visited_pages_count\": 7020,\n      \"entry_page\": \"string\",\n      \"exit_page\": \"string\",\n      \"session_start_time\": 7502,\n      \"device\": \"string\",\n      \"browser\": \"string\",\n      \"country_code\": \"string\",\n      \"watched\": false\n    },\n    {\n      \"id\": \"string\",\n      \"duration\": 1588,\n      \"visited_pages\": [\n        {\n          \"url\": \"string\",\n          \"duration\": 4328,\n          \"timestamp\": 4323\n        },\n        {\n          \"url\": \"string\",\n          \"duration\": 3814,\n          \"timestamp\": 6129\n        }\n      ],\n      \"visited_pages_count\": 8501,\n      \"entry_page\": \"string\",\n      \"exit_page\": \"string\",\n      \"session_start_time\": 9990,\n      \"device\": \"string\",\n      \"browser\": \"string\",\n      \"country_code\": \"string\",\n      \"watched\": false\n    }\n  ],\n  \"extra\": {\n    \"tk\": \"string\",\n    \"pagination\": {\n      \"current_page\": 6727,\n      \"items_count\": 2320,\n      \"items_per_page\": 2000,\n      \"pages_count\": 4461\n    }\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "65ab6052-5f53-4ae3-a706-9adc4a55e2fe",
+          "name": "Delete a specific Convert Signals™ session",
+          "request": {
+            "name": "Delete a specific Convert Signals™ session",
+            "description": {
+              "content": "Permanently removes a recorded Convert Signals™ session, identified by its `signal_session_id`.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "accounts",
+                ":account_id",
+                "projects",
+                ":project_id",
+                "signal_sessions",
+                ":signal_session_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "account_id",
+                  "description": "(Required) ID of the account that owns the retrieved/saved data"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "project_id",
+                  "description": "(Required) ID of the project to be retrieved"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "signal_session_id",
+                  "description": "(Required) ID of the signal session to be deleted"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "DELETE",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "7409edb2-7957-4f82-84b0-65092b06f6a8",
+              "name": "A generic success response, typically used for operations that don't return specific data (like deletions or some updates). The `code` is usually 200, and `message` confirms the successful action.\n",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "accounts",
+                    ":account_id",
+                    "projects",
+                    ":project_id",
+                    "signal_sessions",
+                    ":signal_session_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "account_id",
+                      "description": "(Required) ID of the account that owns the retrieved/saved data"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "project_id",
+                      "description": "(Required) ID of the project to be retrieved"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "signal_session_id",
+                      "description": "(Required) ID of the signal session to be deleted"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 294,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "38e67127-0999-47db-a46e-63c58cb11927",
+              "name": "Indicates an error occurred while processing the request. The `code` provides an HTTP status code, `message` offers a human-readable explanation or an array of validation errors, and `fields` (if present) specifies which input fields were problematic.\n",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "accounts",
+                    ":account_id",
+                    "projects",
+                    ":project_id",
+                    "signal_sessions",
+                    ":signal_session_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "account_id",
+                      "description": "(Required) ID of the account that owns the retrieved/saved data"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "project_id",
+                      "description": "(Required) ID of the project to be retrieved"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "signal_session_id",
+                      "description": "(Required) ID of the signal session to be deleted"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 4486,\n  \"message\": \"string\",\n  \"fields\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.convert.com/api/v2",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "412641d2-88a7-47d8-8d34-943a155daa38",
+    "name": "Convert Accounts Visitor Insights API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Move your app forward with the Convert API. The Convert API allows\nyou to manage your Convert Experiences projects using code. The REST API is\nan interface for managing and extending functionality of Convert. For\nexample, instead of creating and maintaining projects using the Convert\nExperiences web dashboard you can create an experiment programmatically.\nAdditionally, if you prefer to run custom analysis on experiment results you\ncan leverage the API to pull data from Convert Experiences into your own\nworkflow. If you do not have a Convert account already, sign up for a free\ndeveloper account at https://www.convert.com/api/.\n\n*[Convert API V1](/doc/v1) is still available and documentation can be found [here](/doc/v1) but using it is highly discouraged\nas it will be phased out in the future*\n",
+      "type": "text/plain"
+    }
+  }
+}

@@ -1,0 +1,156 @@
+{
+  "item": [
+    {
+      "id": "c774377a-8bac-44cd-a389-5abf1d1a2f92",
+      "name": "OAuth Authorization",
+      "description": {
+        "content": "Delegated authorization endpoints for third-party OAuth clients.\n\nTypical flow:\n* OAuth client initiates GET request in browser (`/oauth/authorize`) with `client_id` + `response_type=code` + `scope` + `state` + `code_challenge` (PKCE)\n* While generating `code_challenge` — don't forget to store the `code_verifier` which will be used to obtain the access token\n* User authenticates in Convert and approves scope in consent UI\n* OAuth client exchanges one-time code (`/auth/oauth/token`) for a scoped bearer session token\n* User can list/revoke authorized OAuth sessions (`/auth/oauth/sessions*`)\n\nScopes: `selected_accounts_projects`\n\nExample:\n```\nhttps://app.convert.com/auth/oauth/authorize?client_id=1111111&state=randomstring&scope=selected_accounts_projects&response_type=code&code_challenge=generatedCodeChallenge\n```\n",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "2fca347b-1b2b-45d3-ae09-c20359c2bdd4",
+          "name": "Exchange OAuth code for session token",
+          "request": {
+            "name": "Exchange OAuth code for session token",
+            "description": {
+              "content": "Public endpoint used by OAuth clients to exchange a one-time authorization code for a scoped bearer session token.\nEnforces PKCE binding.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "auth",
+                "oauth",
+                "token"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"grant_type\": \"authorization_code\",\n  \"code\": \"<string>\",\n  \"client_id\": \"<string>\",\n  \"code_verifier\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "8a76e534-d389-4e3a-9d77-597e3a3e24bc",
+              "name": "One-time code exchanged for a scoped OAuth bearer session token.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "auth",
+                    "oauth",
+                    "token"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"access_token\": \"string\",\n  \"token_type\": \"Bearer\",\n  \"expires_at\": 9162,\n  \"scope\": {\n    \"mode\": \"selected_accounts_projects\",\n    \"accounts\": [\n      {\n        \"account_id\": 513,\n        \"name\": \"string\",\n        \"projects\": [\n          {\n            \"project_id\": 7907,\n            \"role\": \"string\",\n            \"name\": \"string\"\n          },\n          {\n            \"project_id\": 428,\n            \"role\": \"string\",\n            \"name\": \"string\"\n          }\n        ]\n      },\n      {\n        \"account_id\": 642,\n        \"name\": \"string\",\n        \"projects\": [\n          {\n            \"project_id\": 654,\n            \"role\": \"string\",\n            \"name\": \"string\"\n          },\n          {\n            \"project_id\": 2714,\n            \"role\": \"string\",\n            \"name\": \"string\"\n          }\n        ]\n      }\n    ]\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "7f925f07-6b34-466c-b9f4-cb7ac86953f6",
+              "name": "Indicates an error occurred while processing the request. The `code` provides an HTTP status code, `message` offers a human-readable explanation or an array of validation errors, and `fields` (if present) specifies which input fields were problematic.\n",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "auth",
+                    "oauth",
+                    "token"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 1112,\n  \"message\": \"string\",\n  \"fields\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.convert.com/api/v2",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "43e07617-6a44-480a-ae95-44b23853e600",
+    "name": "Convert Accounts OAuth Authorization API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Move your app forward with the Convert API. The Convert API allows\nyou to manage your Convert Experiences projects using code. The REST API is\nan interface for managing and extending functionality of Convert. For\nexample, instead of creating and maintaining projects using the Convert\nExperiences web dashboard you can create an experiment programmatically.\nAdditionally, if you prefer to run custom analysis on experiment results you\ncan leverage the API to pull data from Convert Experiences into your own\nworkflow. If you do not have a Convert account already, sign up for a free\ndeveloper account at https://www.convert.com/api/.\n\n*[Convert API V1](/doc/v1) is still available and documentation can be found [here](/doc/v1) but using it is highly discouraged\nas it will be phased out in the future*\n",
+      "type": "text/plain"
+    }
+  }
+}

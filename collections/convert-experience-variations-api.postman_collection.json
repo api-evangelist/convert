@@ -1,0 +1,1214 @@
+{
+  "item": [
+    {
+      "id": "cb784ec6-b2fe-42b3-9d5e-64e75178ca63",
+      "name": "Experience Variations",
+      "description": {
+        "content": "Each **Experience** has one or more **Variations** which are presented to different groups of visitor\nin order to monitor the results of different changes or to personalize visitor's experience\n",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "50063879-2ee5-47e3-b17c-4aa99eb7ce08",
+          "name": "Update an experience variation",
+          "request": {
+            "name": "Update an experience variation",
+            "description": {
+              "content": "Modifies an existing variation within an experience.\nThis can include changing its name, description, traffic distribution, status (running/stopped), or the actual changes (CSS, JS, HTML modifications) it applies.\nThe Knowledge Base article \"How do I edit my variations?\" covers the UI aspect.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "accounts",
+                ":account_id",
+                "projects",
+                ":project_id",
+                "experiences",
+                ":experience_id",
+                "variations",
+                ":variation_id",
+                "update"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "account_id",
+                  "description": "(Required) ID of the account that owns the retrieved/saved data"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "project_id",
+                  "description": "(Required) ID of the project to which save/retrieved data is connected"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "experience_id",
+                  "description": "(Required) The ID of the updated experience"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "variation_id",
+                  "description": "(Required) The ID of the variation to be updated"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PUT",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"<string>\",\n  \"description\": \"<string>\",\n  \"is_baseline\": \"<boolean>\",\n  \"traffic_distribution\": \"<number>\",\n  \"key\": \"<string>\",\n  \"concurrency_key\": \"<string>\",\n  \"status\": \"<string>\",\n  \"changes\": [\n    {\n      \"id\": \"<integer>\"\n    },\n    {\n      \"id\": \"<integer>\"\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "579563e1-dd42-428e-87e6-ccf422be3430",
+              "name": "Detailed information for a single experience variation, including its `id`, `name`, `description`, `is_baseline` status, `traffic_distribution`, `status` (running/stopped), and an array of `changes` it implements.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "accounts",
+                    ":account_id",
+                    "projects",
+                    ":project_id",
+                    "experiences",
+                    ":experience_id",
+                    "variations",
+                    ":variation_id",
+                    "update"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "account_id",
+                      "description": "(Required) ID of the account that owns the retrieved/saved data"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "project_id",
+                      "description": "(Required) ID of the project to which save/retrieved data is connected"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "experience_id",
+                      "description": "(Required) The ID of the updated experience"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "variation_id",
+                      "description": "(Required) The ID of the variation to be updated"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": 1676,\n  \"name\": \"string\",\n  \"description\": \"string\",\n  \"is_baseline\": true,\n  \"traffic_distribution\": 35.1038,\n  \"key\": \"string\",\n  \"concurrency_key\": \"string\",\n  \"status\": \"running\",\n  \"changes\": [\n    6911,\n    207\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "32090632-a98d-4f59-aff6-729d9ff5fa7d",
+              "name": "Indicates an error occurred while processing the request. The `code` provides an HTTP status code, `message` offers a human-readable explanation or an array of validation errors, and `fields` (if present) specifies which input fields were problematic.\n",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "accounts",
+                    ":account_id",
+                    "projects",
+                    ":project_id",
+                    "experiences",
+                    ":experience_id",
+                    "variations",
+                    ":variation_id",
+                    "update"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "account_id",
+                      "description": "(Required) ID of the account that owns the retrieved/saved data"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "project_id",
+                      "description": "(Required) ID of the project to which save/retrieved data is connected"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "experience_id",
+                      "description": "(Required) The ID of the updated experience"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "variation_id",
+                      "description": "(Required) The ID of the variation to be updated"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 6793,\n  \"message\": \"string\",\n  \"fields\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "a798d907-77b2-4b97-b1e2-2e5ca40a2bf0",
+          "name": "Delete an experience variation",
+          "request": {
+            "name": "Delete an experience variation",
+            "description": {
+              "content": "Permanently removes a variation from an experience.\nNote: Deleting variations from an active or previously active experiment can impact statistical validity and is generally discouraged.\nIt's often better to stop traffic to a variation.\nThe Knowledge Base article \"The Visual Editor in Convert Experiences\" (Variations section) mentions: \"You cannot delete a variation from an experience that is active or has been previously started and then paused.\"\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "accounts",
+                ":account_id",
+                "projects",
+                ":project_id",
+                "experiences",
+                ":experience_id",
+                "variations",
+                ":variation_id",
+                "delete"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "account_id",
+                  "description": "(Required) ID of the account that owns the retrieved/saved data"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "project_id",
+                  "description": "(Required) ID of the project to which save/retrieved data is connected"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "experience_id",
+                  "description": "(Required) The ID of the experience to which the variation belongs"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "variation_id",
+                  "description": "(Required) The ID of the variation to be deleted"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "DELETE",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "c183c19e-3ac8-4db9-9f27-abc43a4f76e3",
+              "name": "A generic success response, typically used for operations that don't return specific data (like deletions or some updates). The `code` is usually 200, and `message` confirms the successful action.\n",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "accounts",
+                    ":account_id",
+                    "projects",
+                    ":project_id",
+                    "experiences",
+                    ":experience_id",
+                    "variations",
+                    ":variation_id",
+                    "delete"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "account_id",
+                      "description": "(Required) ID of the account that owns the retrieved/saved data"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "project_id",
+                      "description": "(Required) ID of the project to which save/retrieved data is connected"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "experience_id",
+                      "description": "(Required) The ID of the experience to which the variation belongs"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "variation_id",
+                      "description": "(Required) The ID of the variation to be deleted"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 3770,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "66b9e30f-1d25-4487-8066-65b68d00cc79",
+              "name": "Indicates an error occurred while processing the request. The `code` provides an HTTP status code, `message` offers a human-readable explanation or an array of validation errors, and `fields` (if present) specifies which input fields were problematic.\n",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "accounts",
+                    ":account_id",
+                    "projects",
+                    ":project_id",
+                    "experiences",
+                    ":experience_id",
+                    "variations",
+                    ":variation_id",
+                    "delete"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "account_id",
+                      "description": "(Required) ID of the account that owns the retrieved/saved data"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "project_id",
+                      "description": "(Required) ID of the project to which save/retrieved data is connected"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "experience_id",
+                      "description": "(Required) The ID of the experience to which the variation belongs"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "variation_id",
+                      "description": "(Required) The ID of the variation to be deleted"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 6793,\n  \"message\": \"string\",\n  \"fields\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "f4ff16f1-3342-4a72-b3d4-0cbdc9091c0e",
+          "name": "Get screenshot for an experience variation",
+          "request": {
+            "name": "Get screenshot for an experience variation",
+            "description": {
+              "content": "Retrieves the screenshot image for a specific variation, base64 encoded.\nScreenshots help visualize the changes applied by a variation and are shown in the Convert UI.\nCan request a full-size image or a thumbnail.\nThe Knowledge Base article \"Whitelist IPs for Screenshot Previews\" is related.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "accounts",
+                ":account_id",
+                "projects",
+                ":project_id",
+                "experiences",
+                ":experience_id",
+                "variations",
+                ":variation_id",
+                "screenshot"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "size",
+                  "value": "<string>",
+                  "description": "The size of the returned image, if omitted will return full size"
+                },
+                {
+                  "disabled": false,
+                  "key": "force_download",
+                  "value": "<boolean>",
+                  "description": "Flag used to force download instead of inline response"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "account_id",
+                  "description": "(Required) ID of the account that owns the retrieved/saved data"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "project_id",
+                  "description": "(Required) ID of the project to which save/retrieved data is connected"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "experience_id",
+                  "description": "(Required) The ID of the experience to which the variation belongs"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "variation_id",
+                  "description": "(Required) The ID of the variation to be deleted"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "943274c8-2e70-4a00-be5c-668335a562fc",
+              "name": "A JSON object containing the `data` field, which holds the base64 encoded string of an image. Useful for transferring image data within JSON payloads.\n",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "accounts",
+                    ":account_id",
+                    "projects",
+                    ":project_id",
+                    "experiences",
+                    ":experience_id",
+                    "variations",
+                    ":variation_id",
+                    "screenshot"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "size",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "force_download",
+                      "value": "<boolean>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "account_id",
+                      "description": "(Required) ID of the account that owns the retrieved/saved data"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "project_id",
+                      "description": "(Required) ID of the project to which save/retrieved data is connected"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "experience_id",
+                      "description": "(Required) The ID of the experience to which the variation belongs"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "variation_id",
+                      "description": "(Required) The ID of the variation to be deleted"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "05d4468d-c7f1-4af5-a30e-6c6790411ed3",
+              "name": "Indicates an error occurred while processing the request. The `code` provides an HTTP status code, `message` offers a human-readable explanation or an array of validation errors, and `fields` (if present) specifies which input fields were problematic.\n",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "accounts",
+                    ":account_id",
+                    "projects",
+                    ":project_id",
+                    "experiences",
+                    ":experience_id",
+                    "variations",
+                    ":variation_id",
+                    "screenshot"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "size",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "force_download",
+                      "value": "<boolean>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "account_id",
+                      "description": "(Required) ID of the account that owns the retrieved/saved data"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "project_id",
+                      "description": "(Required) ID of the project to which save/retrieved data is connected"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "experience_id",
+                      "description": "(Required) The ID of the experience to which the variation belongs"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "variation_id",
+                      "description": "(Required) The ID of the variation to be deleted"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 6793,\n  \"message\": \"string\",\n  \"fields\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "0e28741f-2a37-4576-adf4-92aab2978f84",
+          "name": "Upload a screenshot for an experience variation",
+          "request": {
+            "name": "Upload a screenshot for an experience variation",
+            "description": {
+              "content": "Allows uploading a custom screenshot image for a specific variation.\nThis can be useful if automatic screenshot generation fails or if a specific view needs to be captured.\nThe uploaded image will be displayed in the Convert UI for this variation.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "accounts",
+                ":account_id",
+                "projects",
+                ":project_id",
+                "experiences",
+                ":experience_id",
+                "variations",
+                ":variation_id",
+                "screenshot"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "size",
+                  "value": "<string>",
+                  "description": "The size of the returned image, if omitted will return full size"
+                },
+                {
+                  "disabled": false,
+                  "key": "force_download",
+                  "value": "<boolean>",
+                  "description": "Flag used to force download instead of inline response"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "account_id",
+                  "description": "(Required) ID of the account that owns the retrieved/saved data"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "project_id",
+                  "description": "(Required) ID of the project to which save/retrieved data is connected"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "experience_id",
+                  "description": "(Required) The ID of the experience to which the variation belongs"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "variation_id",
+                  "description": "(Required) The ID of the variation to be deleted"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "multipart/form-data"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "image",
+                  "type": "file",
+                  "description": "(Required) "
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "771232bf-4af0-44f5-a19b-413b013c29f6",
+              "name": "A JSON object containing the `data` field, which holds the base64 encoded string of an image. Useful for transferring image data within JSON payloads.\n",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "accounts",
+                    ":account_id",
+                    "projects",
+                    ":project_id",
+                    "experiences",
+                    ":experience_id",
+                    "variations",
+                    ":variation_id",
+                    "screenshot"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "size",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "force_download",
+                      "value": "<boolean>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "account_id",
+                      "description": "(Required) ID of the account that owns the retrieved/saved data"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "project_id",
+                      "description": "(Required) ID of the project to which save/retrieved data is connected"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "experience_id",
+                      "description": "(Required) The ID of the experience to which the variation belongs"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "variation_id",
+                      "description": "(Required) The ID of the variation to be deleted"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "098b7924-91bd-445d-baf6-554398ada15f",
+              "name": "Indicates an error occurred while processing the request. The `code` provides an HTTP status code, `message` offers a human-readable explanation or an array of validation errors, and `fields` (if present) specifies which input fields were problematic.\n",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "accounts",
+                    ":account_id",
+                    "projects",
+                    ":project_id",
+                    "experiences",
+                    ":experience_id",
+                    "variations",
+                    ":variation_id",
+                    "screenshot"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "size",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "force_download",
+                      "value": "<boolean>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "account_id",
+                      "description": "(Required) ID of the account that owns the retrieved/saved data"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "project_id",
+                      "description": "(Required) ID of the project to which save/retrieved data is connected"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "experience_id",
+                      "description": "(Required) The ID of the experience to which the variation belongs"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "variation_id",
+                      "description": "(Required) The ID of the variation to be deleted"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 6793,\n  \"message\": \"string\",\n  \"fields\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "998dde8c-0bbf-4cb9-9bbc-de9d2534e3f5",
+          "name": "Convert a winning variation into a new experience (Deploy or A/B)",
+          "request": {
+            "name": "Convert a winning variation into a new experience (Deploy or A/B)",
+            "description": {
+              "content": "Takes a variation (often a winning one from an A/B test) and creates a new, separate experience from it.\nThis new experience can be a 'Deploy' (to roll out the change to a specific audience) or another 'A/B' test (to further iterate).\nThis is a common step after an A/B test concludes with a winner.\nThe Knowledge Base article \"What about Deployments?\" mentions: \"Create a new Deploy from a Variation or Winning Variation from another Experiment\".\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "accounts",
+                ":account_id",
+                "projects",
+                ":project_id",
+                "experiences",
+                ":experience_id",
+                "variations",
+                ":variation_id",
+                "convert"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "account_id",
+                  "description": "(Required) ID of the account that owns the retrieved/saved data"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "project_id",
+                  "description": "(Required) ID of the project to which save/retrieved data is connected"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "experience_id",
+                  "description": "(Required) The ID of the experience to which the variation belongs"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "variation_id",
+                  "description": "(Required) The ID of the variation to be converted"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"experience_type\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "8e6640d4-0dfc-4edc-a249-f3760b5b9dee",
+              "name": "Comprehensive details for a single experience, including its configuration, variations, associated audiences, locations, goals, integrations, and settings.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "accounts",
+                    ":account_id",
+                    "projects",
+                    ":project_id",
+                    "experiences",
+                    ":experience_id",
+                    "variations",
+                    ":variation_id",
+                    "convert"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "account_id",
+                      "description": "(Required) ID of the account that owns the retrieved/saved data"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "project_id",
+                      "description": "(Required) ID of the project to which save/retrieved data is connected"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "experience_id",
+                      "description": "(Required) The ID of the experience to which the variation belongs"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "variation_id",
+                      "description": "(Required) The ID of the variation to be converted"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": 4304,\n  \"project\": 71,\n  \"alerts\": [\n    {\n      \"code\": \"no_goals_set_up\",\n      \"title\": \"string\",\n      \"description\": \"string\"\n    },\n    {\n      \"code\": \"max_visitors_reached\",\n      \"title\": \"string\",\n      \"description\": \"string\"\n    }\n  ],\n  \"collaborators\": [\n    {\n      \"first_name\": \"string\",\n      \"last_name\": \"string\",\n      \"role\": \"string\",\n      \"user_id\": \"string\",\n      \"is_author\": false\n    },\n    {\n      \"first_name\": \"string\",\n      \"last_name\": \"string\",\n      \"role\": \"string\",\n      \"user_id\": \"string\",\n      \"is_author\": false\n    }\n  ],\n  \"audiences\": [\n    8812,\n    2565\n  ],\n  \"locations\": [\n    428,\n    8350\n  ],\n  \"goals\": [\n    1926,\n    6555\n  ],\n  \"tags\": [\n    2747,\n    1636\n  ],\n  \"multipage_pages\": [\n    {\n      \"id\": \"pv\",\n      \"name\": \"string\",\n      \"url\": \"string\"\n    },\n    {\n      \"id\": \"uv\",\n      \"name\": \"string\",\n      \"url\": \"string\"\n    }\n  ],\n  \"customizations\": [\n    {\n      \"key\": \"string\",\n      \"value\": \"string\"\n    },\n    {\n      \"key\": \"string\",\n      \"value\": \"string\"\n    }\n  ],\n  \"stats\": {\n    \"goal_id\": 9657,\n    \"conversions\": 5346,\n    \"variations_observed_results\": [\n      {\n        \"variation_id\": 5285,\n        \"improvement\": 7779.516155866823,\n        \"probability_beat_control\": 2646.847465193032,\n        \"test_result\": \"winner\",\n        \"revenue_per_visitor\": null,\n        \"mab_allocation\": null\n      },\n      {\n        \"variation_id\": 7044,\n        \"improvement\": 4969.106555511571,\n        \"probability_beat_control\": 2163.283525653956,\n        \"test_result\": \"losing\",\n        \"revenue_per_visitor\": null,\n        \"mab_allocation\": null\n      }\n    ],\n    \"visitors\": 1374\n  },\n  \"variations\": [\n    5321,\n    48\n  ],\n  \"status\": \"scheduled\",\n  \"description\": \"string\",\n  \"start_time\": 2376,\n  \"end_time\": 589,\n  \"global_js\": \"string\",\n  \"global_css\": \"string\",\n  \"name\": \"string\",\n  \"key\": \"string\",\n  \"primary_goal\": 5172,\n  \"objective\": \"string\",\n  \"settings\": {\n    \"split_url_settings\": {\n      \"split_regex_support\": true,\n      \"split_add_query_params\": false,\n      \"split_query_params_hide_regex\": true\n    },\n    \"matching_options\": {\n      \"audiences\": \"any\",\n      \"locations\": \"any\"\n    },\n    \"visitor_insights\": {\n      \"heatmaps\": {\n        \"1003100122\": \"507f1f77bcf86cd799439012\"\n      }\n    },\n    \"primary_metric\": \"conversion_rate\",\n    \"stats_engine_processing\": {\n      \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n    },\n    \"confidence\": 1763.5662704704268,\n    \"keep_winner\": true,\n    \"min_order_value\": 7510.97195811308,\n    \"max_order_value\": 8222.49549704238,\n    \"outliers\": {\n      \"order_value\": {\n        \"description\": \"Outlier detection settings for the monetary value of orders.\",\n        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n      },\n      \"products_ordered_count\": {\n        \"description\": \"Outlier detection settings for the number of products in an order.\",\n        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n      }\n    },\n    \"max_running_time\": 537,\n    \"max_variation_visitors\": 2701,\n    \"max_experience_visitors\": 1484,\n    \"min_variation_conversions\": 1091,\n    \"min_conversion_value\": 5006,\n    \"min_running_time\": 243,\n    \"min_variation_visitors\": 2425,\n    \"stop_loser\": false,\n    \"keep_running_until_confidence\": false,\n    \"srm_check\": false,\n    \"visual_editor\": {\n      \"selector_blacklist\": \"string\",\n      \"screen_width\": 4359.641521896699,\n      \"user_agent\": \"opera_android\"\n    }\n  },\n  \"site_area\": {\n    \"include\": [\n      {\n        \"rule_type\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"matching\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      },\n      {\n        \"rule_type\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"matching\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      }\n    ],\n    \"exclude\": [\n      {\n        \"rule_type\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"matching\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      },\n      {\n        \"rule_type\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"matching\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      }\n    ]\n  },\n  \"traffic_distribution\": 93.78450000000001,\n  \"type\": \"a/b_fullstack\",\n  \"url\": \"https://ctZaqEFQFsokJ.wpLlAFSgEARwRsfdZuI--6XFxw1,JSAuP-NJVKqMfvmfIorrBLBYEZOXjZXlej8CLqAKCXx\",\n  \"version\": 2713.779114872138,\n  \"integrations\": [\n    {\n      \"custom_dimension\": \"string\",\n      \"provider\": {\n        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n      },\n      \"enabled\": true\n    },\n    {\n      \"custom_dimension\": \"string\",\n      \"provider\": {\n        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n      },\n      \"enabled\": false\n    }\n  ],\n  \"screenshots_info\": [\n    {\n      \"variation_id\": 1261.1398036541289,\n      \"in_progress_since\": 3935.202410979722,\n      \"last_taken_screenshot_time\": 6515.635252666279\n    },\n    {\n      \"variation_id\": 9753.599467680397,\n      \"in_progress_since\": 2396.5244292860966,\n      \"last_taken_screenshot_time\": 2426.399259844506\n    }\n  ],\n  \"environments\": [\n    \"string\",\n    \"string\"\n  ],\n  \"environment\": \"string\",\n  \"concurrency_key\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "b8725598-6a65-4238-b2e8-0001e467ad1a",
+              "name": "Indicates an error occurred while processing the request. The `code` provides an HTTP status code, `message` offers a human-readable explanation or an array of validation errors, and `fields` (if present) specifies which input fields were problematic.\n",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "accounts",
+                    ":account_id",
+                    "projects",
+                    ":project_id",
+                    "experiences",
+                    ":experience_id",
+                    "variations",
+                    ":variation_id",
+                    "convert"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "account_id",
+                      "description": "(Required) ID of the account that owns the retrieved/saved data"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "project_id",
+                      "description": "(Required) ID of the project to which save/retrieved data is connected"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "experience_id",
+                      "description": "(Required) The ID of the experience to which the variation belongs"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "variation_id",
+                      "description": "(Required) The ID of the variation to be converted"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 6793,\n  \"message\": \"string\",\n  \"fields\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.convert.com/api/v2",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "0f1f0a4d-e59f-4558-b0de-21566f15b5e8",
+    "name": "Convert Accounts Experience Variations API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Move your app forward with the Convert API. The Convert API allows\nyou to manage your Convert Experiences projects using code. The REST API is\nan interface for managing and extending functionality of Convert. For\nexample, instead of creating and maintaining projects using the Convert\nExperiences web dashboard you can create an experiment programmatically.\nAdditionally, if you prefer to run custom analysis on experiment results you\ncan leverage the API to pull data from Convert Experiences into your own\nworkflow. If you do not have a Convert account already, sign up for a free\ndeveloper account at https://www.convert.com/api/.\n\n*[Convert API V1](/doc/v1) is still available and documentation can be found [here](/doc/v1) but using it is highly discouraged\nas it will be phased out in the future*\n",
+      "type": "text/plain"
+    }
+  }
+}

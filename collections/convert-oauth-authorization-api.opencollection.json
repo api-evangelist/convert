@@ -1,0 +1,33 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Convert Accounts OAuth Authorization API",
+    "version": "2.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "OAuth Authorization",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Exchange OAuth code for session token",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.convert.com/api/v2/auth/oauth/token",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Public endpoint used by OAuth clients to exchange a one-time authorization code for a scoped bearer session token.\nEnforces PKCE binding.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

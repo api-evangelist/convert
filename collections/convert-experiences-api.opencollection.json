@@ -1,0 +1,503 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Convert Accounts Experiences API",
+    "version": "2.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Experiences",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List experiences within a project",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/projects/:project_id/experiences",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              },
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the project to which save/retrieved data is connected"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Retrieves a list of all experiences (A/B tests, MVT, Split URL, Deployments, etc.) within a specific project.\nSupports filtering by status, type, tags, and other criteria. Pagination is also supported.\nThe `include` parameter can fetch related data like `variations` or `goals`. The `expand` parameter can provide full objects for linked entities.\nThe Knowledge Base article \"The Experience Overview Screen\" describes the UI equivalent.\n"
+        },
+        {
+          "info": {
+            "name": "Get details for a specific experience",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/projects/:project_id/experiences/:experience_id",
+            "headers": [
+              {
+                "name": "report_token",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              },
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the project to which save/retrieved data is connected"
+              },
+              {
+                "name": "experience_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the experience to be retrieved"
+              },
+              {
+                "name": "include",
+                "value": "",
+                "type": "query",
+                "description": "Array parameter that would mention extra fields to be included into the response; otherwise those fields would be excluded by default\n\nRead more in the section related to [Optional Fields](#tag/Optional-Fields)\n"
+              },
+              {
+                "name": "expand",
+                "value": "",
+                "type": "query",
+                "description": "Specifies the list of objects which would be expanded in the response. Otherwise, only their id would be returned.\n\nRead more in the section related to [Expanding Fields](#tag/Expandable-Fields)\n"
+              }
+            ]
+          },
+          "docs": "Retrieves comprehensive details for a single experience, identified by its `experience_id`.\nThis includes its configuration (name, type, URL, status), associated audiences, locations, goals, variations, and integration settings.\nThe `include` and `expand` parameters allow fetching more detailed related data.\nThe Knowledge Base article \"Experience Summary\" describes the UI equivalent of this data.\n"
+        },
+        {
+          "info": {
+            "name": "Get experience details by its unique key",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/projects/:project_id/experiences/:experience_key",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              },
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the project to which save/retrieved data is connected"
+              },
+              {
+                "name": "experience_key",
+                "value": "",
+                "type": "path",
+                "description": "The key of the experience to be retrieved"
+              },
+              {
+                "name": "include",
+                "value": "",
+                "type": "query",
+                "description": "Array parameter that would mention extra fields to be included into the response; otherwise those fields would be excluded by default\n\nRead more in the section related to [Optional Fields](#tag/Optional-Fields)\n"
+              },
+              {
+                "name": "expand",
+                "value": "",
+                "type": "query",
+                "description": "Specifies the list of objects which would be expanded in the response. Otherwise, only their id would be returned.\n\nRead more in the section related to [Expanding Fields](#tag/Expandable-Fields)\n"
+              }
+            ]
+          },
+          "docs": "Retrieves comprehensive details for a single experience, identified by its user-defined `experience_key` instead of its numerical ID.\nThis is useful when you have a human-readable key for an experience.\nFunctionality and parameters are otherwise similar to getting an experience by ID.\n"
+        },
+        {
+          "info": {
+            "name": "Create a new experience",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/projects/:project_id/experiences/add",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              },
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the project to which save/retrieved data is connected"
+              },
+              {
+                "name": "include",
+                "value": "",
+                "type": "query",
+                "description": "Specifies the list of optional objects which would be included in the response.\n\nRead more in the section related to [Expanding Fields](#tag/Optional-Fields)\n"
+              },
+              {
+                "name": "expand",
+                "value": "",
+                "type": "query",
+                "description": "Specifies the list of objects which would be expanded in the response. Otherwise, only their id would be returned.\n\nRead more in the section related to [Expanding Fields](#tag/Expandable-Fields)\n"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a new experience (e.g., A/B test, Split URL test, MVT, Deploy, A/A test, Multi-page Funnel) within a project.\nRequires defining the experience name, type, status (usually 'draft'), and the URL for the Visual Editor or original page.\nVariations, audiences, locations, goals, and other settings can be specified during creation.\nThe Knowledge Base article \"Create a New Experience\" outlines the UI process.\n"
+        },
+        {
+          "info": {
+            "name": "Clone an existing experience",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/projects/:project_id/experiences/:experience_id/clone",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              },
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the project to which save/retrieved data is connected"
+              },
+              {
+                "name": "experience_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the experience to be cloned"
+              },
+              {
+                "name": "include",
+                "value": "",
+                "type": "query",
+                "description": "Specifies the list of optional objects which would be included in the response.\n\nRead more in the section related to [Expanding Fields](#tag/Optional-Fields)\n"
+              },
+              {
+                "name": "expand",
+                "value": "",
+                "type": "query",
+                "description": "Specifies the list of objects which would be expanded in the response. Otherwise, only their id would be returned.\n\nRead more in the section related to [Expanding Fields](#tag/Expandable-Fields)\n"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a new experience as an identical copy of an existing one (specified by `experience_id`).\nThis is useful for iterating on a previous test or using an existing experience as a template.\nThe cloned experience starts in 'draft' status and does not copy historical report data.\nThe Knowledge Base article \"How to Clone an Experiment?\" describes this.\n"
+        },
+        {
+          "info": {
+            "name": "Update an existing experience",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/projects/:project_id/experiences/:experience_id/update",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              },
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the project to which save/retrieved data is connected"
+              },
+              {
+                "name": "experience_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the updated experience"
+              },
+              {
+                "name": "include",
+                "value": "",
+                "type": "query",
+                "description": "Specifies the list of optional objects which would be included in the response.\n\nRead more in the section related to [Expanding Fields](#tag/Optional-Fields)\n"
+              },
+              {
+                "name": "expand",
+                "value": "",
+                "type": "query",
+                "description": "Specifies the list of objects which would be expanded in the response. Otherwise, only their id would be returned.\n\nRead more in the section related to [Expanding Fields](#tag/Expandable-Fields)\n"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Modifies the configuration of an existing experience.\nThis can include changing its name, description, status (e.g., from 'draft' to 'active', or 'active' to 'paused'), URL, traffic distribution, audiences, locations, goals, variations, and integration settings.\nThe Knowledge Base article \"How Can I Change Variations After Experiment Started?\" notes that variations cannot be added/removed after start, but other settings can be updated.\n"
+        },
+        {
+          "info": {
+            "name": "Delete an experience",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/projects/:project_id/experiences/:experience_id/delete",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              },
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the project to which save/retrieved data is connected"
+              },
+              {
+                "name": "experience_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the experience to be delete"
+              }
+            ]
+          },
+          "docs": "Permanently removes an existing experience and all its associated data from the project.\nThis action is irreversible. It's generally recommended to archive experiences instead of deleting them to preserve historical data.\nThe Knowledge Base article \"How Do I Archive / Delete an Experience?\" highlights this.\n"
+        },
+        {
+          "info": {
+            "name": "Manage report access token for an experience",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/projects/:project_id/experiences/:experience_id/report_token",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              },
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the project to which save/retrieved data is connected"
+              },
+              {
+                "name": "experience_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the Experience"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Generates, regenerates, or deletes a unique token that allows read-only access to an experience's report.\nThis is useful for sharing report data with stakeholders who do not have a Convert account or full project access.\nThe token has an expiration time.\n"
+        },
+        {
+          "info": {
+            "name": "Get live tracking events for a specific experience",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/projects/:project_id/experiences/:experience_id/livedata",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              },
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the project into which the experience is stored"
+              },
+              {
+                "name": "experience_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the Experience"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Retrieves the last 100 tracking events (views, conversions, revenue) specifically for the given experience.\nUseful for real-time monitoring and QA of a single active experience. Supports filtering by event type and goals.\nThe Knowledge Base article \"Live Logs for Projects and Experiments in Convert\" describes this feature.\n"
+        },
+        {
+          "info": {
+            "name": "Get change history for a specific experience",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/projects/:project_id/experiences/:experience_id/change-history",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              },
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the project to which save/retrieved data is connected"
+              },
+              {
+                "name": "experience_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the Experience"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Retrieves a historical log of all changes made to a specific experience.\nThis includes modifications to its settings, variations, audiences, goals, status, etc.\nProvides an audit trail for the lifecycle of an experience, filterable by date and user.\nThe Knowledge Base article \"Track User Changes with Change History\" details this.\n"
+        },
+        {
+          "info": {
+            "name": "Trigger screenshot generation for experience variations",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/projects/:project_id/experiences/:experience_id/trigger-screenshots",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              },
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the project to which save/retrieved data is connected"
+              },
+              {
+                "name": "experience_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the Experience"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Initiates the process of generating or regenerating screenshots for the variations of a specified experience.\nThese screenshots are displayed in the Convert UI to help visualize the changes made in each variation.\nThe Knowledge Base article \"Whitelist IPs for Screenshot Previews\" is related as it lists IPs our service uses.\n"
+        },
+        {
+          "info": {
+            "name": "Update multiple experiences at once",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/projects/:project_id/experiences/bulk-update",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              },
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the project to which save/retrieved data is connected"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Allows for changing the status (e.g., activate, pause, archive) of multiple experiences within a project simultaneously.\nRequires a list of experience IDs and the target status.\nThe Knowledge Base article \"Bulk Actions on Experiences\" describes this UI feature.\n"
+        },
+        {
+          "info": {
+            "name": "Delete multiple experiences at once",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/projects/:project_id/experiences/bulk-delete",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              },
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the project to which save/retrieved data is connected"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Permanently removes multiple experiences from a project in a single operation.\nRequires a list of experience IDs. This action is irreversible.\nThe Knowledge Base article \"Bulk Actions on Experiences\" describes this UI feature.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

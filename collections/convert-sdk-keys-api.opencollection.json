@@ -1,0 +1,138 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Convert Accounts SDK Keys API",
+    "version": "2.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "SDK Keys",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List SDK keys for a project",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/projects/:project_id/sdk-keys",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              },
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the project to be retrieved"
+              }
+            ]
+          },
+          "docs": "Retrieves a list of SDK keys associated with a specific project.\nSDK keys are used by Convert's Full Stack SDKs (e.g., Node.js, JavaScript) to fetch experiment configurations and track events from server-side or client-side applications.\nEach key is tied to a specific environment within the project (e.g., production, staging).\n"
+        },
+        {
+          "info": {
+            "name": "Create a new SDK key for a project",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/projects/:project_id/sdk-keys/create",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              },
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the project to be retrieved"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Generates a new SDK key and, optionally, a secret for a specified project and environment.\nThis key is then used by the Convert SDKs to authenticate and fetch project configurations.\nIf `has_secret` is true and no `sdk_secret` is provided, a secret will be auto-generated.\nThe SDK secret (if generated) is only shown at the time of creation.\n"
+        },
+        {
+          "info": {
+            "name": "Update SDK Key",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/projects/:project_id/sdk-keys/:sdk_key/update",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              },
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the project to be retrieved"
+              },
+              {
+                "name": "sdk_key",
+                "value": "",
+                "type": "path",
+                "description": "ID of the SDK key to update"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Partially update an SDK key, modifying only the specific fields provided in the request.\n"
+        },
+        {
+          "info": {
+            "name": "Delete an SDK key",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/projects/:project_id/sdk-keys/:sdk_key/delete",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              },
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the project to be retrieved"
+              },
+              {
+                "name": "sdk_key",
+                "value": "",
+                "type": "path",
+                "description": "ID of the SDK key to be deleted"
+              }
+            ]
+          },
+          "docs": "Permanently revokes an SDK key, identified by its `sdk_key` value.\nOnce deleted, SDKs using this key will no longer be able to fetch configurations or track events for the associated project and environment.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

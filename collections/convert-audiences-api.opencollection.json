@@ -1,0 +1,299 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Convert Accounts Audiences API",
+    "version": "2.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Audiences",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List audiences within a project",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/projects/:project_id/audiences",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              },
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the project to which save/retrieved data is connected"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Retrieves a list of all audiences defined for a specific project.\nAudiences segment visitors based on criteria like behavior, demographics, traffic source, or custom data, to target experiences.\nSupports filtering by status, type, name, and pagination.\nThe Knowledge Base article \"Define Audiences for your Experience\" explains: \"An 'Audience' is a group of visitors that you want to be included in your experience\".\n"
+        },
+        {
+          "info": {
+            "name": "Get details for a specific audience",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/projects/:project_id/audiences/:audience_id",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              },
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the project into which the audience is stored"
+              },
+              {
+                "name": "audience_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the audience to be retrieved"
+              },
+              {
+                "name": "include",
+                "value": "",
+                "type": "query",
+                "description": "Specifies the list of fields to be included in the response, which otherwise would not be sent.\n\nRead more in the section related to [Optional Fields](#tag/Optional-Fields)\n"
+              }
+            ]
+          },
+          "docs": "Retrieves detailed information about a single audience, identified by its `audience_id`.\nThis includes its name, type (permanent, transient, segmentation), status, and the rules defining the audience criteria (e.g., browser is Chrome, country is USA, visited specific page).\nThe `include` parameter can fetch additional data like usage statistics.\n"
+        },
+        {
+          "info": {
+            "name": "Create a new audience",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/projects/:project_id/audiences/add",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              },
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the project into which the audience is to be stored"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Defines a new audience within a project.\nRequires a name, type (permanent, transient, segmentation), and a set of rules defining the audience criteria.\nRules can be based on visitor data (browser, device, geo-location, language, visit count, cookie values), traffic sources (UTM parameters, referrer), page tags, or JavaScript conditions.\nThe Knowledge Base article \"Define an Advanced Audience\" lists many available conditions.\n"
+        },
+        {
+          "info": {
+            "name": "Update an existing audience",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/projects/:project_id/audiences/:audience_id/update",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              },
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the project into which the audience is stored"
+              },
+              {
+                "name": "audience_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the audience to be updated"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Modifies the configuration of an existing audience.\nThis can include changing its name, type, status (active/archived), or the rules defining its criteria.\n"
+        },
+        {
+          "info": {
+            "name": "Delete an audience",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/projects/:project_id/audiences/:audience_id/delete",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              },
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the project to which save/retrieved data is connected"
+              },
+              {
+                "name": "audience_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the audience to be deleted"
+              }
+            ]
+          },
+          "docs": "Permanently removes an audience from a project. This action is irreversible.\nIf the audience is in use by active experiences, consider archiving it instead or unlinking it from experiences first.\n"
+        },
+        {
+          "info": {
+            "name": "Update multiple audiences at once",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/projects/:project_id/audiences/bulk-update",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              },
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the project to which save/retrieved data is connected"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Allows for changing the status (e.g., active, archived) of multiple audiences within a project simultaneously.\nRequires a list of audience IDs and the target status.\n"
+        },
+        {
+          "info": {
+            "name": "Delete multiple audiences at once",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/projects/:project_id/audiences/bulk-delete",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              },
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the project to which save/retrieved data is connected"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Permanently removes multiple audiences from a project in a single operation.\nRequires a list of audience IDs. This action is irreversible.\n"
+        },
+        {
+          "info": {
+            "name": "List predefined audience templates (presets)",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/projects/:project_id/audiences-presets",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              },
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the project to which save/retrieved data is connected"
+              }
+            ]
+          },
+          "docs": "Retrieves a list of predefined audience templates (presets) available for use.\nThese presets offer common targeting configurations (e.g., \"New Visitors\", \"Mobile Users\", \"Visitors from Google\") to speed up audience setup.\nThe Knowledge Base article \"Define an Audience from the Templates\" describes this.\n"
+        },
+        {
+          "info": {
+            "name": "Clone an existing audience",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/projects/:project_id/audiences/:audience_id/clone",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              },
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the project to which save/retrieved data is connected"
+              },
+              {
+                "name": "audience_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the audience to be deleted"
+              },
+              {
+                "name": "include",
+                "value": "",
+                "type": "query",
+                "description": "Specifies the list of fields to be included in the response, which otherwise would not be sent.\n\nRead more in the section related to [Optional Fields](#tag/Optional-Fields)\n"
+              }
+            ]
+          },
+          "docs": "Creates a new audience as an identical copy of an existing one (specified by `audience_id`).\nUseful for creating a similar audience with minor modifications or for templating.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

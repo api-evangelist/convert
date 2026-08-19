@@ -1,0 +1,314 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Convert Accounts Experiences Reports API",
+    "version": "2.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Experiences Reports",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get report settings for an experience",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/projects/:project_id/experiences/:experience_id/report_settings",
+            "headers": [
+              {
+                "name": "report_token",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              },
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the project to which save/retrieved data is connected"
+              },
+              {
+                "name": "experience_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the experience"
+              }
+            ]
+          },
+          "docs": "Retrieves the specific reporting settings for an experience. This includes configurations like confidence level,\nstatistical methodology (Frequentist/Bayesian), MAB strategy, primary metric, and outlier detection rules.\nThese settings govern how experiment results are calculated and displayed.\nThe Knowledge Base article \"Experiment Report\" (Stats Settings section) covers these.\n"
+        },
+        {
+          "info": {
+            "name": "Get aggregated performance report for an experience",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/projects/:project_id/experiences/:experience_id/aggregated_report",
+            "headers": [
+              {
+                "name": "report_token",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              },
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the project to which save/retrieved data is connected"
+              },
+              {
+                "name": "experience_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the experience"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Retrieves the main performance report for a specific experience.\nThis report shows aggregated data for each variation, including visitor counts, conversions, conversion rates, improvement percentages,\nand statistical confidence (or chance to win for Bayesian). Data is provided for all goals attached to the experience.\nSupports filtering by date range and segments.\nThe Knowledge Base article \"Experiment Report\" details the metrics shown.\n"
+        },
+        {
+          "info": {
+            "name": "Get daily performance report for an experience",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/projects/:project_id/experiences/:experience_id/daily_report",
+            "headers": [
+              {
+                "name": "report_token",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              },
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the project to which save/retrieved data is connected"
+              },
+              {
+                "name": "experience_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the experience"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Retrieves a day-by-day breakdown of performance metrics (visitors, conversions, conversion rate, etc.) for a specific experience and goal.\nThis allows trend analysis and observation of how an experiment performs over time.\nSupports filtering by date range and segments, and can show cumulative or non-cumulative data.\nThe Knowledge Base article \"Experiment Report\" (Graphs section) visualizes this type of data.\n"
+        },
+        {
+          "info": {
+            "name": "Get daily traffic allocation report for an MAB experience",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/projects/:project_id/experiences/:experience_id/daily_traffic_allocation",
+            "headers": [
+              {
+                "name": "report_token",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              },
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the project to which save/retrieved data is connected"
+              },
+              {
+                "name": "experience_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the experience"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Retrieves the day-by-day traffic allocation percentages for each variation in an experience that uses Multi-Armed Bandit (MAB) or auto-allocation.\nThis shows how Convert dynamically shifted traffic towards better-performing variations over time.\nThe Knowledge Base article \"Multi-Armed Bandit (MAB) & Auto-Allocation in Convert\" explains this feature.\n"
+        },
+        {
+          "info": {
+            "name": "Reset report data for an experience",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/projects/:project_id/experiences/:experience_id/reset_report",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              },
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the project to which save/retrieved data is connected"
+              },
+              {
+                "name": "experience_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the experience"
+              }
+            ]
+          },
+          "docs": "Clears all accumulated visitor and conversion data for an experience's report, effectively resetting its statistics to zero.\nThe start date of the experiment is also reset. This is useful if you want to restart data collection after making significant changes or for QA purposes.\nThe Knowledge Base article \"Reset Experiment Data\" warns: \"If you want to prevent [carry-over effects], it is suggested that you clone your experiment instead of resetting the report\".\n"
+        },
+        {
+          "info": {
+            "name": "Export an experience report (CSV/PDF)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/projects/:project_id/experiences/:experience_id/export_report",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              },
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the project to which save/retrieved data is connected"
+              },
+              {
+                "name": "experience_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the experience"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Generates an export of an experience's performance report in either CSV (aggregated or daily) or PDF format.\nReturns a downloadable link for the generated file. Useful for offline analysis or sharing with stakeholders.\nThe Knowledge Base article \"Experiment Report\" (Export & Download section) describes this.\n"
+        },
+        {
+          "info": {
+            "name": "Export raw tracking data for an experience",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/projects/:project_id/experiences/:experience_id/export_raw_data",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              },
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the project to which save/retrieved data is connected"
+              },
+              {
+                "name": "experience_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the experience"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Initiates a job to export the raw, event-level tracking data for a specific experience.\nThis data includes individual visitor bucketing events, conversions, and transactions.\nThe export is typically delivered as a link via email due to potential size.\nUseful for in-depth custom analysis or importing into external data warehouses.\nThe Knowledge Base article \"Experiment Report\" (Export & Download section) mentions this.\n"
+        },
+        {
+          "info": {
+            "name": "Remove specific data from an experience report",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/projects/:project_id/experiences/:experience_id/remove_report_data",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              },
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the project to which save/retrieved data is connected"
+              },
+              {
+                "name": "experience_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the experience"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Allows for targeted deletion of report data for an experience based on date range and event type (view_experience, conversion, transaction).\nFor conversion and transaction events, specific goals can be targeted.\nIf `simulate` is true, returns a count of records that would be deleted without actual deletion. Otherwise, performs permanent deletion.\nThe Knowledge Base article \"Remove Report Data Feature\" details this.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

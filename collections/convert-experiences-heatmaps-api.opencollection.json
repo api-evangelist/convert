@@ -1,0 +1,100 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Convert Accounts Experiences Heatmaps API",
+    "version": "2.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Experiences Heatmaps",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get heatmap background image",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/projects/:project_id/experiences/:experience_id/heatmaps/:heatmap_id/background",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              },
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the project to be retrieved"
+              },
+              {
+                "name": "experience_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the experience"
+              },
+              {
+                "name": "heatmap_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the heatmap."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Retrieves the background image for a specific heatmap and device.\n"
+        },
+        {
+          "info": {
+            "name": "Get heatmap overlay (interaction) image",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/projects/:project_id/experiences/:experience_id/heatmaps/:heatmap_id/overlay",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              },
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the project to be retrieved"
+              },
+              {
+                "name": "experience_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the experience"
+              },
+              {
+                "name": "heatmap_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the heatmap."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Retrieves the overlay image for a specific heatmap, device, and interaction type.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

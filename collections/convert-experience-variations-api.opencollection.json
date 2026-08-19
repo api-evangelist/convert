@@ -1,0 +1,239 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Convert Accounts Experience Variations API",
+    "version": "2.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Experience Variations",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Update an experience variation",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/projects/:project_id/experiences/:experience_id/variations/:variation_id/update",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              },
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the project to which save/retrieved data is connected"
+              },
+              {
+                "name": "experience_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the updated experience"
+              },
+              {
+                "name": "variation_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the variation to be updated"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Modifies an existing variation within an experience.\nThis can include changing its name, description, traffic distribution, status (running/stopped), or the actual changes (CSS, JS, HTML modifications) it applies.\nThe Knowledge Base article \"How do I edit my variations?\" covers the UI aspect.\n"
+        },
+        {
+          "info": {
+            "name": "Delete an experience variation",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/projects/:project_id/experiences/:experience_id/variations/:variation_id/delete",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              },
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the project to which save/retrieved data is connected"
+              },
+              {
+                "name": "experience_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the experience to which the variation belongs"
+              },
+              {
+                "name": "variation_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the variation to be deleted"
+              }
+            ]
+          },
+          "docs": "Permanently removes a variation from an experience.\nNote: Deleting variations from an active or previously active experiment can impact statistical validity and is generally discouraged.\nIt's often better to stop traffic to a variation.\nThe Knowledge Base article \"The Visual Editor in Convert Experiences\" (Variations section) mentions: \"You cannot delete a variation from an experience that is active or has been previously started and then paused.\"\n"
+        },
+        {
+          "info": {
+            "name": "Get screenshot for an experience variation",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/projects/:project_id/experiences/:experience_id/variations/:variation_id/screenshot",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              },
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the project to which save/retrieved data is connected"
+              },
+              {
+                "name": "experience_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the experience to which the variation belongs"
+              },
+              {
+                "name": "variation_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the variation to be deleted"
+              },
+              {
+                "name": "size",
+                "value": "",
+                "type": "query",
+                "description": "The size of the returned image, if omitted will return full size"
+              },
+              {
+                "name": "force_download",
+                "value": "",
+                "type": "query",
+                "description": "Flag used to force download instead of inline response"
+              }
+            ]
+          },
+          "docs": "Retrieves the screenshot image for a specific variation, base64 encoded.\nScreenshots help visualize the changes applied by a variation and are shown in the Convert UI.\nCan request a full-size image or a thumbnail.\nThe Knowledge Base article \"Whitelist IPs for Screenshot Previews\" is related.\n"
+        },
+        {
+          "info": {
+            "name": "Upload a screenshot for an experience variation",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/projects/:project_id/experiences/:experience_id/variations/:variation_id/screenshot",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              },
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the project to which save/retrieved data is connected"
+              },
+              {
+                "name": "experience_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the experience to which the variation belongs"
+              },
+              {
+                "name": "variation_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the variation to be deleted"
+              },
+              {
+                "name": "size",
+                "value": "",
+                "type": "query",
+                "description": "The size of the returned image, if omitted will return full size"
+              },
+              {
+                "name": "force_download",
+                "value": "",
+                "type": "query",
+                "description": "Flag used to force download instead of inline response"
+              }
+            ],
+            "body": {
+              "type": "multipart-form",
+              "data": []
+            }
+          },
+          "docs": "Allows uploading a custom screenshot image for a specific variation.\nThis can be useful if automatic screenshot generation fails or if a specific view needs to be captured.\nThe uploaded image will be displayed in the Convert UI for this variation.\n"
+        },
+        {
+          "info": {
+            "name": "Convert a winning variation into a new experience (Deploy or A/B)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/projects/:project_id/experiences/:experience_id/variations/:variation_id/convert",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              },
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the project to which save/retrieved data is connected"
+              },
+              {
+                "name": "experience_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the experience to which the variation belongs"
+              },
+              {
+                "name": "variation_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the variation to be converted"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Takes a variation (often a winning one from an A/B test) and creates a new, separate experience from it.\nThis new experience can be a 'Deploy' (to roll out the change to a specific audience) or another 'A/B' test (to further iterate).\nThis is a common step after an A/B test concludes with a winner.\nThe Knowledge Base article \"What about Deployments?\" mentions: \"Create a new Deploy from a Variation or Winning Variation from another Experiment\".\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

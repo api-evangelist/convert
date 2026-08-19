@@ -1,0 +1,107 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Convert Accounts Visitor Insights API",
+    "version": "2.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Visitor Insights",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List recorded visitor sessions for a project",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/projects/:project_id/sessions",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              },
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the project to be retrieved"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Retrieves a list of recorded visitor sessions for a specific project.\nThis endpoint is typically used for integrations that require access to raw session data.\nNote: This is different from Convert Signals. For frustration and usability insights, see the Signal Sessions endpoint.\n"
+        },
+        {
+          "info": {
+            "name": "List Convert Signals™ (visitor frustration sessions)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/projects/:project_id/signal_sessions",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              },
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the project to be retrieved"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Retrieves a list of Convert Signals™ sessions for a project.\nConvert Signals™ \"is a special anonymous and privacy oriented session recording feature...It shows only really clear frustrations, errors and usability signals of real users\".\nUse this to identify sessions where visitors experienced issues like rage clicks, dead clicks, or scroll stalls.\nSupports filtering by date, experience, variation, location, country, device, browser, and more.\n"
+        },
+        {
+          "info": {
+            "name": "Delete a specific Convert Signals™ session",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/projects/:project_id/signal_sessions/:signal_session_id",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              },
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the project to be retrieved"
+              },
+              {
+                "name": "signal_session_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the signal session to be deleted"
+              }
+            ]
+          },
+          "docs": "Permanently removes a recorded Convert Signals™ session, identified by its `signal_session_id`.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

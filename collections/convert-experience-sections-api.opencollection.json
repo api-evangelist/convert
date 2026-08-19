@@ -1,0 +1,208 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Convert Accounts Experience Sections API",
+    "version": "2.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Experience Sections",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List sections of a multivariate (MVT) experience",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/projects/:project_id/experiences/:experience_id/sections",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              },
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the project to which save/retrieved data is connected"
+              },
+              {
+                "name": "experience_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the experience of which to return sections list"
+              },
+              {
+                "name": "include",
+                "value": "",
+                "type": "query",
+                "description": "Array parameter that would mention extra fields to be included into the response; otherwise those fields would be excluded by default\n\nRead more in the section related to [Optional Fields](#tag/Optional-Fields)\n"
+              },
+              {
+                "name": "expand",
+                "value": "",
+                "type": "query",
+                "description": "Specifies the list of objects which would be expanded in the response. Otherwise, only their id would be returned.\n\nRead more in the section related to [Expanding Fields](#tag/Expandable-Fields)\n"
+              }
+            ]
+          },
+          "docs": "Retrieves the list of sections defined for a multivariate (MVT) experience.\nIn MVT, a \"section\" is an element or area on the page where multiple alternatives (versions) are tested (e.g., a headline section with three different headline versions).\nVariations in an MVT are combinations of one version from each section.\nThe Knowledge Base article \"Creating a Multivariate Experiment\" explains sections.\n"
+        },
+        {
+          "info": {
+            "name": "Add a new section to an MVT experience",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/projects/:project_id/experiences/:experience_id/sections/add",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              },
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the project to which save/retrieved data is connected"
+              },
+              {
+                "name": "experience_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the experience where section will be created"
+              },
+              {
+                "name": "include",
+                "value": "",
+                "type": "query",
+                "description": "Array parameter that would mention extra fields to be included into the response; otherwise those fields would be excluded by default\n\nRead more in the section related to [Optional Fields](#tag/Optional-Fields)\n"
+              },
+              {
+                "name": "expand",
+                "value": "",
+                "type": "query",
+                "description": "Specifies the list of objects which would be expanded in the response. Otherwise, only their id would be returned.\n\nRead more in the section related to [Expanding Fields](#tag/Expandable-Fields)\n"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a new section within a multivariate (MVT) experience.\nA section represents an element or area of the page to be tested with multiple alternatives (versions).\nRequires defining the section name and its initial versions with their respective changes.\n"
+        },
+        {
+          "info": {
+            "name": "Update an existing section in an MVT experience",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/projects/:project_id/experiences/:experience_id/sections/:section_id/update",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              },
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the project to which save/retrieved data is connected"
+              },
+              {
+                "name": "experience_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the given experience"
+              },
+              {
+                "name": "section_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the updated section"
+              },
+              {
+                "name": "include",
+                "value": "",
+                "type": "query",
+                "description": "Array parameter that would mention extra fields to be included into the response; otherwise those fields would be excluded by default\n\nRead more in the section related to [Optional Fields](#tag/Optional-Fields)\n"
+              },
+              {
+                "name": "expand",
+                "value": "",
+                "type": "query",
+                "description": "Specifies the list of objects which would be expanded in the response. Otherwise, only their id would be returned.\n\nRead more in the section related to [Expanding Fields](#tag/Expandable-Fields)\n"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Modifies an existing section within a multivariate (MVT) experience.\nThis can include changing the section's name or updating its versions and their associated changes.\nThe entire list of versions for the section must be provided; versions not included will be removed.\n"
+        },
+        {
+          "info": {
+            "name": "Update all sections for an MVT experience",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.convert.com/api/v2/accounts/:account_id/projects/:project_id/experiences/:experience_id/sections/update",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the account that owns the retrieved/saved data"
+              },
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the project to which save/retrieved data is connected"
+              },
+              {
+                "name": "experience_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the exeprience for which to update sections"
+              },
+              {
+                "name": "include",
+                "value": "",
+                "type": "query",
+                "description": "Array parameter that would mention extra fields to be included into the response; otherwise those fields would be excluded by default\n\nRead more in the section related to [Optional Fields](#tag/Optional-Fields)\n"
+              },
+              {
+                "name": "expand",
+                "value": "",
+                "type": "query",
+                "description": "Specifies the list of objects which would be expanded in the response. Otherwise, only their id would be returned.\n\nRead more in the section related to [Expanding Fields](#tag/Expandable-Fields)\n"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Replaces all existing sections and their versions for a multivariate (MVT) experience with the provided list.\nIf a section or version from the existing configuration is not included in the request, it will be removed.\nThe order of sections, versions, and changes is important and will be preserved.\nThis is a comprehensive update for the entire MVT structure.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
