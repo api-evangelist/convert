@@ -20,6 +20,12 @@ accessModel:
 image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/convert.png
 tags:
   - Experimentation
+  - A/B Testing
+  - Conversion Optimization
+  - Personalization
+  - Analytics
+tags_raw:
+  - Experimentation
   - AB Testing
   - Conversion Optimization
   - Personalization
@@ -38,6 +44,10 @@ apis:
   baseURL: https://api.convert.com/api/v2
   tags:
   - Experimentation
+  - A/B Testing
+  - REST
+  tags_raw:
+  - Experimentation
   - AB Testing
   - REST
   properties:
@@ -53,6 +63,8 @@ apis:
   humanURL: https://api.convert.com/doc/v2/
   baseURL: https://api.convert.com/api/v2
   tags:
+  - Account
+  tags_raw:
   - Accounts
   properties:
   - type: OpenAPI
@@ -74,6 +86,8 @@ apis:
   humanURL: https://api.convert.com/doc/v2/
   baseURL: https://api.convert.com/api/v2
   tags:
+  - APIKeys
+  tags_raw:
   - API Keys
   properties:
   - type: OpenAPI
@@ -190,6 +204,8 @@ apis:
   humanURL: https://api.convert.com/doc/v2/
   baseURL: https://api.convert.com/api/v2
   tags:
+  - Experience
+  tags_raw:
   - Experiences
   properties:
   - type: OpenAPI
@@ -232,6 +248,8 @@ apis:
   humanURL: https://api.convert.com/doc/v2/
   baseURL: https://api.convert.com/api/v2
   tags:
+  - File
+  tags_raw:
   - Files
   properties:
   - type: OpenAPI
@@ -290,6 +308,8 @@ apis:
   humanURL: https://api.convert.com/doc/v2/
   baseURL: https://api.convert.com/api/v2
   tags:
+  - Authentication
+  tags_raw:
   - OAuth
   properties:
   - type: OpenAPI
@@ -353,6 +373,8 @@ apis:
   humanURL: https://api.convert.com/doc/v2/
   baseURL: https://api.convert.com/api/v2
   tags:
+  - Project
+  tags_raw:
   - Projects
   properties:
   - type: OpenAPI
