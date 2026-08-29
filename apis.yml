@@ -482,6 +482,9 @@ apis:
   - type: OpenAPI
     url: openapi/convert-visitors-data-api-openapi.yml
 common:
+  - type: CapabilityMap
+    url: capabilities/convert-capability-edges.yml
+    name: Convert Business Capability Map
   - type: AgenticAccess
     url: agentic-access/convert-agentic-access.yml
   - type: TrustCenter

@@ -1,0 +1,92 @@
+slug: convert
+provider: Convert
+generated_by: planning/capability-mapping/scripts/classify_capabilities.py
+model: claude-opus-5
+frame:
+- Software & Technology
+min_confidence: 0.7
+capability_model:
+  source: https://github.com/vincentmakes/turbo-ea-capabilities
+  license: CC-BY-4.0
+  attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
+    CC BY 4.0
+  notice: NOTICE
+edge_count: 8
+edges:
+- tag: Experiences
+  spec_file: convert-experiences-api-openapi.yml
+  capability_id: BC-4280.50
+  capability_id_l1: BC-4280
+  capability_name: A/B Test Execution
+  confidence: 0.85
+  evidence: '"Create a new experience"; "Get live tracking events for a specific experience"; audience/match-rule
+    schemas such as "AudienceTypesWithUrl"'
+  reason: An 'experience' is this vendor's experiment object; operations create, clone, target and monitor
+    running experiments — configuration, targeting and monitoring of A/B tests.
+- tag: Experience Variations
+  spec_file: convert-experience-variations-api-openapi.yml
+  capability_id: BC-4280.50
+  capability_id_l1: BC-4280
+  capability_name: A/B Test Execution
+  confidence: 0.82
+  evidence: '"Update an experience variation"; "Convert a winning variation into a new experience (Deploy
+    or A/B)"'
+  reason: Managing variations and promoting a winning variation is direct configuration and operation
+    of A/B tests on an experimentation platform.
+- tag: Experience Sections
+  spec_file: convert-experience-sections-api-openapi.yml
+  capability_id: BC-4280.50
+  capability_id_l1: BC-4280
+  capability_name: A/B Test Execution
+  confidence: 0.78
+  evidence: '"List sections of a multivariate (MVT) experience"; "Add a new section to an MVT experience"'
+  reason: Sections are structural components of a multivariate test on this experimentation platform;
+    the operations configure MVT/A-B test structure, which is A/B & multivariate test execution configuration.
+- tag: Section Versions
+  spec_file: convert-section-versions-api-openapi.yml
+  capability_id: BC-4280.50
+  capability_id_l1: BC-4280
+  capability_name: A/B Test Execution
+  confidence: 0.78
+  evidence: addExperienceSectionVersion  Add a new version to an MVT section
+  reason: Operations create/update/delete versions inside multivariate-test sections of an experience
+    — direct configuration of running A/B and multivariate tests.
+- tag: Features
+  spec_file: convert-features-api-openapi.yml
+  capability_id: BC-4210.50
+  capability_id_l1: BC-4210
+  capability_name: Feature Flag Management
+  confidence: 0.75
+  evidence: '"List features within a Full Stack project"; schemas "FeatureVariableBool", "FeatureStatuses"'
+  reason: Full Stack 'features' with typed variables and statuses are feature flags whose lifecycle is
+    managed via CRUD and bulk operations — feature flag management. Some overlap with feature experimentation,
+    hence not maximal confidence.
+- tag: Hypotheses
+  spec_file: convert-hypotheses-api-openapi.yml
+  capability_id: BC-4280.40
+  capability_id_l1: BC-4280
+  capability_name: Experimentation Programme Management
+  confidence: 0.75
+  evidence: '"Create a new hypothesis"; "Convert a proven/disproven hypothesis to a Knowledge Base entry";
+    schema "HypothesisICE"'
+  reason: Hypothesis capture, ICE prioritisation and proven/disproven adjudication is the methodology
+    and governance layer of an experimentation programme.
+- tag: Experiences Reports
+  spec_file: convert-experiences-reports-api-openapi.yml
+  capability_id: BC-4280.50
+  capability_id_l1: BC-4280
+  capability_name: A/B Test Execution
+  confidence: 0.72
+  evidence: '"Get aggregated performance report for an experience"; schemas "ExperienceAggregatedGoalBayesian",
+    "ExperienceAggregatedGoalReportFrequentist"'
+  reason: Statistical (Bayesian/frequentist) result reporting per variation is the monitoring and result
+    analysis side of running A/B tests on this experimentation platform.
+- tag: Version Changes
+  spec_file: convert-version-changes-api-openapi.yml
+  capability_id: BC-4280.50
+  capability_id_l1: BC-4280
+  capability_name: A/B Test Execution
+  confidence: 0.72
+  evidence: getExperienceChange  Get details of a specific change in a variation
+  reason: Reads and updates individual changes within an experience variation (ExperienceChangeFullStackFeature,
+    ExperienceChangeDefaultRedirectData) — configuration of variant content for running tests.
