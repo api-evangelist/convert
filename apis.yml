@@ -315,18 +315,6 @@ apis:
   properties:
   - type: OpenAPI
     url: openapi/convert-locations-api-openapi.yml
-- aid: convert:convert-oauth-api
-  name: Convert OAuth API
-  description: Manage OAuth clients and authorized sessions.
-  humanURL: https://api.convert.com/doc/v2/
-  baseURL: https://api.convert.com/api/v2
-  tags:
-  - Authentication
-  tags_raw:
-  - OAuth
-  properties:
-  - type: OpenAPI
-    url: openapi/convert-oauth-api-openapi.yml
 - aid: convert:convert-oauth-authorization-api
   name: Convert OAuth Authorization API
   description: >-
@@ -482,6 +470,16 @@ apis:
   properties:
   - type: OpenAPI
     url: openapi/convert-visitors-data-api-openapi.yml
+- aid: convert:convert-oauth-api
+  name: Convert O Auth API
+  description: Manage OAuth clients and authorized sessions.
+  humanURL: https://api.convert.com/doc/v2/
+  baseURL: https://api.convert.com/api/v2
+  tags:
+  - OAuth
+  properties:
+  - type: OpenAPI
+    url: openapi/convert-oauth-api-openapi.yml
 common:
   - type: CapabilityMap
     url: capabilities/convert-capability-edges.yml
