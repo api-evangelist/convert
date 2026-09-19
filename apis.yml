@@ -311,6 +311,8 @@ apis:
   humanURL: https://api.convert.com/doc/v2/
   baseURL: https://api.convert.com/api/v2
   tags:
+  - Location
+  tags_raw:
   - Locations
   properties:
   - type: OpenAPI
@@ -476,6 +478,8 @@ apis:
   humanURL: https://api.convert.com/doc/v2/
   baseURL: https://api.convert.com/api/v2
   tags:
+  - Authentication
+  tags_raw:
   - OAuth
   properties:
   - type: OpenAPI
