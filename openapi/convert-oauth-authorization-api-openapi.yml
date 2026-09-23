@@ -1,30 +1,7 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Convert Accounts OAuth Authorization API
-  description: 'Move your app forward with the Convert API. The Convert API allows
-
-    you to manage your Convert Experiences projects using code. The REST API is
-
-    an interface for managing and extending functionality of Convert. For
-
-    example, instead of creating and maintaining projects using the Convert
-
-    Experiences web dashboard you can create an experiment programmatically.
-
-    Additionally, if you prefer to run custom analysis on experiment results you
-
-    can leverage the API to pull data from Convert Experiences into your own
-
-    workflow. If you do not have a Convert account already, sign up for a free
-
-    developer account at https://www.convert.com/api/.
-
-
-    *[Convert API V1](/doc/v1) is still available and documentation can be found [here](/doc/v1) but using it is highly discouraged
-
-    as it will be phased out in the future*
-
-    '
+  title: Convert OAuth Authorization API
+  description: Move your app forward with the Convert API.
   version: 2.0.0
 servers:
 - url: https://api.convert.com/api/v2
@@ -35,34 +12,7 @@ servers:
   description: DEV mocked API server
 tags:
 - name: OAuth Authorization
-  description: 'Delegated authorization endpoints for third-party OAuth clients.
-
-
-    Typical flow:
-
-    * OAuth client initiates GET request in browser (`/oauth/authorize`) with `client_id` + `response_type=code` + `scope` + `state` + `code_challenge` (PKCE)
-
-    * While generating `code_challenge` — don''t forget to store the `code_verifier` which will be used to obtain the access token
-
-    * User authenticates in Convert and approves scope in consent UI
-
-    * OAuth client exchanges one-time code (`/auth/oauth/token`) for a scoped bearer session token
-
-    * User can list/revoke authorized OAuth sessions (`/auth/oauth/sessions*`)
-
-
-    Scopes: `selected_accounts_projects`
-
-
-    Example:
-
-    ```
-
-    https://app.convert.com/auth/oauth/authorize?client_id=1111111&state=randomstring&scope=selected_accounts_projects&response_type=code&code_challenge=generatedCodeChallenge
-
-    ```
-
-    '
+  description: Delegated authorization endpoints for third-party OAuth clients.
 paths:
   /auth/oauth/token:
     post:
@@ -70,9 +20,7 @@ paths:
       summary: Exchange OAuth code for session token
       description: 'Public endpoint used by OAuth clients to exchange a one-time authorization code for a scoped bearer session token.
 
-        Enforces PKCE binding.
-
-        '
+        Enforces PKCE binding.'
       tags:
       - OAuth Authorization
       requestBody:
@@ -84,26 +32,43 @@ paths:
           $ref: '#/components/responses/ErrorResponse'
 components:
   schemas:
-    OAuthTokenResponseData:
+    ErrorData:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          oneOf:
+          - type: string
+          - type: array
+            items:
+              type: string
+        fields:
+          oneOf:
+          - type: string
+          - type: array
+            items:
+              type: string
+    OAuthScopeMode:
+      type: string
+      enum:
+      - selected_accounts_projects
+    OAuthScopeAccountResponse:
       type: object
       required:
-      - access_token
-      - token_type
-      - expires_at
-      - scope
+      - account_id
       properties:
-        access_token:
-          description: Opaque OAuth session bearer token.
-          type: string
-        token_type:
-          type: string
-          enum:
-          - Bearer
-        expires_at:
+        account_id:
           type: integer
-          description: Absolute expiration timestamp (unix seconds).
-        scope:
-          $ref: '#/components/schemas/OAuthScopeResponse'
+          minimum: 1
+        name:
+          description: Display name of the account.
+          type: string
+        projects:
+          type: array
+          items:
+            $ref: '#/components/schemas/OAuthScopeProject'
     OAuthTokenRequestData:
       type: object
       required:
@@ -131,10 +96,17 @@ components:
           minLength: 43
           maxLength: 128
           pattern: ^[A-Za-z0-9\-._~]+$
-    OAuthScopeMode:
-      type: string
-      enum:
-      - selected_accounts_projects
+    OAuthScopeResponse:
+      type: object
+      required:
+      - mode
+      properties:
+        mode:
+          $ref: '#/components/schemas/OAuthScopeMode'
+        accounts:
+          type: array
+          items:
+            $ref: '#/components/schemas/OAuthScopeAccountResponse'
     OAuthScopeProject:
       type: object
       required:
@@ -150,50 +122,26 @@ components:
         name:
           description: Display name of the project.
           type: string
-    ErrorData:
-      type: object
-      properties:
-        code:
-          type: integer
-          format: int32
-        message:
-          oneOf:
-          - type: string
-          - type: array
-            items:
-              type: string
-        fields:
-          oneOf:
-          - type: string
-          - type: array
-            items:
-              type: string
-    OAuthScopeAccountResponse:
+    OAuthTokenResponseData:
       type: object
       required:
-      - account_id
+      - access_token
+      - token_type
+      - expires_at
+      - scope
       properties:
-        account_id:
-          type: integer
-          minimum: 1
-        name:
-          description: Display name of the account.
+        access_token:
+          description: Opaque OAuth session bearer token.
           type: string
-        projects:
-          type: array
-          items:
-            $ref: '#/components/schemas/OAuthScopeProject'
-    OAuthScopeResponse:
-      type: object
-      required:
-      - mode
-      properties:
-        mode:
-          $ref: '#/components/schemas/OAuthScopeMode'
-        accounts:
-          type: array
-          items:
-            $ref: '#/components/schemas/OAuthScopeAccountResponse'
+        token_type:
+          type: string
+          enum:
+          - Bearer
+        expires_at:
+          type: integer
+          description: Absolute expiration timestamp (unix seconds).
+        scope:
+          $ref: '#/components/schemas/OAuthScopeResponse'
   responses:
     ErrorResponse:
       description: 'Indicates an error occurred while processing the request. The `code` provides an HTTP status code, `message` offers a human-readable explanation or an array of validation errors, and `fields` (if present) specifies which input fields were problematic.

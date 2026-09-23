@@ -1,30 +1,7 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Convert Accounts Section Versions API
-  description: 'Move your app forward with the Convert API. The Convert API allows
-
-    you to manage your Convert Experiences projects using code. The REST API is
-
-    an interface for managing and extending functionality of Convert. For
-
-    example, instead of creating and maintaining projects using the Convert
-
-    Experiences web dashboard you can create an experiment programmatically.
-
-    Additionally, if you prefer to run custom analysis on experiment results you
-
-    can leverage the API to pull data from Convert Experiences into your own
-
-    workflow. If you do not have a Convert account already, sign up for a free
-
-    developer account at https://www.convert.com/api/.
-
-
-    *[Convert API V1](/doc/v1) is still available and documentation can be found [here](/doc/v1) but using it is highly discouraged
-
-    as it will be phased out in the future*
-
-    '
+  title: Convert Section Versions API
+  description: Move your app forward with the Convert API.
   version: 2.0.0
 servers:
 - url: https://api.convert.com/api/v2
@@ -45,9 +22,7 @@ paths:
       summary: Add a new version to an MVT section
       description: 'Creates a new version (alternative) within a specific section of a multivariate (MVT) experience.
 
-        Requires defining the version name and its associated changes (CSS, JS, etc.).
-
-        '
+        Requires defining the version name and its associated changes (CSS, JS, etc.).'
       parameters:
       - name: account_id
         in: path
@@ -114,9 +89,7 @@ paths:
       summary: Update a version within an MVT section
       description: 'Modifies an existing version within a specific section of a multivariate (MVT) experience.
 
-        This can include changing the version''s name or updating its associated changes.
-
-        '
+        This can include changing the version''s name or updating its associated changes.'
       parameters:
       - name: account_id
         in: path
@@ -189,9 +162,7 @@ paths:
       summary: Delete a version from an MVT section
       description: 'Permanently removes a version from a specific section of a multivariate (MVT) experience.
 
-        Deleting versions can affect the combinations tested and the statistical validity of an active MVT.
-
-        '
+        Deleting versions can affect the combinations tested and the statistical validity of an active MVT.'
       parameters:
       - name: account_id
         in: path
@@ -229,51 +200,75 @@ paths:
         default:
           $ref: '#/components/responses/ErrorResponse'
 components:
-  requestBodies:
-    CreateSectionVersionRequest:
-      description: 'Adds a new version (alternative) to an existing section within an MVT experience. Requires:
-
-        - `id`: A unique 1-2 character ID for this version within its section.
-
-        - `name`: A descriptive name for the version (e.g., "Red Button", "Short Headline").
-
-        - `changes`: An array defining the modifications (JS, CSS) for this specific version.
-
-        **IMPORTANT:** Adding versions changes the MVT combinations.
-
-        '
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/CreateSectionVersionRequestData'
-      required: true
-    UpdateSectionVersionRequest:
-      description: 'Updates an existing version within an MVT section. Allows changing the `name` or the `changes` (JS, CSS modifications) associated with this version.
-
-        The `id` of the version must be provided.
-
-        '
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/UpdateSectionVersionRequestData'
-      required: true
   schemas:
-    ExperienceSectionVersionExpandFields:
-      type: string
-      enum:
-      - changes
-    ExperienceChangeDefaultRedirectDataAdd:
+    SuccessData:
       type: object
-      description: Data for creating a new 'defaultRedirect' type change.
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+    ExperienceSectionVersionResponseData:
+      description: Response containing the details of a single MVT section version.
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/SectionVersion'
+    ExperienceChangeFullStackFeature:
+      type: object
+      description: Represents a 'fullStackFeature' type change, including its system-assigned ID.
       allOf:
       - $ref: '#/components/schemas/ExperienceChangeIdReadOnly'
-      - $ref: '#/components/schemas/ExperienceChangeDefaultRedirectDataBase'
+      - $ref: '#/components/schemas/ExperienceChangeFullStackFeatureBase'
+      - type: object
+        properties:
+          concurrency_key:
+            $ref: '#/components/schemas/ConcurrencyKey'
+    ConcurrencyKey:
+      type: string
+      nullable: true
+      description: A server-generated hash that represents the object's state at the time of retrieval. When included in an update request, the operation will only succeed if the object hasn't been modified since this key was obtained. If another update has occurred in the meantime, the request will fail with a conflict error, requiring you to fetch the latest version and retry your update with the new concurrency_key. This implements optimistic concurrency control to prevent lost updates in concurrent scenarios.
+    ExperienceChangeRichStructureDataAdd:
+      type: object
+      description: Data for creating a new 'richStructure' type change.
+      allOf:
+      - $ref: '#/components/schemas/ExperienceChangeIdReadOnly'
+      - $ref: '#/components/schemas/ExperienceChangeRichStructureDataBase'
       - properties:
           data:
             required:
-            - original_pattern
-            - variation_pattern
+            - js
+        required:
+        - type
+        - data
+    ExperienceChangeDefaultCodeMultipageDataAdd:
+      type: object
+      description: Data for creating a new 'defaultCodeMultipage' type change.
+      allOf:
+      - $ref: '#/components/schemas/ExperienceChangeIdReadOnly'
+      - $ref: '#/components/schemas/ExperienceChangeDefaultCodeMultipageDataBase'
+      - properties:
+          data:
+            required:
+            - page_id
+        required:
+        - type
+        - data
+    CreateSectionVersionRequestData:
+      allOf:
+      - $ref: '#/components/schemas/SectionVersionCreate'
+    ExperienceChangeCustomCodeDataAdd:
+      type: object
+      description: Data for creating a new 'customCode' type change.
+      allOf:
+      - $ref: '#/components/schemas/ExperienceChangeIdReadOnly'
+      - $ref: '#/components/schemas/ExperienceChangeCustomCodeDataBase'
+      - properties:
+          data:
+            required:
+            - css
+            - js
         required:
         - type
         - data
@@ -292,23 +287,236 @@ components:
         required:
         - type
         - data
-    ExperienceSectionVersionIncludeFields:
-      type: string
-      enum:
-      - changes
-    ExperienceChangeDefaultCodeMultipageDataAdd:
+    ExperienceChangeFullStackFeatureUpdate:
       type: object
-      description: Data for creating a new 'defaultCodeMultipage' type change.
+      description: Data for updating an existing 'fullStackFeature' type change, identified by its `id`.
+      allOf:
+      - $ref: '#/components/schemas/ExperienceChangeId'
+      - $ref: '#/components/schemas/ExperienceChangeFullStackFeatureBase'
+      - type: object
+        properties:
+          concurrency_key:
+            $ref: '#/components/schemas/ConcurrencyKey'
+      - required:
+        - type
+        - data
+    ExperienceChangeCustomCodeDataUpdate:
+      type: object
+      description: Data for updating an existing 'customCode' type change, identified by its `id`.
+      allOf:
+      - $ref: '#/components/schemas/ExperienceChangeId'
+      - $ref: '#/components/schemas/ExperienceChangeCustomCodeDataBase'
+      - type: object
+        properties:
+          concurrency_key:
+            $ref: '#/components/schemas/ConcurrencyKey'
+      - required:
+        - type
+        - data
+    ErrorData:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          oneOf:
+          - type: string
+          - type: array
+            items:
+              type: string
+        fields:
+          oneOf:
+          - type: string
+          - type: array
+            items:
+              type: string
+    ExperienceChangeDefaultCodeMultipageDataUpdate:
+      type: object
+      description: Data for updating an existing 'defaultCodeMultipage' type change, identified by its `id`.
+      allOf:
+      - $ref: '#/components/schemas/ExperienceChangeId'
+      - $ref: '#/components/schemas/ExperienceChangeDefaultCodeMultipageDataBase'
+      - type: object
+        properties:
+          concurrency_key:
+            $ref: '#/components/schemas/ConcurrencyKey'
+      - required:
+        - type
+        - data
+    ExperienceChangeFullStackFeatureAdd:
+      type: object
+      description: Data for creating a new 'fullStackFeature' type change.
       allOf:
       - $ref: '#/components/schemas/ExperienceChangeIdReadOnly'
-      - $ref: '#/components/schemas/ExperienceChangeDefaultCodeMultipageDataBase'
+      - $ref: '#/components/schemas/ExperienceChangeFullStackFeatureBase'
       - properties:
           data:
             required:
-            - page_id
+            - feature_id
+            - variables_data
         required:
         - type
         - data
+    ExperienceChangeDefaultCodeDataBase:
+      type: object
+      description: Defines a standard code-based change, typically generated by the Visual Editor for modifications like text replacement, style changes, or element removal. It can include CSS, Convert's internal JS representation, and custom JS.
+      allOf:
+      - $ref: '#/components/schemas/ExperienceChangeBase'
+      - type: object
+        properties:
+          type:
+            enum:
+            - defaultCode
+          data:
+            type: object
+            description: Describes structure for "defaultCode" type of experience change
+            additionalProperties: false
+            properties:
+              css:
+                type: string
+                nullable: true
+                description: CSS code to be applied by this change
+              js:
+                type: string
+                nullable: true
+                description: Javascript code generated by the visual editor or written in the same structure, to be applied by this experience change
+              custom_js:
+                type: string
+                description: Custom javascript code to be applied by this change
+                nullable: true
+    ExperienceChangeDefaultCodeDataUpdate:
+      type: object
+      description: Data for updating an existing 'defaultCode' type change, identified by its `id`.
+      allOf:
+      - $ref: '#/components/schemas/ExperienceChangeId'
+      - $ref: '#/components/schemas/ExperienceChangeDefaultCodeDataBase'
+      - type: object
+        properties:
+          concurrency_key:
+            $ref: '#/components/schemas/ConcurrencyKey'
+      - required:
+        - type
+        - data
+    ExperienceChangeRichStructureDataBase:
+      type: object
+      description: Defines a complex change, often involving multiple DOM manipulations or structured data, typically generated by advanced Visual Editor interactions or specific integrations. (Primarily for internal or advanced programmatic use).
+      allOf:
+      - $ref: '#/components/schemas/ExperienceChangeBase'
+      - type: object
+        properties:
+          type:
+            enum:
+            - richStructure
+          data:
+            type: object
+            description: Describes structure for "defaultCode" type of experience change
+            additionalProperties:
+              type: string
+              description: Various key - value data
+            properties:
+              js:
+                type: string
+                nullable: true
+                description: Javascript code generated by the visual editor or written in the same structure, to be applied by this experience change
+              selector:
+                type: string
+                description: CSS selector of the element to which the change refers to, if this is a change concerning one DOM element
+              page_id:
+                description: The **id** of the page connected to this change, in case this is a **multi-page** experiment
+                type: string
+    UpdateSectionVersionRequestData:
+      allOf:
+      - $ref: '#/components/schemas/SectionVersionUpdate'
+    SectionVersionCreate:
+      allOf:
+      - $ref: '#/components/schemas/BaseSectionVersion'
+      - type: object
+        properties:
+          changes:
+            type: array
+            description: List of changes to apply. If ID of a change is not provided, the change is gonna be created. Otherwise the change would be updated
+            items:
+              oneOf:
+              - $ref: '#/components/schemas/ExperienceChangeAdd'
+    ExperienceChangeDefaultRedirectData:
+      type: object
+      description: Represents a 'defaultRedirect' type change, including its system-assigned ID.
+      allOf:
+      - $ref: '#/components/schemas/ExperienceChangeIdReadOnly'
+      - $ref: '#/components/schemas/ExperienceChangeDefaultRedirectDataBase'
+      - type: object
+        properties:
+          concurrency_key:
+            $ref: '#/components/schemas/ConcurrencyKey'
+    ExperienceChangeDefaultRedirectDataBase:
+      type: object
+      description: Defines a URL redirect, typically used in Split URL experiments. It specifies how to match an original URL and construct the URL for the variation page.
+      allOf:
+      - $ref: '#/components/schemas/ExperienceChangeBase'
+      - type: object
+        properties:
+          type:
+            enum:
+            - defaultRedirect
+          data:
+            type: object
+            description: Describes structure for "defaultRedirect" type of experience change
+            additionalProperties: false
+            properties:
+              case_sensitive:
+                type: boolean
+                description: Defines whether the URL matching is case sensitive or not
+              original_pattern:
+                type: string
+                description: Pattern for matching the Original URL in order to construct the redirect URL
+              variation_pattern:
+                type: string
+                description: String used to construct the variation redirect URL. This string can contain matches from original_url or it can be a standard URL
+    ExperienceChangeDefaultCodeMultipageData:
+      type: object
+      description: Represents a 'defaultCodeMultipage' type change, including its system-assigned ID.
+      allOf:
+      - $ref: '#/components/schemas/ExperienceChangeIdReadOnly'
+      - $ref: '#/components/schemas/ExperienceChangeDefaultCodeMultipageDataBase'
+      - type: object
+        properties:
+          concurrency_key:
+            $ref: '#/components/schemas/ConcurrencyKey'
+    BaseSectionVersion:
+      type: object
+      properties:
+        id:
+          description: 'A unique identifier for this version within its parent section (e.g., "v1", "02", "ab").
+
+            Typically a short string (1-2 characters). This ID is used to construct the overall MVT variation combinations.
+
+            '
+          type: string
+          minLength: 1
+          maxLength: 2
+          pattern: ^[0-9a-z]{1,2}$
+        name:
+          description: A user-defined, friendly name for this version (e.g., "Red Button", "Headline Option A", "Original Image"). This name appears in MVT setup and reports.
+          type: string
+          maxLength: 200
+        concurrency_key:
+          $ref: '#/components/schemas/ConcurrencyKey'
+    SectionVersionUpdate:
+      allOf:
+      - $ref: '#/components/schemas/BaseSectionVersion'
+      - type: object
+        properties:
+          concurrency_key:
+            $ref: '#/components/schemas/ConcurrencyKey'
+          changes:
+            type: array
+            description: List of changes to apply. If ID of a change is not provided, the change is gonna be created. Empty array will remove changes. Otherwise the change would be updated
+            items:
+              anyOf:
+              - $ref: '#/components/schemas/ExperienceChangeId'
+              - $ref: '#/components/schemas/ExperienceChangeUpdate'
+              - $ref: '#/components/schemas/ExperienceChangeAdd'
     ExperienceChangeCustomCodeData:
       type: object
       description: Represents a 'customCode' type change, including its system-assigned ID.
@@ -319,15 +527,165 @@ components:
         properties:
           concurrency_key:
             $ref: '#/components/schemas/ConcurrencyKey'
-    UpdateSectionVersionRequestData:
-      allOf:
-      - $ref: '#/components/schemas/SectionVersionUpdate'
-    ExperienceChangeDefaultRedirectData:
+    ExperienceChangeUpdate:
+      description: Data structure for updating an existing change within an experience variation. Requires the `id` of the change to be modified.
+      oneOf:
+      - $ref: '#/components/schemas/ExperienceChangeDefaultCodeDataUpdate'
+      - $ref: '#/components/schemas/ExperienceChangeDefaultCodeMultipageDataUpdate'
+      - $ref: '#/components/schemas/ExperienceChangeDefaultRedirectDataUpdate'
+      - $ref: '#/components/schemas/ExperienceChangeRichStructureDataUpdate'
+      - $ref: '#/components/schemas/ExperienceChangeCustomCodeDataUpdate'
+      - $ref: '#/components/schemas/ExperienceChangeFullStackFeatureUpdate'
+      discriminator:
+        propertyName: type
+        mapping:
+          richStructure: '#/components/schemas/ExperienceChangeRichStructureDataUpdate'
+          customCode: '#/components/schemas/ExperienceChangeCustomCodeDataUpdate'
+          defaultCode: '#/components/schemas/ExperienceChangeDefaultCodeDataUpdate'
+          defaultCodeMultipage: '#/components/schemas/ExperienceChangeDefaultCodeMultipageDataUpdate'
+          defaultRedirect: '#/components/schemas/ExperienceChangeDefaultRedirectDataUpdate'
+          fullStackFeature: '#/components/schemas/ExperienceChangeFullStackFeatureUpdate'
+    ExperienceChangeBase:
+      description: The fundamental structure representing a single modification applied within an experience's variation. The specific content and behavior of the change are determined by its `type` and detailed in the `data` object.
       type: object
-      description: Represents a 'defaultRedirect' type change, including its system-assigned ID.
+      properties:
+        type:
+          type: string
+          enum:
+          - richStructure
+          - customCode
+          - defaultCode
+          - defaultCodeMultipage
+          - defaultRedirect
+          - fullStackFeature
+        data:
+          description: 'A flexible object containing the specific details and content for this change, structured according to the change `type`.
+
+            For example, for `customCode`, it would contain `js` and `css` strings. For `defaultRedirect`, it would contain `original_pattern` and `variation_pattern`.
+
+            This field is included by default when fetching a single `ExperienceChange` but might be omitted in list views unless specified in an `include` parameter.
+
+            '
+          type: object
+    ExperienceChangeCustomCodeDataBase:
+      type: object
+      description: Defines a change applied purely through custom-written CSS and/or JavaScript code, bypassing the Visual Editor's generated code. This offers maximum flexibility for developers.
+      allOf:
+      - $ref: '#/components/schemas/ExperienceChangeBase'
+      - type: object
+        properties:
+          type:
+            enum:
+            - customCode
+          data:
+            type: object
+            description: Describes structure for "defaultCode" type of experience change
+            additionalProperties: false
+            properties:
+              css:
+                type: string
+                nullable: true
+                description: CSS code to be applied by this change
+              js:
+                type: string
+                description: Custom javascript code to be applied by this change
+                nullable: true
+              page_id:
+                description: The **id** of the page connected to this change, in case this is a **multi-page** experiment
+                type: string
+    ExperienceChangeAdd:
+      description: Data structure for adding a new change to an experience variation. The `id` field is omitted as it will be assigned upon creation.
+      oneOf:
+      - $ref: '#/components/schemas/ExperienceChangeDefaultCodeDataAdd'
+      - $ref: '#/components/schemas/ExperienceChangeDefaultCodeMultipageDataAdd'
+      - $ref: '#/components/schemas/ExperienceChangeDefaultRedirectDataAdd'
+      - $ref: '#/components/schemas/ExperienceChangeCustomCodeDataAdd'
+      - $ref: '#/components/schemas/ExperienceChangeRichStructureDataAdd'
+      - $ref: '#/components/schemas/ExperienceChangeFullStackFeatureAdd'
+      discriminator:
+        propertyName: type
+        mapping:
+          richStructure: '#/components/schemas/ExperienceChangeRichStructureDataAdd'
+          customCode: '#/components/schemas/ExperienceChangeCustomCodeDataAdd'
+          defaultCode: '#/components/schemas/ExperienceChangeDefaultCodeDataAdd'
+          defaultCodeMultipage: '#/components/schemas/ExperienceChangeDefaultCodeMultipageDataAdd'
+          defaultRedirect: '#/components/schemas/ExperienceChangeDefaultRedirectDataAdd'
+          fullStackFeature: '#/components/schemas/ExperienceChangeFullStackFeatureAdd'
+    SectionVersion:
+      allOf:
+      - $ref: '#/components/schemas/BaseSectionVersion'
+      - type: object
+        properties:
+          changes:
+            type: array
+            items:
+              oneOf:
+              - type: integer
+                description: Change ID
+              - $ref: '#/components/schemas/ExperienceChange'
+          variations:
+            type: array
+            items:
+              oneOf:
+              - type: integer
+                description: Variation ID
+    ExperienceSectionVersionExpandFields:
+      type: string
+      enum:
+      - changes
+    ExperienceChangeRichStructureDataUpdate:
+      type: object
+      description: Data for updating an existing 'richStructure' type change, identified by its `id`.
+      allOf:
+      - $ref: '#/components/schemas/ExperienceChangeId'
+      - $ref: '#/components/schemas/ExperienceChangeRichStructureDataBase'
+      - type: object
+        properties:
+          concurrency_key:
+            $ref: '#/components/schemas/ConcurrencyKey'
+      - required:
+        - type
+        - data
+    ExperienceChangeId:
+      description: Represents the unique identifier of an existing change within an experience variation. Used when updating or referencing a specific change.
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          description: The unique numerical identifier for this specific change.
+          type: integer
+      required:
+      - id
+    ExperienceChangeFullStackFeatureBase:
+      type: object
+      description: Defines a change for a Full Stack experiment that involves enabling or configuring a specific 'Feature' and its variables for this variation.
+      allOf:
+      - $ref: '#/components/schemas/ExperienceChangeBase'
+      - type: object
+        properties:
+          type:
+            enum:
+            - fullStackFeature
+          data:
+            type: object
+            description: Describes structure for "fullStackFeature" type of experience change
+            properties:
+              feature_id:
+                description: The **id** of the feature connected to this change
+                type: integer
+              variables_data:
+                type: object
+                description: A key-value object defined by user which describes the variables values. Where the key is variable name defined in connected feature and value is a variable's value with corresponding type
+    ExperienceSectionVersionIncludeFields:
+      type: string
+      enum:
+      - changes
+    ExperienceChangeDefaultCodeData:
+      type: object
+      description: Represents a 'defaultCode' type change, including its system-assigned ID.
       allOf:
       - $ref: '#/components/schemas/ExperienceChangeIdReadOnly'
-      - $ref: '#/components/schemas/ExperienceChangeDefaultRedirectDataBase'
+      - $ref: '#/components/schemas/ExperienceChangeDefaultCodeDataBase'
       - type: object
         properties:
           concurrency_key:
@@ -362,102 +720,34 @@ components:
               page_id:
                 description: The **id** of the page connected to this change.
                 type: string
-    CreateSectionVersionRequestData:
-      allOf:
-      - $ref: '#/components/schemas/SectionVersionCreate'
-    ExperienceChangeUpdate:
-      description: Data structure for updating an existing change within an experience variation. Requires the `id` of the change to be modified.
-      oneOf:
-      - $ref: '#/components/schemas/ExperienceChangeDefaultCodeDataUpdate'
-      - $ref: '#/components/schemas/ExperienceChangeDefaultCodeMultipageDataUpdate'
-      - $ref: '#/components/schemas/ExperienceChangeDefaultRedirectDataUpdate'
-      - $ref: '#/components/schemas/ExperienceChangeRichStructureDataUpdate'
-      - $ref: '#/components/schemas/ExperienceChangeCustomCodeDataUpdate'
-      - $ref: '#/components/schemas/ExperienceChangeFullStackFeatureUpdate'
-      discriminator:
-        propertyName: type
-        mapping:
-          richStructure: '#/components/schemas/ExperienceChangeRichStructureDataUpdate'
-          customCode: '#/components/schemas/ExperienceChangeCustomCodeDataUpdate'
-          defaultCode: '#/components/schemas/ExperienceChangeDefaultCodeDataUpdate'
-          defaultCodeMultipage: '#/components/schemas/ExperienceChangeDefaultCodeMultipageDataUpdate'
-          defaultRedirect: '#/components/schemas/ExperienceChangeDefaultRedirectDataUpdate'
-          fullStackFeature: '#/components/schemas/ExperienceChangeFullStackFeatureUpdate'
-    SectionVersion:
-      allOf:
-      - $ref: '#/components/schemas/BaseSectionVersion'
-      - type: object
-        properties:
-          changes:
-            type: array
-            items:
-              oneOf:
-              - type: integer
-                description: Change ID
-              - $ref: '#/components/schemas/ExperienceChange'
-          variations:
-            type: array
-            items:
-              oneOf:
-              - type: integer
-                description: Variation ID
-    ExperienceChangeRichStructureData:
+    ExperienceChangeIdReadOnly:
+      description: Represents the unique identifier of a change, typically when returned by the API after creation or in a list.
       type: object
-      description: Represents a 'richStructure' type change, including its system-assigned ID.
+      properties:
+        id:
+          description: The unique numerical identifier for this specific change.
+          type: integer
+          readOnly: true
+    ExperienceChangeDefaultRedirectDataAdd:
+      type: object
+      description: Data for creating a new 'defaultRedirect' type change.
       allOf:
       - $ref: '#/components/schemas/ExperienceChangeIdReadOnly'
-      - $ref: '#/components/schemas/ExperienceChangeRichStructureDataBase'
-      - type: object
-        properties:
-          concurrency_key:
-            $ref: '#/components/schemas/ConcurrencyKey'
-    ExperienceChangeFullStackFeatureBase:
-      type: object
-      description: Defines a change for a Full Stack experiment that involves enabling or configuring a specific 'Feature' and its variables for this variation.
-      allOf:
-      - $ref: '#/components/schemas/ExperienceChangeBase'
-      - type: object
-        properties:
-          type:
-            enum:
-            - fullStackFeature
+      - $ref: '#/components/schemas/ExperienceChangeDefaultRedirectDataBase'
+      - properties:
           data:
-            type: object
-            description: Describes structure for "fullStackFeature" type of experience change
-            properties:
-              feature_id:
-                description: The **id** of the feature connected to this change
-                type: integer
-              variables_data:
-                type: object
-                description: A key-value object defined by user which describes the variables values. Where the key is variable name defined in connected feature and value is a variable's value with corresponding type
-    SectionVersionCreate:
-      allOf:
-      - $ref: '#/components/schemas/BaseSectionVersion'
-      - type: object
-        properties:
-          changes:
-            type: array
-            description: List of changes to apply. If ID of a change is not provided, the change is gonna be created. Otherwise the change would be updated
-            items:
-              oneOf:
-              - $ref: '#/components/schemas/ExperienceChangeAdd'
-    ExperienceChangeFullStackFeature:
+            required:
+            - original_pattern
+            - variation_pattern
+        required:
+        - type
+        - data
+    ExperienceChangeDefaultRedirectDataUpdate:
       type: object
-      description: Represents a 'fullStackFeature' type change, including its system-assigned ID.
-      allOf:
-      - $ref: '#/components/schemas/ExperienceChangeIdReadOnly'
-      - $ref: '#/components/schemas/ExperienceChangeFullStackFeatureBase'
-      - type: object
-        properties:
-          concurrency_key:
-            $ref: '#/components/schemas/ConcurrencyKey'
-    ExperienceChangeDefaultCodeDataUpdate:
-      type: object
-      description: Data for updating an existing 'defaultCode' type change, identified by its `id`.
+      description: Data for updating an existing 'defaultRedirect' type change, identified by its `id`.
       allOf:
       - $ref: '#/components/schemas/ExperienceChangeId'
-      - $ref: '#/components/schemas/ExperienceChangeDefaultCodeDataBase'
+      - $ref: '#/components/schemas/ExperienceChangeDefaultRedirectDataBase'
       - type: object
         properties:
           concurrency_key:
@@ -465,69 +755,6 @@ components:
       - required:
         - type
         - data
-    ExperienceChangeDefaultCodeDataBase:
-      type: object
-      description: Defines a standard code-based change, typically generated by the Visual Editor for modifications like text replacement, style changes, or element removal. It can include CSS, Convert's internal JS representation, and custom JS.
-      allOf:
-      - $ref: '#/components/schemas/ExperienceChangeBase'
-      - type: object
-        properties:
-          type:
-            enum:
-            - defaultCode
-          data:
-            type: object
-            description: Describes structure for "defaultCode" type of experience change
-            additionalProperties: false
-            properties:
-              css:
-                type: string
-                nullable: true
-                description: CSS code to be applied by this change
-              js:
-                type: string
-                nullable: true
-                description: Javascript code generated by the visual editor or written in the same structure, to be applied by this experience change
-              custom_js:
-                type: string
-                description: Custom javascript code to be applied by this change
-                nullable: true
-    ExperienceChangeCustomCodeDataBase:
-      type: object
-      description: Defines a change applied purely through custom-written CSS and/or JavaScript code, bypassing the Visual Editor's generated code. This offers maximum flexibility for developers.
-      allOf:
-      - $ref: '#/components/schemas/ExperienceChangeBase'
-      - type: object
-        properties:
-          type:
-            enum:
-            - customCode
-          data:
-            type: object
-            description: Describes structure for "defaultCode" type of experience change
-            additionalProperties: false
-            properties:
-              css:
-                type: string
-                nullable: true
-                description: CSS code to be applied by this change
-              js:
-                type: string
-                description: Custom javascript code to be applied by this change
-                nullable: true
-              page_id:
-                description: The **id** of the page connected to this change, in case this is a **multi-page** experiment
-                type: string
-    ExperienceChangeId:
-      description: Represents the unique identifier of an existing change within an experience variation. Used when updating or referencing a specific change.
-      type: object
-      additionalProperties: false
-      properties:
-        id:
-          description: The unique numerical identifier for this specific change.
-          type: integer
-      required:
-      - id
     ExperienceChange:
       description: Represents a single, specific modification applied as part of an experience's variation. The exact structure and content depend on the `type` of change.
       oneOf:
@@ -546,310 +773,46 @@ components:
           defaultCodeMultipage: '#/components/schemas/ExperienceChangeDefaultCodeMultipageData'
           defaultRedirect: '#/components/schemas/ExperienceChangeDefaultRedirectData'
           fullStackFeature: '#/components/schemas/ExperienceChangeFullStackFeature'
-    ExperienceChangeCustomCodeDataAdd:
+    ExperienceChangeRichStructureData:
       type: object
-      description: Data for creating a new 'customCode' type change.
-      allOf:
-      - $ref: '#/components/schemas/ExperienceChangeIdReadOnly'
-      - $ref: '#/components/schemas/ExperienceChangeCustomCodeDataBase'
-      - properties:
-          data:
-            required:
-            - css
-            - js
-        required:
-        - type
-        - data
-    ExperienceChangeDefaultCodeData:
-      type: object
-      description: Represents a 'defaultCode' type change, including its system-assigned ID.
-      allOf:
-      - $ref: '#/components/schemas/ExperienceChangeIdReadOnly'
-      - $ref: '#/components/schemas/ExperienceChangeDefaultCodeDataBase'
-      - type: object
-        properties:
-          concurrency_key:
-            $ref: '#/components/schemas/ConcurrencyKey'
-    ExperienceSectionVersionResponseData:
-      description: Response containing the details of a single MVT section version.
-      type: object
-      properties:
-        data:
-          $ref: '#/components/schemas/SectionVersion'
-    ExperienceChangeRichStructureDataBase:
-      type: object
-      description: Defines a complex change, often involving multiple DOM manipulations or structured data, typically generated by advanced Visual Editor interactions or specific integrations. (Primarily for internal or advanced programmatic use).
-      allOf:
-      - $ref: '#/components/schemas/ExperienceChangeBase'
-      - type: object
-        properties:
-          type:
-            enum:
-            - richStructure
-          data:
-            type: object
-            description: Describes structure for "defaultCode" type of experience change
-            additionalProperties:
-              type: string
-              description: Various key - value data
-            properties:
-              js:
-                type: string
-                nullable: true
-                description: Javascript code generated by the visual editor or written in the same structure, to be applied by this experience change
-              selector:
-                type: string
-                description: CSS selector of the element to which the change refers to, if this is a change concerning one DOM element
-              page_id:
-                description: The **id** of the page connected to this change, in case this is a **multi-page** experiment
-                type: string
-    ExperienceChangeFullStackFeatureUpdate:
-      type: object
-      description: Data for updating an existing 'fullStackFeature' type change, identified by its `id`.
-      allOf:
-      - $ref: '#/components/schemas/ExperienceChangeId'
-      - $ref: '#/components/schemas/ExperienceChangeFullStackFeatureBase'
-      - type: object
-        properties:
-          concurrency_key:
-            $ref: '#/components/schemas/ConcurrencyKey'
-      - required:
-        - type
-        - data
-    BaseSectionVersion:
-      type: object
-      properties:
-        id:
-          description: 'A unique identifier for this version within its parent section (e.g., "v1", "02", "ab").
-
-            Typically a short string (1-2 characters). This ID is used to construct the overall MVT variation combinations.
-
-            '
-          type: string
-          minLength: 1
-          maxLength: 2
-          pattern: ^[0-9a-z]{1,2}$
-        name:
-          description: A user-defined, friendly name for this version (e.g., "Red Button", "Headline Option A", "Original Image"). This name appears in MVT setup and reports.
-          type: string
-          maxLength: 200
-        concurrency_key:
-          $ref: '#/components/schemas/ConcurrencyKey'
-    ErrorData:
-      type: object
-      properties:
-        code:
-          type: integer
-          format: int32
-        message:
-          oneOf:
-          - type: string
-          - type: array
-            items:
-              type: string
-        fields:
-          oneOf:
-          - type: string
-          - type: array
-            items:
-              type: string
-    ExperienceChangeRichStructureDataAdd:
-      type: object
-      description: Data for creating a new 'richStructure' type change.
+      description: Represents a 'richStructure' type change, including its system-assigned ID.
       allOf:
       - $ref: '#/components/schemas/ExperienceChangeIdReadOnly'
       - $ref: '#/components/schemas/ExperienceChangeRichStructureDataBase'
-      - properties:
-          data:
-            required:
-            - js
-        required:
-        - type
-        - data
-    ExperienceChangeDefaultCodeMultipageData:
-      type: object
-      description: Represents a 'defaultCodeMultipage' type change, including its system-assigned ID.
-      allOf:
-      - $ref: '#/components/schemas/ExperienceChangeIdReadOnly'
-      - $ref: '#/components/schemas/ExperienceChangeDefaultCodeMultipageDataBase'
       - type: object
         properties:
           concurrency_key:
             $ref: '#/components/schemas/ConcurrencyKey'
-    ExperienceChangeFullStackFeatureAdd:
-      type: object
-      description: Data for creating a new 'fullStackFeature' type change.
-      allOf:
-      - $ref: '#/components/schemas/ExperienceChangeIdReadOnly'
-      - $ref: '#/components/schemas/ExperienceChangeFullStackFeatureBase'
-      - properties:
-          data:
-            required:
-            - feature_id
-            - variables_data
-        required:
-        - type
-        - data
-    ExperienceChangeDefaultRedirectDataBase:
-      type: object
-      description: Defines a URL redirect, typically used in Split URL experiments. It specifies how to match an original URL and construct the URL for the variation page.
-      allOf:
-      - $ref: '#/components/schemas/ExperienceChangeBase'
-      - type: object
-        properties:
-          type:
-            enum:
-            - defaultRedirect
-          data:
-            type: object
-            description: Describes structure for "defaultRedirect" type of experience change
-            additionalProperties: false
-            properties:
-              case_sensitive:
-                type: boolean
-                description: Defines whether the URL matching is case sensitive or not
-              original_pattern:
-                type: string
-                description: Pattern for matching the Original URL in order to construct the redirect URL
-              variation_pattern:
-                type: string
-                description: String used to construct the variation redirect URL. This string can contain matches from original_url or it can be a standard URL
-    ExperienceChangeCustomCodeDataUpdate:
-      type: object
-      description: Data for updating an existing 'customCode' type change, identified by its `id`.
-      allOf:
-      - $ref: '#/components/schemas/ExperienceChangeId'
-      - $ref: '#/components/schemas/ExperienceChangeCustomCodeDataBase'
-      - type: object
-        properties:
-          concurrency_key:
-            $ref: '#/components/schemas/ConcurrencyKey'
-      - required:
-        - type
-        - data
-    SectionVersionUpdate:
-      allOf:
-      - $ref: '#/components/schemas/BaseSectionVersion'
-      - type: object
-        properties:
-          concurrency_key:
-            $ref: '#/components/schemas/ConcurrencyKey'
-          changes:
-            type: array
-            description: List of changes to apply. If ID of a change is not provided, the change is gonna be created. Empty array will remove changes. Otherwise the change would be updated
-            items:
-              anyOf:
-              - $ref: '#/components/schemas/ExperienceChangeId'
-              - $ref: '#/components/schemas/ExperienceChangeUpdate'
-              - $ref: '#/components/schemas/ExperienceChangeAdd'
-    SuccessData:
-      type: object
-      properties:
-        code:
-          type: integer
-          format: int32
-        message:
-          type: string
-    ExperienceChangeDefaultCodeMultipageDataUpdate:
-      type: object
-      description: Data for updating an existing 'defaultCodeMultipage' type change, identified by its `id`.
-      allOf:
-      - $ref: '#/components/schemas/ExperienceChangeId'
-      - $ref: '#/components/schemas/ExperienceChangeDefaultCodeMultipageDataBase'
-      - type: object
-        properties:
-          concurrency_key:
-            $ref: '#/components/schemas/ConcurrencyKey'
-      - required:
-        - type
-        - data
-    ExperienceChangeRichStructureDataUpdate:
-      type: object
-      description: Data for updating an existing 'richStructure' type change, identified by its `id`.
-      allOf:
-      - $ref: '#/components/schemas/ExperienceChangeId'
-      - $ref: '#/components/schemas/ExperienceChangeRichStructureDataBase'
-      - type: object
-        properties:
-          concurrency_key:
-            $ref: '#/components/schemas/ConcurrencyKey'
-      - required:
-        - type
-        - data
-    ConcurrencyKey:
-      type: string
-      nullable: true
-      description: A server-generated hash that represents the object's state at the time of retrieval. When included in an update request, the operation will only succeed if the object hasn't been modified since this key was obtained. If another update has occurred in the meantime, the request will fail with a conflict error, requiring you to fetch the latest version and retry your update with the new concurrency_key. This implements optimistic concurrency control to prevent lost updates in concurrent scenarios.
-    ExperienceChangeIdReadOnly:
-      description: Represents the unique identifier of a change, typically when returned by the API after creation or in a list.
-      type: object
-      properties:
-        id:
-          description: The unique numerical identifier for this specific change.
-          type: integer
-          readOnly: true
-    ExperienceChangeBase:
-      description: The fundamental structure representing a single modification applied within an experience's variation. The specific content and behavior of the change are determined by its `type` and detailed in the `data` object.
-      type: object
-      properties:
-        type:
-          type: string
-          enum:
-          - richStructure
-          - customCode
-          - defaultCode
-          - defaultCodeMultipage
-          - defaultRedirect
-          - fullStackFeature
-        data:
-          description: 'A flexible object containing the specific details and content for this change, structured according to the change `type`.
+  requestBodies:
+    UpdateSectionVersionRequest:
+      description: 'Updates an existing version within an MVT section. Allows changing the `name` or the `changes` (JS, CSS modifications) associated with this version.
 
-            For example, for `customCode`, it would contain `js` and `css` strings. For `defaultRedirect`, it would contain `original_pattern` and `variation_pattern`.
-
-            This field is included by default when fetching a single `ExperienceChange` but might be omitted in list views unless specified in an `include` parameter.
-
-            '
-          type: object
-    ExperienceChangeAdd:
-      description: Data structure for adding a new change to an experience variation. The `id` field is omitted as it will be assigned upon creation.
-      oneOf:
-      - $ref: '#/components/schemas/ExperienceChangeDefaultCodeDataAdd'
-      - $ref: '#/components/schemas/ExperienceChangeDefaultCodeMultipageDataAdd'
-      - $ref: '#/components/schemas/ExperienceChangeDefaultRedirectDataAdd'
-      - $ref: '#/components/schemas/ExperienceChangeCustomCodeDataAdd'
-      - $ref: '#/components/schemas/ExperienceChangeRichStructureDataAdd'
-      - $ref: '#/components/schemas/ExperienceChangeFullStackFeatureAdd'
-      discriminator:
-        propertyName: type
-        mapping:
-          richStructure: '#/components/schemas/ExperienceChangeRichStructureDataAdd'
-          customCode: '#/components/schemas/ExperienceChangeCustomCodeDataAdd'
-          defaultCode: '#/components/schemas/ExperienceChangeDefaultCodeDataAdd'
-          defaultCodeMultipage: '#/components/schemas/ExperienceChangeDefaultCodeMultipageDataAdd'
-          defaultRedirect: '#/components/schemas/ExperienceChangeDefaultRedirectDataAdd'
-          fullStackFeature: '#/components/schemas/ExperienceChangeFullStackFeatureAdd'
-    ExperienceChangeDefaultRedirectDataUpdate:
-      type: object
-      description: Data for updating an existing 'defaultRedirect' type change, identified by its `id`.
-      allOf:
-      - $ref: '#/components/schemas/ExperienceChangeId'
-      - $ref: '#/components/schemas/ExperienceChangeDefaultRedirectDataBase'
-      - type: object
-        properties:
-          concurrency_key:
-            $ref: '#/components/schemas/ConcurrencyKey'
-      - required:
-        - type
-        - data
-  responses:
-    SuccessResponse:
-      description: 'A generic success response, typically used for operations that don''t return specific data (like deletions or some updates). The `code` is usually 200, and `message` confirms the successful action.
+        The `id` of the version must be provided.
 
         '
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/SuccessData'
+            $ref: '#/components/schemas/UpdateSectionVersionRequestData'
+      required: true
+    CreateSectionVersionRequest:
+      description: 'Adds a new version (alternative) to an existing section within an MVT experience. Requires:
+
+        - `id`: A unique 1-2 character ID for this version within its section.
+
+        - `name`: A descriptive name for the version (e.g., "Red Button", "Short Headline").
+
+        - `changes`: An array defining the modifications (JS, CSS) for this specific version.
+
+        **IMPORTANT:** Adding versions changes the MVT combinations.
+
+        '
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CreateSectionVersionRequestData'
+      required: true
+  responses:
     ErrorResponse:
       description: 'Indicates an error occurred while processing the request. The `code` provides an HTTP status code, `message` offers a human-readable explanation or an array of validation errors, and `fields` (if present) specifies which input fields were problematic.
 
@@ -858,6 +821,14 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorData'
+    SuccessResponse:
+      description: 'A generic success response, typically used for operations that don''t return specific data (like deletions or some updates). The `code` is usually 200, and `message` confirms the successful action.
+
+        '
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SuccessData'
     ExperienceSectionVersionResponse:
       description: Details for a single version within an MVT experience section, including its `id`, `name`, and the `changes` (CSS, JS modifications) it applies.
       content:

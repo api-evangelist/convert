@@ -1,30 +1,7 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Convert Accounts AI content API
-  description: 'Move your app forward with the Convert API. The Convert API allows
-
-    you to manage your Convert Experiences projects using code. The REST API is
-
-    an interface for managing and extending functionality of Convert. For
-
-    example, instead of creating and maintaining projects using the Convert
-
-    Experiences web dashboard you can create an experiment programmatically.
-
-    Additionally, if you prefer to run custom analysis on experiment results you
-
-    can leverage the API to pull data from Convert Experiences into your own
-
-    workflow. If you do not have a Convert account already, sign up for a free
-
-    developer account at https://www.convert.com/api/.
-
-
-    *[Convert API V1](/doc/v1) is still available and documentation can be found [here](/doc/v1) but using it is highly discouraged
-
-    as it will be phased out in the future*
-
-    '
+  title: Convert AI content API
+  description: Move your app forward with the Convert API.
   version: 2.0.0
 servers:
 - url: https://api.convert.com/api/v2
@@ -55,9 +32,7 @@ paths:
 
         This helps in quickly generating creative options for A/B testing headlines, calls to action, or other textual elements.
 
-        Optionally, an OpenAI Key can be provided for using more advanced models or larger context.
-
-        '
+        Optionally, an OpenAI Key can be provided for using more advanced models or larger context.'
       requestBody:
         $ref: '#/components/requestBodies/GenerateTextVariantsRequest'
       responses:
@@ -78,9 +53,7 @@ paths:
         description: ID of the account under which the api call executes
         schema:
           type: integer
-      description: 'Leverages Generative AI to improve provided code.
-
-        '
+      description: Leverages Generative AI to improve provided code.
       requestBody:
         $ref: '#/components/requestBodies/GenerateCodeVariantRequest'
       responses:
@@ -90,70 +63,6 @@ paths:
           $ref: '#/components/responses/ErrorResponse'
 components:
   schemas:
-    FABPrinciples:
-      description: 'A component of the Features-Advantages-Benefits (FAB) sales technique, used to explain how a product can help a customer.
-
-        - `features`: Describe the factual statements about the product or service (e.g., "This car has a hybrid engine").
-
-        - `advantages`: Explain what the features do and how they can be helpful (e.g., "The hybrid engine gives you better gas mileage").
-
-        - `benefits`: Show the customer how the advantages meet their explicit needs and desires (e.g., "You''ll save money on gas and reduce your carbon footprint").
-
-        '
-      type: string
-      enum:
-      - features
-      - advantages
-      - benefits
-    GenerateCodeVariantRequestData:
-      type: object
-      properties:
-        content:
-          description: The original code that you want the AI to improve.
-          type: string
-        stream:
-          description: Whether to stream the response.
-          type: boolean
-          default: false
-      required:
-      - content
-    GenerateCodeVariantResponseStreamData:
-      type: string
-      description: 'Stream of the AI-generated code variation.
-
-
-        In format:
-
-
-        `data: {"content":"Hello"}`
-
-
-        `data: {"content":"World"}`
-
-
-        `data: [DONE]`
-
-        '
-    GenerateTextVariantsRequestDataFogg:
-      allOf:
-      - $ref: '#/components/schemas/GenerateTextVariantsRequestDataBase'
-      - type: object
-        properties:
-          principle_class:
-            enum:
-            - fogg_behavior
-          principle:
-            $ref: '#/components/schemas/FoggBehaviorPrinciples'
-    GenerateTextVariantsRequestDataAIDA:
-      allOf:
-      - $ref: '#/components/schemas/GenerateTextVariantsRequestDataBase'
-      - type: object
-        properties:
-          principle_class:
-            enum:
-            - aida
-          principle:
-            $ref: '#/components/schemas/AIDAPrinciples'
     AIDAPrinciples:
       description: 'A stage in the AIDA marketing model, representing a common sequence of events leading to a purchase or action.
 
@@ -172,6 +81,43 @@ components:
       - interest
       - desire
       - action
+    GenerateTextVariantsRequestData:
+      oneOf:
+      - $ref: '#/components/schemas/GenerateTextVariantsRequestDataNone'
+      - $ref: '#/components/schemas/GenerateTextVariantsRequestDataCialdini'
+      - $ref: '#/components/schemas/GenerateTextVariantsRequestDataFogg'
+      - $ref: '#/components/schemas/GenerateTextVariantsRequestDataAIDA'
+      - $ref: '#/components/schemas/GenerateTextVariantsRequestDataPAS'
+      - $ref: '#/components/schemas/GenerateTextVariantsRequestDataFAB'
+      discriminator:
+        propertyName: principle_class
+        mapping:
+          none: '#/components/schemas/GenerateTextVariantsRequestDataNone'
+          cialdini: '#/components/schemas/GenerateTextVariantsRequestDataCialdini'
+          fogg_behavior: '#/components/schemas/GenerateTextVariantsRequestDataFogg'
+          aida: '#/components/schemas/GenerateTextVariantsRequestDataAIDA'
+          pas: '#/components/schemas/GenerateTextVariantsRequestDataPAS'
+          fab: '#/components/schemas/GenerateTextVariantsRequestDataFAB'
+    GenerateTextVariantsRequestDataCialdini:
+      allOf:
+      - $ref: '#/components/schemas/GenerateTextVariantsRequestDataBase'
+      - type: object
+        properties:
+          principle_class:
+            description: Framework model from which principles used for text generation are selected
+            enum:
+            - cialdini
+          principle:
+            $ref: '#/components/schemas/CialdiniPrinciples'
+    GenerateTextVariantsRequestDataNone:
+      allOf:
+      - $ref: '#/components/schemas/GenerateTextVariantsRequestDataBase'
+      - type: object
+        properties:
+          principle_class:
+            description: Framework model from which principles used for text generation are selected
+            enum:
+            - none
     GenerateTextVariantsRequestDataPAS:
       allOf:
       - $ref: '#/components/schemas/GenerateTextVariantsRequestDataBase'
@@ -182,37 +128,34 @@ components:
             - pas
           principle:
             $ref: '#/components/schemas/PASPrinciples'
-    VariantResponseItem:
-      description: A single AI-generated text variant.
-      type: object
-      properties:
-        content:
-          description: The AI-generated text string. This is one alternative version of the original content provided in the request.
-          type: string
-    PASPrinciples:
-      description: 'A component of the Problem-Agitate-Solution (PAS) copywriting framework, designed to persuade by highlighting a pain point and offering a solution.
-
-        - `problem`: Identify and state the customer''s problem.
-
-        - `agitation`: Amplify the problem, making it more acute and emotional.
-
-        - `solution`: Present your product/service as the solution to this agitated problem.
-
-        '
-      type: string
-      enum:
-      - problem
-      - agitation
-      - solution
-    GenerateTextVariantsRequestDataNone:
+    GenerateTextVariantsRequestDataFAB:
       allOf:
       - $ref: '#/components/schemas/GenerateTextVariantsRequestDataBase'
       - type: object
         properties:
           principle_class:
-            description: Framework model from which principles used for text generation are selected
             enum:
-            - none
+            - fab
+          principle:
+            $ref: '#/components/schemas/FABPrinciples'
+    ErrorData:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          oneOf:
+          - type: string
+          - type: array
+            items:
+              type: string
+        fields:
+          oneOf:
+          - type: string
+          - type: array
+            items:
+              type: string
     CialdiniPrinciples:
       description: 'One of Robert Cialdini''s six (now seven) key principles of influence. Selecting a principle guides the AI to generate text that leverages that specific psychological trigger.
 
@@ -240,27 +183,83 @@ components:
       - unity
       - scarcity
       - sympathy
-    GenerateTextVariantsRequestDataFAB:
+    GenerateCodeVariantResponseStreamData:
+      type: string
+      description: 'Stream of the AI-generated code variation.
+
+
+        In format:
+
+
+        `data: {"content":"Hello"}`
+
+
+        `data: {"content":"World"}`
+
+
+        `data: [DONE]`
+
+        '
+    FoggBehaviorPrinciples:
+      description: 'One of the core components of BJ Fogg''s Behavior Model (B=MAP), which states that for a behavior to occur, Motivation, Ability, and a Prompt (or Trigger) must converge at the same moment.
+
+        - `motivation`: The underlying drive (e.g., pleasure/pain, hope/fear, social acceptance/rejection).
+
+        - `ability`: The ease with which the action can be performed (simplicity).
+
+        - `triggers` (or Prompts): The cue that tells someone to perform the behavior.
+
+        '
+      type: string
+      enum:
+      - motivation
+      - ability
+      - triggers
+    PASPrinciples:
+      description: 'A component of the Problem-Agitate-Solution (PAS) copywriting framework, designed to persuade by highlighting a pain point and offering a solution.
+
+        - `problem`: Identify and state the customer''s problem.
+
+        - `agitation`: Amplify the problem, making it more acute and emotional.
+
+        - `solution`: Present your product/service as the solution to this agitated problem.
+
+        '
+      type: string
+      enum:
+      - problem
+      - agitation
+      - solution
+    VariantResponseItem:
+      description: A single AI-generated text variant.
+      type: object
+      properties:
+        content:
+          description: The AI-generated text string. This is one alternative version of the original content provided in the request.
+          type: string
+    GenerateTextVariantsRequestDataAIDA:
       allOf:
       - $ref: '#/components/schemas/GenerateTextVariantsRequestDataBase'
       - type: object
         properties:
           principle_class:
             enum:
-            - fab
+            - aida
           principle:
-            $ref: '#/components/schemas/FABPrinciples'
-    GenerateTextVariantsRequestDataCialdini:
-      allOf:
-      - $ref: '#/components/schemas/GenerateTextVariantsRequestDataBase'
-      - type: object
-        properties:
-          principle_class:
-            description: Framework model from which principles used for text generation are selected
-            enum:
-            - cialdini
-          principle:
-            $ref: '#/components/schemas/CialdiniPrinciples'
+            $ref: '#/components/schemas/AIDAPrinciples'
+    GenerateTextVariantsResponseData:
+      description: The response containing the AI-generated text variations.
+      type: object
+      properties:
+        data:
+          description: Wrapper for the response data.
+          type: object
+          properties:
+            variants:
+              description: A list of the generated text variations. Each item in the list is a string representing one AI-generated alternative to the input content.
+              type: array
+              items:
+                $ref: '#/components/schemas/VariantResponseItem'
     GenerateTextVariantsRequestDataBase:
       description: Base structure for requesting AI-generated text variations. Specifies the content to rewrite, the AI model framework and principle to use, number of variations, and optional contextual content.
       type: object
@@ -303,69 +302,18 @@ components:
       required:
       - content
       - parameters
-    GenerateTextVariantsResponseData:
-      description: The response containing the AI-generated text variations.
+    GenerateCodeVariantRequestData:
       type: object
       properties:
-        data:
-          description: Wrapper for the response data.
-          type: object
-          properties:
-            variants:
-              description: A list of the generated text variations. Each item in the list is a string representing one AI-generated alternative to the input content.
-              type: array
-              items:
-                $ref: '#/components/schemas/VariantResponseItem'
-    FoggBehaviorPrinciples:
-      description: 'One of the core components of BJ Fogg''s Behavior Model (B=MAP), which states that for a behavior to occur, Motivation, Ability, and a Prompt (or Trigger) must converge at the same moment.
-
-        - `motivation`: The underlying drive (e.g., pleasure/pain, hope/fear, social acceptance/rejection).
-
-        - `ability`: The ease with which the action can be performed (simplicity).
-
-        - `triggers` (or Prompts): The cue that tells someone to perform the behavior.
-
-        '
-      type: string
-      enum:
-      - motivation
-      - ability
-      - triggers
-    GenerateTextVariantsRequestData:
-      oneOf:
-      - $ref: '#/components/schemas/GenerateTextVariantsRequestDataNone'
-      - $ref: '#/components/schemas/GenerateTextVariantsRequestDataCialdini'
-      - $ref: '#/components/schemas/GenerateTextVariantsRequestDataFogg'
-      - $ref: '#/components/schemas/GenerateTextVariantsRequestDataAIDA'
-      - $ref: '#/components/schemas/GenerateTextVariantsRequestDataPAS'
-      - $ref: '#/components/schemas/GenerateTextVariantsRequestDataFAB'
-      discriminator:
-        propertyName: principle_class
-        mapping:
-          none: '#/components/schemas/GenerateTextVariantsRequestDataNone'
-          cialdini: '#/components/schemas/GenerateTextVariantsRequestDataCialdini'
-          fogg_behavior: '#/components/schemas/GenerateTextVariantsRequestDataFogg'
-          aida: '#/components/schemas/GenerateTextVariantsRequestDataAIDA'
-          pas: '#/components/schemas/GenerateTextVariantsRequestDataPAS'
-          fab: '#/components/schemas/GenerateTextVariantsRequestDataFAB'
-    ErrorData:
-      type: object
-      properties:
-        code:
-          type: integer
-          format: int32
-        message:
-          oneOf:
-          - type: string
-          - type: array
-            items:
-              type: string
-        fields:
-          oneOf:
-          - type: string
-          - type: array
-            items:
-              type: string
+        content:
+          description: The original code that you want the AI to improve.
+          type: string
+        stream:
+          description: Whether to stream the response.
+          type: boolean
+          default: false
+      required:
+      - content
     GenerateCodeVariantResponseData:
       description: The response containing the AI-generated code variation.
       type: object
@@ -377,28 +325,38 @@ components:
             content:
               description: The AI-generated code string. Or partial response if streaming is enabled.
               type: string
-  requestBodies:
-    GenerateTextVariantsRequest:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/GenerateTextVariantsRequestData'
-      required: true
-    GenerateCodeVariantRequest:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/GenerateCodeVariantRequestData'
-      required: true
-  responses:
-    ErrorResponse:
-      description: 'Indicates an error occurred while processing the request. The `code` provides an HTTP status code, `message` offers a human-readable explanation or an array of validation errors, and `fields` (if present) specifies which input fields were problematic.
+    FABPrinciples:
+      description: 'A component of the Features-Advantages-Benefits (FAB) sales technique, used to explain how a product can help a customer.
+
+        - `features`: Describe the factual statements about the product or service (e.g., "This car has a hybrid engine").
+
+        - `advantages`: Explain what the features do and how they can be helpful (e.g., "The hybrid engine gives you better gas mileage").
+
+        - `benefits`: Show the customer how the advantages meet their explicit needs and desires (e.g., "You''ll save money on gas and reduce your carbon footprint").
 
         '
+      type: string
+      enum:
+      - features
+      - advantages
+      - benefits
+    GenerateTextVariantsRequestDataFogg:
+      allOf:
+      - $ref: '#/components/schemas/GenerateTextVariantsRequestDataBase'
+      - type: object
+        properties:
+          principle_class:
+            enum:
+            - fogg_behavior
+          principle:
+            $ref: '#/components/schemas/FoggBehaviorPrinciples'
+  responses:
+    GenerateTextVariantsResponse:
+      description: A list of AI-generated text variations based on the provided input content, model framework, and principle. Each variant is a string.
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/ErrorData'
+            $ref: '#/components/schemas/GenerateTextVariantsResponseData'
     GenerateCodeVariantResponse:
       description: A list of AI-generated code variation based on the provided input code.
       content:
@@ -408,12 +366,27 @@ components:
         text/event-stream:
           schema:
             $ref: '#/components/schemas/GenerateCodeVariantResponseStreamData'
-    GenerateTextVariantsResponse:
-      description: A list of AI-generated text variations based on the provided input content, model framework, and principle. Each variant is a string.
+    ErrorResponse:
+      description: 'Indicates an error occurred while processing the request. The `code` provides an HTTP status code, `message` offers a human-readable explanation or an array of validation errors, and `fields` (if present) specifies which input fields were problematic.
+
+        '
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/GenerateTextVariantsResponseData'
+            $ref: '#/components/schemas/ErrorData'
+  requestBodies:
+    GenerateCodeVariantRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GenerateCodeVariantRequestData'
+      required: true
+    GenerateTextVariantsRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GenerateTextVariantsRequestData'
+      required: true
   securitySchemes:
     requestSigning:
       type: apiKey

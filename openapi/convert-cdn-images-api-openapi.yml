@@ -1,30 +1,7 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Convert Accounts Cdn Images API
-  description: 'Move your app forward with the Convert API. The Convert API allows
-
-    you to manage your Convert Experiences projects using code. The REST API is
-
-    an interface for managing and extending functionality of Convert. For
-
-    example, instead of creating and maintaining projects using the Convert
-
-    Experiences web dashboard you can create an experiment programmatically.
-
-    Additionally, if you prefer to run custom analysis on experiment results you
-
-    can leverage the API to pull data from Convert Experiences into your own
-
-    workflow. If you do not have a Convert account already, sign up for a free
-
-    developer account at https://www.convert.com/api/.
-
-
-    *[Convert API V1](/doc/v1) is still available and documentation can be found [here](/doc/v1) but using it is highly discouraged
-
-    as it will be phased out in the future*
-
-    '
+  title: Convert Cdn Images API
+  description: Move your app forward with the Convert API.
   version: 2.0.0
 servers:
 - url: https://api.convert.com/api/v2
@@ -45,9 +22,7 @@ paths:
 
         These images can be used in experience variations. Supports pagination.
 
-        The Knowledge Base article "Image Upload Guidelines for Convert Visual Editor" mentions image upload limits.
-
-        '
+        The Knowledge Base article "Image Upload Guidelines for Convert Visual Editor" mentions image upload limits.'
       tags:
       - Cdn Images
       parameters:
@@ -136,40 +111,6 @@ components:
           format: int32
         message:
           type: string
-    GetCdnImagesListRequestData:
-      type: object
-      description: Parameters for listing images uploaded to a project's CDN storage. Supports pagination.
-      properties:
-        start_from:
-          description: 'The `key` (filename on CDN) of an image from which to start listing.
-
-            The returned list will include images lexicographically after this key. Used for pagination.
-
-            '
-          type: string
-        max_results:
-          type: integer
-          nullable: true
-          minimum: 0
-          maximum: 100
-          default: 50
-          description: 'The maximum number of images to return in this request. Used for pagination. Default is 50.
-
-            '
-    CdnImage:
-      type: object
-      description: Represents an image file hosted on Convert's CDN, typically used in experience variations.
-      properties:
-        cdn_url:
-          description: The publicly accessible URL of the image on the Content Delivery Network (CDN). This URL can be used directly in `<img>` tags or CSS.
-          type: string
-        key:
-          description: 'The unique key or path identifier for this image within Convert''s CDN storage for the project (e.g., "project_images/my_hero_image.jpg").
-
-            This key is used for managing the image (e.g., deletion) and can be used for pagination (`start_from`).
-
-            '
-          type: string
     ErrorData:
       type: object
       properties:
@@ -188,17 +129,31 @@ components:
           - type: array
             items:
               type: string
+    CdnImage:
+      type: object
+      description: Represents an image file hosted on Convert's CDN, typically used in experience variations.
+      properties:
+        cdn_url:
+          description: The publicly accessible URL of the image on the Content Delivery Network (CDN). This URL can be used directly in `<img>` tags or CSS.
+          type: string
+        key:
+          description: 'The unique key or path identifier for this image within Convert''s CDN storage for the project (e.g., "project_images/my_hero_image.jpg").
+
+            This key is used for managing the image (e.g., deletion) and can be used for pagination (`start_from`).
+
+            '
+          type: string
+    CdnImagesList:
+      type: array
+      description: A list of CDN image objects.
+      items:
+        $ref: '#/components/schemas/CdnImage'
     CdnImagesListResponseData:
       type: object
       description: Response containing a list of images hosted on Convert's CDN for the project.
       properties:
         data:
           $ref: '#/components/schemas/CdnImagesList'
-    CdnImagesList:
-      type: array
-      description: A list of CDN image objects.
-      items:
-        $ref: '#/components/schemas/CdnImage'
     UploadCdnImageRequestData:
       type: object
       description: 'Request body for uploading an image to the project''s CDN storage. Uses multipart/form-data.
@@ -226,13 +181,27 @@ components:
       required:
       - image_name
       - image
+    GetCdnImagesListRequestData:
+      type: object
+      description: Parameters for listing images uploaded to a project's CDN storage. Supports pagination.
+      properties:
+        start_from:
+          description: 'The `key` (filename on CDN) of an image from which to start listing.
+
+            The returned list will include images lexicographically after this key. Used for pagination.
+
+            '
+          type: string
+        max_results:
+          type: integer
+          nullable: true
+          minimum: 0
+          maximum: 100
+          default: 50
+          description: 'The maximum number of images to return in this request. Used for pagination. Default is 50.
+
+            '
   responses:
-    ImageCdnResponse:
-      description: Details of a single image uploaded to the CDN, including its `cdn_url` and `key`.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/CdnImage'
     ErrorResponse:
       description: 'Indicates an error occurred while processing the request. The `code` provides an HTTP status code, `message` offers a human-readable explanation or an array of validation errors, and `fields` (if present) specifies which input fields were problematic.
 
@@ -241,6 +210,12 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorData'
+    ImageCdnResponse:
+      description: Details of a single image uploaded to the CDN, including its `cdn_url` and `key`.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CdnImage'
     CdnImagesListResponse:
       description: A list of images uploaded to the Convert CDN for a project. Each entry provides the `cdn_url` for accessing the image and its `key` (filename).
       content:

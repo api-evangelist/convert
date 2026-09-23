@@ -1,30 +1,7 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Convert Accounts Files API
-  description: 'Move your app forward with the Convert API. The Convert API allows
-
-    you to manage your Convert Experiences projects using code. The REST API is
-
-    an interface for managing and extending functionality of Convert. For
-
-    example, instead of creating and maintaining projects using the Convert
-
-    Experiences web dashboard you can create an experiment programmatically.
-
-    Additionally, if you prefer to run custom analysis on experiment results you
-
-    can leverage the API to pull data from Convert Experiences into your own
-
-    workflow. If you do not have a Convert account already, sign up for a free
-
-    developer account at https://www.convert.com/api/.
-
-
-    *[Convert API V1](/doc/v1) is still available and documentation can be found [here](/doc/v1) but using it is highly discouraged
-
-    as it will be phased out in the future*
-
-    '
+  title: Convert Files API
+  description: Move your app forward with the Convert API.
   version: 2.0.0
 servers:
 - url: https://api.convert.com/api/v2
@@ -69,9 +46,7 @@ paths:
       summary: Get content of an uploaded file
       description: 'Retrieves the content of a previously uploaded file, identified by its `file_key`.
 
-        The file content is returned base64 encoded.
-
-        '
+        The file content is returned base64 encoded.'
       tags:
       - Files
       parameters:
@@ -132,6 +107,42 @@ paths:
           $ref: '#/components/responses/ErrorResponse'
 components:
   schemas:
+    SuccessData:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+    ErrorData:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          oneOf:
+          - type: string
+          - type: array
+            items:
+              type: string
+        fields:
+          oneOf:
+          - type: string
+          - type: array
+            items:
+              type: string
+    FileData:
+      allOf:
+      - $ref: '#/components/schemas/FileBase'
+      - type: object
+        description: File content object with base64 encoded data
+        properties:
+          content:
+            description: Base64 encoded content of the file
+            type: string
+            example: JVBERi0xLjMKJcTl8uXrp/Og0MTGCjQgMCBvYmoKPDwgL0xlbg...
     UploadFileRequestData:
       type: object
       description: 'Request body for uploading a generic file. Uses multipart/form-data.
@@ -161,6 +172,21 @@ components:
       required:
       - file_name
       - file
+    UploadedFile:
+      allOf:
+      - $ref: '#/components/schemas/FileBase'
+      - type: object
+        description: File Object in upload response with additional status fields
+        properties:
+          status:
+            description: Status of the file upload operation
+            type: string
+            enum:
+            - success
+            - error
+          message:
+            description: Message related to the file upload status
+            type: string
     FileBase:
       type: object
       description: Base properties common to an uploaded file in Convert's storage.
@@ -198,63 +224,6 @@ components:
         message:
           description: A message related to the file's status, providing more details in case of an error during upload.
           type: string
-    UploadedFile:
-      allOf:
-      - $ref: '#/components/schemas/FileBase'
-      - type: object
-        description: File Object in upload response with additional status fields
-        properties:
-          status:
-            description: Status of the file upload operation
-            type: string
-            enum:
-            - success
-            - error
-          message:
-            description: Message related to the file upload status
-            type: string
-    FileData:
-      allOf:
-      - $ref: '#/components/schemas/FileBase'
-      - type: object
-        description: File content object with base64 encoded data
-        properties:
-          content:
-            description: Base64 encoded content of the file
-            type: string
-            example: JVBERi0xLjMKJcTl8uXrp/Og0MTGCjQgMCBvYmoKPDwgL0xlbg...
-    ErrorData:
-      type: object
-      properties:
-        code:
-          type: integer
-          format: int32
-        message:
-          oneOf:
-          - type: string
-          - type: array
-            items:
-              type: string
-        fields:
-          oneOf:
-          - type: string
-          - type: array
-            items:
-              type: string
-    SuccessData:
-      type: object
-      properties:
-        code:
-          type: integer
-          format: int32
-        message:
-          type: string
-  requestBodies:
-    UploadFileRequest:
-      content:
-        multipart/form-data:
-          schema:
-            $ref: '#/components/schemas/UploadFileRequestData'
   responses:
     ErrorResponse:
       description: 'Indicates an error occurred while processing the request. The `code` provides an HTTP status code, `message` offers a human-readable explanation or an array of validation errors, and `fields` (if present) specifies which input fields were problematic.
@@ -264,6 +233,12 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorData'
+    FileResponse:
+      description: Details of a single uploaded file, including its access `url`, storage `key`, original `file_name`, `file_size`, and `mime_type`.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UploadedFile'
     FileDataResponse:
       description: Contains the base64 encoded `content` of a requested file, along with its metadata like `key`, `file_name`, and `mime_type`.
       content:
@@ -278,12 +253,12 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/SuccessData'
-    FileResponse:
-      description: Details of a single uploaded file, including its access `url`, storage `key`, original `file_name`, `file_size`, and `mime_type`.
+  requestBodies:
+    UploadFileRequest:
       content:
-        application/json:
+        multipart/form-data:
           schema:
-            $ref: '#/components/schemas/UploadedFile'
+            $ref: '#/components/schemas/UploadFileRequestData'
   securitySchemes:
     requestSigning:
       type: apiKey

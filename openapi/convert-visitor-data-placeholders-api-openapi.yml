@@ -1,30 +1,7 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Convert Accounts Visitor Data Placeholders API
-  description: 'Move your app forward with the Convert API. The Convert API allows
-
-    you to manage your Convert Experiences projects using code. The REST API is
-
-    an interface for managing and extending functionality of Convert. For
-
-    example, instead of creating and maintaining projects using the Convert
-
-    Experiences web dashboard you can create an experiment programmatically.
-
-    Additionally, if you prefer to run custom analysis on experiment results you
-
-    can leverage the API to pull data from Convert Experiences into your own
-
-    workflow. If you do not have a Convert account already, sign up for a free
-
-    developer account at https://www.convert.com/api/.
-
-
-    *[Convert API V1](/doc/v1) is still available and documentation can be found [here](/doc/v1) but using it is highly discouraged
-
-    as it will be phased out in the future*
-
-    '
+  title: Convert Visitor Data Placeholders API
+  description: Move your app forward with the Convert API.
   version: 2.0.0
 servers:
 - url: https://api.convert.com/api/v2
@@ -35,9 +12,7 @@ servers:
   description: DEV mocked API server
 tags:
 - name: Visitor Data Placeholders
-  description: 'Endpoints for managing visitor data placeholders personalization data. Visitor data placeholders define dynamic content that can be personalized for individual visitors or groups.
-
-    '
+  description: Endpoints for managing visitor data placeholders personalization data. Visitor data placeholders define dynamic content that can be personalized for individual visitors or groups.
 paths:
   /accounts/{account_id}/projects/{project_id}/visitors-data/placeholders:
     post:
@@ -125,16 +100,14 @@ paths:
           $ref: '#/components/responses/ErrorResponse'
 components:
   schemas:
-    PlaceholdersList:
-      type: array
-      description: List of visitor data placeholders
-      items:
-        $ref: '#/components/schemas/VisitorDataPlaceholder'
-    Extra:
+    SuccessData:
       type: object
       properties:
-        pagination:
-          $ref: '#/components/schemas/Pagination'
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
     Pagination:
       type: object
       properties:
@@ -154,17 +127,19 @@ components:
           description: The total number of pages available for the current filter criteria and `results_per_page` setting.
           type: integer
           minimum: 0
-    PageNumber:
+    CreatePlaceholderRequestData:
+      allOf:
+      - $ref: '#/components/schemas/VisitorDataPlaceholder'
+      required:
+      - placeholder
+    PlaceholdersListResponseData:
       type: object
+      description: Response containing list of visitor data placeholders and extra list metadata
       properties:
-        page:
-          type: integer
-          minimum: 1
-          description: 'The page number for paginated results. For example, if `results_per_page` is 30, `page: 2` will retrieve items 31-60.
-
-            Defaults to 1 if not specified.
-
-            '
+        data:
+          $ref: '#/components/schemas/PlaceholdersList'
+        extra:
+          $ref: '#/components/schemas/Extra'
     VisitorDataPlaceholder:
       type: object
       description: Base Visitor Data Placeholder Object
@@ -185,18 +160,6 @@ components:
           description: Unix timestamp (UTC) indicating when the placeholder was created
           type: integer
           readOnly: true
-    UpdatePlaceholderRequestData:
-      type: object
-      description: Request body for updating a visitor data placeholder.
-      properties:
-        default_value:
-          description: Default value to use when no personalization data is found
-          type: string
-          maxLength: 10000
-        placeholder:
-          description: A unique per project level identifier for the placeholder. Used in {{placeholder}} syntax.
-          type: string
-          maxLength: 128
     GetPlaceholdersListRequestData:
       allOf:
       - $ref: '#/components/schemas/OnlyCount'
@@ -213,19 +176,6 @@ components:
               the `placeholder` value contains the given string.
 
               '
-    PlaceholdersListResponseData:
-      type: object
-      description: Response containing list of visitor data placeholders and extra list metadata
-      properties:
-        data:
-          $ref: '#/components/schemas/PlaceholdersList'
-        extra:
-          $ref: '#/components/schemas/Extra'
-    CreatePlaceholderRequestData:
-      allOf:
-      - $ref: '#/components/schemas/VisitorDataPlaceholder'
-      required:
-      - placeholder
     ErrorData:
       type: object
       properties:
@@ -244,16 +194,18 @@ components:
           - type: array
             items:
               type: string
-    OnlyCount:
+    UpdatePlaceholderRequestData:
       type: object
+      description: Request body for updating a visitor data placeholder.
       properties:
-        onlyCount:
-          type: boolean
-          description: 'If set to `true` in a list request, the response will only contain the total count of matching items (`extra.pagination.items_count`)
-
-            and will not include the actual item data. Useful for quickly getting totals without fetching full datasets.
-
-            '
+        default_value:
+          description: Default value to use when no personalization data is found
+          type: string
+          maxLength: 10000
+        placeholder:
+          description: A unique per project level identifier for the placeholder. Used in {{placeholder}} syntax.
+          type: string
+          maxLength: 128
     ResultsPerPage:
       type: object
       properties:
@@ -268,23 +220,38 @@ components:
             Used for pagination. Default is 30, maximum is 50.
 
             '
-    SuccessData:
+    PlaceholdersList:
+      type: array
+      description: List of visitor data placeholders
+      items:
+        $ref: '#/components/schemas/VisitorDataPlaceholder'
+    PageNumber:
       type: object
       properties:
-        code:
+        page:
           type: integer
-          format: int32
-        message:
-          type: string
-  responses:
-    SuccessResponse:
-      description: 'A generic success response, typically used for operations that don''t return specific data (like deletions or some updates). The `code` is usually 200, and `message` confirms the successful action.
+          minimum: 1
+          description: 'The page number for paginated results. For example, if `results_per_page` is 30, `page: 2` will retrieve items 31-60.
 
-        '
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/SuccessData'
+            Defaults to 1 if not specified.
+
+            '
+    OnlyCount:
+      type: object
+      properties:
+        onlyCount:
+          type: boolean
+          description: 'If set to `true` in a list request, the response will only contain the total count of matching items (`extra.pagination.items_count`)
+
+            and will not include the actual item data. Useful for quickly getting totals without fetching full datasets.
+
+            '
+    Extra:
+      type: object
+      properties:
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+  responses:
     ErrorResponse:
       description: 'Indicates an error occurred while processing the request. The `code` provides an HTTP status code, `message` offers a human-readable explanation or an array of validation errors, and `fields` (if present) specifies which input fields were problematic.
 
@@ -293,6 +260,14 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorData'
+    SuccessResponse:
+      description: 'A generic success response, typically used for operations that don''t return specific data (like deletions or some updates). The `code` is usually 200, and `message` confirms the successful action.
+
+        '
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SuccessData'
     VisitorDataPlaceholdersListResponse:
       description: Response object containing the list of visitor data placeholders defined in the project
       content:
@@ -306,12 +281,12 @@ components:
           schema:
             $ref: '#/components/schemas/VisitorDataPlaceholder'
   requestBodies:
-    CreateVisitorDataPlaceholderRequest:
+    UpdateVisitorDataPlaceholderRequest:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/CreatePlaceholderRequestData'
-      description: Create visitor data placeholder schema
+            $ref: '#/components/schemas/UpdatePlaceholderRequestData'
+      description: Update visitor data placeholder schema
       required: true
     GetVisitorDataPlaceholdersListRequest:
       content:
@@ -320,12 +295,12 @@ components:
             $ref: '#/components/schemas/GetPlaceholdersListRequestData'
       description: Filter visitor data placeholders list
       required: false
-    UpdateVisitorDataPlaceholderRequest:
+    CreateVisitorDataPlaceholderRequest:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/UpdatePlaceholderRequestData'
-      description: Update visitor data placeholder schema
+            $ref: '#/components/schemas/CreatePlaceholderRequestData'
+      description: Create visitor data placeholder schema
       required: true
   parameters:
     AccountId:
