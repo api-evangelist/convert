@@ -356,14 +356,70 @@ paths:
           $ref: '#/components/responses/ErrorResponse'
 components:
   schemas:
-    HypothesisExperiences:
+    HypothesesList:
       type: array
-      description: A list of experience IDs linked to this hypothesis.
+      description: A list of hypothesis objects.
       items:
-        type: integer
-    HypothesisICE:
+        $ref: '#/components/schemas/HypothesisData'
+    ErrorData:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          oneOf:
+          - type: string
+          - type: array
+            items:
+              type: string
+        fields:
+          oneOf:
+          - type: string
+          - type: array
+            items:
+              type: string
+    Hypothesis:
+      oneOf:
+      - $ref: '#/components/schemas/HypothesisPIE'
+      - $ref: '#/components/schemas/HypothesisICE'
+      discriminator:
+        propertyName: prioritization_score_type
+        mapping:
+          PIE: '#/components/schemas/HypothesisPIE'
+          ICE: '#/components/schemas/HypothesisICE'
+    Percentiles:
+      type: number
+      description: 'Standard percentile values used for outlier detection thresholds.
+
+        For example, a `min` of 5 and `max` of 95 means orders in the bottom 5% and top 5% of values are considered outliers and capped.
+
+        '
+      enum:
+      - 1
+      - 5
+      - 10
+      - 25
+      - 50
+      - 75
+      - 90
+      - 95
+      - 99
+    CreateHypothesisPIE:
       allOf:
-      - $ref: '#/components/schemas/HypothesisICEBase'
+      - $ref: '#/components/schemas/CreateUpdateHypothesisPIEBase'
+      required:
+      - name
+      - status
+      - prioritization_score_type
+      - prioritization_score_attributes
+    ProjectIntegrationGA3:
+      allOf:
+      - $ref: '#/components/schemas/ProjectGASettingsBase'
+      - $ref: '#/components/schemas/IntegrationGA3'
+    HypothesisPIE:
+      allOf:
+      - $ref: '#/components/schemas/HypothesisPIEBase'
       - type: object
         properties:
           experiences:
@@ -378,6 +434,119 @@ components:
             description: The list of tags connected to this hypothesis
             items:
               $ref: '#/components/schemas/TagExpandable'
+    IntegrationGA3:
+      type: object
+      properties:
+        type:
+          enum:
+          - ga3
+        property_UA:
+          type: string
+          maxLength: 150
+          nullable: true
+          description: The Universal Analytics Property ID (e.g., "UA-XXXXXXXX-Y") to which Convert experiment data will be sent.
+    SE_ProcSettingsBase:
+      type: object
+      properties:
+        stats_type:
+          $ref: '#/components/schemas/SE_ProcTypes'
+    UploadedFileData:
+      type: object
+      description: File Object
+      additionalProperties: false
+      properties:
+        key:
+          description: Storage key of the uploaded file.
+          type: string
+          maxLength: 500
+        name:
+          description: Original name of the uploaded file.
+          type: string
+          maxLength: 250
+        url:
+          description: Endpoint to access the file resource associated with the project.
+          type: string
+          readOnly: true
+          example: https://api.convert.com/api/v2/accounts/{account_id}/projects/{project_id}/files/{fileKey}
+    TagToCreate:
+      allOf:
+      - $ref: '#/components/schemas/Tag'
+      required:
+      - name
+    HypothesisCreateUpdateExperiences:
+      type: array
+      description: A list of experience IDs that are testing or were derived from this hypothesis. This links the hypothesis to actual experiments.
+      items:
+        type: integer
+      maxItems: 100
+    CustomDomainOwnershipVerificationItem:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the DNS record.
+        type:
+          $ref: '#/components/schemas/DNSRecordTypes'
+        value:
+          type: string
+          description: The value of the DNS record.
+    ProjectExpandable:
+      readOnly: true
+      anyOf:
+      - type: integer
+        description: Project ID to which the data belongs to
+      - $ref: '#/components/schemas/Project'
+    HypothesesListResponseData:
+      type: object
+      description: Response containing a list of hypotheses defined within a project, along with pagination details if applicable.
+      properties:
+        data:
+          $ref: '#/components/schemas/HypothesesList'
+        extra:
+          $ref: '#/components/schemas/Extra'
+    SimpleLocation:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The unique numerical identifier of the location.
+          readOnly: true
+        name:
+          type: string
+          description: The user-defined, friendly name of the location.
+          maxLength: 100
+    MetricTypes:
+      type: string
+      description: 'The primary types of performance metrics calculated by the reporting engine for each goal.
+
+        - `conversion_rate`: The percentage of visitors who completed the goal (Conversions / Visitors).
+
+        - `avg_revenue_visitor`: Average Revenue Per Visitor (RPV = Total Revenue / Total Visitors). Applicable for revenue goals.
+
+        - `avg_products_ordered_visitor`: Average Products Per Visitor (APPV = Total Products Ordered / Total Visitors). Applicable for revenue goals tracking product counts.
+
+        - `average_order_value`: Average Order Value (AOV = Total Revenue / Total Conversions). Applicable for revenue goals tracking order value.
+
+        - `average_products_per_order`: Average Products Per Order (APPO = Total Products Ordered Per Visitor / Total Conversions). Applicable for revenue goals tracking product counts.
+
+        Knowledge Base: "Understanding Report Metrics in Convert".
+
+        '
+      enum:
+      - conversion_rate
+      - avg_revenue_visitor
+      - avg_products_ordered_visitor
+      - average_order_value
+      - average_products_per_order
+    TrackingScriptReleaseManual:
+      allOf:
+      - $ref: '#/components/schemas/TrackingScriptReleaseBase'
+      - type: object
+        additionalProperties: false
+        properties:
+          type:
+            enum:
+            - manual
     ProjectIntegrationGA4:
       allOf:
       - $ref: '#/components/schemas/ProjectGASettingsBase'
@@ -387,23 +556,32 @@ components:
           no_wait_pageview:
             type: boolean
             description: Boolean indicating whether to wait for the page view event to complete before sending other events.
-    SimpleAudienceExpandable:
-      anyOf:
-      - type: integer
-        description: Audience ID
-      - $ref: '#/components/schemas/SimpleAudience'
-    GA_SettingsBase:
+    CreateHypothesisRequestData:
+      $ref: '#/components/schemas/CreateHypothesis'
+    ExperienceId:
+      type: integer
+      description: The unique numerical identifier for an experience.
+    TrackingScriptReleaseBase:
       type: object
+      description: Base settings for managing how new versions of the Convert tracking script are applied to the project.
       properties:
-        enabled:
-          type: boolean
-          description: If true, integration with Google Analytics is enabled for this project or experience, allowing experiment data to be sent to GA.
-    TagExpandable:
-      description: Represents a tag, either as its unique ID or as the full tag object (ID, name, description) if expanded.
-      oneOf:
-      - type: integer
-        description: Tag ID
-      - $ref: '#/components/schemas/Tag'
+        type:
+          type: string
+          description: 'The chosen strategy for updating the tracking script: ''manual'', ''latest'' (auto-update), or ''scheduled''.
+
+            '
+    HypothesisICEBase:
+      allOf:
+      - $ref: '#/components/schemas/HypothesisBase'
+      - type: object
+        properties:
+          prioritization_score_type:
+            type: string
+            description: A given description of prioritizing model
+            enum:
+            - ICE
+          prioritization_score_attributes:
+            $ref: '#/components/schemas/ICE_Attributes'
     BaseSimpleExperience:
       type: object
       properties:
@@ -412,14 +590,230 @@ components:
         name:
           description: The user-defined, friendly name of the experience.
           type: string
-    SimpleAudience:
+    KnowledgeBaseStatuses:
+      description: 'The status of a Knowledge Base entry:
+
+        - `active`: The entry is current and relevant.
+
+        - `archived`: The entry is kept for historical purposes but may no longer be considered current best practice or has been superseded by newer learnings.
+
+        '
+      type: string
+      enum:
+      - active
+      - archived
+      default: active
+    GA_Settings:
+      oneOf:
+      - $ref: '#/components/schemas/ProjectIntegrationGA3'
+      - $ref: '#/components/schemas/ProjectIntegrationGA4'
+      discriminator:
+        propertyName: type
+        mapping:
+          ga3: '#/components/schemas/ProjectIntegrationGA3'
+          ga4: '#/components/schemas/ProjectIntegrationGA4'
+    NumericOutlierBase:
+      type: object
+      properties:
+        detection_type:
+          $ref: '#/components/schemas/NumericOutlierTypes'
+      required:
+      - detection_type
+    Domain:
+      type: object
+      description: A website domain data.
+      properties:
+        id:
+          type: integer
+          description: Domain ID.
+          readOnly: true
+        url:
+          type: string
+          maxLength: 150
+          pattern: ^(http|https)://
+          description: Domain's homepage url
+        code_installed:
+          type: boolean
+          description: Indicating whether code installed check passed sometimes in the past.
+          default: false
+    HypothesisExpandFields:
+      type: string
+      enum:
+      - project
+      - tags
+      - experiences
+    BulkUpdateHypothesesRequestData:
+      type: object
+      description: Request body for bulk updating the status of multiple hypotheses.
+      additionalProperties: false
+      properties:
+        id:
+          $ref: '#/components/schemas/BulkHypothesisIds'
+        status:
+          $ref: '#/components/schemas/HypothesisStatuses'
+      required:
+      - id
+      - status
+    HypothesisDataPIE:
+      allOf:
+      - $ref: '#/components/schemas/HypothesisPIEBase'
+      - type: object
+        properties:
+          experiences:
+            $ref: '#/components/schemas/HypothesisExperiences'
+          tags:
+            type: array
+            nullable: true
+            description: The list of tags connected to this hypothesis
+            items:
+              $ref: '#/components/schemas/TagExpandable'
+    IntegrationGA4:
+      allOf:
+      - $ref: '#/components/schemas/IntegrationGA4Base'
+      - type: object
+        properties:
+          propertyId:
+            type: string
+            description: ID of the ga4 property where data will be sent. Used internally for API calls to GoogleAnalytics
+    NumericOutlierMinMax:
+      allOf:
+      - $ref: '#/components/schemas/NumericOutlierBase'
+      - type: object
+        additionalProperties: false
+        properties:
+          detection_type:
+            enum:
+            - min_max
+          min:
+            type: number
+            description: Minimum value for the outlier detection, under which, the value is considered an outlier
+          max:
+            type: number
+            description: Maximum value for the outlier detection, over which, the value is considered an outlier
+    TrackingScriptRelease:
+      oneOf:
+      - $ref: '#/components/schemas/TrackingScriptReleaseManual'
+      - $ref: '#/components/schemas/TrackingScriptReleaseLatest'
+      - $ref: '#/components/schemas/TrackingScriptReleaseScheduled'
+      discriminator:
+        propertyName: type
+        mapping:
+          manual: '#/components/schemas/TrackingScriptReleaseManual'
+          latest: '#/components/schemas/TrackingScriptReleaseLatest'
+          scheduled: '#/components/schemas/TrackingScriptReleaseScheduled'
+    HypothesisPIEBase:
+      allOf:
+      - $ref: '#/components/schemas/HypothesisBase'
+      - type: object
+        properties:
+          prioritization_score_type:
+            type: string
+            description: A given description of prioritizing model
+            enum:
+            - PIE
+          prioritization_score_attributes:
+            $ref: '#/components/schemas/PIE_Attributes'
+    BulkHypothesisIds:
+      type: array
+      description: A list of hypothesis unique numerical identifiers to be affected by a bulk operation.
+      items:
+        type: integer
+      minItems: 1
+      maxItems: 100
+    HypothesisDataICE:
+      allOf:
+      - $ref: '#/components/schemas/HypothesisICEBase'
+      - type: object
+        properties:
+          experiences:
+            $ref: '#/components/schemas/HypothesisExperiences'
+          tags:
+            type: array
+            nullable: true
+            description: The list of tags connected to this hypothesis
+            items:
+              $ref: '#/components/schemas/TagExpandable'
+    HypothesisExperiences:
+      type: array
+      description: A list of experience IDs linked to this hypothesis.
+      items:
+        type: integer
+    BaseExperienceExpandable:
+      description: Represents an experience, either as its unique ID or as a simple object with its ID and name. Used when an experience is referenced by another entity and can be optionally expanded.
+      oneOf:
+      - $ref: '#/components/schemas/ExperienceId'
+      - $ref: '#/components/schemas/BaseSimpleExperience'
+    SE_ProcSettingsFrequentist:
+      allOf:
+      - $ref: '#/components/schemas/SE_ProcSettingsBase'
+      - type: object
+        description: Stats Engine Settings needed for the Frequentist processing
+        properties:
+          stats_type:
+            enum:
+            - frequentist
+          confidence:
+            description: Confidence value to be used (in percent)
+            type: number
+            minimum: 50
+            maximum: 99
+            multipleOf: 1
+          power:
+            description: Statistical power value to be used (in percent)
+            type: number
+            minimum: 10
+            maximum: 99
+            multipleOf: 1
+          test_type:
+            description: The type of test applied to the data
+            type: string
+            default: two_tails
+            enum:
+            - one_tail
+            - one_tail_left
+            - one_tail_right
+            - two_tails
+            - sequential
+          multiple_comparison_correction:
+            description: Multiple comparison correction
+            type: string
+            enum:
+            - none
+            - bonferroni
+            - sidak
+          power_calculation_type:
+            description: Power calculation type
+            type: string
+            default: dynamic_mde
+            enum:
+            - dynamic_mde
+            - fixed_mde
+          fixed_mde:
+            description: Fixed minimum detectable effect (corresponding to the relative improvement in percent)
+            type: number
+            minimum: 0
+            maximum: 10000
+          mab_settings:
+            allOf:
+            - $ref: '#/components/schemas/SE_MabSettings'
+            nullable: true
+    NumericOutlierNone:
+      allOf:
+      - $ref: '#/components/schemas/NumericOutlierBase'
+      - type: object
+        additionalProperties: false
+        properties:
+          detection_type:
+            enum:
+            - none
+    SimpleGoal:
       type: object
       properties:
         id:
-          description: The unique numerical identifier of the audience.
+          description: The unique numerical identifier of the goal.
           type: integer
         name:
-          description: The user-defined, friendly name of the audience.
+          description: The user-defined, friendly name of the goal.
           type: string
     Project:
       description: 'Represents a Convert project, which is a container for organizing a set of related optimization activities (experiences),
@@ -596,86 +990,9 @@ components:
             readOnly: true
             nullable: true
             description: An autogenerated hash key used to retrieve data of fullstack project. Available only for fullstack projects type.
-    HypothesisICEBase:
+    HypothesisICE:
       allOf:
-      - $ref: '#/components/schemas/HypothesisBase'
-      - type: object
-        properties:
-          prioritization_score_type:
-            type: string
-            description: A given description of prioritizing model
-            enum:
-            - ICE
-          prioritization_score_attributes:
-            $ref: '#/components/schemas/ICE_Attributes'
-    TrackingScriptReleaseManual:
-      allOf:
-      - $ref: '#/components/schemas/TrackingScriptReleaseBase'
-      - type: object
-        additionalProperties: false
-        properties:
-          type:
-            enum:
-            - manual
-    NumericOutlierBase:
-      type: object
-      properties:
-        detection_type:
-          $ref: '#/components/schemas/NumericOutlierTypes'
-      required:
-      - detection_type
-    UpdateHypothesis:
-      oneOf:
-      - $ref: '#/components/schemas/UpdateHypothesisPIE'
-      - $ref: '#/components/schemas/UpdateHypothesisICE'
-      discriminator:
-        propertyName: prioritization_score_type
-        mapping:
-          PIE: '#/components/schemas/UpdateHypothesisPIE'
-          ICE: '#/components/schemas/UpdateHypothesisICE'
-    TagToCreate:
-      allOf:
-      - $ref: '#/components/schemas/Tag'
-      required:
-      - name
-    ExperienceId:
-      type: integer
-      description: The unique numerical identifier for an experience.
-    PageNumber:
-      type: object
-      properties:
-        page:
-          type: integer
-          minimum: 1
-          description: 'The page number for paginated results. For example, if `results_per_page` is 30, `page: 2` will retrieve items 31-60.
-
-            Defaults to 1 if not specified.
-
-            '
-    UpdateHypothesisStatusRequestData:
-      type: object
-      properties:
-        status:
-          $ref: '#/components/schemas/HypothesisStatuses'
-    SimpleGoalExpandable:
-      oneOf:
-      - type: integer
-        description: Goal ID
-      - $ref: '#/components/schemas/SimpleGoal'
-    IntegrationGA3:
-      type: object
-      properties:
-        type:
-          enum:
-          - ga3
-        property_UA:
-          type: string
-          maxLength: 150
-          nullable: true
-          description: The Universal Analytics Property ID (e.g., "UA-XXXXXXXX-Y") to which Convert experiment data will be sent.
-    HypothesisPIE:
-      allOf:
-      - $ref: '#/components/schemas/HypothesisPIEBase'
+      - $ref: '#/components/schemas/HypothesisICEBase'
       - type: object
         properties:
           experiences:
@@ -690,216 +1007,112 @@ components:
             description: The list of tags connected to this hypothesis
             items:
               $ref: '#/components/schemas/TagExpandable'
-    IntegrationGA4Base:
+    ProjectGASettingsBase:
+      allOf:
+      - $ref: '#/components/schemas/GA_SettingsBase'
+      - type: object
+        properties:
+          auto_revenue_tracking:
+            type: boolean
+            description: Attempt to pull revenue data from Google Analytics Revenue Tracking code.
+    Tag:
       type: object
+      description: 'Represents a tag (keyword or label) that can be associated with various Convert entities like experiences, goals, audiences, hypotheses, and observations.
+
+        Tags help organize and categorize these entities for easier filtering, searching, and management.
+
+        Knowledge Base: "Adding tags to your Experiences".
+
+        '
       properties:
-        type:
-          enum:
-          - ga4
-        measurementId:
+        id:
+          type: integer
+          readOnly: true
+          description: The unique numerical identifier for the tag.
+        name:
           type: string
-          description: The GA4 Measurement ID (e.g., "G-XXXXXXXXXX") for the data stream where Convert experiment data will be sent.
-    HypothesisStatuses:
-      description: 'The current stage or outcome of a hypothesis in its lifecycle:
+          description: The user-defined name of the tag (e.g., "Q3 Campaigns", "Homepage Tests", "High Priority", "Mobile Specific"). This is the primary identifier shown in the UI.
+          maxLength: 100
+        description:
+          type: string
+          description: (Optional) A brief explanation of the tag's purpose or the criteria for its application.
+          maxLength: 200
+          nullable: true
+    SimpleAudienceExpandable:
+      anyOf:
+      - type: integer
+        description: Audience ID
+      - $ref: '#/components/schemas/SimpleAudience'
+    SimpleLocationExpandable:
+      anyOf:
+      - type: integer
+        description: Location ID
+      - $ref: '#/components/schemas/SimpleLocation'
+    BulkEntityError:
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          description: The unique identifier of the entity that could not be processed.
+        message:
+          type: string
+          description: A message explaining the reason for the failure for this specific entity.
+    AccessRoleNames:
+      type: string
+      description: 'The predefined names for user access roles within the Convert system. Each role grants a specific set of permissions.
 
-        - `draft`: The hypothesis is still being formulated or refined; not yet ready for testing.
+        - `owner`: Highest level, full control over account, billing, users, and all projects. Typically the account creator.
 
-        - `completed`: The hypothesis definition is finalized and it''s ready to be linked to an experiment or tested.
+        - `account_manager`: Broad administrative rights over the account, often including billing and user management, but might not be able to delete the account itself.
 
-        - `applied`: The hypothesis is currently being tested in one or more active experiences.
+        - `admin`: Full control over projects they are assigned to, including creating/editing/deleting experiences, goals, audiences, and managing project settings. May also manage project-level collaborators.
 
-        - `proven`: Testing has concluded, and the hypothesis was validated (i.e., the proposed change led to a positive, statistically significant outcome). Can be moved to Knowledge Base.
+        - `browse`: Read-only access. Can view experiences, reports, and settings but cannot make changes.
 
-        - `disproven`: Testing has concluded, and the hypothesis was invalidated (i.e., the proposed change did not lead to the expected positive outcome or had a negative impact). Can be moved to Knowledge Base.
+        - `edit`: Can create and modify entities like experiences, goals, audiences within assigned projects, but typically cannot activate/publish experiences or manage project settings.
 
-        - `archived`: The hypothesis is no longer active or relevant for current testing but is kept for historical records.
+        - `publish`: Can do everything an ''editor'' can, plus activate/pause/complete experiences.
 
-        KB: "Hypotheses (Compass)" - "Status of Hypothesis".
+        - `review`: Can view and comment, but not make direct changes. Suited for stakeholders who need to approve or provide feedback.
+
+        Knowledge Base: "Collaborators - Share With Multiple Users / Accounts" (describes access levels).
+
+        '
+      enum:
+      - owner
+      - account_manager
+      - admin
+      - browse
+      - edit
+      - publish
+      - review
+    NumericOutlier:
+      oneOf:
+      - $ref: '#/components/schemas/NumericOutlierNone'
+      - $ref: '#/components/schemas/NumericOutlierMinMax'
+      - $ref: '#/components/schemas/NumericOutlierPercentile'
+      discriminator:
+        propertyName: detection_type
+        mapping:
+          none: '#/components/schemas/NumericOutlierNone'
+          min_max: '#/components/schemas/NumericOutlierMinMax'
+          percentile: '#/components/schemas/NumericOutlierPercentile'
+    NumericOutlierTypes:
+      description: 'The method used for detecting and handling order outliers in revenue or product count tracking:
+
+        - `none`: No outlier detection is applied.
+
+        - `min_max`: Orders with values below a specified minimum or above a specified maximum are capped at those boundaries.
+
+        - `percentile`: Orders falling below a lower percentile or above an upper percentile are capped at the values corresponding to those percentiles.
 
         '
       type: string
       enum:
-      - applied
-      - archived
-      - completed
-      - draft
-      - proven
-      - disproven
-    HypothesesList:
-      type: array
-      description: A list of hypothesis objects.
-      items:
-        $ref: '#/components/schemas/HypothesisData'
-    CreateHypothesisICE:
-      allOf:
-      - $ref: '#/components/schemas/CreateUpdateHypothesisICEBase'
-      required:
-      - name
-      - status
-      - prioritization_score_type
-      - prioritization_score_attributes
-    HypothesisBase:
-      type: object
-      properties:
-        id:
-          type: integer
-          description: The unique numerical identifier for the hypothesis.
-          readOnly: true
-        name:
-          type: string
-          description: A user-defined, concise name for the hypothesis (e.g., "Changing CTA Button Color to Green", "Simplifying Signup Form"). This name appears in the Compass section of Convert.
-          maxLength: 100
-        url:
-          type: string
-          description: (Optional) A URL relevant to this hypothesis, such as the page where the proposed change would be implemented or a link to supporting research/data.
-          maxLength: 2048
-          nullable: true
-        project:
-          $ref: '#/components/schemas/ProjectExpandable'
-        prioritization_score:
-          readOnly: true
-          type: string
-          description: 'The calculated priority score for this hypothesis, based on the chosen `prioritization_score_type` (PIE or ICE) and its attribute scores.
-
-            Helps in ranking hypotheses to decide which to test next.
-
-            KB: "Hypotheses (Compass)" - "How to Prioritize a Hypothesis".
-
-            '
-        objective:
-          type: string
-          maxLength: 5000
-          description: 'A detailed description of the hypothesis. This should clearly state:
-
-            1. The **problem** observed (e.g., "Low click-through rate on the main CTA").
-
-            2. The **proposed solution/change** (e.g., "Change the CTA button text from ''Learn More'' to ''Get Started Now''").
-
-            3. The **expected outcome/impact** (e.g., "This will increase clicks on the CTA by 15% because ''Get Started Now'' is more action-oriented").
-
-            KB: "Hypotheses (Compass)" - "What is a Hypothesis".
-
-            '
-        status:
-          $ref: '#/components/schemas/HypothesisStatuses'
-        start_date:
-          description: (Optional) The date (YYYY-MM-DD) when this hypothesis was conceptualized or formally logged.
-          type: string
-          maxLength: 10
-          format: date
-          nullable: true
-        end_date:
-          description: (Optional) The target date (YYYY-MM-DD) by which this hypothesis is expected to be tested or resolved.
-          type: string
-          maxLength: 10
-          format: date
-          nullable: true
-        summary:
-          type: string
-          description: (Optional) A brief summary or key takeaway from this hypothesis, often filled in after testing.
-          maxLength: 500
-        description:
-          type: string
-          nullable: true
-          maxLength: 5000
-          description: This is more details that want to be added besides the name of the hypothesis
-        files:
-          type: array
-          description: Files attached to the hypothesis
-          nullable: true
-          items:
-            $ref: '#/components/schemas/UploadedFileData'
-        created_at:
-          type: integer
-          description: Unix timestamp (UTC) indicating when this hypothesis was created in the system.
-        updated_at:
-          type: integer
-          readOnly: true
-          description: Unix timestamp (UTC) indicating when this hypothesis entry was last updated or created.
-        created_by:
-          type: string
-          readOnly: true
-          nullable: true
-          description: The name or identifier of the user who created this hypothesis.
-    SuccessData:
-      type: object
-      properties:
-        code:
-          type: integer
-          format: int32
-        message:
-          type: string
-    BaseExperienceExpandable:
-      description: Represents an experience, either as its unique ID or as a simple object with its ID and name. Used when an experience is referenced by another entity and can be optionally expanded.
-      oneOf:
-      - $ref: '#/components/schemas/ExperienceId'
-      - $ref: '#/components/schemas/BaseSimpleExperience'
-    BulkUpdateHypothesesRequestData:
-      type: object
-      description: Request body for bulk updating the status of multiple hypotheses.
-      additionalProperties: false
-      properties:
-        id:
-          $ref: '#/components/schemas/BulkHypothesisIds'
-        status:
-          $ref: '#/components/schemas/HypothesisStatuses'
-      required:
-      - id
-      - status
-    SE_ProcSettingsFrequentist:
-      allOf:
-      - $ref: '#/components/schemas/SE_ProcSettingsBase'
-      - type: object
-        description: Stats Engine Settings needed for the Frequentist processing
-        properties:
-          stats_type:
-            enum:
-            - frequentist
-          confidence:
-            description: Confidence value to be used (in percent)
-            type: number
-            minimum: 50
-            maximum: 99
-            multipleOf: 1
-          power:
-            description: Statistical power value to be used (in percent)
-            type: number
-            minimum: 10
-            maximum: 99
-            multipleOf: 1
-          test_type:
-            description: The type of test applied to the data
-            type: string
-            default: two_tails
-            enum:
-            - one_tail
-            - one_tail_left
-            - one_tail_right
-            - two_tails
-            - sequential
-          multiple_comparison_correction:
-            description: Multiple comparison correction
-            type: string
-            enum:
-            - none
-            - bonferroni
-            - sidak
-          power_calculation_type:
-            description: Power calculation type
-            type: string
-            default: dynamic_mde
-            enum:
-            - dynamic_mde
-            - fixed_mde
-          fixed_mde:
-            description: Fixed minimum detectable effect (corresponding to the relative improvement in percent)
-            type: number
-            minimum: 0
-            maximum: 10000
-          mab_settings:
-            allOf:
-            - $ref: '#/components/schemas/SE_MabSettings'
-            nullable: true
+      - none
+      - min_max
+      - percentile
     TrackingScriptAvailableVersions:
       type: array
       description: A list of available versions for the Convert tracking script, each with a version tag, changelog, release date, and potentially the date it was or will be applied to the project.
@@ -923,131 +1136,263 @@ components:
             format: int64
             nullable: true
             description: Unix timestamp (UTC) when this version was (or is scheduled to be) applied to the project, if using manual or scheduled updates.
-    GA_Settings:
-      oneOf:
-      - $ref: '#/components/schemas/ProjectIntegrationGA3'
-      - $ref: '#/components/schemas/ProjectIntegrationGA4'
-      discriminator:
-        propertyName: type
-        mapping:
-          ga3: '#/components/schemas/ProjectIntegrationGA3'
-          ga4: '#/components/schemas/ProjectIntegrationGA4'
-    Hypothesis:
-      oneOf:
-      - $ref: '#/components/schemas/HypothesisPIE'
-      - $ref: '#/components/schemas/HypothesisICE'
-      discriminator:
-        propertyName: prioritization_score_type
-        mapping:
-          PIE: '#/components/schemas/HypothesisPIE'
-          ICE: '#/components/schemas/HypothesisICE'
-    SE_ProcSettingsBayesian:
-      allOf:
-      - $ref: '#/components/schemas/SE_ProcSettingsBase'
-      - type: object
-        description: Stats Engine Settings needed for the Bayesian processing
-        properties:
-          stats_type:
-            enum:
-            - bayesian
-          decision_threshold:
-            description: Threshold after which a decision can be made
-            type: number
-            minimum: 50
-            maximum: 99
-            multipleOf: 1
-          risk_threshold:
-            description: The maximum acceptable level of potential loss if the chosen variant turns out to be worse than the control. It represents the threshold below which the relative risk of preferring a variant over the control must fall to consider the variant as a strong and relatively safe choice.
-            type: number
-            minimum: 1
-            maximum: 100
-            multipleOf: 1
-          mab_settings:
-            allOf:
-            - $ref: '#/components/schemas/SE_MabSettings'
-            nullable: true
-    NumericOutlierMinMax:
-      allOf:
-      - $ref: '#/components/schemas/NumericOutlierBase'
-      - type: object
-        additionalProperties: false
-        properties:
-          detection_type:
-            enum:
-            - min_max
-          min:
-            type: number
-            description: Minimum value for the outlier detection, under which, the value is considered an outlier
-          max:
-            type: number
-            description: Maximum value for the outlier detection, over which, the value is considered an outlier
-    Domain:
+    PageNumber:
       type: object
-      description: A website domain data.
       properties:
-        id:
+        page:
           type: integer
-          description: Domain ID.
-          readOnly: true
-        url:
-          type: string
-          maxLength: 150
-          pattern: ^(http|https)://
-          description: Domain's homepage url
-        code_installed:
+          minimum: 1
+          description: 'The page number for paginated results. For example, if `results_per_page` is 30, `page: 2` will retrieve items 31-60.
+
+            Defaults to 1 if not specified.
+
+            '
+    VisualEditorUserAgents:
+      description: Predefined User-Agent strings that the Visual Editor can emulate for responsive design and device-specific testing.
+      type: string
+      nullable: true
+      enum:
+      - chrome_desktop
+      - chrome_ipad
+      - chrome_iphone
+      - chrome_android
+      - safari_mac
+      - safari_ipad
+      - safari_iphone
+      - firefox_desktop
+      - firefox_ipad
+      - firefox_iphone
+      - firefox_android
+      - edge_desktop
+      - edge_tablet
+      - brave_desktop
+      - brave_ipad
+      - brave_iphone
+      - brave_android
+      - opera_desktop
+      - opera_ipad
+      - opera_iphone
+      - opera_android
+    TagExpandable:
+      description: Represents a tag, either as its unique ID or as the full tag object (ID, name, description) if expanded.
+      oneOf:
+      - type: integer
+        description: Tag ID
+      - $ref: '#/components/schemas/Tag'
+    OnlyCount:
+      type: object
+      properties:
+        onlyCount:
           type: boolean
-          description: Indicating whether code installed check passed sometimes in the past.
-          default: false
-    UpdateHypothesisRequestData:
-      $ref: '#/components/schemas/UpdateHypothesis'
-    BulkSuccessData:
-      allOf:
-      - $ref: '#/components/schemas/SuccessData'
-      - type: object
-        properties:
-          code:
-            type: integer
-            format: int32
-          errors:
-            type: array
-            description: List of unprocessed entities. Would be empty, if all passed entities processed
-            items:
-              $ref: '#/components/schemas/BulkEntityError'
-    NumericOutlierPercentile:
-      allOf:
-      - $ref: '#/components/schemas/NumericOutlierBase'
-      - type: object
-        additionalProperties: false
-        properties:
-          detection_type:
-            enum:
-            - percentile
-          min:
-            allOf:
-            - description: Minimum percentile value for the outlier detection; values outside this percentile are considered outliers
-            - $ref: '#/components/schemas/Percentiles'
-          max:
-            allOf:
-            - description: Maximum percentile value for the outlier detection; values outside this percentile are considered outliers
-            - $ref: '#/components/schemas/Percentiles'
-    BulkDeleteHypothesesRequestData:
+          description: 'If set to `true` in a list request, the response will only contain the total count of matching items (`extra.pagination.items_count`)
+
+            and will not include the actual item data. Useful for quickly getting totals without fetching full datasets.
+
+            '
+    ExperienceReportingSettings:
       type: object
-      description: Request body for bulk deleting multiple hypotheses. Contains a list of hypothesis IDs to be permanently removed.
-      additionalProperties: false
+      description: Comprehensive settings governing how an experience's results are reported and analyzed.
       properties:
-        id:
-          $ref: '#/components/schemas/BulkHypothesisIds'
-      required:
-      - id
-    SimpleGoal:
-      type: object
-      properties:
-        id:
-          description: The unique numerical identifier of the goal.
+        primary_metric:
+          description: 'The key performance indicator (KPI) that the statistical engine will primarily use to evaluate variations and determine winners, especially for MAB allocation or automated decisions.
+
+            - `conversion_rate`: Based on the conversion rate of the primary goal. (Default)
+
+            - `avg_revenue_visitor`: Based on Revenue Per Visitor (RPV) from a revenue goal.
+
+            - `avg_products_ordered_visitor`: Based on Average Products Per Visitor (APPV) from a revenue goal.
+
+            '
+          default: conversion_rate
+          allOf:
+          - $ref: '#/components/schemas/MetricTypes'
+        stats_engine_processing:
+          $ref: '#/components/schemas/SE_ProcSettings'
+        confidence:
+          description: (Deprecated) Legacy setting for confidence level. Use `stats_engine_processing.confidence` for Frequentist settings instead.
+          deprecated: true
+          type: number
+          minimum: 0
+        keep_winner:
+          description: 'If true, after an experience is marked as ''Completed'' because a winning variation was found, that winning variation will continue to receive 100% of the experience traffic.
+
+            If false (default), traffic might revert to the original or be evenly split, or the experience might simply stop serving.
+
+            KB: "My Experiments Stopped, What Happened?" - "An experiment can keep winning variation running".
+
+            '
+          type: boolean
+        min_order_value:
+          description: (Deprecated) Minimum order value for transaction outliers. Use `outliers.order_value.min` instead.
+          type: number
+          minimum: 0
+          deprecated: true
+        max_order_value:
+          description: (Deprecated) Maximum order value for transaction outliers. Use `outliers.order_value.max` instead.
+          type: number
+          deprecated: true
+          minimum: 0
+        outliers:
+          description: 'Configuration for handling statistical outliers in order-related data (revenue and product counts) to prevent skewed results.
+
+            KB: "Setting limits for Order Outliers" and "How Outlier Detection Works in Convert Reports and Exports".
+
+            '
+          type: object
+          additionalProperties: false
+          properties:
+            order_value:
+              description: Outlier detection settings for the monetary value of orders.
+              allOf:
+              - $ref: '#/components/schemas/NumericOutlier'
+            products_ordered_count:
+              description: Outlier detection settings for the number of products in an order.
+              allOf:
+              - $ref: '#/components/schemas/NumericOutlier'
+        max_running_time:
+          description: 'The maximum number of days the experience should run. If no clear winner is found by this time, the experience may be automatically completed or paused.
+
+            Set to 0 for no maximum limit.
+
+            KB: "Setting an end date for running an experiment." (Mentions max days in Stats section).
+
+            '
           type: integer
-        name:
-          description: The user-defined, friendly name of the goal.
-          type: string
+          minimum: 0
+          maximum: 999
+        max_variation_visitors:
+          description: (Deprecated) Maximum number of visitors per variation. Use `max_experience_visitors` or rely on statistical significance.
+          deprecated: true
+          type: integer
+          minimum: 0
+        max_experience_visitors:
+          description: The maximum total number of unique visitors to be included in the entire experience. Once reached, the experience may be automatically paused or completed. Set to 0 for no limit.
+          type: integer
+          minimum: 0
+        min_variation_conversions:
+          type: integer
+          minimum: 0
+          description: 'The minimum number of conversions a variation must achieve before its statistical significance (confidence/chance to win) is calculated and displayed in reports.
+
+            Default is often 5. Helps avoid premature conclusions based on very small conversion numbers.
+
+            KB: "Experiment Report" - "Confidence Level (statistical significance)".
+
+            '
+        min_conversion_value:
+          description: (Deprecated or unclear) Minimum conversion value per variation. Might relate to revenue goals or be a legacy setting.
+          type: integer
+          minimum: 0
+          deprecated: true
+        min_running_time:
+          description: 'The minimum number of days the experience must run before it can be automatically completed, even if a winner is found earlier.
+
+            Helps ensure stability and account for weekly variations. Set to 0 for no minimum.
+
+            KB: "My Experiments Stopped, What Happened?".
+
+            '
+          type: integer
+          minimum: 0
+          maximum: 999
+        min_variation_visitors:
+          description: 'The minimum number of unique visitors each variation (including the original) must receive before statistical significance is calculated.
+
+            Helps ensure a sufficient sample size for reliable results.
+
+            '
+          type: integer
+          minimum: 0
+        stop_loser:
+          description: 'If true, variations that are statistically determined to be performing significantly worse than the baseline (losing variations) will be automatically stopped.
+
+            Their traffic is then redistributed among the remaining active variations.
+
+            KB: "My Experiments Stopped, What Happened?" - "An experiment can stop losing variations".
+
+            '
+          type: boolean
+        keep_running_until_confidence:
+          type: boolean
+          description: 'If true, the experiment does not auto-complete when planned sample size (100% progress) is reached alone.
+
+            It only auto-completes when both planned sample size is reached and the confidence threshold is met.
+
+            If false, the experiment completes automatically when planned sample size is reached, regardless of confidence level.
+
+            Default depends on automation toggle: when keep_winner or stop_loser is enabled, default is true; otherwise false.
+
+            '
+        srm_check:
+          type: boolean
+          nullable: true
+          description: 'If true, enables Sample Ratio Mismatch (SRM) checks for the experience.
+
+            SRM occurs when the distribution of visitors to variations significantly deviates from the intended traffic allocation, potentially indicating a problem with the experiment setup.
+
+            If not provided at experience level, project-level setting is used.
+
+            KB: "What is SRM?".
+
+            '
+        visual_editor:
+          description: Settings related to the behavior and configuration of Convert's Visual Editor when used for this experience.
+          type: object
+          properties:
+            selector_blacklist:
+              description: 'A list of keywords (newline-separated string). If an element''s attribute (class, ID) contains any of these keywords, that attribute part will be ignored when Convert generates CSS selectors for changes.
+
+                Useful for avoiding dynamic or unstable selectors (e.g., from Squarespace, Bootstrap).
+
+                KB: "My changes created on the Visual Editor don''t get saved when using Squarespace", "Issues while editing websites on Bootstrap".
+
+                '
+              type: string
+              nullable: true
+            screen_width:
+              description: The emulated screen width (in pixels) used when loading the page in the Visual Editor. Allows previewing and editing for different responsive views.
+              type: number
+              minimum: 240
+              maximum: 7680
+              nullable: true
+            user_agent:
+              $ref: '#/components/schemas/VisualEditorUserAgents'
+    UpdateHypothesisICE:
+      allOf:
+      - $ref: '#/components/schemas/CreateUpdateHypothesisICEBase'
+    HypothesesListExpandFields:
+      type: string
+      enum:
+      - project
+      - tags
+    ResultsPerPage:
+      type: object
+      properties:
+        results_per_page:
+          type: integer
+          nullable: true
+          minimum: 0
+          maximum: 50
+          default: 30
+          description: 'Specifies the maximum number of items to return in a single page of results.
+
+            Used for pagination. Default is 30, maximum is 50.
+
+            '
+    GetHypothesesListRequestData:
+      allOf:
+      - $ref: '#/components/schemas/OnlyCount'
+      - $ref: '#/components/schemas/HypothesesListFilteringOptions'
+      - $ref: '#/components/schemas/PageNumber'
+      - type: object
+        properties:
+          expand:
+            description: 'Specifies the list of fields which would be expanded in the response. Otherwise, only their id would be returned.
+
+              Read more in the section related to [Expanding Fields](#tag/Expandable-Fields)'
+            type: array
+            items:
+              $ref: '#/components/schemas/HypothesesListExpandFields'
     VisitorInsightsBase:
       type: object
       properties:
@@ -1077,6 +1422,416 @@ components:
             Higher values collect data from a larger share of traffic and consume allocation faster.
 
             '
+    HypothesesListFilteringOptions:
+      allOf:
+      - $ref: '#/components/schemas/ResultsPerPage'
+      - $ref: '#/components/schemas/SortDirection'
+      - type: object
+        properties:
+          sort_by:
+            type: string
+            nullable: true
+            default: id
+            description: 'A value to sort hypotheses by specific field(s)
+
+
+              Defaults to **id** if not provided
+
+              '
+            enum:
+            - id
+            - name
+            - score
+            - start_date
+            - status
+          scoreMax:
+            type: integer
+            nullable: true
+            default: 5
+            description: The maximum score for hypotheses which you would like to retrieve
+            enum:
+            - 0
+            - 1
+            - 2
+            - 3
+            - 4
+            - 5
+          scoreMin:
+            type: integer
+            default: 0
+            nullable: true
+            description: The minimum score for hypotheses which you would like to retrieve
+            enum:
+            - 0
+            - 1
+            - 2
+            - 3
+            - 4
+            - 5
+          search:
+            type: string
+            maxLength: 200
+            nullable: true
+            description: A search string that would be used to search against hypotheses's name or description
+          status:
+            type: array
+            nullable: true
+            description: The status of the hypotheses you'd like to be returned; one of the below can be provided
+            items:
+              $ref: '#/components/schemas/HypothesisStatuses'
+          experiences:
+            type: array
+            nullable: true
+            description: The list of experience ID's used to filter the list of returned hypotheses
+            items:
+              type: integer
+          tags:
+            type: array
+            nullable: true
+            description: The list of tag ID's used to filter the list of returned hypotheses
+            items:
+              type: integer
+          only:
+            description: 'Only retrieve hypotheses with the given ids.
+
+              '
+            type: array
+            nullable: true
+            items:
+              type: integer
+            maxItems: 100
+          except:
+            description: 'Except hypotheses with the given ids.
+
+              '
+            type: array
+            items:
+              type: integer
+            maxItems: 100
+    TrackingScriptReleaseScheduled:
+      allOf:
+      - $ref: '#/components/schemas/TrackingScriptReleaseBase'
+      - type: object
+        additionalProperties: false
+        properties:
+          type:
+            enum:
+            - scheduled
+          automatic_apply_on:
+            $ref: '#/components/schemas/TrackingScriptReleaseAutomaticApplyOn'
+    BaseKnowledgeBase:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The unique numerical identifier for this Knowledge Base entry.
+          readOnly: true
+        name:
+          type: string
+          description: A concise title for the Knowledge Base entry, often derived from the original hypothesis name or a summary of the key learning (e.g., "Green CTA Button Increased Signups by 10%", "Simplified Navigation Did Not Improve Task Completion").
+          maxLength: 100
+        project:
+          $ref: '#/components/schemas/ProjectExpandable'
+        status:
+          $ref: '#/components/schemas/KnowledgeBaseStatuses'
+        summary:
+          type: string
+          description: 'A detailed summary of the findings, insights, and conclusions derived from the tested hypothesis that led to this Knowledge Base entry.
+
+            This should articulate what was learned, whether the hypothesis was proven or disproven, and any actionable takeaways.
+
+            '
+          maxLength: 500
+        url:
+          type: string
+          description: Url reference for the knowledge base
+          maxLength: 2048
+          nullable: true
+        objective:
+          type: string
+          maxLength: 5000
+          description: A given description for the knowledge base to easily identify it later
+        start_date:
+          description: The date in format YYYY-MM-DD
+          type: string
+          maxLength: 10
+          format: date
+          nullable: true
+        end_date:
+          description: The date in format YYYY-MM-DD
+          type: string
+          maxLength: 10
+          format: date
+          nullable: true
+        prioritization_score_type:
+          type: string
+          description: A given description of prioritizing model
+          nullable: true
+        prioritization_score_attributes:
+          type: object
+          description: Prioritization score attributes
+          nullable: true
+        experiences:
+          type: array
+          nullable: true
+          description: The list of experiences connected to this knowledge base
+          items:
+            $ref: '#/components/schemas/BaseExperienceExpandable'
+        description:
+          type: string
+          maxLength: 5000
+          description: Detailed description of the knowledge base
+        files:
+          type: array
+          description: Files attached to the knowledge base
+          nullable: true
+          items:
+            $ref: '#/components/schemas/UploadedFileData'
+        created_by:
+          type: string
+          readOnly: true
+          nullable: true
+          description: The name or identifier of the user who created this Knowledge Base entry (often the person who marked the source hypothesis as proven/disproven).
+        updated_at:
+          type: integer
+          readOnly: true
+          description: Unix timestamp (UTC) indicating when this Knowledge Base entry was last updated or created.
+    TrackingScriptReleaseAutomaticApplyOn:
+      type: object
+      description: Configuration for scheduled tracking script updates, specifying the day of the week and time for automatic application of new versions.
+      additionalProperties: false
+      properties:
+        day:
+          type: integer
+          description: Day of the week for scheduled updates (e.g., 1 for Monday, 7 for Sunday - convention needs to be clear).
+          minimum: 1
+          maximum: 7
+        time:
+          type: string
+          pattern: ^([01]?[0-9]|2[0-4]):([0-5][0-9])$
+          description: Time of day (in project's timezone or UTC, needs clarification) in HH:MM format for scheduled updates (e.g., "03:00" for 3 AM).
+      required:
+      - day
+      - time
+    IntegrationGA4Base:
+      type: object
+      properties:
+        type:
+          enum:
+          - ga4
+        measurementId:
+          type: string
+          description: The GA4 Measurement ID (e.g., "G-XXXXXXXXXX") for the data stream where Convert experiment data will be sent.
+    SimpleAudience:
+      type: object
+      properties:
+        id:
+          description: The unique numerical identifier of the audience.
+          type: integer
+        name:
+          description: The user-defined, friendly name of the audience.
+          type: string
+    HypothesisData:
+      oneOf:
+      - $ref: '#/components/schemas/HypothesisDataPIE'
+      - $ref: '#/components/schemas/HypothesisDataICE'
+      discriminator:
+        propertyName: prioritization_score_type
+        mapping:
+          PIE: '#/components/schemas/HypothesisDataPIE'
+          ICE: '#/components/schemas/HypothesisDataICE'
+    CreateHypothesis:
+      oneOf:
+      - $ref: '#/components/schemas/CreateHypothesisPIE'
+      - $ref: '#/components/schemas/CreateHypothesisICE'
+      discriminator:
+        propertyName: prioritization_score_type
+        mapping:
+          PIE: '#/components/schemas/CreateHypothesisPIE'
+          ICE: '#/components/schemas/CreateHypothesisICE'
+    UpdateHypothesisRequestData:
+      $ref: '#/components/schemas/UpdateHypothesis'
+    DNSRecordTypes:
+      description: The type of the DNS record.
+      type: string
+      enum:
+      - TXT
+      - CNAME
+    KnowledgeBase:
+      allOf:
+      - $ref: '#/components/schemas/BaseKnowledgeBase'
+      - type: object
+        properties:
+          tags:
+            type: array
+            nullable: true
+            description: The list of tags connected to this knowledge base
+            items:
+              $ref: '#/components/schemas/TagExpandable'
+    SuccessData:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+    BulkSuccessData:
+      allOf:
+      - $ref: '#/components/schemas/SuccessData'
+      - type: object
+        properties:
+          code:
+            type: integer
+            format: int32
+          errors:
+            type: array
+            description: List of unprocessed entities. Would be empty, if all passed entities processed
+            items:
+              $ref: '#/components/schemas/BulkEntityError'
+    PIE_Attributes:
+      description: 'Scores for the PIE (Potential, Importance, Ease) prioritization model. Each attribute is scored on a scale of 1 to 5.
+
+        KB: "Hypotheses (Compass)" - "PIE prioritization model".
+
+        '
+      title: PIE_Attributes
+      type: object
+      properties:
+        potential:
+          type: integer
+          description: 'Score (1-5, 5 highest): How likely is this hypothesis to result in a significant improvement if successful?'
+          minimum: 1
+          maximum: 5
+        importance:
+          type: integer
+          description: 'Score (1-5, 5 highest): How valuable is the traffic or user segment this hypothesis targets? (e.g., high-traffic pages, critical conversion funnel steps).'
+          minimum: 1
+          maximum: 5
+        ease:
+          type: integer
+          description: 'Score (1-5, 5 easiest): How easy is it to implement the changes required to test this hypothesis, considering technical complexity and resource requirements?'
+          minimum: 1
+          maximum: 5
+    CreateHypothesisICE:
+      allOf:
+      - $ref: '#/components/schemas/CreateUpdateHypothesisICEBase'
+      required:
+      - name
+      - status
+      - prioritization_score_type
+      - prioritization_score_attributes
+    GA_SettingsBase:
+      type: object
+      properties:
+        enabled:
+          type: boolean
+          description: If true, integration with Google Analytics is enabled for this project or experience, allowing experiment data to be sent to GA.
+    ProjectStatuses:
+      description: 'The overall status of a project:
+
+        - `active`: The project is active, and experiences within it can run and track data.
+
+        - `inactive`: The project is inactive (archived or paused). No experiences within it will run, and no new data will be tracked.
+
+        - `suspended`: The project (or account) has been suspended, typically due to billing issues or terms of service violations. Services are disabled.
+
+        '
+      type: string
+      enum:
+      - active
+      - inactive
+      - suspended
+    UTC_Offset:
+      type: integer
+      description: 'The time offset from Coordinated Universal Time (UTC) in seconds.
+
+        For example, UTC-5 (EST) would be -18000. UTC+2 would be 7200.
+
+        Used for interpreting or displaying date/time information according to a specific timezone.
+
+        '
+      default: 0
+      minimum: -43200
+      maximum: 50400
+    Extra:
+      type: object
+      properties:
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+    TagExpandableRequest:
+      description: 'Represents a tag when associating it with another entity (like an experience or goal) during a create or update operation.
+
+        Can be either the existing `integer` ID of the tag, or a `TagToCreate` object if a new tag should be created and associated on the fly.
+
+        '
+      anyOf:
+      - type: integer
+        description: Tag ID
+      - $ref: '#/components/schemas/TagToCreate'
+    NumericOutlierPercentile:
+      allOf:
+      - $ref: '#/components/schemas/NumericOutlierBase'
+      - type: object
+        additionalProperties: false
+        properties:
+          detection_type:
+            enum:
+            - percentile
+          min:
+            allOf:
+            - description: Minimum percentile value for the outlier detection; values outside this percentile are considered outliers
+            - $ref: '#/components/schemas/Percentiles'
+          max:
+            allOf:
+            - description: Maximum percentile value for the outlier detection; values outside this percentile are considered outliers
+            - $ref: '#/components/schemas/Percentiles'
+    CreateUpdateHypothesisPIEBase:
+      allOf:
+      - $ref: '#/components/schemas/HypothesisPIEBase'
+      - type: object
+        properties:
+          experiences:
+            $ref: '#/components/schemas/HypothesisCreateUpdateExperiences'
+          tags:
+            type: array
+            nullable: true
+            description: The list of tags connected to this hypothesis
+            items:
+              $ref: '#/components/schemas/TagExpandableRequest'
+    TrackingScriptReleaseLatest:
+      allOf:
+      - $ref: '#/components/schemas/TrackingScriptReleaseBase'
+      - type: object
+        additionalProperties: false
+        properties:
+          type:
+            enum:
+            - latest
+    ICE_Attributes:
+      description: 'Scores for the ICE (Impact, Confidence, Ease) prioritization model. Each attribute is scored on a scale of 1 to 5.
+
+        KB: "Hypotheses (Compass)" - "ICE prioritization model".
+
+        '
+      title: ICE_Attributes
+      type: object
+      properties:
+        impact:
+          type: integer
+          description: 'Score (1-5, 5 highest): If this hypothesis is successful, how much positive impact will it have on the key metric(s) you''re trying to improve?'
+          minimum: 1
+          maximum: 5
+        confidence:
+          type: integer
+          description: 'Score (1-5, 5 highest): How confident are you that this hypothesis will achieve the desired impact and that the proposed changes are technically feasible?'
+          minimum: 1
+          maximum: 5
+        ease:
+          type: integer
+          description: 'Score (1-5, 5 easiest): How easy is it to implement the changes required to test this hypothesis, considering technical complexity and resource requirements?'
+          minimum: 1
+          maximum: 5
     SE_MabSettings:
       type: object
       description: 'Configuration for Multi-Armed Bandit (MAB) traffic allocation. If `null`, MAB is disabled and manual traffic allocation is used.
@@ -1125,59 +1880,15 @@ components:
           - 0.9
           - 1
           default: 0.3
-    HypothesisData:
+    UpdateHypothesis:
       oneOf:
-      - $ref: '#/components/schemas/HypothesisDataPIE'
-      - $ref: '#/components/schemas/HypothesisDataICE'
+      - $ref: '#/components/schemas/UpdateHypothesisPIE'
+      - $ref: '#/components/schemas/UpdateHypothesisICE'
       discriminator:
         propertyName: prioritization_score_type
         mapping:
-          PIE: '#/components/schemas/HypothesisDataPIE'
-          ICE: '#/components/schemas/HypothesisDataICE'
-    CreateHypothesis:
-      oneOf:
-      - $ref: '#/components/schemas/CreateHypothesisPIE'
-      - $ref: '#/components/schemas/CreateHypothesisICE'
-      discriminator:
-        propertyName: prioritization_score_type
-        mapping:
-          PIE: '#/components/schemas/CreateHypothesisPIE'
-          ICE: '#/components/schemas/CreateHypothesisICE'
-    UTC_Offset:
-      type: integer
-      description: 'The time offset from Coordinated Universal Time (UTC) in seconds.
-
-        For example, UTC-5 (EST) would be -18000. UTC+2 would be 7200.
-
-        Used for interpreting or displaying date/time information according to a specific timezone.
-
-        '
-      default: 0
-      minimum: -43200
-      maximum: 50400
-    MetricTypes:
-      type: string
-      description: 'The primary types of performance metrics calculated by the reporting engine for each goal.
-
-        - `conversion_rate`: The percentage of visitors who completed the goal (Conversions / Visitors).
-
-        - `avg_revenue_visitor`: Average Revenue Per Visitor (RPV = Total Revenue / Total Visitors). Applicable for revenue goals.
-
-        - `avg_products_ordered_visitor`: Average Products Per Visitor (APPV = Total Products Ordered / Total Visitors). Applicable for revenue goals tracking product counts.
-
-        - `average_order_value`: Average Order Value (AOV = Total Revenue / Total Conversions). Applicable for revenue goals tracking order value.
-
-        - `average_products_per_order`: Average Products Per Order (APPO = Total Products Ordered Per Visitor / Total Conversions). Applicable for revenue goals tracking product counts.
-
-        Knowledge Base: "Understanding Report Metrics in Convert".
-
-        '
-      enum:
-      - conversion_rate
-      - avg_revenue_visitor
-      - avg_products_ordered_visitor
-      - average_order_value
-      - average_products_per_order
+          PIE: '#/components/schemas/UpdateHypothesisPIE'
+          ICE: '#/components/schemas/UpdateHypothesisICE'
     SE_ProcSettings:
       description: Overall settings for the statistical engine processing results for this experience.
       oneOf:
@@ -1188,30 +1899,33 @@ components:
         mapping:
           frequentist: '#/components/schemas/SE_ProcSettingsFrequentist'
           bayesian: '#/components/schemas/SE_ProcSettingsBayesian'
-    ICE_Attributes:
-      description: 'Scores for the ICE (Impact, Confidence, Ease) prioritization model. Each attribute is scored on a scale of 1 to 5.
-
-        KB: "Hypotheses (Compass)" - "ICE prioritization model".
-
-        '
-      title: ICE_Attributes
+    BulkDeleteHypothesesRequestData:
+      type: object
+      description: Request body for bulk deleting multiple hypotheses. Contains a list of hypothesis IDs to be permanently removed.
+      additionalProperties: false
+      properties:
+        id:
+          $ref: '#/components/schemas/BulkHypothesisIds'
+      required:
+      - id
+    CreateUpdateHypothesisICEBase:
+      allOf:
+      - $ref: '#/components/schemas/HypothesisICEBase'
+      - type: object
+        properties:
+          experiences:
+            $ref: '#/components/schemas/HypothesisCreateUpdateExperiences'
+          tags:
+            type: array
+            nullable: true
+            description: The list of tags connected to this hypothesis
+            items:
+              $ref: '#/components/schemas/TagExpandableRequest'
+    UpdateHypothesisStatusRequestData:
       type: object
       properties:
-        impact:
-          type: integer
-          description: 'Score (1-5, 5 highest): If this hypothesis is successful, how much positive impact will it have on the key metric(s) you''re trying to improve?'
-          minimum: 1
-          maximum: 5
-        confidence:
-          type: integer
-          description: 'Score (1-5, 5 highest): How confident are you that this hypothesis will achieve the desired impact and that the proposed changes are technically feasible?'
-          minimum: 1
-          maximum: 5
-        ease:
-          type: integer
-          description: 'Score (1-5, 5 easiest): How easy is it to implement the changes required to test this hypothesis, considering technical complexity and resource requirements?'
-          minimum: 1
-          maximum: 5
+        status:
+          $ref: '#/components/schemas/HypothesisStatuses'
     SE_ProcTypes:
       type: string
       description: 'The statistical methodology used for analyzing experiment results and determining winners.
@@ -1224,52 +1938,15 @@ components:
       enum:
       - frequentist
       - bayesian
-    TrackingScriptReleaseBase:
+    GenerateDebugTokenData:
       type: object
-      description: Base settings for managing how new versions of the Convert tracking script are applied to the project.
+      readOnly: true
       properties:
-        type:
+        value:
           type: string
-          description: 'The chosen strategy for updating the tracking script: ''manual'', ''latest'' (auto-update), or ''scheduled''.
-
-            '
-    HypothesisExpandFields:
-      type: string
-      enum:
-      - project
-      - tags
-      - experiences
-    ErrorData:
-      type: object
-      properties:
-        code:
+        ttl:
           type: integer
-          format: int32
-        message:
-          oneOf:
-          - type: string
-          - type: array
-            items:
-              type: string
-        fields:
-          oneOf:
-          - type: string
-          - type: array
-            items:
-              type: string
-    HypothesisDataPIE:
-      allOf:
-      - $ref: '#/components/schemas/HypothesisPIEBase'
-      - type: object
-        properties:
-          experiences:
-            $ref: '#/components/schemas/HypothesisExperiences'
-          tags:
-            type: array
-            nullable: true
-            description: The list of tags connected to this hypothesis
-            items:
-              $ref: '#/components/schemas/TagExpandable'
+          description: Unix timestamp (UTC) indicating when this debug token will expire and become invalid.
     BaseProject:
       type: object
       properties:
@@ -1732,464 +2409,37 @@ components:
           description: A list of Location IDs that will be automatically added to any new experience created within this project.
           items:
             $ref: '#/components/schemas/SimpleLocationExpandable'
-    HypothesesListExpandFields:
-      type: string
-      enum:
-      - project
-      - tags
-    SE_ProcSettingsBase:
-      type: object
-      properties:
-        stats_type:
-          $ref: '#/components/schemas/SE_ProcTypes'
-    CreateUpdateHypothesisPIEBase:
-      allOf:
-      - $ref: '#/components/schemas/HypothesisPIEBase'
-      - type: object
-        properties:
-          experiences:
-            $ref: '#/components/schemas/HypothesisCreateUpdateExperiences'
-          tags:
-            type: array
-            nullable: true
-            description: The list of tags connected to this hypothesis
-            items:
-              $ref: '#/components/schemas/TagExpandableRequest'
-    PIE_Attributes:
-      description: 'Scores for the PIE (Potential, Importance, Ease) prioritization model. Each attribute is scored on a scale of 1 to 5.
+    HypothesisStatuses:
+      description: 'The current stage or outcome of a hypothesis in its lifecycle:
 
-        KB: "Hypotheses (Compass)" - "PIE prioritization model".
+        - `draft`: The hypothesis is still being formulated or refined; not yet ready for testing.
 
-        '
-      title: PIE_Attributes
-      type: object
-      properties:
-        potential:
-          type: integer
-          description: 'Score (1-5, 5 highest): How likely is this hypothesis to result in a significant improvement if successful?'
-          minimum: 1
-          maximum: 5
-        importance:
-          type: integer
-          description: 'Score (1-5, 5 highest): How valuable is the traffic or user segment this hypothesis targets? (e.g., high-traffic pages, critical conversion funnel steps).'
-          minimum: 1
-          maximum: 5
-        ease:
-          type: integer
-          description: 'Score (1-5, 5 easiest): How easy is it to implement the changes required to test this hypothesis, considering technical complexity and resource requirements?'
-          minimum: 1
-          maximum: 5
-    CustomDomainOwnershipVerificationItem:
-      type: object
-      properties:
-        name:
-          type: string
-          description: The name of the DNS record.
-        type:
-          $ref: '#/components/schemas/DNSRecordTypes'
-        value:
-          type: string
-          description: The value of the DNS record.
-    NumericOutlierTypes:
-      description: 'The method used for detecting and handling order outliers in revenue or product count tracking:
+        - `completed`: The hypothesis definition is finalized and it''s ready to be linked to an experiment or tested.
 
-        - `none`: No outlier detection is applied.
+        - `applied`: The hypothesis is currently being tested in one or more active experiences.
 
-        - `min_max`: Orders with values below a specified minimum or above a specified maximum are capped at those boundaries.
+        - `proven`: Testing has concluded, and the hypothesis was validated (i.e., the proposed change led to a positive, statistically significant outcome). Can be moved to Knowledge Base.
 
-        - `percentile`: Orders falling below a lower percentile or above an upper percentile are capped at the values corresponding to those percentiles.
+        - `disproven`: Testing has concluded, and the hypothesis was invalidated (i.e., the proposed change did not lead to the expected positive outcome or had a negative impact). Can be moved to Knowledge Base.
+
+        - `archived`: The hypothesis is no longer active or relevant for current testing but is kept for historical records.
+
+        KB: "Hypotheses (Compass)" - "Status of Hypothesis".
 
         '
       type: string
       enum:
-      - none
-      - min_max
-      - percentile
-    UpdateHypothesisICE:
-      allOf:
-      - $ref: '#/components/schemas/CreateUpdateHypothesisICEBase'
-    Percentiles:
-      type: number
-      description: 'Standard percentile values used for outlier detection thresholds.
-
-        For example, a `min` of 5 and `max` of 95 means orders in the bottom 5% and top 5% of values are considered outliers and capped.
-
-        '
-      enum:
-      - 1
-      - 5
-      - 10
-      - 25
-      - 50
-      - 75
-      - 90
-      - 95
-      - 99
-    BaseKnowledgeBase:
-      type: object
-      properties:
-        id:
-          type: integer
-          description: The unique numerical identifier for this Knowledge Base entry.
-          readOnly: true
-        name:
-          type: string
-          description: A concise title for the Knowledge Base entry, often derived from the original hypothesis name or a summary of the key learning (e.g., "Green CTA Button Increased Signups by 10%", "Simplified Navigation Did Not Improve Task Completion").
-          maxLength: 100
-        project:
-          $ref: '#/components/schemas/ProjectExpandable'
-        status:
-          $ref: '#/components/schemas/KnowledgeBaseStatuses'
-        summary:
-          type: string
-          description: 'A detailed summary of the findings, insights, and conclusions derived from the tested hypothesis that led to this Knowledge Base entry.
-
-            This should articulate what was learned, whether the hypothesis was proven or disproven, and any actionable takeaways.
-
-            '
-          maxLength: 500
-        url:
-          type: string
-          description: Url reference for the knowledge base
-          maxLength: 2048
-          nullable: true
-        objective:
-          type: string
-          maxLength: 5000
-          description: A given description for the knowledge base to easily identify it later
-        start_date:
-          description: The date in format YYYY-MM-DD
-          type: string
-          maxLength: 10
-          format: date
-          nullable: true
-        end_date:
-          description: The date in format YYYY-MM-DD
-          type: string
-          maxLength: 10
-          format: date
-          nullable: true
-        prioritization_score_type:
-          type: string
-          description: A given description of prioritizing model
-          nullable: true
-        prioritization_score_attributes:
-          type: object
-          description: Prioritization score attributes
-          nullable: true
-        experiences:
-          type: array
-          nullable: true
-          description: The list of experiences connected to this knowledge base
-          items:
-            $ref: '#/components/schemas/BaseExperienceExpandable'
-        description:
-          type: string
-          maxLength: 5000
-          description: Detailed description of the knowledge base
-        files:
-          type: array
-          description: Files attached to the knowledge base
-          nullable: true
-          items:
-            $ref: '#/components/schemas/UploadedFileData'
-        created_by:
-          type: string
-          readOnly: true
-          nullable: true
-          description: The name or identifier of the user who created this Knowledge Base entry (often the person who marked the source hypothesis as proven/disproven).
-        updated_at:
-          type: integer
-          readOnly: true
-          description: Unix timestamp (UTC) indicating when this Knowledge Base entry was last updated or created.
-    CreateHypothesisRequestData:
-      $ref: '#/components/schemas/CreateHypothesis'
-    ProjectExpandable:
-      readOnly: true
-      anyOf:
-      - type: integer
-        description: Project ID to which the data belongs to
-      - $ref: '#/components/schemas/Project'
-    ProjectIntegrationGA3:
-      allOf:
-      - $ref: '#/components/schemas/ProjectGASettingsBase'
-      - $ref: '#/components/schemas/IntegrationGA3'
-    AccessRoleNames:
-      type: string
-      description: 'The predefined names for user access roles within the Convert system. Each role grants a specific set of permissions.
-
-        - `owner`: Highest level, full control over account, billing, users, and all projects. Typically the account creator.
-
-        - `account_manager`: Broad administrative rights over the account, often including billing and user management, but might not be able to delete the account itself.
-
-        - `admin`: Full control over projects they are assigned to, including creating/editing/deleting experiences, goals, audiences, and managing project settings. May also manage project-level collaborators.
-
-        - `browse`: Read-only access. Can view experiences, reports, and settings but cannot make changes.
-
-        - `edit`: Can create and modify entities like experiences, goals, audiences within assigned projects, but typically cannot activate/publish experiences or manage project settings.
-
-        - `publish`: Can do everything an ''editor'' can, plus activate/pause/complete experiences.
-
-        - `review`: Can view and comment, but not make direct changes. Suited for stakeholders who need to approve or provide feedback.
-
-        Knowledge Base: "Collaborators - Share With Multiple Users / Accounts" (describes access levels).
-
-        '
-      enum:
-      - owner
-      - account_manager
-      - admin
-      - browse
-      - edit
-      - publish
-      - review
-    TrackingScriptReleaseScheduled:
-      allOf:
-      - $ref: '#/components/schemas/TrackingScriptReleaseBase'
-      - type: object
-        additionalProperties: false
-        properties:
-          type:
-            enum:
-            - scheduled
-          automatic_apply_on:
-            $ref: '#/components/schemas/TrackingScriptReleaseAutomaticApplyOn'
-    ExperienceReportingSettings:
-      type: object
-      description: Comprehensive settings governing how an experience's results are reported and analyzed.
-      properties:
-        primary_metric:
-          description: 'The key performance indicator (KPI) that the statistical engine will primarily use to evaluate variations and determine winners, especially for MAB allocation or automated decisions.
-
-            - `conversion_rate`: Based on the conversion rate of the primary goal. (Default)
-
-            - `avg_revenue_visitor`: Based on Revenue Per Visitor (RPV) from a revenue goal.
-
-            - `avg_products_ordered_visitor`: Based on Average Products Per Visitor (APPV) from a revenue goal.
-
-            '
-          default: conversion_rate
-          allOf:
-          - $ref: '#/components/schemas/MetricTypes'
-        stats_engine_processing:
-          $ref: '#/components/schemas/SE_ProcSettings'
-        confidence:
-          description: (Deprecated) Legacy setting for confidence level. Use `stats_engine_processing.confidence` for Frequentist settings instead.
-          deprecated: true
-          type: number
-          minimum: 0
-        keep_winner:
-          description: 'If true, after an experience is marked as ''Completed'' because a winning variation was found, that winning variation will continue to receive 100% of the experience traffic.
-
-            If false (default), traffic might revert to the original or be evenly split, or the experience might simply stop serving.
-
-            KB: "My Experiments Stopped, What Happened?" - "An experiment can keep winning variation running".
-
-            '
-          type: boolean
-        min_order_value:
-          description: (Deprecated) Minimum order value for transaction outliers. Use `outliers.order_value.min` instead.
-          type: number
-          minimum: 0
-          deprecated: true
-        max_order_value:
-          description: (Deprecated) Maximum order value for transaction outliers. Use `outliers.order_value.max` instead.
-          type: number
-          deprecated: true
-          minimum: 0
-        outliers:
-          description: 'Configuration for handling statistical outliers in order-related data (revenue and product counts) to prevent skewed results.
-
-            KB: "Setting limits for Order Outliers" and "How Outlier Detection Works in Convert Reports and Exports".
-
-            '
-          type: object
-          additionalProperties: false
-          properties:
-            order_value:
-              description: Outlier detection settings for the monetary value of orders.
-              allOf:
-              - $ref: '#/components/schemas/NumericOutlier'
-            products_ordered_count:
-              description: Outlier detection settings for the number of products in an order.
-              allOf:
-              - $ref: '#/components/schemas/NumericOutlier'
-        max_running_time:
-          description: 'The maximum number of days the experience should run. If no clear winner is found by this time, the experience may be automatically completed or paused.
-
-            Set to 0 for no maximum limit.
-
-            KB: "Setting an end date for running an experiment." (Mentions max days in Stats section).
-
-            '
-          type: integer
-          minimum: 0
-          maximum: 999
-        max_variation_visitors:
-          description: (Deprecated) Maximum number of visitors per variation. Use `max_experience_visitors` or rely on statistical significance.
-          deprecated: true
-          type: integer
-          minimum: 0
-        max_experience_visitors:
-          description: The maximum total number of unique visitors to be included in the entire experience. Once reached, the experience may be automatically paused or completed. Set to 0 for no limit.
-          type: integer
-          minimum: 0
-        min_variation_conversions:
-          type: integer
-          minimum: 0
-          description: 'The minimum number of conversions a variation must achieve before its statistical significance (confidence/chance to win) is calculated and displayed in reports.
-
-            Default is often 5. Helps avoid premature conclusions based on very small conversion numbers.
-
-            KB: "Experiment Report" - "Confidence Level (statistical significance)".
-
-            '
-        min_conversion_value:
-          description: (Deprecated or unclear) Minimum conversion value per variation. Might relate to revenue goals or be a legacy setting.
-          type: integer
-          minimum: 0
-          deprecated: true
-        min_running_time:
-          description: 'The minimum number of days the experience must run before it can be automatically completed, even if a winner is found earlier.
-
-            Helps ensure stability and account for weekly variations. Set to 0 for no minimum.
-
-            KB: "My Experiments Stopped, What Happened?".
-
-            '
-          type: integer
-          minimum: 0
-          maximum: 999
-        min_variation_visitors:
-          description: 'The minimum number of unique visitors each variation (including the original) must receive before statistical significance is calculated.
-
-            Helps ensure a sufficient sample size for reliable results.
-
-            '
-          type: integer
-          minimum: 0
-        stop_loser:
-          description: 'If true, variations that are statistically determined to be performing significantly worse than the baseline (losing variations) will be automatically stopped.
-
-            Their traffic is then redistributed among the remaining active variations.
-
-            KB: "My Experiments Stopped, What Happened?" - "An experiment can stop losing variations".
-
-            '
-          type: boolean
-        keep_running_until_confidence:
-          type: boolean
-          description: 'If true, the experiment does not auto-complete when planned sample size (100% progress) is reached alone.
-
-            It only auto-completes when both planned sample size is reached and the confidence threshold is met.
-
-            If false, the experiment completes automatically when planned sample size is reached, regardless of confidence level.
-
-            Default depends on automation toggle: when keep_winner or stop_loser is enabled, default is true; otherwise false.
-
-            '
-        srm_check:
-          type: boolean
-          nullable: true
-          description: 'If true, enables Sample Ratio Mismatch (SRM) checks for the experience.
-
-            SRM occurs when the distribution of visitors to variations significantly deviates from the intended traffic allocation, potentially indicating a problem with the experiment setup.
-
-            If not provided at experience level, project-level setting is used.
-
-            KB: "What is SRM?".
-
-            '
-        visual_editor:
-          description: Settings related to the behavior and configuration of Convert's Visual Editor when used for this experience.
-          type: object
-          properties:
-            selector_blacklist:
-              description: 'A list of keywords (newline-separated string). If an element''s attribute (class, ID) contains any of these keywords, that attribute part will be ignored when Convert generates CSS selectors for changes.
-
-                Useful for avoiding dynamic or unstable selectors (e.g., from Squarespace, Bootstrap).
-
-                KB: "My changes created on the Visual Editor don''t get saved when using Squarespace", "Issues while editing websites on Bootstrap".
-
-                '
-              type: string
-              nullable: true
-            screen_width:
-              description: The emulated screen width (in pixels) used when loading the page in the Visual Editor. Allows previewing and editing for different responsive views.
-              type: number
-              minimum: 240
-              maximum: 7680
-              nullable: true
-            user_agent:
-              $ref: '#/components/schemas/VisualEditorUserAgents'
-    BulkHypothesisIds:
-      type: array
-      description: A list of hypothesis unique numerical identifiers to be affected by a bulk operation.
-      items:
-        type: integer
-      minItems: 1
-      maxItems: 100
-    HypothesesListResponseData:
-      type: object
-      description: Response containing a list of hypotheses defined within a project, along with pagination details if applicable.
-      properties:
-        data:
-          $ref: '#/components/schemas/HypothesesList'
-        extra:
-          $ref: '#/components/schemas/Extra'
-    HypothesisDataICE:
-      allOf:
-      - $ref: '#/components/schemas/HypothesisICEBase'
-      - type: object
-        properties:
-          experiences:
-            $ref: '#/components/schemas/HypothesisExperiences'
-          tags:
-            type: array
-            nullable: true
-            description: The list of tags connected to this hypothesis
-            items:
-              $ref: '#/components/schemas/TagExpandable'
-    SimpleLocation:
-      type: object
-      properties:
-        id:
-          type: integer
-          description: The unique numerical identifier of the location.
-          readOnly: true
-        name:
-          type: string
-          description: The user-defined, friendly name of the location.
-          maxLength: 100
-    UploadedFileData:
-      type: object
-      description: File Object
-      additionalProperties: false
-      properties:
-        key:
-          description: Storage key of the uploaded file.
-          type: string
-          maxLength: 500
-        name:
-          description: Original name of the uploaded file.
-          type: string
-          maxLength: 250
-        url:
-          description: Endpoint to access the file resource associated with the project.
-          type: string
-          readOnly: true
-          example: https://api.convert.com/api/v2/accounts/{account_id}/projects/{project_id}/files/{fileKey}
-    TrackingScriptRelease:
+      - applied
+      - archived
+      - completed
+      - draft
+      - proven
+      - disproven
+    SimpleGoalExpandable:
       oneOf:
-      - $ref: '#/components/schemas/TrackingScriptReleaseManual'
-      - $ref: '#/components/schemas/TrackingScriptReleaseLatest'
-      - $ref: '#/components/schemas/TrackingScriptReleaseScheduled'
-      discriminator:
-        propertyName: type
-        mapping:
-          manual: '#/components/schemas/TrackingScriptReleaseManual'
-          latest: '#/components/schemas/TrackingScriptReleaseLatest'
-          scheduled: '#/components/schemas/TrackingScriptReleaseScheduled'
+      - type: integer
+        description: Goal ID
+      - $ref: '#/components/schemas/SimpleGoal'
     Pagination:
       type: object
       properties:
@@ -2228,411 +2478,124 @@ components:
           enum:
           - asc
           - desc
-    HypothesesListFilteringOptions:
+    SE_ProcSettingsBayesian:
       allOf:
-      - $ref: '#/components/schemas/ResultsPerPage'
-      - $ref: '#/components/schemas/SortDirection'
+      - $ref: '#/components/schemas/SE_ProcSettingsBase'
       - type: object
+        description: Stats Engine Settings needed for the Bayesian processing
         properties:
-          sort_by:
-            type: string
-            nullable: true
-            default: id
-            description: 'A value to sort hypotheses by specific field(s)
-
-
-              Defaults to **id** if not provided
-
-              '
+          stats_type:
             enum:
-            - id
-            - name
-            - score
-            - start_date
-            - status
-          scoreMax:
-            type: integer
+            - bayesian
+          decision_threshold:
+            description: Threshold after which a decision can be made
+            type: number
+            minimum: 50
+            maximum: 99
+            multipleOf: 1
+          risk_threshold:
+            description: The maximum acceptable level of potential loss if the chosen variant turns out to be worse than the control. It represents the threshold below which the relative risk of preferring a variant over the control must fall to consider the variant as a strong and relatively safe choice.
+            type: number
+            minimum: 1
+            maximum: 100
+            multipleOf: 1
+          mab_settings:
+            allOf:
+            - $ref: '#/components/schemas/SE_MabSettings'
             nullable: true
-            default: 5
-            description: The maximum score for hypotheses which you would like to retrieve
-            enum:
-            - 0
-            - 1
-            - 2
-            - 3
-            - 4
-            - 5
-          scoreMin:
-            type: integer
-            default: 0
-            nullable: true
-            description: The minimum score for hypotheses which you would like to retrieve
-            enum:
-            - 0
-            - 1
-            - 2
-            - 3
-            - 4
-            - 5
-          search:
-            type: string
-            maxLength: 200
-            nullable: true
-            description: A search string that would be used to search against hypotheses's name or description
-          status:
-            type: array
-            nullable: true
-            description: The status of the hypotheses you'd like to be returned; one of the below can be provided
-            items:
-              $ref: '#/components/schemas/HypothesisStatuses'
-          experiences:
-            type: array
-            nullable: true
-            description: The list of experience ID's used to filter the list of returned hypotheses
-            items:
-              type: integer
-          tags:
-            type: array
-            nullable: true
-            description: The list of tag ID's used to filter the list of returned hypotheses
-            items:
-              type: integer
-          only:
-            description: 'Only retrieve hypotheses with the given ids.
-
-              '
-            type: array
-            nullable: true
-            items:
-              type: integer
-            maxItems: 100
-          except:
-            description: 'Except hypotheses with the given ids.
-
-              '
-            type: array
-            items:
-              type: integer
-            maxItems: 100
-    SimpleLocationExpandable:
-      anyOf:
-      - type: integer
-        description: Location ID
-      - $ref: '#/components/schemas/SimpleLocation'
-    NumericOutlier:
-      oneOf:
-      - $ref: '#/components/schemas/NumericOutlierNone'
-      - $ref: '#/components/schemas/NumericOutlierMinMax'
-      - $ref: '#/components/schemas/NumericOutlierPercentile'
-      discriminator:
-        propertyName: detection_type
-        mapping:
-          none: '#/components/schemas/NumericOutlierNone'
-          min_max: '#/components/schemas/NumericOutlierMinMax'
-          percentile: '#/components/schemas/NumericOutlierPercentile'
-    HypothesisPIEBase:
-      allOf:
-      - $ref: '#/components/schemas/HypothesisBase'
-      - type: object
-        properties:
-          prioritization_score_type:
-            type: string
-            description: A given description of prioritizing model
-            enum:
-            - PIE
-          prioritization_score_attributes:
-            $ref: '#/components/schemas/PIE_Attributes'
-    IntegrationGA4:
-      allOf:
-      - $ref: '#/components/schemas/IntegrationGA4Base'
-      - type: object
-        properties:
-          propertyId:
-            type: string
-            description: ID of the ga4 property where data will be sent. Used internally for API calls to GoogleAnalytics
-    GenerateDebugTokenData:
-      type: object
-      readOnly: true
-      properties:
-        value:
-          type: string
-        ttl:
-          type: integer
-          description: Unix timestamp (UTC) indicating when this debug token will expire and become invalid.
-    CreateHypothesisPIE:
-      allOf:
-      - $ref: '#/components/schemas/CreateUpdateHypothesisPIEBase'
-      required:
-      - name
-      - status
-      - prioritization_score_type
-      - prioritization_score_attributes
-    ResultsPerPage:
-      type: object
-      properties:
-        results_per_page:
-          type: integer
-          nullable: true
-          minimum: 0
-          maximum: 50
-          default: 30
-          description: 'Specifies the maximum number of items to return in a single page of results.
-
-            Used for pagination. Default is 30, maximum is 50.
-
-            '
-    GetHypothesesListRequestData:
-      allOf:
-      - $ref: '#/components/schemas/OnlyCount'
-      - $ref: '#/components/schemas/HypothesesListFilteringOptions'
-      - $ref: '#/components/schemas/PageNumber'
-      - type: object
-        properties:
-          expand:
-            description: 'Specifies the list of fields which would be expanded in the response. Otherwise, only their id would be returned.
-
-              Read more in the section related to [Expanding Fields](#tag/Expandable-Fields)'
-            type: array
-            items:
-              $ref: '#/components/schemas/HypothesesListExpandFields'
-    CreateUpdateHypothesisICEBase:
-      allOf:
-      - $ref: '#/components/schemas/HypothesisICEBase'
-      - type: object
-        properties:
-          experiences:
-            $ref: '#/components/schemas/HypothesisCreateUpdateExperiences'
-          tags:
-            type: array
-            nullable: true
-            description: The list of tags connected to this hypothesis
-            items:
-              $ref: '#/components/schemas/TagExpandableRequest'
-    TagExpandableRequest:
-      description: 'Represents a tag when associating it with another entity (like an experience or goal) during a create or update operation.
-
-        Can be either the existing `integer` ID of the tag, or a `TagToCreate` object if a new tag should be created and associated on the fly.
-
-        '
-      anyOf:
-      - type: integer
-        description: Tag ID
-      - $ref: '#/components/schemas/TagToCreate'
-    DNSRecordTypes:
-      description: The type of the DNS record.
-      type: string
-      enum:
-      - TXT
-      - CNAME
-    KnowledgeBase:
-      allOf:
-      - $ref: '#/components/schemas/BaseKnowledgeBase'
-      - type: object
-        properties:
-          tags:
-            type: array
-            nullable: true
-            description: The list of tags connected to this knowledge base
-            items:
-              $ref: '#/components/schemas/TagExpandable'
     UpdateHypothesisPIE:
       allOf:
       - $ref: '#/components/schemas/CreateUpdateHypothesisPIEBase'
-    BulkEntityError:
+    HypothesisBase:
       type: object
-      additionalProperties: false
       properties:
         id:
           type: integer
-          description: The unique identifier of the entity that could not be processed.
-        message:
-          type: string
-          description: A message explaining the reason for the failure for this specific entity.
-    OnlyCount:
-      type: object
-      properties:
-        onlyCount:
-          type: boolean
-          description: 'If set to `true` in a list request, the response will only contain the total count of matching items (`extra.pagination.items_count`)
-
-            and will not include the actual item data. Useful for quickly getting totals without fetching full datasets.
-
-            '
-    ProjectGASettingsBase:
-      allOf:
-      - $ref: '#/components/schemas/GA_SettingsBase'
-      - type: object
-        properties:
-          auto_revenue_tracking:
-            type: boolean
-            description: Attempt to pull revenue data from Google Analytics Revenue Tracking code.
-    Extra:
-      type: object
-      properties:
-        pagination:
-          $ref: '#/components/schemas/Pagination'
-    VisualEditorUserAgents:
-      description: Predefined User-Agent strings that the Visual Editor can emulate for responsive design and device-specific testing.
-      type: string
-      nullable: true
-      enum:
-      - chrome_desktop
-      - chrome_ipad
-      - chrome_iphone
-      - chrome_android
-      - safari_mac
-      - safari_ipad
-      - safari_iphone
-      - firefox_desktop
-      - firefox_ipad
-      - firefox_iphone
-      - firefox_android
-      - edge_desktop
-      - edge_tablet
-      - brave_desktop
-      - brave_ipad
-      - brave_iphone
-      - brave_android
-      - opera_desktop
-      - opera_ipad
-      - opera_iphone
-      - opera_android
-    TrackingScriptReleaseAutomaticApplyOn:
-      type: object
-      description: Configuration for scheduled tracking script updates, specifying the day of the week and time for automatic application of new versions.
-      additionalProperties: false
-      properties:
-        day:
-          type: integer
-          description: Day of the week for scheduled updates (e.g., 1 for Monday, 7 for Sunday - convention needs to be clear).
-          minimum: 1
-          maximum: 7
-        time:
-          type: string
-          pattern: ^([01]?[0-9]|2[0-4]):([0-5][0-9])$
-          description: Time of day (in project's timezone or UTC, needs clarification) in HH:MM format for scheduled updates (e.g., "03:00" for 3 AM).
-      required:
-      - day
-      - time
-    NumericOutlierNone:
-      allOf:
-      - $ref: '#/components/schemas/NumericOutlierBase'
-      - type: object
-        additionalProperties: false
-        properties:
-          detection_type:
-            enum:
-            - none
-    KnowledgeBaseStatuses:
-      description: 'The status of a Knowledge Base entry:
-
-        - `active`: The entry is current and relevant.
-
-        - `archived`: The entry is kept for historical purposes but may no longer be considered current best practice or has been superseded by newer learnings.
-
-        '
-      type: string
-      enum:
-      - active
-      - archived
-      default: active
-    HypothesisCreateUpdateExperiences:
-      type: array
-      description: A list of experience IDs that are testing or were derived from this hypothesis. This links the hypothesis to actual experiments.
-      items:
-        type: integer
-      maxItems: 100
-    ProjectStatuses:
-      description: 'The overall status of a project:
-
-        - `active`: The project is active, and experiences within it can run and track data.
-
-        - `inactive`: The project is inactive (archived or paused). No experiences within it will run, and no new data will be tracked.
-
-        - `suspended`: The project (or account) has been suspended, typically due to billing issues or terms of service violations. Services are disabled.
-
-        '
-      type: string
-      enum:
-      - active
-      - inactive
-      - suspended
-    TrackingScriptReleaseLatest:
-      allOf:
-      - $ref: '#/components/schemas/TrackingScriptReleaseBase'
-      - type: object
-        additionalProperties: false
-        properties:
-          type:
-            enum:
-            - latest
-    Tag:
-      type: object
-      description: 'Represents a tag (keyword or label) that can be associated with various Convert entities like experiences, goals, audiences, hypotheses, and observations.
-
-        Tags help organize and categorize these entities for easier filtering, searching, and management.
-
-        Knowledge Base: "Adding tags to your Experiences".
-
-        '
-      properties:
-        id:
-          type: integer
+          description: The unique numerical identifier for the hypothesis.
           readOnly: true
-          description: The unique numerical identifier for the tag.
         name:
           type: string
-          description: The user-defined name of the tag (e.g., "Q3 Campaigns", "Homepage Tests", "High Priority", "Mobile Specific"). This is the primary identifier shown in the UI.
+          description: A user-defined, concise name for the hypothesis (e.g., "Changing CTA Button Color to Green", "Simplifying Signup Form"). This name appears in the Compass section of Convert.
           maxLength: 100
+        url:
+          type: string
+          description: (Optional) A URL relevant to this hypothesis, such as the page where the proposed change would be implemented or a link to supporting research/data.
+          maxLength: 2048
+          nullable: true
+        project:
+          $ref: '#/components/schemas/ProjectExpandable'
+        prioritization_score:
+          readOnly: true
+          type: string
+          description: 'The calculated priority score for this hypothesis, based on the chosen `prioritization_score_type` (PIE or ICE) and its attribute scores.
+
+            Helps in ranking hypotheses to decide which to test next.
+
+            KB: "Hypotheses (Compass)" - "How to Prioritize a Hypothesis".
+
+            '
+        objective:
+          type: string
+          maxLength: 5000
+          description: 'A detailed description of the hypothesis. This should clearly state:
+
+            1. The **problem** observed (e.g., "Low click-through rate on the main CTA").
+
+            2. The **proposed solution/change** (e.g., "Change the CTA button text from ''Learn More'' to ''Get Started Now''").
+
+            3. The **expected outcome/impact** (e.g., "This will increase clicks on the CTA by 15% because ''Get Started Now'' is more action-oriented").
+
+            KB: "Hypotheses (Compass)" - "What is a Hypothesis".
+
+            '
+        status:
+          $ref: '#/components/schemas/HypothesisStatuses'
+        start_date:
+          description: (Optional) The date (YYYY-MM-DD) when this hypothesis was conceptualized or formally logged.
+          type: string
+          maxLength: 10
+          format: date
+          nullable: true
+        end_date:
+          description: (Optional) The target date (YYYY-MM-DD) by which this hypothesis is expected to be tested or resolved.
+          type: string
+          maxLength: 10
+          format: date
+          nullable: true
+        summary:
+          type: string
+          description: (Optional) A brief summary or key takeaway from this hypothesis, often filled in after testing.
+          maxLength: 500
         description:
           type: string
-          description: (Optional) A brief explanation of the tag's purpose or the criteria for its application.
-          maxLength: 200
           nullable: true
-  requestBodies:
-    BulkUpdateHypothesesRequest:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/BulkUpdateHypothesesRequestData'
-      description: Contains a list of hypothesis `id`s and the target `status` to apply to all of them.
-      required: true
-    GetHypothesesRequest:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/GetHypothesesListRequestData'
-    CreateHypothesisRequest:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/CreateHypothesisRequestData'
-      required: true
-    UpdateHypothesisStatusRequest:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/UpdateHypothesisStatusRequestData'
-      required: true
-    BulkDeleteHypothesesRequest:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/BulkDeleteHypothesesRequestData'
-      required: true
-    UpdateHypothesisRequest:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/UpdateHypothesisRequestData'
-      required: true
+          maxLength: 5000
+          description: This is more details that want to be added besides the name of the hypothesis
+        files:
+          type: array
+          description: Files attached to the hypothesis
+          nullable: true
+          items:
+            $ref: '#/components/schemas/UploadedFileData'
+        created_at:
+          type: integer
+          description: Unix timestamp (UTC) indicating when this hypothesis was created in the system.
+        updated_at:
+          type: integer
+          readOnly: true
+          description: Unix timestamp (UTC) indicating when this hypothesis entry was last updated or created.
+        created_by:
+          type: string
+          readOnly: true
+          nullable: true
+          description: The name or identifier of the user who created this hypothesis.
   responses:
-    KnowledgeBaseResponse:
-      description: Detailed information for a single Knowledge Base entry, including its name, summary of findings, status (active/archived), creator, and associated tags.
+    HypothesisResponse:
+      description: Detailed information for a single hypothesis, including its name, objective, prioritization model (PIE/ICE) and scores, status, start/end dates, summary, and links to associated experiences and tags.
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/KnowledgeBase'
+            $ref: '#/components/schemas/Hypothesis'
     ErrorResponse:
       description: 'Indicates an error occurred while processing the request. The `code` provides an HTTP status code, `message` offers a human-readable explanation or an array of validation errors, and `fields` (if present) specifies which input fields were problematic.
 
@@ -2641,12 +2604,12 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorData'
-    HypothesesListResponse:
-      description: A list of hypotheses defined within a project. Each entry includes the hypothesis ID, name, objective, prioritization score, status, and associated experiences/tags.
+    KnowledgeBaseResponse:
+      description: Detailed information for a single Knowledge Base entry, including its name, summary of findings, status (active/archived), creator, and associated tags.
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/HypothesesListResponseData'
+            $ref: '#/components/schemas/KnowledgeBase'
     BulkSuccessResponse:
       description: 'Indicates the outcome of a bulk operation (e.g., bulk update or delete). Provides a general success `message` and an `errors` array listing any entities that could not be processed, along with the reason for failure for each.
 
@@ -2655,12 +2618,49 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/BulkSuccessData'
-    HypothesisResponse:
-      description: Detailed information for a single hypothesis, including its name, objective, prioritization model (PIE/ICE) and scores, status, start/end dates, summary, and links to associated experiences and tags.
+    HypothesesListResponse:
+      description: A list of hypotheses defined within a project. Each entry includes the hypothesis ID, name, objective, prioritization score, status, and associated experiences/tags.
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Hypothesis'
+            $ref: '#/components/schemas/HypothesesListResponseData'
+  requestBodies:
+    CreateHypothesisRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CreateHypothesisRequestData'
+      required: true
+    GetHypothesesRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GetHypothesesListRequestData'
+    BulkUpdateHypothesesRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BulkUpdateHypothesesRequestData'
+      description: Contains a list of hypothesis `id`s and the target `status` to apply to all of them.
+      required: true
+    UpdateHypothesisRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UpdateHypothesisRequestData'
+      required: true
+    BulkDeleteHypothesesRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BulkDeleteHypothesesRequestData'
+      required: true
+    UpdateHypothesisStatusRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UpdateHypothesisStatusRequestData'
+      required: true
   securitySchemes:
     requestSigning:
       type: apiKey

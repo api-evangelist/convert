@@ -91,26 +91,11 @@ paths:
           $ref: '#/components/responses/ErrorResponse'
 components:
   schemas:
-    SuccessData:
-      type: object
-      properties:
-        code:
-          type: integer
-          format: int32
-        message:
-          type: string
-    CreateApiKeyRequestData:
-      allOf:
-      - $ref: '#/components/schemas/ApiKey'
-      - type: object
-        properties:
-          auth_type:
-            type: string
-            default: requestSigning
-          role:
-            $ref: '#/components/schemas/ApiKeyRole'
-        required:
-        - name
+    ApiKeysList:
+      type: array
+      description: A list of API key objects.
+      items:
+        $ref: '#/components/schemas/ApiKey'
     ErrorData:
       type: object
       properties:
@@ -139,6 +124,25 @@ components:
       - edit
       - publish
       - review
+    ApiKeyRole:
+      allOf:
+      - $ref: '#/components/schemas/AccessRoleNamesNoOwner'
+      description: 'The role assigned to this API key, which determines its permissions.
+
+        Must have equal or lower permissions than the creator''s role when creating.
+
+        If not specified, inherits the creator''s role.For legacy keys, a default role of account_manager is returned.
+
+        '
+      example: browse
+    SuccessData:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
     ApiKey:
       type: object
       description: Defines an API key used for authenticating server-side requests to the Convert API.
@@ -181,22 +185,18 @@ components:
       properties:
         data:
           $ref: '#/components/schemas/ApiKeysList'
-    ApiKeyRole:
+    CreateApiKeyRequestData:
       allOf:
-      - $ref: '#/components/schemas/AccessRoleNamesNoOwner'
-      description: 'The role assigned to this API key, which determines its permissions.
-
-        Must have equal or lower permissions than the creator''s role when creating.
-
-        If not specified, inherits the creator''s role.For legacy keys, a default role of account_manager is returned.
-
-        '
-      example: browse
-    ApiKeysList:
-      type: array
-      description: A list of API key objects.
-      items:
-        $ref: '#/components/schemas/ApiKey'
+      - $ref: '#/components/schemas/ApiKey'
+      - type: object
+        properties:
+          auth_type:
+            type: string
+            default: requestSigning
+          role:
+            $ref: '#/components/schemas/ApiKeyRole'
+        required:
+        - name
     ApiKeyAuthTypes:
       type: string
       description: 'The authentication type for this API key:
@@ -218,6 +218,12 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorData'
+    ApiKeyResponse:
+      description: Details of a single API key, including its name, ID, associated projects, and the API secret (only shown in full upon creation).
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiKey'
     ApiKeysListResponse:
       description: A list of API keys configured for the account. Each entry includes the key's name, its ID (part of the key itself), and the projects it's scoped to. The secret is masked for existing keys.
       content:
@@ -232,12 +238,6 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/SuccessData'
-    ApiKeyResponse:
-      description: Details of a single API key, including its name, ID, associated projects, and the API secret (only shown in full upon creation).
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ApiKey'
   requestBodies:
     CreateApiKeyRequest:
       content:

@@ -37,9 +37,7 @@
     "convert-visitor-insights-api-openapi.yml",
     "convert-visitors-data-api-openapi.yml"
   ],
-  "archived": [
-    "deleted 1 superseded output(s) from the previous generation"
-  ],
+  "archived": [],
   "errors": [],
   "warnings": [],
   "notes": [
@@ -51,8 +49,7 @@
     "convert-openapi.yml: declared missing tag: Observations",
     "convert-openapi.yml: declared missing tag: SDK Keys",
     "convert-openapi.yml: declared missing tag: Visitors Data",
-    "superseded outputs removed: convert-o-auth-api-openapi.yml",
-    "apis.yml register: written (+1 apis, 33 total)"
+    "apis.yml register: already-registered"
   ],
   "skipped": [
     "convert-accounts-api-openapi.yml: previously refined output, superseded by openapi/_original/",
@@ -75,7 +72,7 @@
     "convert-hypotheses-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "convert-knowledge-bases-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "convert-locations-api-openapi.yml: previously refined output, superseded by openapi/_original/",
-    "convert-o-auth-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "convert-oauth-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "convert-oauth-authorization-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "convert-observations-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "convert-projects-api-openapi.yml: previously refined output, superseded by openapi/_original/",

@@ -331,29 +331,13 @@ paths:
           $ref: '#/components/responses/ErrorResponse'
 components:
   schemas:
-    LocationTriggerBase:
-      type: object
-      properties:
-        type:
-          $ref: '#/components/schemas/LocationTriggerTypes'
-      required:
-      - type
-    JsConditionMatchRule:
-      allOf:
-      - $ref: '#/components/schemas/BaseRuleWithJsCodeValue'
-      - type: object
-        required:
-        - rule_type
-        properties:
-          rule_type:
-            $ref: '#/components/schemas/JsConditionMatchRulesTypes'
-          matching:
-            allOf:
-            - $ref: '#/components/schemas/BaseMatch'
-            - type: object
-              properties:
-                match_type:
-                  $ref: '#/components/schemas/ChoiceMatchingOptions'
+    BulkLocationsIds:
+      type: array
+      description: A list of location unique numerical identifiers to be affected by a bulk operation.
+      items:
+        type: integer
+      minItems: 1
+      maxItems: 100
     BaseRuleWithHourOfDayValue:
       allOf:
       - $ref: '#/components/schemas/BaseRule'
@@ -364,6 +348,71 @@ components:
             type: number
             minimum: 0
             maximum: 24
+    WeatherConditionMatchRule:
+      allOf:
+      - $ref: '#/components/schemas/BaseRuleWithWeatherConditionValue'
+      - type: object
+        required:
+        - rule_type
+        properties:
+          rule_type:
+            $ref: '#/components/schemas/WeatherConditionMatchRulesTypes'
+          matching:
+            allOf:
+            - $ref: '#/components/schemas/BaseMatch'
+            - type: object
+              properties:
+                match_type:
+                  $ref: '#/components/schemas/TextMatchingOptions'
+    GenericTextKeyValueMatchRulesTypes:
+      type: string
+      enum:
+      - generic_text_key_value
+    ErrorData:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          oneOf:
+          - type: string
+          - type: array
+            items:
+              type: string
+        fields:
+          oneOf:
+          - type: string
+          - type: array
+            items:
+              type: string
+    GenericBoolKeyValueMatchRule:
+      allOf:
+      - $ref: '#/components/schemas/BaseRuleWithBooleanValue'
+      - type: object
+        required:
+        - rule_type
+        properties:
+          rule_type:
+            $ref: '#/components/schemas/GenericBoolKeyValueMatchRulesTypes'
+          matching:
+            allOf:
+            - $ref: '#/components/schemas/BaseMatch'
+            - type: object
+              properties:
+                match_type:
+                  $ref: '#/components/schemas/ChoiceMatchingOptions'
+      - $ref: '#/components/schemas/GenericKey'
+    CookieMatchingOptions:
+      type: string
+      enum:
+      - matches
+      - regexMatches
+      - contains
+      - endsWith
+      - startsWith
+      - exists
+      - doesNotExist
     LocationRuleElement:
       oneOf:
       - $ref: '#/components/schemas/GenericTextMatchRule'
@@ -393,10 +442,194 @@ components:
           generic_numeric_key_value: '#/components/schemas/GenericNumericKeyValueMatchRule'
           generic_bool_key_value: '#/components/schemas/GenericBoolKeyValueMatchRule'
           js_condition: '#/components/schemas/JsConditionMatchRule'
-    SegmentBucketedMatchRulesTypes:
+    CountryMatchRulesTypes:
       type: string
       enum:
-      - bucketed_into_segment
+      - country
+    LocationDomTriggerEvents:
+      type: string
+      description: 'The type of user interaction with a DOM element that will trigger the experience:
+
+        - `click`: Activates when the element is clicked.
+
+        - `hover`: Activates when the mouse pointer hovers over the element (mouseenter).
+
+        - `in_view`: Activates when the element becomes visible in the browser''s viewport (e.g., user scrolls to it). KB: "Launch Experiments Using Custom JavaScript When Elements Appear in DOM".
+
+        - `change`: Activates when the value of a form element (like input, select, textarea) changes.
+
+        '
+      enum:
+      - click
+      - hover
+      - in_view
+      - change
+    BulkUpdateLocationsRequestData:
+      type: object
+      description: Request body for bulk updating the status of multiple locations.
+      additionalProperties: false
+      properties:
+        id:
+          $ref: '#/components/schemas/BulkLocationsIds'
+        status:
+          $ref: '#/components/schemas/LocationStatuses'
+      required:
+      - id
+      - status
+    WeatherConditionMatchRulesTypes:
+      type: string
+      enum:
+      - weather_condition
+    LocationBase:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The unique numerical identifier for the location.
+          readOnly: true
+        description:
+          type: string
+          description: An optional, more detailed explanation of this location's purpose or the pages/conditions it targets.
+          maxLength: 500
+        status:
+          $ref: '#/components/schemas/LocationStatuses'
+        name:
+          type: string
+          description: A user-defined, friendly name for the location (e.g., "All Product Pages", "Homepage Only", "Checkout Funnel"). This name appears in the Convert UI when selecting locations for experiences.
+          maxLength: 100
+        preset:
+          type: boolean
+          description: Indicates if this location is a system-defined preset (e.g., "All Pages"). Preset locations cannot be modified directly but can be used as templates.
+          readOnly: true
+        selected_default:
+          type: boolean
+          description: If true, this location will be automatically pre-selected when creating new experiences within the project. Useful for commonly targeted site areas.
+        stats:
+          type: object
+          readOnly: true
+          description: Statistics related to the usage of this location.
+          properties:
+            experiences_usage:
+              description: 'The number of currently active experiences that are using this location for targeting.
+
+                This is an optional field, included if ''stats.experiences_usage'' is specified in the `include` parameter.
+
+                '
+              type: number
+              default: 0
+    BrowserNameMatchRule:
+      allOf:
+      - $ref: '#/components/schemas/BaseRuleWithBrowserNameValue'
+      - type: object
+        required:
+        - rule_type
+        properties:
+          rule_type:
+            $ref: '#/components/schemas/BrowserNameMatchRulesTypes'
+          matching:
+            allOf:
+            - $ref: '#/components/schemas/BaseMatch'
+            - type: object
+              properties:
+                match_type:
+                  $ref: '#/components/schemas/ChoiceMatchingOptions'
+    ChoiceMatchingOptions:
+      type: string
+      enum:
+      - equals
+    HourOfDayMatchRule:
+      allOf:
+      - $ref: '#/components/schemas/BaseRuleWithHourOfDayValue'
+      - type: object
+        required:
+        - rule_type
+        properties:
+          rule_type:
+            $ref: '#/components/schemas/HourOfDayMatchRulesTypes'
+          matching:
+            allOf:
+            - $ref: '#/components/schemas/BaseMatch'
+            - type: object
+              properties:
+                match_type:
+                  $ref: '#/components/schemas/NumericMatchingOptions'
+    BaseRuleWithCountryCodeValue:
+      allOf:
+      - $ref: '#/components/schemas/BaseRule'
+      - type: object
+        properties:
+          value:
+            description: The 2 letter ISO country code used for matching
+            type: string
+            minLength: 2
+            maxLength: 2
+    CreateLocationRequestData:
+      $ref: '#/components/schemas/LocationCreate'
+    BaseMatch:
+      type: object
+      properties:
+        negated:
+          description: 'If `true`, the logical result of the match is inverted.
+
+            For example, if `match_type` is ''contains'' and `value` is ''apple'', `negated: true` means the rule matches if the attribute *does not* contain ''apple''.
+
+            '
+          type: boolean
+    LocationTriggerUponRun:
+      allOf:
+      - $ref: '#/components/schemas/LocationTriggerBase'
+      - type: object
+        properties:
+          type:
+            type: string
+            enum:
+            - upon_run
+        additionalProperties: false
+    LocationCreate:
+      required:
+      - name
+      - rules
+      allOf:
+      - $ref: '#/components/schemas/Location'
+    GenericBoolKeyValueMatchRulesTypes:
+      type: string
+      enum:
+      - generic_bool_key_value
+    OsMatchRule:
+      allOf:
+      - $ref: '#/components/schemas/BaseRuleWithOsValue'
+      - type: object
+        required:
+        - rule_type
+        properties:
+          rule_type:
+            $ref: '#/components/schemas/OsMatchRulesTypes'
+          matching:
+            allOf:
+            - $ref: '#/components/schemas/BaseMatch'
+            - type: object
+              properties:
+                match_type:
+                  $ref: '#/components/schemas/ChoiceMatchingOptions'
+    CookieMatchRule:
+      allOf:
+      - $ref: '#/components/schemas/BaseRuleWithStringValue'
+      - type: object
+        required:
+        - rule_type
+        properties:
+          rule_type:
+            $ref: '#/components/schemas/CookieMatchRulesTypes'
+          matching:
+            allOf:
+            - $ref: '#/components/schemas/BaseMatch'
+            - type: object
+              properties:
+                match_type:
+                  $ref: '#/components/schemas/CookieMatchingOptions'
+          key:
+            description: The name of the cookie which value is compared to the given rule value
+            type: string
     LocationsListFilteringOptions:
       allOf:
       - $ref: '#/components/schemas/ResultsPerPage'
@@ -446,53 +679,36 @@ components:
             enum:
             - used
             - not_used
-    TextMatchingOptions:
-      type: string
-      enum:
-      - matches
-      - regexMatches
-      - contains
-      - endsWith
-      - startsWith
-    GenericBoolKeyValueMatchRulesTypes:
-      type: string
-      enum:
-      - generic_bool_key_value
-    GenericNumericKeyValueMatchRulesTypes:
-      type: string
-      enum:
-      - generic_numeric_key_value
-    LocationsListResponseData:
-      type: object
-      description: Response containing a list of locations defined within a project, along with pagination details if applicable.
-      properties:
-        data:
-          $ref: '#/components/schemas/LocationsList'
-        extra:
-          $ref: '#/components/schemas/Extra'
-    LocationsPresetsListResponseData:
-      type: object
-      description: Response containing a list of predefined location templates (presets) available in the system.
-      properties:
-        data:
-          $ref: '#/components/schemas/LocationsPresetsList'
-    SegmentBucketedMatchRule:
+    GetLocationsListRequestData:
       allOf:
-      - $ref: '#/components/schemas/BaseRuleWithSegmentBucketedValue'
+      - $ref: '#/components/schemas/OnlyCount'
+      - $ref: '#/components/schemas/LocationsListFilteringOptions'
+      - $ref: '#/components/schemas/PageNumber'
       - type: object
-        required:
-        - rule_type
         properties:
-          rule_type:
-            $ref: '#/components/schemas/SegmentBucketedMatchRulesTypes'
-          matching:
-            allOf:
-            - $ref: '#/components/schemas/BaseMatch'
-            - type: object
-              properties:
-                match_type:
-                  $ref: '#/components/schemas/ChoiceMatchingOptions'
-    CookieMatchRule:
+          include:
+            description: Specifies the list of fields to be included in the response, which otherwise would not be sent.
+            type: array
+            items:
+              $ref: '#/components/schemas/LocationIncludeFields'
+          only:
+            description: 'Only retrieve location with the given ids.
+
+              '
+            type: array
+            nullable: true
+            items:
+              type: integer
+            maxItems: 100
+          except:
+            description: 'Except locations with the given ids.
+
+              '
+            type: array
+            items:
+              type: integer
+            maxItems: 100
+    GenericTextKeyValueMatchRule:
       allOf:
       - $ref: '#/components/schemas/BaseRuleWithStringValue'
       - type: object
@@ -500,21 +716,19 @@ components:
         - rule_type
         properties:
           rule_type:
-            $ref: '#/components/schemas/CookieMatchRulesTypes'
+            $ref: '#/components/schemas/GenericTextKeyValueMatchRulesTypes'
           matching:
             allOf:
             - $ref: '#/components/schemas/BaseMatch'
             - type: object
               properties:
                 match_type:
-                  $ref: '#/components/schemas/CookieMatchingOptions'
-          key:
-            description: The name of the cookie which value is compared to the given rule value
-            type: string
-    VisitorTypeMatchRulesTypes:
+                  $ref: '#/components/schemas/TextMatchingOptions'
+      - $ref: '#/components/schemas/GenericKey'
+    JsConditionMatchRulesTypes:
       type: string
       enum:
-      - visitor_type
+      - js_condition
     CountryMatchRule:
       allOf:
       - $ref: '#/components/schemas/BaseRuleWithCountryCodeValue'
@@ -531,286 +745,15 @@ components:
               properties:
                 match_type:
                   $ref: '#/components/schemas/ChoiceMatchingOptions'
-    GenericNumericKeyValueMatchRule:
-      allOf:
-      - $ref: '#/components/schemas/BaseRuleWithNumericValue'
-      - type: object
-        required:
-        - rule_type
-        properties:
-          rule_type:
-            $ref: '#/components/schemas/GenericNumericKeyValueMatchRulesTypes'
-          matching:
-            allOf:
-            - $ref: '#/components/schemas/BaseMatch'
-            - type: object
-              properties:
-                match_type:
-                  $ref: '#/components/schemas/NumericMatchingOptions'
-      - $ref: '#/components/schemas/GenericKey'
-    LanguageMatchRulesTypes:
-      type: string
-      enum:
-      - language
-    BulkLocationsIds:
-      type: array
-      description: A list of location unique numerical identifiers to be affected by a bulk operation.
-      items:
-        type: integer
-      minItems: 1
-      maxItems: 100
-    LocationIncludeFields:
-      type: string
-      enum:
-      - rules
-      - trigger
-      - stats.experiences_usage
-    PageNumber:
-      type: object
-      properties:
-        page:
-          type: integer
-          minimum: 1
-          description: 'The page number for paginated results. For example, if `results_per_page` is 30, `page: 2` will retrieve items 31-60.
-
-            Defaults to 1 if not specified.
-
-            '
-    BrowserNameMatchRule:
-      allOf:
-      - $ref: '#/components/schemas/BaseRuleWithBrowserNameValue'
-      - type: object
-        required:
-        - rule_type
-        properties:
-          rule_type:
-            $ref: '#/components/schemas/BrowserNameMatchRulesTypes'
-          matching:
-            allOf:
-            - $ref: '#/components/schemas/BaseMatch'
-            - type: object
-              properties:
-                match_type:
-                  $ref: '#/components/schemas/ChoiceMatchingOptions'
-    DayOfWeekMatchRulesTypes:
-      type: string
-      enum:
-      - local_time_day_of_week
-      - project_time_day_of_week
-    MinuteOfHourMatchRulesTypes:
-      type: string
-      enum:
-      - local_time_minute_of_hour
-      - project_time_minute_of_hour
-    BaseRuleWithDayOfWeekValue:
+    BaseRuleWithStringValue:
       allOf:
       - $ref: '#/components/schemas/BaseRule'
       - type: object
         properties:
           value:
-            description: Day of week used for matching
-            type: number
-            minimum: 1
-            maximum: 7
-    BaseRuleWithOsValue:
-      allOf:
-      - $ref: '#/components/schemas/BaseRule'
-      - type: object
-        properties:
-          value:
-            description: Operating System name used for matching
+            description: The value used to match against 'rule_type' using 'matching'
             type: string
-            enum:
-            - android
-            - iphone
-            - ipod
-            - ipad
-            - windows
-            - macos
-            - linux
-    LocationRuleObject:
-      type: object
-      nullable: true
-      description: 'Defines the logical structure for combining multiple rule conditions for a Location.
-
-        It uses a nested OR -> AND -> OR_WHEN structure, similar to Audience rules, but `LocationRuleElement` types are restricted to page content/URL attributes.
-
-        '
-      properties:
-        OR:
-          description: An array of AND-blocks. The location matches if any of these AND-blocks match.
-          type: array
-          items:
-            type: object
-            properties:
-              AND:
-                description: An array of OR_WHEN-blocks. This AND-block matches if all its OR_WHEN-blocks match.
-                type: array
-                items:
-                  type: object
-                  properties:
-                    OR_WHEN:
-                      description: An array of individual `LocationRuleElement` conditions. This OR_WHEN-block matches if any of its rule elements match.
-                      type: array
-                      items:
-                        $ref: '#/components/schemas/LocationRuleElement'
-    GenericBoolKeyValueMatchRule:
-      allOf:
-      - $ref: '#/components/schemas/BaseRuleWithBooleanValue'
-      - type: object
-        required:
-        - rule_type
-        properties:
-          rule_type:
-            $ref: '#/components/schemas/GenericBoolKeyValueMatchRulesTypes'
-          matching:
-            allOf:
-            - $ref: '#/components/schemas/BaseMatch'
-            - type: object
-              properties:
-                match_type:
-                  $ref: '#/components/schemas/ChoiceMatchingOptions'
-      - $ref: '#/components/schemas/GenericKey'
-    DayOfWeekMatchRule:
-      allOf:
-      - $ref: '#/components/schemas/BaseRuleWithDayOfWeekValue'
-      - type: object
-        required:
-        - rule_type
-        properties:
-          rule_type:
-            $ref: '#/components/schemas/DayOfWeekMatchRulesTypes'
-          matching:
-            allOf:
-            - $ref: '#/components/schemas/BaseMatch'
-            - type: object
-              properties:
-                match_type:
-                  $ref: '#/components/schemas/NumericMatchingOptions'
-    SuccessData:
-      type: object
-      properties:
-        code:
-          type: integer
-          format: int32
-        message:
-          type: string
-    CreateLocationRequestData:
-      $ref: '#/components/schemas/LocationCreate'
-    HourOfDayMatchRulesTypes:
-      type: string
-      enum:
-      - local_time_hour_of_day
-      - project_time_hour_of_day
-    GenericBoolMatchRule:
-      allOf:
-      - $ref: '#/components/schemas/BaseRuleWithBooleanValue'
-      - type: object
-        required:
-        - rule_type
-        properties:
-          rule_type:
-            $ref: '#/components/schemas/BoolMatchRulesTypes'
-          matching:
-            allOf:
-            - $ref: '#/components/schemas/BaseMatch'
-            - type: object
-              properties:
-                match_type:
-                  $ref: '#/components/schemas/ChoiceMatchingOptions'
-    LocationsPresetsList:
-      type: array
-      description: A list of location preset objects.
-      items:
-        $ref: '#/components/schemas/LocationPreset'
-    CountryMatchRulesTypes:
-      type: string
-      enum:
-      - country
-    BulkSuccessData:
-      allOf:
-      - $ref: '#/components/schemas/SuccessData'
-      - type: object
-        properties:
-          code:
-            type: integer
-            format: int32
-          errors:
-            type: array
-            description: List of unprocessed entities. Would be empty, if all passed entities processed
-            items:
-              $ref: '#/components/schemas/BulkEntityError'
-    WeatherConditionMatchRule:
-      allOf:
-      - $ref: '#/components/schemas/BaseRuleWithWeatherConditionValue'
-      - type: object
-        required:
-        - rule_type
-        properties:
-          rule_type:
-            $ref: '#/components/schemas/WeatherConditionMatchRulesTypes'
-          matching:
-            allOf:
-            - $ref: '#/components/schemas/BaseMatch'
-            - type: object
-              properties:
-                match_type:
-                  $ref: '#/components/schemas/TextMatchingOptions'
-    UpdateLocationRequestData:
-      $ref: '#/components/schemas/Location'
-    MinuteOfHourMatchRule:
-      allOf:
-      - $ref: '#/components/schemas/BaseRuleWithMinuteOfHourValue'
-      - type: object
-        required:
-        - rule_type
-        properties:
-          rule_type:
-            $ref: '#/components/schemas/MinuteOfHourMatchRulesTypes'
-          matching:
-            allOf:
-            - $ref: '#/components/schemas/BaseMatch'
-            - type: object
-              properties:
-                match_type:
-                  $ref: '#/components/schemas/NumericMatchingOptions'
-    TextMatchRulesTypes:
-      type: string
-      enum:
-      - url
-      - url_with_query
-      - query_string
-      - campaign
-      - keyword
-      - medium
-      - source_name
-      - city
-      - region
-      - browser_version
-      - user_agent
-      - page_tag_page_type
-      - page_tag_category_id
-      - page_tag_category_name
-      - page_tag_product_sku
-      - page_tag_product_name
-      - page_tag_customer_id
-      - page_tag_custom_1
-      - page_tag_custom_2
-      - page_tag_custom_3
-      - page_tag_custom_4
-      - visitor_id
-    BaseRuleWithVisitorTypeValue:
-      allOf:
-      - $ref: '#/components/schemas/BaseRule'
-      - type: object
-        properties:
-          value:
-            description: Type of the visitors
-            type: string
-            enum:
-            - new
-            - returning
-    LocationTriggerCallback:
+    LocationTriggerDomElement:
       allOf:
       - $ref: '#/components/schemas/LocationTriggerBase'
       - type: object
@@ -818,34 +761,19 @@ components:
           type:
             type: string
             enum:
-            - callback
-          js:
+            - dom_element
+          selector:
+            description: Describes html selector
             type: string
-            description: "Describes the js callback that will be executed in order to fire the experience.\n\nIt is called with two arguments:\n- `activate` - a function that should be called when the experience should be activated\n- `options` - an object with the following properties:\n  - `locationId` - id of the location that is being activated\n  - `isActive` - boolean flag that indicates if the location is active\nExample:\n```\nfunction(activate, options) {\n  if (options.isActive) {\n    setTimeout(function() {\n      /* it activates the experiences 1 second after the\n      location trigger is initialized - at the load of the tracking script */\n      activate();\n    }, 1000);\n  }\n}\n```\n"
+          events:
+            type: array
+            description: Events for LocationTriggerDomElement
+            items:
+              $ref: '#/components/schemas/LocationDomTriggerEvents'
         additionalProperties: false
         required:
-        - js
-    Location:
-      allOf:
-      - $ref: '#/components/schemas/LocationBase'
-      - type: object
-        properties:
-          rules:
-            nullable: true
-            allOf:
-            - $ref: '#/components/schemas/LocationRuleObject'
-          trigger:
-            $ref: '#/components/schemas/LocationTrigger'
-    BaseRuleWithCountryCodeValue:
-      allOf:
-      - $ref: '#/components/schemas/BaseRule'
-      - type: object
-        properties:
-          value:
-            description: The 2 letter ISO country code used for matching
-            type: string
-            minLength: 2
-            maxLength: 2
+        - selector
+        - events
     RuleObject:
       type: object
       nullable: true
@@ -878,6 +806,157 @@ components:
                       type: array
                       items:
                         $ref: '#/components/schemas/RuleElement'
+    HourOfDayMatchRulesTypes:
+      type: string
+      enum:
+      - local_time_hour_of_day
+      - project_time_hour_of_day
+    BaseRuleWithSegmentBucketedValue:
+      allOf:
+      - $ref: '#/components/schemas/BaseRule'
+      - type: object
+        properties:
+          value:
+            description: ID of the segment used for matching
+            type: number
+    TextMatchingOptions:
+      type: string
+      enum:
+      - matches
+      - regexMatches
+      - contains
+      - endsWith
+      - startsWith
+    LocationTriggerCallback:
+      allOf:
+      - $ref: '#/components/schemas/LocationTriggerBase'
+      - type: object
+        properties:
+          type:
+            type: string
+            enum:
+            - callback
+          js:
+            type: string
+            description: "Describes the js callback that will be executed in order to fire the experience.\n\nIt is called with two arguments:\n- `activate` - a function that should be called when the experience should be activated\n- `options` - an object with the following properties:\n  - `locationId` - id of the location that is being activated\n  - `isActive` - boolean flag that indicates if the location is active\nExample:\n```\nfunction(activate, options) {\n  if (options.isActive) {\n    setTimeout(function() {\n      /* it activates the experiences 1 second after the\n      location trigger is initialized - at the load of the tracking script */\n      activate();\n    }, 1000);\n  }\n}\n```\n"
+        additionalProperties: false
+        required:
+        - js
+    SegmentBucketedMatchRulesTypes:
+      type: string
+      enum:
+      - bucketed_into_segment
+    BaseRuleWithWeatherConditionValue:
+      allOf:
+      - $ref: '#/components/schemas/BaseRule'
+      - type: object
+        properties:
+          value:
+            description: 'Weather Condition name used for matching. Full or partial condition.
+
+
+              The weather provider used by Convert detects the following conditions:
+
+              - Blizzard
+
+              - Blowing snow
+
+              - Cloudy
+
+              - Fog
+
+              - Freezing drizzle
+
+              - Freezing fog
+
+              - Heavy freezing drizzle
+
+              - Heavy rain
+
+              - Heavy rain at times
+
+              - Light drizzle
+
+              - Light freezing rain
+
+              - Light rain
+
+              - Mist
+
+              - Moderate rain
+
+              - Moderate rain at times
+
+              - Overcast
+
+              - Partly cloudy
+
+              '
+            type: string
+    VisitorTypeMatchRulesTypes:
+      type: string
+      enum:
+      - visitor_type
+    LocationRuleObject:
+      type: object
+      nullable: true
+      description: 'Defines the logical structure for combining multiple rule conditions for a Location.
+
+        It uses a nested OR -> AND -> OR_WHEN structure, similar to Audience rules, but `LocationRuleElement` types are restricted to page content/URL attributes.
+
+        '
+      properties:
+        OR:
+          description: An array of AND-blocks. The location matches if any of these AND-blocks match.
+          type: array
+          items:
+            type: object
+            properties:
+              AND:
+                description: An array of OR_WHEN-blocks. This AND-block matches if all its OR_WHEN-blocks match.
+                type: array
+                items:
+                  type: object
+                  properties:
+                    OR_WHEN:
+                      description: An array of individual `LocationRuleElement` conditions. This OR_WHEN-block matches if any of its rule elements match.
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/LocationRuleElement'
+    BulkEntityError:
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          description: The unique identifier of the entity that could not be processed.
+        message:
+          type: string
+          description: A message explaining the reason for the failure for this specific entity.
+    BaseRuleWithNumericValue:
+      allOf:
+      - $ref: '#/components/schemas/BaseRule'
+      - type: object
+        properties:
+          value:
+            description: The value used to match against 'rule_type' using 'matching'
+            type: number
+    LocationsList:
+      type: array
+      description: A list of location objects.
+      items:
+        $ref: '#/components/schemas/Location'
+    PageNumber:
+      type: object
+      properties:
+        page:
+          type: integer
+          minimum: 1
+          description: 'The page number for paginated results. For example, if `results_per_page` is 30, `page: 2` will retrieve items 31-60.
+
+            Defaults to 1 if not specified.
+
+            '
     LanguageMatchRule:
       allOf:
       - $ref: '#/components/schemas/BaseRuleWithLanguageCodeValue'
@@ -894,45 +973,71 @@ components:
               properties:
                 match_type:
                   $ref: '#/components/schemas/ChoiceMatchingOptions'
-    BaseRuleWithMinuteOfHourValue:
+    JsConditionMatchRule:
       allOf:
-      - $ref: '#/components/schemas/BaseRule'
+      - $ref: '#/components/schemas/BaseRuleWithJsCodeValue'
       - type: object
+        required:
+        - rule_type
         properties:
-          value:
-            description: Minute of hour used for matching
-            type: number
-            minimum: 1
-            maximum: 60
-    BaseRuleWithGoalTriggeredValue:
+          rule_type:
+            $ref: '#/components/schemas/JsConditionMatchRulesTypes'
+          matching:
+            allOf:
+            - $ref: '#/components/schemas/BaseMatch'
+            - type: object
+              properties:
+                match_type:
+                  $ref: '#/components/schemas/ChoiceMatchingOptions'
+    MinuteOfHourMatchRule:
       allOf:
-      - $ref: '#/components/schemas/BaseRule'
+      - $ref: '#/components/schemas/BaseRuleWithMinuteOfHourValue'
       - type: object
+        required:
+        - rule_type
         properties:
-          value:
-            description: ID of the goal used for matching
-            type: number
-    LocationsList:
-      type: array
-      description: A list of location objects.
-      items:
-        $ref: '#/components/schemas/Location'
-    JsConditionMatchRulesTypes:
+          rule_type:
+            $ref: '#/components/schemas/MinuteOfHourMatchRulesTypes'
+          matching:
+            allOf:
+            - $ref: '#/components/schemas/BaseMatch'
+            - type: object
+              properties:
+                match_type:
+                  $ref: '#/components/schemas/NumericMatchingOptions'
+    OnlyCount:
+      type: object
+      properties:
+        onlyCount:
+          type: boolean
+          description: 'If set to `true` in a list request, the response will only contain the total count of matching items (`extra.pagination.items_count`)
+
+            and will not include the actual item data. Useful for quickly getting totals without fetching full datasets.
+
+            '
+    NumericMatchRulesTypes:
       type: string
       enum:
-      - js_condition
-    GoalTriggeredMatchRulesTypes:
-      type: string
-      enum:
-      - goal_triggered
-    BaseRuleWithSegmentBucketedValue:
-      allOf:
-      - $ref: '#/components/schemas/BaseRule'
-      - type: object
-        properties:
-          value:
-            description: ID of the segment used for matching
-            type: number
+      - avg_time_page
+      - days_since_last_visit
+      - pages_visited_count
+      - visit_duration
+      - visits_count
+      - page_tag_product_price
+    ResultsPerPage:
+      type: object
+      properties:
+        results_per_page:
+          type: integer
+          nullable: true
+          minimum: 0
+          maximum: 50
+          default: 30
+          description: 'Specifies the maximum number of items to return in a single page of results.
+
+            Used for pagination. Default is 30, maximum is 50.
+
+            '
     BaseRuleWithLanguageCodeValue:
       allOf:
       - $ref: '#/components/schemas/BaseRule'
@@ -943,234 +1048,252 @@ components:
             type: string
             minLength: 2
             maxLength: 2
-    VisitorTypeMatchRule:
-      allOf:
-      - $ref: '#/components/schemas/BaseRuleWithVisitorTypeValue'
-      - type: object
-        required:
-        - rule_type
-        properties:
-          rule_type:
-            $ref: '#/components/schemas/VisitorTypeMatchRulesTypes'
-          matching:
-            allOf:
-            - $ref: '#/components/schemas/BaseMatch'
-            - type: object
-              properties:
-                match_type:
-                  $ref: '#/components/schemas/ChoiceMatchingOptions'
-    ErrorData:
+    BaseRule:
       type: object
+      required:
+      - rule_type
       properties:
-        code:
-          type: integer
-          format: int32
-        message:
-          oneOf:
-          - type: string
-          - type: array
-            items:
-              type: string
-        fields:
-          oneOf:
-          - type: string
-          - type: array
-            items:
-              type: string
-    LocationDomTriggerEvents:
-      type: string
-      description: 'The type of user interaction with a DOM element that will trigger the experience:
+        rule_type:
+          description: 'The specific attribute or condition to evaluate. Examples: ''url'', ''cookie'', ''browser_name'', ''js_condition'', ''page_tag_product_price''.
 
-        - `click`: Activates when the element is clicked.
-
-        - `hover`: Activates when the mouse pointer hovers over the element (mouseenter).
-
-        - `in_view`: Activates when the element becomes visible in the browser''s viewport (e.g., user scrolls to it). KB: "Launch Experiments Using Custom JavaScript When Elements Appear in DOM".
-
-        - `change`: Activates when the value of a form element (like input, select, textarea) changes.
-
-        '
-      enum:
-      - click
-      - hover
-      - in_view
-      - change
-    NumericMatchRulesTypes:
-      type: string
-      enum:
-      - avg_time_page
-      - days_since_last_visit
-      - pages_visited_count
-      - visit_duration
-      - visits_count
-      - page_tag_product_price
-    GenericTextKeyValueMatchRulesTypes:
-      type: string
-      enum:
-      - generic_text_key_value
-    BaseMatch:
-      type: object
-      properties:
-        negated:
-          description: 'If `true`, the logical result of the match is inverted.
-
-            For example, if `match_type` is ''contains'' and `value` is ''apple'', `negated: true` means the rule matches if the attribute *does not* contain ''apple''.
+            The allowed `rule_type` values depend on whether the rule is for an Audience (which can use visitor and page content attributes if it''s a ''segmentation'' type) or a Location (typically URL or page tag based).
 
             '
-          type: boolean
+          type: string
     OsMatchRulesTypes:
       type: string
       enum:
       - os
-    GetLocationsListRequestData:
-      allOf:
-      - $ref: '#/components/schemas/OnlyCount'
-      - $ref: '#/components/schemas/LocationsListFilteringOptions'
-      - $ref: '#/components/schemas/PageNumber'
-      - type: object
-        properties:
-          include:
-            description: Specifies the list of fields to be included in the response, which otherwise would not be sent.
-            type: array
-            items:
-              $ref: '#/components/schemas/LocationIncludeFields'
-          only:
-            description: 'Only retrieve location with the given ids.
-
-              '
-            type: array
-            nullable: true
-            items:
-              type: integer
-            maxItems: 100
-          except:
-            description: 'Except locations with the given ids.
-
-              '
-            type: array
-            items:
-              type: integer
-            maxItems: 100
-    BaseRuleWithNumericValue:
-      allOf:
-      - $ref: '#/components/schemas/BaseRule'
-      - type: object
-        properties:
-          value:
-            description: The value used to match against 'rule_type' using 'matching'
-            type: number
+    LocationsPresetsListResponseData:
+      type: object
+      description: Response containing a list of predefined location templates (presets) available in the system.
+      properties:
+        data:
+          $ref: '#/components/schemas/LocationsPresetsList'
     GenericKey:
       type: object
       properties:
         key:
           description: The name of the key whose value will be retrieved and compared against the rule's `value`.
           type: string
-    LocationBase:
+    LocationStatuses:
+      type: string
+      description: 'The current status of a location:
+
+        - `active`: The location is active and can be used for targeting experiences.
+
+        - `archived`: The location is archived and no longer available for new experiences, but its definition is preserved. Archived locations can often be cloned.
+
+        Knowledge Base: "Benefits of Archiving Unused Goals, Locations, and Audiences."
+
+        '
+      enum:
+      - active
+      - archived
+      default: active
+    BaseRuleWithOsValue:
+      allOf:
+      - $ref: '#/components/schemas/BaseRule'
+      - type: object
+        properties:
+          value:
+            description: Operating System name used for matching
+            type: string
+            enum:
+            - android
+            - iphone
+            - ipod
+            - ipad
+            - windows
+            - macos
+            - linux
+    BaseRuleWithGoalTriggeredValue:
+      allOf:
+      - $ref: '#/components/schemas/BaseRule'
+      - type: object
+        properties:
+          value:
+            description: ID of the goal used for matching
+            type: number
+    LanguageMatchRulesTypes:
+      type: string
+      enum:
+      - language
+    SegmentBucketedMatchRule:
+      allOf:
+      - $ref: '#/components/schemas/BaseRuleWithSegmentBucketedValue'
+      - type: object
+        required:
+        - rule_type
+        properties:
+          rule_type:
+            $ref: '#/components/schemas/SegmentBucketedMatchRulesTypes'
+          matching:
+            allOf:
+            - $ref: '#/components/schemas/BaseMatch'
+            - type: object
+              properties:
+                match_type:
+                  $ref: '#/components/schemas/ChoiceMatchingOptions'
+    Location:
+      allOf:
+      - $ref: '#/components/schemas/LocationBase'
+      - type: object
+        properties:
+          rules:
+            nullable: true
+            allOf:
+            - $ref: '#/components/schemas/LocationRuleObject'
+          trigger:
+            $ref: '#/components/schemas/LocationTrigger'
+    TextMatchRulesTypes:
+      type: string
+      enum:
+      - url
+      - url_with_query
+      - query_string
+      - campaign
+      - keyword
+      - medium
+      - source_name
+      - city
+      - region
+      - browser_version
+      - user_agent
+      - page_tag_page_type
+      - page_tag_category_id
+      - page_tag_category_name
+      - page_tag_product_sku
+      - page_tag_product_name
+      - page_tag_customer_id
+      - page_tag_custom_1
+      - page_tag_custom_2
+      - page_tag_custom_3
+      - page_tag_custom_4
+      - visitor_id
+    UpdateLocationRequestData:
+      $ref: '#/components/schemas/Location'
+    SuccessData:
       type: object
       properties:
-        id:
+        code:
           type: integer
-          description: The unique numerical identifier for the location.
-          readOnly: true
-        description:
+          format: int32
+        message:
           type: string
-          description: An optional, more detailed explanation of this location's purpose or the pages/conditions it targets.
-          maxLength: 500
-        status:
-          $ref: '#/components/schemas/LocationStatuses'
-        name:
-          type: string
-          description: A user-defined, friendly name for the location (e.g., "All Product Pages", "Homepage Only", "Checkout Funnel"). This name appears in the Convert UI when selecting locations for experiences.
-          maxLength: 100
-        preset:
-          type: boolean
-          description: Indicates if this location is a system-defined preset (e.g., "All Pages"). Preset locations cannot be modified directly but can be used as templates.
-          readOnly: true
-        selected_default:
-          type: boolean
-          description: If true, this location will be automatically pre-selected when creating new experiences within the project. Useful for commonly targeted site areas.
-        stats:
-          type: object
-          readOnly: true
-          description: Statistics related to the usage of this location.
-          properties:
-            experiences_usage:
-              description: 'The number of currently active experiences that are using this location for targeting.
-
-                This is an optional field, included if ''stats.experiences_usage'' is specified in the `include` parameter.
-
-                '
-              type: number
-              default: 0
-    BaseRuleWithStringValue:
+    BulkSuccessData:
+      allOf:
+      - $ref: '#/components/schemas/SuccessData'
+      - type: object
+        properties:
+          code:
+            type: integer
+            format: int32
+          errors:
+            type: array
+            description: List of unprocessed entities. Would be empty, if all passed entities processed
+            items:
+              $ref: '#/components/schemas/BulkEntityError'
+    LocationsListResponseData:
+      type: object
+      description: Response containing a list of locations defined within a project, along with pagination details if applicable.
+      properties:
+        data:
+          $ref: '#/components/schemas/LocationsList'
+        extra:
+          $ref: '#/components/schemas/Extra'
+    GenericNumericKeyValueMatchRulesTypes:
+      type: string
+      enum:
+      - generic_numeric_key_value
+    NumericMatchingOptions:
+      type: string
+      enum:
+      - equalsNumber
+      - less
+      - lessEqual
+    BaseRuleWithVisitorTypeValue:
+      allOf:
+      - $ref: '#/components/schemas/BaseRule'
+      - type: object
+        properties:
+          value:
+            description: Type of the visitors
+            type: string
+            enum:
+            - new
+            - returning
+    BaseRuleWithDayOfWeekValue:
+      allOf:
+      - $ref: '#/components/schemas/BaseRule'
+      - type: object
+        properties:
+          value:
+            description: Day of week used for matching
+            type: number
+            minimum: 1
+            maximum: 7
+    GenericNumericMatchRule:
+      allOf:
+      - $ref: '#/components/schemas/BaseRuleWithNumericValue'
+      - type: object
+        required:
+        - rule_type
+        properties:
+          rule_type:
+            $ref: '#/components/schemas/NumericMatchRulesTypes'
+          matching:
+            allOf:
+            - $ref: '#/components/schemas/BaseMatch'
+            - type: object
+              properties:
+                match_type:
+                  $ref: '#/components/schemas/NumericMatchingOptions'
+    LocationIncludeFields:
+      type: string
+      enum:
+      - rules
+      - trigger
+      - stats.experiences_usage
+    LocationsPresetsList:
+      type: array
+      description: A list of location preset objects.
+      items:
+        $ref: '#/components/schemas/LocationPreset'
+    DayOfWeekMatchRulesTypes:
+      type: string
+      enum:
+      - local_time_day_of_week
+      - project_time_day_of_week
+    Extra:
+      type: object
+      properties:
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+    BaseRuleWithBooleanValue:
       allOf:
       - $ref: '#/components/schemas/BaseRule'
       - type: object
         properties:
           value:
             description: The value used to match against 'rule_type' using 'matching'
+            type: boolean
+    BaseRuleWithBrowserNameValue:
+      allOf:
+      - $ref: '#/components/schemas/BaseRule'
+      - type: object
+        properties:
+          value:
+            description: Browser name used for matching
             type: string
-    ChoiceMatchingOptions:
-      type: string
-      enum:
-      - equals
-    BoolMatchRulesTypes:
-      type: string
-      enum:
-      - bucketed_into_experience
-      - is_desktop
-      - is_mobile
-      - is_tablet
-    OsMatchRule:
-      allOf:
-      - $ref: '#/components/schemas/BaseRuleWithOsValue'
-      - type: object
-        required:
-        - rule_type
-        properties:
-          rule_type:
-            $ref: '#/components/schemas/OsMatchRulesTypes'
-          matching:
-            allOf:
-            - $ref: '#/components/schemas/BaseMatch'
-            - type: object
-              properties:
-                match_type:
-                  $ref: '#/components/schemas/ChoiceMatchingOptions'
-    GoalTriggeredMatchRule:
-      allOf:
-      - $ref: '#/components/schemas/BaseRuleWithGoalTriggeredValue'
-      - type: object
-        required:
-        - rule_type
-        properties:
-          rule_type:
-            $ref: '#/components/schemas/GoalTriggeredMatchRulesTypes'
-          matching:
-            allOf:
-            - $ref: '#/components/schemas/BaseMatch'
-            - type: object
-              properties:
-                match_type:
-                  $ref: '#/components/schemas/ChoiceMatchingOptions'
-    BulkUpdateLocationsRequestData:
-      type: object
-      description: Request body for bulk updating the status of multiple locations.
-      additionalProperties: false
-      properties:
-        id:
-          $ref: '#/components/schemas/BulkLocationsIds'
-        status:
-          $ref: '#/components/schemas/LocationStatuses'
-      required:
-      - id
-      - status
-    LocationCreate:
-      required:
-      - name
-      - rules
-      allOf:
-      - $ref: '#/components/schemas/Location'
+            enum:
+            - chrome
+            - microsoft_ie
+            - firefox
+            - microsoft_edge
+            - mozilla
+            - opera
+            - safari
     LocationPreset:
       type: object
       properties:
@@ -1200,58 +1323,7 @@ components:
           allOf:
           - $ref: '#/components/schemas/RuleObject'
           readOnly: true
-    HourOfDayMatchRule:
-      allOf:
-      - $ref: '#/components/schemas/BaseRuleWithHourOfDayValue'
-      - type: object
-        required:
-        - rule_type
-        properties:
-          rule_type:
-            $ref: '#/components/schemas/HourOfDayMatchRulesTypes'
-          matching:
-            allOf:
-            - $ref: '#/components/schemas/BaseMatch'
-            - type: object
-              properties:
-                match_type:
-                  $ref: '#/components/schemas/NumericMatchingOptions'
-    BaseRuleWithBrowserNameValue:
-      allOf:
-      - $ref: '#/components/schemas/BaseRule'
-      - type: object
-        properties:
-          value:
-            description: Browser name used for matching
-            type: string
-            enum:
-            - chrome
-            - microsoft_ie
-            - firefox
-            - microsoft_edge
-            - mozilla
-            - opera
-            - safari
-    SortDirection:
-      type: object
-      properties:
-        sort_direction:
-          type: string
-          nullable: true
-          default: desc
-          description: 'The direction for sorting the list results, based on the `sort_by` field.
-
-            - `asc`: Ascending order (e.g., A-Z, 1-10, oldest to newest).
-
-            - `desc`: Descending order (e.g., Z-A, 10-1, newest to oldest).
-
-            Defaults to `desc` (newest/highest first) if not specified.
-
-            '
-          enum:
-          - asc
-          - desc
-    GenericNumericMatchRule:
+    GenericNumericKeyValueMatchRule:
       allOf:
       - $ref: '#/components/schemas/BaseRuleWithNumericValue'
       - type: object
@@ -1259,7 +1331,7 @@ components:
         - rule_type
         properties:
           rule_type:
-            $ref: '#/components/schemas/NumericMatchRulesTypes'
+            $ref: '#/components/schemas/GenericNumericKeyValueMatchRulesTypes'
           matching:
             allOf:
             - $ref: '#/components/schemas/BaseMatch'
@@ -1267,6 +1339,142 @@ components:
               properties:
                 match_type:
                   $ref: '#/components/schemas/NumericMatchingOptions'
+      - $ref: '#/components/schemas/GenericKey'
+    LocationTrigger:
+      description: 'Defines how and when an experience associated with this location should be activated for a visitor who matches the location''s rules.
+
+        The `type` determines the activation mechanism.
+
+        Knowledge Base: "Locations" - "Dynamic Website Triggers".
+
+        '
+      oneOf:
+      - $ref: '#/components/schemas/LocationTriggerDomElement'
+      - $ref: '#/components/schemas/LocationTriggerCallback'
+      - $ref: '#/components/schemas/LocationTriggerManual'
+      - $ref: '#/components/schemas/LocationTriggerUponRun'
+      discriminator:
+        propertyName: type
+        mapping:
+          dom_element: '#/components/schemas/LocationTriggerDomElement'
+          callback: '#/components/schemas/LocationTriggerCallback'
+          manual: '#/components/schemas/LocationTriggerManual'
+          upon_run: '#/components/schemas/LocationTriggerUponRun'
+    GoalTriggeredMatchRulesTypes:
+      type: string
+      enum:
+      - goal_triggered
+    MinuteOfHourMatchRulesTypes:
+      type: string
+      enum:
+      - local_time_minute_of_hour
+      - project_time_minute_of_hour
+    BoolMatchRulesTypes:
+      type: string
+      enum:
+      - bucketed_into_experience
+      - is_desktop
+      - is_mobile
+      - is_tablet
+    GenericBoolMatchRule:
+      allOf:
+      - $ref: '#/components/schemas/BaseRuleWithBooleanValue'
+      - type: object
+        required:
+        - rule_type
+        properties:
+          rule_type:
+            $ref: '#/components/schemas/BoolMatchRulesTypes'
+          matching:
+            allOf:
+            - $ref: '#/components/schemas/BaseMatch'
+            - type: object
+              properties:
+                match_type:
+                  $ref: '#/components/schemas/ChoiceMatchingOptions'
+    GenericTextMatchRule:
+      allOf:
+      - $ref: '#/components/schemas/BaseRuleWithStringValue'
+      - type: object
+        required:
+        - rule_type
+        properties:
+          rule_type:
+            $ref: '#/components/schemas/TextMatchRulesTypes'
+          matching:
+            allOf:
+            - $ref: '#/components/schemas/BaseMatch'
+            - type: object
+              properties:
+                match_type:
+                  $ref: '#/components/schemas/TextMatchingOptions'
+    LocationTriggerBase:
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/LocationTriggerTypes'
+      required:
+      - type
+    VisitorTypeMatchRule:
+      allOf:
+      - $ref: '#/components/schemas/BaseRuleWithVisitorTypeValue'
+      - type: object
+        required:
+        - rule_type
+        properties:
+          rule_type:
+            $ref: '#/components/schemas/VisitorTypeMatchRulesTypes'
+          matching:
+            allOf:
+            - $ref: '#/components/schemas/BaseMatch'
+            - type: object
+              properties:
+                match_type:
+                  $ref: '#/components/schemas/ChoiceMatchingOptions'
+    LocationTriggerManual:
+      allOf:
+      - $ref: '#/components/schemas/LocationTriggerBase'
+      - type: object
+        properties:
+          type:
+            type: string
+            enum:
+            - manual
+        additionalProperties: false
+    BulkDeleteLocationsRequestData:
+      type: object
+      description: Request body for bulk deleting multiple locations. Contains a list of location IDs to be permanently removed.
+      additionalProperties: false
+      properties:
+        id:
+          $ref: '#/components/schemas/BulkLocationsIds'
+      required:
+      - id
+    BrowserNameMatchRulesTypes:
+      type: string
+      enum:
+      - browser_name
+    LocationTriggerTypes:
+      type: string
+      default: upon_run
+      description: 'Specifies the mechanism that activates an experience when its location rules are met:
+
+        - `upon_run`: (Default) The experience activates as soon as the Convert tracking script loads and evaluates that the visitor matches the location''s rules (e.g., URL match). This is the standard behavior for most A/B tests.
+
+        - `manual`: The experience only activates when explicitly triggered by a JavaScript call (`window._conv_q.push({ what: ''triggerLocation'', params: { locationId: ''...'' } })`). Gives precise programmatic control over activation.
+
+        - `dom_element`: The experience activates upon a specific user interaction (e.g., ''click'', ''hover'', ''in_view'', ''change'') with a defined DOM element (identified by a CSS `selector`). Useful for testing changes related to interactive elements.
+
+        - `callback`: The experience activates when a custom JavaScript `callback` function (provided in `js`) calls the `activate()` function passed to it. Allows for complex asynchronous activation logic, e.g., after an API response or a specific SPA state change.
+
+        Note: For Full Stack projects, `upon_run` is effectively the only mode, as activation is handled by the SDK.
+
+        '
+      enum:
+      - upon_run
+      - manual
+      - dom_element
+      - callback
     Pagination:
       type: object
       properties:
@@ -1286,33 +1494,38 @@ components:
           description: The total number of pages available for the current filter criteria and `results_per_page` setting.
           type: integer
           minimum: 0
-    GenericTextKeyValueMatchRule:
+    GoalTriggeredMatchRule:
       allOf:
-      - $ref: '#/components/schemas/BaseRuleWithStringValue'
+      - $ref: '#/components/schemas/BaseRuleWithGoalTriggeredValue'
       - type: object
         required:
         - rule_type
         properties:
           rule_type:
-            $ref: '#/components/schemas/GenericTextKeyValueMatchRulesTypes'
+            $ref: '#/components/schemas/GoalTriggeredMatchRulesTypes'
           matching:
             allOf:
             - $ref: '#/components/schemas/BaseMatch'
             - type: object
               properties:
                 match_type:
-                  $ref: '#/components/schemas/TextMatchingOptions'
-      - $ref: '#/components/schemas/GenericKey'
-    BrowserNameMatchRulesTypes:
-      type: string
-      enum:
-      - browser_name
-    NumericMatchingOptions:
-      type: string
-      enum:
-      - equalsNumber
-      - less
-      - lessEqual
+                  $ref: '#/components/schemas/ChoiceMatchingOptions'
+    DayOfWeekMatchRule:
+      allOf:
+      - $ref: '#/components/schemas/BaseRuleWithDayOfWeekValue'
+      - type: object
+        required:
+        - rule_type
+        properties:
+          rule_type:
+            $ref: '#/components/schemas/DayOfWeekMatchRulesTypes'
+          matching:
+            allOf:
+            - $ref: '#/components/schemas/BaseMatch'
+            - type: object
+              properties:
+                match_type:
+                  $ref: '#/components/schemas/NumericMatchingOptions'
     RuleElement:
       oneOf:
       - $ref: '#/components/schemas/GenericTextMatchRule'
@@ -1387,67 +1600,10 @@ components:
           generic_text_key_value: '#/components/schemas/GenericTextKeyValueMatchRule'
           generic_numeric_key_value: '#/components/schemas/GenericNumericKeyValueMatchRule'
           generic_bool_key_value: '#/components/schemas/GenericBoolKeyValueMatchRule'
-    BulkDeleteLocationsRequestData:
-      type: object
-      description: Request body for bulk deleting multiple locations. Contains a list of location IDs to be permanently removed.
-      additionalProperties: false
-      properties:
-        id:
-          $ref: '#/components/schemas/BulkLocationsIds'
-      required:
-      - id
-    BaseRuleWithBooleanValue:
-      allOf:
-      - $ref: '#/components/schemas/BaseRule'
-      - type: object
-        properties:
-          value:
-            description: The value used to match against 'rule_type' using 'matching'
-            type: boolean
-    CookieMatchingOptions:
-      type: string
-      enum:
-      - matches
-      - regexMatches
-      - contains
-      - endsWith
-      - startsWith
-      - exists
-      - doesNotExist
     CookieMatchRulesTypes:
       type: string
       enum:
       - cookie
-    ResultsPerPage:
-      type: object
-      properties:
-        results_per_page:
-          type: integer
-          nullable: true
-          minimum: 0
-          maximum: 50
-          default: 30
-          description: 'Specifies the maximum number of items to return in a single page of results.
-
-            Used for pagination. Default is 30, maximum is 50.
-
-            '
-    GenericTextMatchRule:
-      allOf:
-      - $ref: '#/components/schemas/BaseRuleWithStringValue'
-      - type: object
-        required:
-        - rule_type
-        properties:
-          rule_type:
-            $ref: '#/components/schemas/TextMatchRulesTypes'
-          matching:
-            allOf:
-            - $ref: '#/components/schemas/BaseMatch'
-            - type: object
-              properties:
-                match_type:
-                  $ref: '#/components/schemas/TextMatchingOptions'
     BaseRuleWithJsCodeValue:
       allOf:
       - $ref: '#/components/schemas/BaseRule'
@@ -1461,243 +1617,48 @@ components:
 
               '
             type: string
-    LocationTriggerManual:
-      allOf:
-      - $ref: '#/components/schemas/LocationTriggerBase'
-      - type: object
-        properties:
-          type:
-            type: string
-            enum:
-            - manual
-        additionalProperties: false
-    LocationStatuses:
-      type: string
-      description: 'The current status of a location:
-
-        - `active`: The location is active and can be used for targeting experiences.
-
-        - `archived`: The location is archived and no longer available for new experiences, but its definition is preserved. Archived locations can often be cloned.
-
-        Knowledge Base: "Benefits of Archiving Unused Goals, Locations, and Audiences."
-
-        '
-      enum:
-      - active
-      - archived
-      default: active
-    BulkEntityError:
+    SortDirection:
       type: object
-      additionalProperties: false
       properties:
-        id:
-          type: integer
-          description: The unique identifier of the entity that could not be processed.
-        message:
+        sort_direction:
           type: string
-          description: A message explaining the reason for the failure for this specific entity.
-    OnlyCount:
-      type: object
-      properties:
-        onlyCount:
-          type: boolean
-          description: 'If set to `true` in a list request, the response will only contain the total count of matching items (`extra.pagination.items_count`)
+          nullable: true
+          default: desc
+          description: 'The direction for sorting the list results, based on the `sort_by` field.
 
-            and will not include the actual item data. Useful for quickly getting totals without fetching full datasets.
+            - `asc`: Ascending order (e.g., A-Z, 1-10, oldest to newest).
+
+            - `desc`: Descending order (e.g., Z-A, 10-1, newest to oldest).
+
+            Defaults to `desc` (newest/highest first) if not specified.
 
             '
-    LocationTriggerUponRun:
-      allOf:
-      - $ref: '#/components/schemas/LocationTriggerBase'
-      - type: object
-        properties:
-          type:
-            type: string
-            enum:
-            - upon_run
-        additionalProperties: false
-    LocationTrigger:
-      description: 'Defines how and when an experience associated with this location should be activated for a visitor who matches the location''s rules.
-
-        The `type` determines the activation mechanism.
-
-        Knowledge Base: "Locations" - "Dynamic Website Triggers".
-
-        '
-      oneOf:
-      - $ref: '#/components/schemas/LocationTriggerDomElement'
-      - $ref: '#/components/schemas/LocationTriggerCallback'
-      - $ref: '#/components/schemas/LocationTriggerManual'
-      - $ref: '#/components/schemas/LocationTriggerUponRun'
-      discriminator:
-        propertyName: type
-        mapping:
-          dom_element: '#/components/schemas/LocationTriggerDomElement'
-          callback: '#/components/schemas/LocationTriggerCallback'
-          manual: '#/components/schemas/LocationTriggerManual'
-          upon_run: '#/components/schemas/LocationTriggerUponRun'
-    Extra:
-      type: object
-      properties:
-        pagination:
-          $ref: '#/components/schemas/Pagination'
-    LocationTriggerDomElement:
-      allOf:
-      - $ref: '#/components/schemas/LocationTriggerBase'
-      - type: object
-        properties:
-          type:
-            type: string
-            enum:
-            - dom_element
-          selector:
-            description: Describes html selector
-            type: string
-          events:
-            type: array
-            description: Events for LocationTriggerDomElement
-            items:
-              $ref: '#/components/schemas/LocationDomTriggerEvents'
-        additionalProperties: false
-        required:
-        - selector
-        - events
-    LocationTriggerTypes:
-      type: string
-      default: upon_run
-      description: 'Specifies the mechanism that activates an experience when its location rules are met:
-
-        - `upon_run`: (Default) The experience activates as soon as the Convert tracking script loads and evaluates that the visitor matches the location''s rules (e.g., URL match). This is the standard behavior for most A/B tests.
-
-        - `manual`: The experience only activates when explicitly triggered by a JavaScript call (`window._conv_q.push({ what: ''triggerLocation'', params: { locationId: ''...'' } })`). Gives precise programmatic control over activation.
-
-        - `dom_element`: The experience activates upon a specific user interaction (e.g., ''click'', ''hover'', ''in_view'', ''change'') with a defined DOM element (identified by a CSS `selector`). Useful for testing changes related to interactive elements.
-
-        - `callback`: The experience activates when a custom JavaScript `callback` function (provided in `js`) calls the `activate()` function passed to it. Allows for complex asynchronous activation logic, e.g., after an API response or a specific SPA state change.
-
-        Note: For Full Stack projects, `upon_run` is effectively the only mode, as activation is handled by the SDK.
-
-        '
-      enum:
-      - upon_run
-      - manual
-      - dom_element
-      - callback
-    BaseRule:
-      type: object
-      required:
-      - rule_type
-      properties:
-        rule_type:
-          description: 'The specific attribute or condition to evaluate. Examples: ''url'', ''cookie'', ''browser_name'', ''js_condition'', ''page_tag_product_price''.
-
-            The allowed `rule_type` values depend on whether the rule is for an Audience (which can use visitor and page content attributes if it''s a ''segmentation'' type) or a Location (typically URL or page tag based).
-
-            '
-          type: string
-    WeatherConditionMatchRulesTypes:
-      type: string
-      enum:
-      - weather_condition
-    BaseRuleWithWeatherConditionValue:
+          enum:
+          - asc
+          - desc
+    BaseRuleWithMinuteOfHourValue:
       allOf:
       - $ref: '#/components/schemas/BaseRule'
       - type: object
         properties:
           value:
-            description: 'Weather Condition name used for matching. Full or partial condition.
-
-
-              The weather provider used by Convert detects the following conditions:
-
-              - Blizzard
-
-              - Blowing snow
-
-              - Cloudy
-
-              - Fog
-
-              - Freezing drizzle
-
-              - Freezing fog
-
-              - Heavy freezing drizzle
-
-              - Heavy rain
-
-              - Heavy rain at times
-
-              - Light drizzle
-
-              - Light freezing rain
-
-              - Light rain
-
-              - Mist
-
-              - Moderate rain
-
-              - Moderate rain at times
-
-              - Overcast
-
-              - Partly cloudy
-
-              '
-            type: string
-  requestBodies:
-    BulkUpdateLocationsRequest:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/BulkUpdateLocationsRequestData'
-      description: Contains a list of location `id`s and the target `status` (e.g., 'active', 'archived') to apply to all of them.
-      required: true
-    CreateLocationRequest:
-      content:
-        application/json:
-          schema:
-            allOf:
-            - $ref: '#/components/schemas/CreateLocationRequestData'
-      required: true
-    UpdateLocationRequest:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/UpdateLocationRequestData'
-      required: true
-    GetLocationsListRequest:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/GetLocationsListRequestData'
-    BulkDeleteLocationsRequest:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/BulkDeleteLocationsRequestData'
+            description: Minute of hour used for matching
+            type: number
+            minimum: 1
+            maximum: 60
   responses:
-    LocationsPresetsListResponse:
-      description: A list of predefined location templates (presets) provided by Convert, such as "All Pages" or "Homepage," which can be used as a starting point for creating custom locations.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/LocationsPresetsListResponseData'
-    SuccessResponse:
-      description: 'A generic success response, typically used for operations that don''t return specific data (like deletions or some updates). The `code` is usually 200, and `message` confirms the successful action.
-
-        '
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/SuccessData'
     LocationsListResponse:
       description: A list of locations defined within a project. Each location entry includes its ID, name, status, and potentially usage statistics if requested. Locations define where experiences run.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/LocationsListResponseData'
+    LocationResponse:
+      description: Detailed information for a single location, including its name, status, the `rules` (URL patterns, JS conditions) that define it, and the `trigger` type (e.g., 'upon_run', 'manual').
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Location'
     ErrorResponse:
       description: 'Indicates an error occurred while processing the request. The `code` provides an HTTP status code, `message` offers a human-readable explanation or an array of validation errors, and `fields` (if present) specifies which input fields were problematic.
 
@@ -1706,12 +1667,14 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorData'
-    LocationResponse:
-      description: Detailed information for a single location, including its name, status, the `rules` (URL patterns, JS conditions) that define it, and the `trigger` type (e.g., 'upon_run', 'manual').
+    SuccessResponse:
+      description: 'A generic success response, typically used for operations that don''t return specific data (like deletions or some updates). The `code` is usually 200, and `message` confirms the successful action.
+
+        '
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Location'
+            $ref: '#/components/schemas/SuccessData'
     BulkSuccessResponse:
       description: 'Indicates the outcome of a bulk operation (e.g., bulk update or delete). Provides a general success `message` and an `errors` array listing any entities that could not be processed, along with the reason for failure for each.
 
@@ -1720,6 +1683,43 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/BulkSuccessData'
+    LocationsPresetsListResponse:
+      description: A list of predefined location templates (presets) provided by Convert, such as "All Pages" or "Homepage," which can be used as a starting point for creating custom locations.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/LocationsPresetsListResponseData'
+  requestBodies:
+    BulkUpdateLocationsRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BulkUpdateLocationsRequestData'
+      description: Contains a list of location `id`s and the target `status` (e.g., 'active', 'archived') to apply to all of them.
+      required: true
+    GetLocationsListRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GetLocationsListRequestData'
+    UpdateLocationRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UpdateLocationRequestData'
+      required: true
+    CreateLocationRequest:
+      content:
+        application/json:
+          schema:
+            allOf:
+            - $ref: '#/components/schemas/CreateLocationRequestData'
+      required: true
+    BulkDeleteLocationsRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BulkDeleteLocationsRequestData'
   securitySchemes:
     requestSigning:
       type: apiKey

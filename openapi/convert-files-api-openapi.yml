@@ -106,33 +106,36 @@ paths:
         default:
           $ref: '#/components/responses/ErrorResponse'
 components:
+  responses:
+    FileResponse:
+      description: Details of a single uploaded file, including its access `url`, storage `key`, original `file_name`, `file_size`, and `mime_type`.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UploadedFile'
+    ErrorResponse:
+      description: 'Indicates an error occurred while processing the request. The `code` provides an HTTP status code, `message` offers a human-readable explanation or an array of validation errors, and `fields` (if present) specifies which input fields were problematic.
+
+        '
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorData'
+    SuccessResponse:
+      description: 'A generic success response, typically used for operations that don''t return specific data (like deletions or some updates). The `code` is usually 200, and `message` confirms the successful action.
+
+        '
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SuccessData'
+    FileDataResponse:
+      description: Contains the base64 encoded `content` of a requested file, along with its metadata like `key`, `file_name`, and `mime_type`.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/FileData'
   schemas:
-    SuccessData:
-      type: object
-      properties:
-        code:
-          type: integer
-          format: int32
-        message:
-          type: string
-    ErrorData:
-      type: object
-      properties:
-        code:
-          type: integer
-          format: int32
-        message:
-          oneOf:
-          - type: string
-          - type: array
-            items:
-              type: string
-        fields:
-          oneOf:
-          - type: string
-          - type: array
-            items:
-              type: string
     FileData:
       allOf:
       - $ref: '#/components/schemas/FileBase'
@@ -172,6 +175,32 @@ components:
       required:
       - file_name
       - file
+    SuccessData:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+    ErrorData:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          oneOf:
+          - type: string
+          - type: array
+            items:
+              type: string
+        fields:
+          oneOf:
+          - type: string
+          - type: array
+            items:
+              type: string
     UploadedFile:
       allOf:
       - $ref: '#/components/schemas/FileBase'
@@ -224,35 +253,6 @@ components:
         message:
           description: A message related to the file's status, providing more details in case of an error during upload.
           type: string
-  responses:
-    ErrorResponse:
-      description: 'Indicates an error occurred while processing the request. The `code` provides an HTTP status code, `message` offers a human-readable explanation or an array of validation errors, and `fields` (if present) specifies which input fields were problematic.
-
-        '
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorData'
-    FileResponse:
-      description: Details of a single uploaded file, including its access `url`, storage `key`, original `file_name`, `file_size`, and `mime_type`.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/UploadedFile'
-    FileDataResponse:
-      description: Contains the base64 encoded `content` of a requested file, along with its metadata like `key`, `file_name`, and `mime_type`.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/FileData'
-    SuccessResponse:
-      description: 'A generic success response, typically used for operations that don''t return specific data (like deletions or some updates). The `code` is usually 200, and `message` confirms the successful action.
-
-        '
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/SuccessData'
   requestBodies:
     UploadFileRequest:
       content:

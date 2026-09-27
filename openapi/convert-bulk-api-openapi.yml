@@ -564,100 +564,49 @@ paths:
           $ref: '#/components/responses/ErrorResponse'
 components:
   schemas:
-    SuccessData:
-      type: object
-      properties:
-        code:
-          type: integer
-          format: int32
-        message:
-          type: string
-    BulkDomainsIds:
+    BulkLocationsIds:
       type: array
-      description: The list of domains id to delete
+      description: A list of location unique numerical identifiers to be affected by a bulk operation.
       items:
         type: integer
       minItems: 1
       maxItems: 100
-    BulkUpdateHypothesesRequestData:
-      type: object
-      description: Request body for bulk updating the status of multiple hypotheses.
-      additionalProperties: false
-      properties:
-        id:
-          $ref: '#/components/schemas/BulkHypothesisIds'
-        status:
-          $ref: '#/components/schemas/HypothesisStatuses'
-      required:
-      - id
-      - status
-    BulkAudiencesIds:
+    BulkKnowledgeBaseIds:
       type: array
-      description: A list of audience unique numerical identifiers to be affected by a bulk operation.
+      description: A list of Knowledge Base entry unique numerical identifiers to be affected by a bulk operation.
       items:
         type: integer
       minItems: 1
       maxItems: 100
-    BulkDeleteExperiencesRequestData:
-      type: object
-      description: Request body for bulk deleting multiple experiences. Contains a list of experience IDs to be permanently removed.
-      additionalProperties: false
-      properties:
-        id:
-          $ref: '#/components/schemas/BulkExperienceIds'
-      required:
-      - id
-    BulkUpdateObservationsRequestData:
-      type: object
-      description: Request body for bulk updating the status of multiple observations.
-      additionalProperties: false
-      properties:
-        id:
-          $ref: '#/components/schemas/BulkObservationIds'
-        status:
-          $ref: '#/components/schemas/ObservationStatuses'
-      required:
-      - id
-      - status
-    BulkDeleteAudienceRequestData:
-      type: object
-      description: Request body for bulk deleting multiple audiences. Contains a list of audience IDs to be permanently removed.
-      additionalProperties: false
-      properties:
-        id:
-          $ref: '#/components/schemas/BulkAudiencesIds'
-      required:
-      - id
-    BulkFeaturesIds:
-      type: array
-      description: A list of feature unique numerical identifiers to be affected by a bulk operation.
-      items:
-        type: integer
-      minItems: 1
-      maxItems: 100
-    BulkGoalsIds:
-      type: array
-      description: The list of goals id to delete
-      items:
-        type: integer
-      minItems: 1
-      maxItems: 100
-    BulkObservationIds:
-      type: array
-      description: A list of observation unique numerical identifiers to be affected by a bulk operation.
-      items:
-        type: integer
-      minItems: 1
-      maxItems: 100
-    BulkDeleteGoalRequestData:
-      type: object
-      description: Request body for bulk deleting multiple goals. Contains a list of goal IDs to be permanently removed.
-      additionalProperties: false
-      properties:
-        id:
-          $ref: '#/components/schemas/BulkGoalsIds'
-      required:
-      - id
+    ObservationStatuses:
+      description: 'The current status of an observation in its lifecycle:
+
+        - `active`: The observation is current, under consideration, or being actively discussed. This is the default for new observations.
+
+        - `archived`: The observation has been reviewed and is no longer actively being pursued (e.g., deemed not actionable, superseded, or already addressed). It''s kept for historical records.
+
+        Knowledge Base: "Observations Feature Guide" - "Status Management".
+
+        '
+      type: string
+      enum:
+      - active
+      - archived
+      default: active
+    GoalStatuses:
+      type: string
+      description: 'The current status of a goal:
+
+        - `active`: The goal is active and will track conversions for experiences it''s attached to.
+
+        - `archived`: The goal is archived and will not track new conversions. Its historical data remains accessible in reports for experiences that previously used it. Archived goals can often be cloned or unarchived.
+
+        Knowledge Base: "Benefits of Archiving Unused Goals, Locations, and Audiences."
+
+        '
+      enum:
+      - active
+      - archived
     ErrorData:
       type: object
       properties:
@@ -676,33 +625,18 @@ components:
           - type: array
             items:
               type: string
-    BulkExperienceStatuses:
-      type: string
-      enum:
-      - active
-      - paused
-      - archived
-    BulkUpdateFeatureRequestData:
+    BulkUpdateHypothesesRequestData:
       type: object
-      description: Request body for bulk updating the status of multiple features.
+      description: Request body for bulk updating the status of multiple hypotheses.
       additionalProperties: false
       properties:
         id:
-          $ref: '#/components/schemas/BulkFeaturesIds'
+          $ref: '#/components/schemas/BulkHypothesisIds'
         status:
-          $ref: '#/components/schemas/FeatureStatuses'
+          $ref: '#/components/schemas/HypothesisStatuses'
       required:
       - id
       - status
-    BulkDeleteLocationsRequestData:
-      type: object
-      description: Request body for bulk deleting multiple locations. Contains a list of location IDs to be permanently removed.
-      additionalProperties: false
-      properties:
-        id:
-          $ref: '#/components/schemas/BulkLocationsIds'
-      required:
-      - id
     FeatureStatuses:
       type: string
       description: 'The current status of a feature:
@@ -716,22 +650,19 @@ components:
       - active
       - archived
       default: active
-    BulkDeleteKnowledgeBasesRequestData:
-      type: object
-      description: Request body for bulk deleting multiple Knowledge Base entries. Contains a list of entry IDs to be permanently removed.
-      additionalProperties: false
-      properties:
-        id:
-          $ref: '#/components/schemas/BulkKnowledgeBaseIds'
-      required:
-      - id
-    GoalStatuses:
+    BulkExperienceStatuses:
       type: string
-      description: 'The current status of a goal:
+      enum:
+      - active
+      - paused
+      - archived
+    AudienceStatuses:
+      type: string
+      description: 'The status of an audience:
 
-        - `active`: The goal is active and will track conversions for experiences it''s attached to.
+        - `active`: The audience is currently active and can be used for targeting experiences.
 
-        - `archived`: The goal is archived and will not track new conversions. Its historical data remains accessible in reports for experiences that previously used it. Archived goals can often be cloned or unarchived.
+        - `archived`: The audience is no longer active and cannot be used for new experiences, but its definition and past usage data are preserved. Archived audiences can often be cloned.
 
         Knowledge Base: "Benefits of Archiving Unused Goals, Locations, and Audiences."
 
@@ -739,47 +670,103 @@ components:
       enum:
       - active
       - archived
-    BulkSuccessData:
-      allOf:
-      - $ref: '#/components/schemas/SuccessData'
-      - type: object
-        properties:
-          code:
-            type: integer
-            format: int32
-          errors:
-            type: array
-            description: List of unprocessed entities. Would be empty, if all passed entities processed
-            items:
-              $ref: '#/components/schemas/BulkEntityError'
-    BulkDeleteDomainRequestData:
+    BulkUpdateObservationsRequestData:
       type: object
-      description: Bulk Delete provided domains
+      description: Request body for bulk updating the status of multiple observations.
       additionalProperties: false
       properties:
         id:
-          $ref: '#/components/schemas/BulkDomainsIds'
+          $ref: '#/components/schemas/BulkObservationIds'
+        status:
+          $ref: '#/components/schemas/ObservationStatuses'
       required:
       - id
-    BulkExperienceIds:
+      - status
+    BulkUpdateExperiencesRequestData:
+      type: object
+      description: Request body for bulk updating the status of multiple experiences.
+      additionalProperties: false
+      properties:
+        id:
+          $ref: '#/components/schemas/BulkExperienceIds'
+        status:
+          $ref: '#/components/schemas/BulkExperienceStatuses'
+      required:
+      - id
+      - status
+    BulkDeleteExperiencesRequestData:
+      type: object
+      description: Request body for bulk deleting multiple experiences. Contains a list of experience IDs to be permanently removed.
+      additionalProperties: false
+      properties:
+        id:
+          $ref: '#/components/schemas/BulkExperienceIds'
+      required:
+      - id
+    BulkProjectIds:
       type: array
-      description: A list of unique numerical identifiers for experiences to be affected by a bulk operation.
+      description: A list of project unique numerical identifiers to be affected by a bulk operation.
       items:
         type: integer
       minItems: 1
       maxItems: 100
-    BulkDeleteFeatureRequestData:
+    BulkDeleteGoalRequestData:
       type: object
-      description: Request body for bulk deleting multiple features. Contains a list of feature IDs to be permanently removed.
+      description: Request body for bulk deleting multiple goals. Contains a list of goal IDs to be permanently removed.
       additionalProperties: false
       properties:
         id:
-          $ref: '#/components/schemas/BulkFeaturesIds'
+          $ref: '#/components/schemas/BulkGoalsIds'
       required:
       - id
-    BulkKnowledgeBaseIds:
+    BulkTagsIds:
       type: array
-      description: A list of Knowledge Base entry unique numerical identifiers to be affected by a bulk operation.
+      description: A list of tag unique numerical identifiers to be affected by a bulk delete operation.
+      items:
+        type: integer
+      minItems: 1
+      maxItems: 100
+    BulkUpdateLocationsRequestData:
+      type: object
+      description: Request body for bulk updating the status of multiple locations.
+      additionalProperties: false
+      properties:
+        id:
+          $ref: '#/components/schemas/BulkLocationsIds'
+        status:
+          $ref: '#/components/schemas/LocationStatuses'
+      required:
+      - id
+      - status
+    BulkHypothesisIds:
+      type: array
+      description: A list of hypothesis unique numerical identifiers to be affected by a bulk operation.
+      items:
+        type: integer
+      minItems: 1
+      maxItems: 100
+    BulkObservationIds:
+      type: array
+      description: A list of observation unique numerical identifiers to be affected by a bulk operation.
+      items:
+        type: integer
+      minItems: 1
+      maxItems: 100
+    BulkUpdateAudienceRequestData:
+      type: object
+      description: Request body for bulk updating the status of multiple audiences.
+      additionalProperties: false
+      properties:
+        id:
+          $ref: '#/components/schemas/BulkAudiencesIds'
+        status:
+          $ref: '#/components/schemas/AudienceStatuses'
+      required:
+      - id
+      - status
+    BulkFeaturesIds:
+      type: array
+      description: A list of feature unique numerical identifiers to be affected by a bulk operation.
       items:
         type: integer
       minItems: 1
@@ -806,6 +793,66 @@ components:
                   description: The target tracking script version string to apply to all selected projects.
       required:
       - id
+    BulkUpdateFeatureRequestData:
+      type: object
+      description: Request body for bulk updating the status of multiple features.
+      additionalProperties: false
+      properties:
+        id:
+          $ref: '#/components/schemas/BulkFeaturesIds'
+        status:
+          $ref: '#/components/schemas/FeatureStatuses'
+      required:
+      - id
+      - status
+    BulkDeleteObservationsRequestData:
+      type: object
+      description: Request body for bulk deleting multiple observations. Contains a list of observation IDs to be permanently removed.
+      additionalProperties: false
+      properties:
+        id:
+          $ref: '#/components/schemas/BulkObservationIds'
+      required:
+      - id
+    BulkDeleteAudienceRequestData:
+      type: object
+      description: Request body for bulk deleting multiple audiences. Contains a list of audience IDs to be permanently removed.
+      additionalProperties: false
+      properties:
+        id:
+          $ref: '#/components/schemas/BulkAudiencesIds'
+      required:
+      - id
+    BulkDeleteTagRequestData:
+      type: object
+      description: Request body for bulk deleting multiple tags. Contains a list of tag IDs to be permanently removed.
+      additionalProperties: false
+      properties:
+        id:
+          $ref: '#/components/schemas/BulkTagsIds'
+      required:
+      - id
+    BulkDeleteKnowledgeBasesRequestData:
+      type: object
+      description: Request body for bulk deleting multiple Knowledge Base entries. Contains a list of entry IDs to be permanently removed.
+      additionalProperties: false
+      properties:
+        id:
+          $ref: '#/components/schemas/BulkKnowledgeBaseIds'
+      required:
+      - id
+    BulkUpdateGoalRequestData:
+      type: object
+      description: Request body for bulk updating the status of multiple goals.
+      additionalProperties: false
+      properties:
+        id:
+          $ref: '#/components/schemas/BulkGoalsIds'
+        status:
+          $ref: '#/components/schemas/GoalStatuses'
+      required:
+      - id
+      - status
     LocationStatuses:
       type: string
       description: 'The current status of a location:
@@ -821,21 +868,6 @@ components:
       - active
       - archived
       default: active
-    ObservationStatuses:
-      description: 'The current status of an observation in its lifecycle:
-
-        - `active`: The observation is current, under consideration, or being actively discussed. This is the default for new observations.
-
-        - `archived`: The observation has been reviewed and is no longer actively being pursued (e.g., deemed not actionable, superseded, or already addressed). It''s kept for historical records.
-
-        Knowledge Base: "Observations Feature Guide" - "Status Management".
-
-        '
-      type: string
-      enum:
-      - active
-      - archived
-      default: active
     BulkDeleteHypothesesRequestData:
       type: object
       description: Request body for bulk deleting multiple hypotheses. Contains a list of hypothesis IDs to be permanently removed.
@@ -845,49 +877,48 @@ components:
           $ref: '#/components/schemas/BulkHypothesisIds'
       required:
       - id
-    BulkUpdateAudienceRequestData:
-      type: object
-      description: Request body for bulk updating the status of multiple audiences.
-      additionalProperties: false
-      properties:
-        id:
-          $ref: '#/components/schemas/BulkAudiencesIds'
-        status:
-          $ref: '#/components/schemas/AudienceStatuses'
-      required:
-      - id
-      - status
-    BulkLocationsIds:
+    BulkExperienceIds:
       type: array
-      description: A list of location unique numerical identifiers to be affected by a bulk operation.
+      description: A list of unique numerical identifiers for experiences to be affected by a bulk operation.
       items:
         type: integer
       minItems: 1
       maxItems: 100
-    AudienceStatuses:
-      type: string
-      description: 'The status of an audience:
-
-        - `active`: The audience is currently active and can be used for targeting experiences.
-
-        - `archived`: The audience is no longer active and cannot be used for new experiences, but its definition and past usage data are preserved. Archived audiences can often be cloned.
-
-        Knowledge Base: "Benefits of Archiving Unused Goals, Locations, and Audiences."
-
-        '
-      enum:
-      - active
-      - archived
-    BulkEntityError:
+    BulkUpdateKnowledgeBasesRequestData:
       type: object
+      description: Request body for bulk updating the status of multiple Knowledge Base entries.
       additionalProperties: false
       properties:
         id:
-          type: integer
-          description: The unique identifier of the entity that could not be processed.
-        message:
-          type: string
-          description: A message explaining the reason for the failure for this specific entity.
+          $ref: '#/components/schemas/BulkKnowledgeBaseIds'
+        status:
+          $ref: '#/components/schemas/KnowledgeBaseStatuses'
+      required:
+      - id
+      - status
+    BulkAudiencesIds:
+      type: array
+      description: A list of audience unique numerical identifiers to be affected by a bulk operation.
+      items:
+        type: integer
+      minItems: 1
+      maxItems: 100
+    BulkDeleteLocationsRequestData:
+      type: object
+      description: Request body for bulk deleting multiple locations. Contains a list of location IDs to be permanently removed.
+      additionalProperties: false
+      properties:
+        id:
+          $ref: '#/components/schemas/BulkLocationsIds'
+      required:
+      - id
+    BulkGoalsIds:
+      type: array
+      description: The list of goals id to delete
+      items:
+        type: integer
+      minItems: 1
+      maxItems: 100
     HypothesisStatuses:
       description: 'The current stage or outcome of a hypothesis in its lifecycle:
 
@@ -914,36 +945,45 @@ components:
       - draft
       - proven
       - disproven
-    BulkDeleteObservationsRequestData:
+    BulkDeleteFeatureRequestData:
       type: object
-      description: Request body for bulk deleting multiple observations. Contains a list of observation IDs to be permanently removed.
+      description: Request body for bulk deleting multiple features. Contains a list of feature IDs to be permanently removed.
       additionalProperties: false
       properties:
         id:
-          $ref: '#/components/schemas/BulkObservationIds'
+          $ref: '#/components/schemas/BulkFeaturesIds'
       required:
       - id
-    BulkHypothesisIds:
-      type: array
-      description: A list of hypothesis unique numerical identifiers to be affected by a bulk operation.
-      items:
-        type: integer
-      minItems: 1
-      maxItems: 100
-    BulkProjectIds:
-      type: array
-      description: A list of project unique numerical identifiers to be affected by a bulk operation.
-      items:
-        type: integer
-      minItems: 1
-      maxItems: 100
-    BulkTagsIds:
-      type: array
-      description: A list of tag unique numerical identifiers to be affected by a bulk delete operation.
-      items:
-        type: integer
-      minItems: 1
-      maxItems: 100
+    SuccessData:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+    BulkSuccessData:
+      allOf:
+      - $ref: '#/components/schemas/SuccessData'
+      - type: object
+        properties:
+          code:
+            type: integer
+            format: int32
+          errors:
+            type: array
+            description: List of unprocessed entities. Would be empty, if all passed entities processed
+            items:
+              $ref: '#/components/schemas/BulkEntityError'
+    BulkDeleteDomainRequestData:
+      type: object
+      description: Bulk Delete provided domains
+      additionalProperties: false
+      properties:
+        id:
+          $ref: '#/components/schemas/BulkDomainsIds'
+      required:
+      - id
     KnowledgeBaseStatuses:
       description: 'The status of a Knowledge Base entry:
 
@@ -957,152 +997,24 @@ components:
       - active
       - archived
       default: active
-    BulkUpdateGoalRequestData:
+    BulkEntityError:
       type: object
-      description: Request body for bulk updating the status of multiple goals.
       additionalProperties: false
       properties:
         id:
-          $ref: '#/components/schemas/BulkGoalsIds'
-        status:
-          $ref: '#/components/schemas/GoalStatuses'
-      required:
-      - id
-      - status
-    BulkUpdateLocationsRequestData:
-      type: object
-      description: Request body for bulk updating the status of multiple locations.
-      additionalProperties: false
-      properties:
-        id:
-          $ref: '#/components/schemas/BulkLocationsIds'
-        status:
-          $ref: '#/components/schemas/LocationStatuses'
-      required:
-      - id
-      - status
-    BulkDeleteTagRequestData:
-      type: object
-      description: Request body for bulk deleting multiple tags. Contains a list of tag IDs to be permanently removed.
-      additionalProperties: false
-      properties:
-        id:
-          $ref: '#/components/schemas/BulkTagsIds'
-      required:
-      - id
-    BulkUpdateExperiencesRequestData:
-      type: object
-      description: Request body for bulk updating the status of multiple experiences.
-      additionalProperties: false
-      properties:
-        id:
-          $ref: '#/components/schemas/BulkExperienceIds'
-        status:
-          $ref: '#/components/schemas/BulkExperienceStatuses'
-      required:
-      - id
-      - status
-    BulkUpdateKnowledgeBasesRequestData:
-      type: object
-      description: Request body for bulk updating the status of multiple Knowledge Base entries.
-      additionalProperties: false
-      properties:
-        id:
-          $ref: '#/components/schemas/BulkKnowledgeBaseIds'
-        status:
-          $ref: '#/components/schemas/KnowledgeBaseStatuses'
-      required:
-      - id
-      - status
+          type: integer
+          description: The unique identifier of the entity that could not be processed.
+        message:
+          type: string
+          description: A message explaining the reason for the failure for this specific entity.
+    BulkDomainsIds:
+      type: array
+      description: The list of domains id to delete
+      items:
+        type: integer
+      minItems: 1
+      maxItems: 100
   requestBodies:
-    BulkUpdateExperiencesRequest:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/BulkUpdateExperiencesRequestData'
-      description: Contains a list of experience `id`s and the target `status` (e.g., 'active', 'paused', 'archived') to apply to all of them. Useful for managing multiple experiments efficiently.
-      required: true
-    BulkUpdateObservationsRequest:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/BulkUpdateObservationsRequestData'
-      description: Contains a list of observation `id`s and the target `status` (e.g., 'active', 'archived') to apply to all of them.
-      required: true
-    BulkDeleteExperiencesRequest:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/BulkDeleteExperiencesRequestData'
-      required: true
-    BulkUpdateKnowledgeBasesRequest:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/BulkUpdateKnowledgeBasesRequestData'
-      description: Contains a list of Knowledge Base entry `id`s and the target `status` to apply to all of them.
-      required: true
-    BulkUpdateLocationsRequest:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/BulkUpdateLocationsRequestData'
-      description: Contains a list of location `id`s and the target `status` (e.g., 'active', 'archived') to apply to all of them.
-      required: true
-    BulkUpdateAudiencesRequest:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/BulkUpdateAudienceRequestData'
-      description: Contains a list of audience `id`s and the target `status` (e.g., 'active', 'archived') to apply to all of them.
-      required: true
-    BulkUpdateGoalsRequest:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/BulkUpdateGoalRequestData'
-      description: Contains a list of goal `id`s and the target `status` (e.g., 'active', 'archived') to apply to all of them.
-      required: true
-    BulkDeleteObservationsRequest:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/BulkDeleteObservationsRequestData'
-      required: true
-    BulkUpdateHypothesesRequest:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/BulkUpdateHypothesesRequestData'
-      description: Contains a list of hypothesis `id`s and the target `status` to apply to all of them.
-      required: true
-    BulkDeleteFeaturesRequest:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/BulkDeleteFeatureRequestData'
-    BulkDeleteDomainsRequest:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/BulkDeleteDomainRequestData'
-    BulkDeleteLocationsRequest:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/BulkDeleteLocationsRequestData'
-    BulkDeleteAudiencesRequest:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/BulkDeleteAudienceRequestData'
-    BulkUpdateFeaturesRequest:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/BulkUpdateFeatureRequestData'
-      description: Contains a list of feature `id`s and the target `status` (e.g., 'active', 'archived') to apply to all of them.
-      required: true
     BulkDeleteKnowledgeBasesRequest:
       content:
         application/json:
@@ -1114,16 +1026,48 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/BulkDeleteGoalRequestData'
-    BulkDeleteTagsRequest:
+    BulkUpdateObservationsRequest:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/BulkDeleteTagRequestData'
+            $ref: '#/components/schemas/BulkUpdateObservationsRequestData'
+      description: Contains a list of observation `id`s and the target `status` (e.g., 'active', 'archived') to apply to all of them.
+      required: true
     BulkDeleteHypothesesRequest:
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/BulkDeleteHypothesesRequestData'
+      required: true
+    BulkUpdateKnowledgeBasesRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BulkUpdateKnowledgeBasesRequestData'
+      description: Contains a list of Knowledge Base entry `id`s and the target `status` to apply to all of them.
+      required: true
+    BulkDeleteAudiencesRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BulkDeleteAudienceRequestData'
+    BulkDeleteObservationsRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BulkDeleteObservationsRequestData'
+      required: true
+    BulkDeleteTagsRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BulkDeleteTagRequestData'
+    BulkUpdateFeaturesRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BulkUpdateFeatureRequestData'
+      description: Contains a list of feature `id`s and the target `status` (e.g., 'active', 'archived') to apply to all of them.
       required: true
     BulkUpdateProjectsRequest:
       content:
@@ -1131,6 +1075,62 @@ components:
           schema:
             $ref: '#/components/schemas/BulkUpdateProjectsRequestData'
       description: Contains a list of project `id`s and the `settings` (specifically `tracking_script.current_version`) to be applied to all specified projects. Useful for rolling out tracking script updates.
+      required: true
+    BulkDeleteDomainsRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BulkDeleteDomainRequestData'
+    BulkUpdateGoalsRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BulkUpdateGoalRequestData'
+      description: Contains a list of goal `id`s and the target `status` (e.g., 'active', 'archived') to apply to all of them.
+      required: true
+    BulkDeleteFeaturesRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BulkDeleteFeatureRequestData'
+    BulkUpdateHypothesesRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BulkUpdateHypothesesRequestData'
+      description: Contains a list of hypothesis `id`s and the target `status` to apply to all of them.
+      required: true
+    BulkDeleteLocationsRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BulkDeleteLocationsRequestData'
+    BulkUpdateAudiencesRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BulkUpdateAudienceRequestData'
+      description: Contains a list of audience `id`s and the target `status` (e.g., 'active', 'archived') to apply to all of them.
+      required: true
+    BulkUpdateLocationsRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BulkUpdateLocationsRequestData'
+      description: Contains a list of location `id`s and the target `status` (e.g., 'active', 'archived') to apply to all of them.
+      required: true
+    BulkUpdateExperiencesRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BulkUpdateExperiencesRequestData'
+      description: Contains a list of experience `id`s and the target `status` (e.g., 'active', 'paused', 'archived') to apply to all of them. Useful for managing multiple experiments efficiently.
+      required: true
+    BulkDeleteExperiencesRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BulkDeleteExperiencesRequestData'
       required: true
   responses:
     ErrorResponse:

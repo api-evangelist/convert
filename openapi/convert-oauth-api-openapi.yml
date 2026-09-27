@@ -1,6 +1,6 @@
 openapi: 3.2.0
 info:
-  title: Convert O Auth API
+  title: Convert OAuth API
   description: Move your app forward with the Convert API.
   version: 2.0.0
 servers:
@@ -81,24 +81,39 @@ paths:
           $ref: '#/components/responses/ErrorResponse'
 components:
   schemas:
-    ErrorData:
+    OAuthClientResponseData:
       type: object
+      required:
+      - id
+      - name
+      - callback_url
+      - embedded
       properties:
-        code:
+        id:
+          type: string
+        name:
+          type: string
+        callback_url:
+          type: string
+          format: uri
+        description:
+          type: string
+        embedded:
+          type: boolean
+          description: 'Enable this when the OAuth client is used by a third-party or embedded integration. An embedded client stays active even if the user who created it is later deleted, so integrations that depend on it continue to work.
+
+            '
+        created_at:
           type: integer
-          format: int32
-        message:
-          oneOf:
-          - type: string
-          - type: array
-            items:
-              type: string
-        fields:
-          oneOf:
-          - type: string
-          - type: array
-            items:
-              type: string
+    OAuthClientsListResponseData:
+      type: object
+      required:
+      - data
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/OAuthClientData'
     OAuthCreateClientRequestData:
       type: object
       required:
@@ -138,6 +153,24 @@ components:
           description: 'Enable this when the OAuth client is used by a third-party or embedded integration. An embedded client stays active even if the user who created it is later deleted, so integrations that depend on it continue to work.
 
             '
+    ErrorData:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          oneOf:
+          - type: string
+          - type: array
+            items:
+              type: string
+        fields:
+          oneOf:
+          - type: string
+          - type: array
+            items:
+              type: string
     OAuthClientData:
       type: object
       required:
@@ -163,39 +196,6 @@ components:
             '
         created_at:
           type: integer
-    OAuthClientsListResponseData:
-      type: object
-      required:
-      - data
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/OAuthClientData'
-    OAuthClientResponseData:
-      type: object
-      required:
-      - id
-      - name
-      - callback_url
-      - embedded
-      properties:
-        id:
-          type: string
-        name:
-          type: string
-        callback_url:
-          type: string
-          format: uri
-        description:
-          type: string
-        embedded:
-          type: boolean
-          description: 'Enable this when the OAuth client is used by a third-party or embedded integration. An embedded client stays active even if the user who created it is later deleted, so integrations that depend on it continue to work.
-
-            '
-        created_at:
-          type: integer
     OAuthDeleteClientResponseData:
       type: object
       required:
@@ -206,22 +206,13 @@ components:
           type: integer
         message:
           type: string
-  requestBodies:
-    OAuthCreateClientRequest:
-      required: true
-      description: Creates a new OAuth client application.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/OAuthCreateClientRequestData'
-    OAuthUpdateClientRequest:
-      required: true
-      description: Updates an existing OAuth client application.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/OAuthUpdateClientRequestData'
   responses:
+    OAuthClientsListResponse:
+      description: List of OAuth clients for the current user.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/OAuthClientsListResponseData'
     ErrorResponse:
       description: 'Indicates an error occurred while processing the request. The `code` provides an HTTP status code, `message` offers a human-readable explanation or an array of validation errors, and `fields` (if present) specifies which input fields were problematic.
 
@@ -242,12 +233,21 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/OAuthClientResponseData'
-    OAuthClientsListResponse:
-      description: List of OAuth clients for the current user.
+  requestBodies:
+    OAuthCreateClientRequest:
+      required: true
+      description: Creates a new OAuth client application.
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/OAuthClientsListResponseData'
+            $ref: '#/components/schemas/OAuthCreateClientRequestData'
+    OAuthUpdateClientRequest:
+      required: true
+      description: Updates an existing OAuth client application.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/OAuthUpdateClientRequestData'
   securitySchemes:
     requestSigning:
       type: apiKey
