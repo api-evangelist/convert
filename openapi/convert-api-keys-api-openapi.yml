@@ -91,11 +91,65 @@ paths:
           $ref: '#/components/responses/ErrorResponse'
 components:
   schemas:
+    ApiKey:
+      type: object
+      description: Defines an API key used for authenticating server-side requests to the Convert API.
+      properties:
+        name:
+          type: string
+          description: A user-defined, friendly name for the API key to help identify its purpose or the application using it (e.g., "Reporting Dashboard Integration", "Nightly Data Sync Script").
+          maxLength: 100
+        auth_type:
+          $ref: '#/components/schemas/ApiKeyAuthTypes'
+        projects:
+          description: 'An optional list of project IDs that this API key is authorized to access.
+
+            If null or an empty list, the key typically grants access to all projects within the account it belongs to.
+
+            This allows for granular control over API key permissions.
+
+            '
+          nullable: true
+          type: array
+          items:
+            type: number
+        key_id:
+          type: string
+          description: The public identifier part of the API key pair (ApplicationID). This is sent in the `Convert-Application-ID` header.
+          readOnly: true
+        key_secret:
+          description: 'The secret part of the API key pair (ApplicationSecretKey). This is used to sign API requests and is critical for authentication.
+
+            **Important:** The full `key_secret` is only returned at the time of API key creation. For security reasons, subsequent retrievals of this API key will show this field masked (e.g., with asterisks or partially hidden). Store the secret securely upon creation.
+
+            '
+          type: string
+          readOnly: true
+        role:
+          $ref: '#/components/schemas/ApiKeyRole'
+    ApiKeysListResponse:
+      type: object
+      description: Response containing a list of API keys defined for a specific account, used for server-to-server authentication.
+      properties:
+        data:
+          $ref: '#/components/schemas/ApiKeysList'
     ApiKeysList:
       type: array
       description: A list of API key objects.
       items:
         $ref: '#/components/schemas/ApiKey'
+    ApiKeyAuthTypes:
+      type: string
+      description: 'The authentication type for this API key:
+
+        - requestSigning: Each request must be signed with the key and a hash sent in the header (most secure)
+
+        - secretKey: A simpler authentication method using the secret key as a Bearer token in the Authorization header (good security)
+
+        '
+      enum:
+      - requestSigning
+      - secretKey
     ErrorData:
       type: object
       properties:
@@ -143,48 +197,6 @@ components:
           format: int32
         message:
           type: string
-    ApiKey:
-      type: object
-      description: Defines an API key used for authenticating server-side requests to the Convert API.
-      properties:
-        name:
-          type: string
-          description: A user-defined, friendly name for the API key to help identify its purpose or the application using it (e.g., "Reporting Dashboard Integration", "Nightly Data Sync Script").
-          maxLength: 100
-        auth_type:
-          $ref: '#/components/schemas/ApiKeyAuthTypes'
-        projects:
-          description: 'An optional list of project IDs that this API key is authorized to access.
-
-            If null or an empty list, the key typically grants access to all projects within the account it belongs to.
-
-            This allows for granular control over API key permissions.
-
-            '
-          nullable: true
-          type: array
-          items:
-            type: number
-        key_id:
-          type: string
-          description: The public identifier part of the API key pair (ApplicationID). This is sent in the `Convert-Application-ID` header.
-          readOnly: true
-        key_secret:
-          description: 'The secret part of the API key pair (ApplicationSecretKey). This is used to sign API requests and is critical for authentication.
-
-            **Important:** The full `key_secret` is only returned at the time of API key creation. For security reasons, subsequent retrievals of this API key will show this field masked (e.g., with asterisks or partially hidden). Store the secret securely upon creation.
-
-            '
-          type: string
-          readOnly: true
-        role:
-          $ref: '#/components/schemas/ApiKeyRole'
-    ApiKeysListResponse:
-      type: object
-      description: Response containing a list of API keys defined for a specific account, used for server-to-server authentication.
-      properties:
-        data:
-          $ref: '#/components/schemas/ApiKeysList'
     CreateApiKeyRequestData:
       allOf:
       - $ref: '#/components/schemas/ApiKey'
@@ -197,39 +209,7 @@ components:
             $ref: '#/components/schemas/ApiKeyRole'
         required:
         - name
-    ApiKeyAuthTypes:
-      type: string
-      description: 'The authentication type for this API key:
-
-        - requestSigning: Each request must be signed with the key and a hash sent in the header (most secure)
-
-        - secretKey: A simpler authentication method using the secret key as a Bearer token in the Authorization header (good security)
-
-        '
-      enum:
-      - requestSigning
-      - secretKey
   responses:
-    ErrorResponse:
-      description: 'Indicates an error occurred while processing the request. The `code` provides an HTTP status code, `message` offers a human-readable explanation or an array of validation errors, and `fields` (if present) specifies which input fields were problematic.
-
-        '
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorData'
-    ApiKeyResponse:
-      description: Details of a single API key, including its name, ID, associated projects, and the API secret (only shown in full upon creation).
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ApiKey'
-    ApiKeysListResponse:
-      description: A list of API keys configured for the account. Each entry includes the key's name, its ID (part of the key itself), and the projects it's scoped to. The secret is masked for existing keys.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ApiKeysListResponse'
     SuccessResponse:
       description: 'A generic success response, typically used for operations that don''t return specific data (like deletions or some updates). The `code` is usually 200, and `message` confirms the successful action.
 
@@ -238,6 +218,26 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/SuccessData'
+    ApiKeyResponse:
+      description: Details of a single API key, including its name, ID, associated projects, and the API secret (only shown in full upon creation).
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiKey'
+    ErrorResponse:
+      description: 'Indicates an error occurred while processing the request. The `code` provides an HTTP status code, `message` offers a human-readable explanation or an array of validation errors, and `fields` (if present) specifies which input fields were problematic.
+
+        '
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorData'
+    ApiKeysListResponse:
+      description: A list of API keys configured for the account. Each entry includes the key's name, its ID (part of the key itself), and the projects it's scoped to. The secret is masked for existing keys.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiKeysListResponse'
   requestBodies:
     CreateApiKeyRequest:
       content:

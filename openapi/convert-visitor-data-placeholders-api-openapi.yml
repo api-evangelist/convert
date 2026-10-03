@@ -100,76 +100,6 @@ paths:
           $ref: '#/components/responses/ErrorResponse'
 components:
   schemas:
-    PageNumber:
-      type: object
-      properties:
-        page:
-          type: integer
-          minimum: 1
-          description: 'The page number for paginated results. For example, if `results_per_page` is 30, `page: 2` will retrieve items 31-60.
-
-            Defaults to 1 if not specified.
-
-            '
-    ErrorData:
-      type: object
-      properties:
-        code:
-          type: integer
-          format: int32
-        message:
-          oneOf:
-          - type: string
-          - type: array
-            items:
-              type: string
-        fields:
-          oneOf:
-          - type: string
-          - type: array
-            items:
-              type: string
-    OnlyCount:
-      type: object
-      properties:
-        onlyCount:
-          type: boolean
-          description: 'If set to `true` in a list request, the response will only contain the total count of matching items (`extra.pagination.items_count`)
-
-            and will not include the actual item data. Useful for quickly getting totals without fetching full datasets.
-
-            '
-    UpdatePlaceholderRequestData:
-      type: object
-      description: Request body for updating a visitor data placeholder.
-      properties:
-        default_value:
-          description: Default value to use when no personalization data is found
-          type: string
-          maxLength: 10000
-        placeholder:
-          description: A unique per project level identifier for the placeholder. Used in {{placeholder}} syntax.
-          type: string
-          maxLength: 128
-    ResultsPerPage:
-      type: object
-      properties:
-        results_per_page:
-          type: integer
-          nullable: true
-          minimum: 0
-          maximum: 50
-          default: 30
-          description: 'Specifies the maximum number of items to return in a single page of results.
-
-            Used for pagination. Default is 30, maximum is 50.
-
-            '
-    Extra:
-      type: object
-      properties:
-        pagination:
-          $ref: '#/components/schemas/Pagination'
     VisitorDataPlaceholder:
       type: object
       description: Base Visitor Data Placeholder Object
@@ -190,6 +120,34 @@ components:
           description: Unix timestamp (UTC) indicating when the placeholder was created
           type: integer
           readOnly: true
+    PlaceholdersList:
+      type: array
+      description: List of visitor data placeholders
+      items:
+        $ref: '#/components/schemas/VisitorDataPlaceholder'
+    UpdatePlaceholderRequestData:
+      type: object
+      description: Request body for updating a visitor data placeholder.
+      properties:
+        default_value:
+          description: Default value to use when no personalization data is found
+          type: string
+          maxLength: 10000
+        placeholder:
+          description: A unique per project level identifier for the placeholder. Used in {{placeholder}} syntax.
+          type: string
+          maxLength: 128
+    PageNumber:
+      type: object
+      properties:
+        page:
+          type: integer
+          minimum: 1
+          description: 'The page number for paginated results. For example, if `results_per_page` is 30, `page: 2` will retrieve items 31-60.
+
+            Defaults to 1 if not specified.
+
+            '
     PlaceholdersListResponseData:
       type: object
       description: Response containing list of visitor data placeholders and extra list metadata
@@ -198,30 +156,24 @@ components:
           $ref: '#/components/schemas/PlaceholdersList'
         extra:
           $ref: '#/components/schemas/Extra'
-    PlaceholdersList:
-      type: array
-      description: List of visitor data placeholders
-      items:
-        $ref: '#/components/schemas/VisitorDataPlaceholder'
-    Pagination:
+    ErrorData:
       type: object
       properties:
-        current_page:
-          description: The current page number being displayed from the paginated set.
+        code:
           type: integer
-          minimum: 1
-        items_count:
-          description: The total number of items available across all pages for the current filter criteria.
-          type: integer
-          minimum: 0
-        items_per_page:
-          description: The number of items included in the current page of results (matches `results_per_page` from the request).
-          type: integer
-          minimum: 0
-        pages_count:
-          description: The total number of pages available for the current filter criteria and `results_per_page` setting.
-          type: integer
-          minimum: 0
+          format: int32
+        message:
+          oneOf:
+          - type: string
+          - type: array
+            items:
+              type: string
+        fields:
+          oneOf:
+          - type: string
+          - type: array
+            items:
+              type: string
     SuccessData:
       type: object
       properties:
@@ -251,36 +203,55 @@ components:
               the `placeholder` value contains the given string.
 
               '
-  requestBodies:
-    CreateVisitorDataPlaceholderRequest:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/CreatePlaceholderRequestData'
-      description: Create visitor data placeholder schema
-      required: true
-    GetVisitorDataPlaceholdersListRequest:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/GetPlaceholdersListRequestData'
-      description: Filter visitor data placeholders list
-      required: false
-    UpdateVisitorDataPlaceholderRequest:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/UpdatePlaceholderRequestData'
-      description: Update visitor data placeholder schema
-      required: true
+    ResultsPerPage:
+      type: object
+      properties:
+        results_per_page:
+          type: integer
+          nullable: true
+          minimum: 0
+          maximum: 50
+          default: 30
+          description: 'Specifies the maximum number of items to return in a single page of results.
+
+            Used for pagination. Default is 30, maximum is 50.
+
+            '
+    Pagination:
+      type: object
+      properties:
+        current_page:
+          description: The current page number being displayed from the paginated set.
+          type: integer
+          minimum: 1
+        items_count:
+          description: The total number of items available across all pages for the current filter criteria.
+          type: integer
+          minimum: 0
+        items_per_page:
+          description: The number of items included in the current page of results (matches `results_per_page` from the request).
+          type: integer
+          minimum: 0
+        pages_count:
+          description: The total number of pages available for the current filter criteria and `results_per_page` setting.
+          type: integer
+          minimum: 0
+    Extra:
+      type: object
+      properties:
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+    OnlyCount:
+      type: object
+      properties:
+        onlyCount:
+          type: boolean
+          description: 'If set to `true` in a list request, the response will only contain the total count of matching items (`extra.pagination.items_count`)
+
+            and will not include the actual item data. Useful for quickly getting totals without fetching full datasets.
+
+            '
   parameters:
-    PlaceholderId:
-      name: placeholder_id
-      in: path
-      required: true
-      description: ID of the placeholder to be retrieved/updated/deleted
-      schema:
-        type: integer
     AccountId:
       name: account_id
       in: path
@@ -295,7 +266,22 @@ components:
       description: ID of the project to be retrieved
       schema:
         type: integer
+    PlaceholderId:
+      name: placeholder_id
+      in: path
+      required: true
+      description: ID of the placeholder to be retrieved/updated/deleted
+      schema:
+        type: integer
   responses:
+    SuccessResponse:
+      description: 'A generic success response, typically used for operations that don''t return specific data (like deletions or some updates). The `code` is usually 200, and `message` confirms the successful action.
+
+        '
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SuccessData'
     VisitorDataPlaceholdersListResponse:
       description: Response object containing the list of visitor data placeholders defined in the project
       content:
@@ -316,14 +302,28 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/VisitorDataPlaceholder'
-    SuccessResponse:
-      description: 'A generic success response, typically used for operations that don''t return specific data (like deletions or some updates). The `code` is usually 200, and `message` confirms the successful action.
-
-        '
+  requestBodies:
+    GetVisitorDataPlaceholdersListRequest:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/SuccessData'
+            $ref: '#/components/schemas/GetPlaceholdersListRequestData'
+      description: Filter visitor data placeholders list
+      required: false
+    CreateVisitorDataPlaceholderRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CreatePlaceholderRequestData'
+      description: Create visitor data placeholder schema
+      required: true
+    UpdateVisitorDataPlaceholderRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UpdatePlaceholderRequestData'
+      description: Update visitor data placeholder schema
+      required: true
   securitySchemes:
     requestSigning:
       type: apiKey

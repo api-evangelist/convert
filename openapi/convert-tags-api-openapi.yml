@@ -204,6 +204,43 @@ paths:
           $ref: '#/components/responses/ErrorResponse'
 components:
   schemas:
+    BulkEntityError:
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          description: The unique identifier of the entity that could not be processed.
+        message:
+          type: string
+          description: A message explaining the reason for the failure for this specific entity.
+    BulkTagsIds:
+      type: array
+      description: A list of tag unique numerical identifiers to be affected by a bulk delete operation.
+      items:
+        type: integer
+      minItems: 1
+      maxItems: 100
+    BulkDeleteTagRequestData:
+      type: object
+      description: Request body for bulk deleting multiple tags. Contains a list of tag IDs to be permanently removed.
+      additionalProperties: false
+      properties:
+        id:
+          $ref: '#/components/schemas/BulkTagsIds'
+      required:
+      - id
+    PageNumber:
+      type: object
+      properties:
+        page:
+          type: integer
+          minimum: 1
+          description: 'The page number for paginated results. For example, if `results_per_page` is 30, `page: 2` will retrieve items 31-60.
+
+            Defaults to 1 if not specified.
+
+            '
     GetTagsListRequestData:
       allOf:
       - $ref: '#/components/schemas/TagsListDataOptions'
@@ -232,20 +269,6 @@ components:
             maxLength: 100
             nullable: true
             description: A search string that would be used to search against Tag's name
-    PageNumber:
-      type: object
-      properties:
-        page:
-          type: integer
-          minimum: 1
-          description: 'The page number for paginated results. For example, if `results_per_page` is 30, `page: 2` will retrieve items 31-60.
-
-            Defaults to 1 if not specified.
-
-            '
-    TagsListDataOptions:
-      allOf:
-      - $ref: '#/components/schemas/ResultsPerPage'
     ErrorData:
       type: object
       properties:
@@ -264,83 +287,6 @@ components:
           - type: array
             items:
               type: string
-    TagsList:
-      type: array
-      items:
-        $ref: '#/components/schemas/Tag'
-    ResultsPerPage:
-      type: object
-      properties:
-        results_per_page:
-          type: integer
-          nullable: true
-          minimum: 0
-          maximum: 50
-          default: 30
-          description: 'Specifies the maximum number of items to return in a single page of results.
-
-            Used for pagination. Default is 30, maximum is 50.
-
-            '
-    Extra:
-      type: object
-      properties:
-        pagination:
-          $ref: '#/components/schemas/Pagination'
-    BulkTagsIds:
-      type: array
-      description: A list of tag unique numerical identifiers to be affected by a bulk delete operation.
-      items:
-        type: integer
-      minItems: 1
-      maxItems: 100
-    TagToCreate:
-      allOf:
-      - $ref: '#/components/schemas/Tag'
-      required:
-      - name
-    UpdateTagRequestData:
-      allOf:
-      - $ref: '#/components/schemas/Tag'
-    BulkDeleteTagRequestData:
-      type: object
-      description: Request body for bulk deleting multiple tags. Contains a list of tag IDs to be permanently removed.
-      additionalProperties: false
-      properties:
-        id:
-          $ref: '#/components/schemas/BulkTagsIds'
-      required:
-      - id
-    CreateTagRequestData:
-      allOf:
-      - $ref: '#/components/schemas/TagToCreate'
-    TagsListResponseData:
-      type: object
-      description: Response containing a list of tags defined within a project, along with pagination details if applicable.
-      properties:
-        data:
-          $ref: '#/components/schemas/TagsList'
-        extra:
-          $ref: '#/components/schemas/Extra'
-    Pagination:
-      type: object
-      properties:
-        current_page:
-          description: The current page number being displayed from the paginated set.
-          type: integer
-          minimum: 1
-        items_count:
-          description: The total number of items available across all pages for the current filter criteria.
-          type: integer
-          minimum: 0
-        items_per_page:
-          description: The number of items included in the current page of results (matches `results_per_page` from the request).
-          type: integer
-          minimum: 0
-        pages_count:
-          description: The total number of pages available for the current filter criteria and `results_per_page` setting.
-          type: integer
-          minimum: 0
     SuccessData:
       type: object
       properties:
@@ -385,31 +331,77 @@ components:
           description: (Optional) A brief explanation of the tag's purpose or the criteria for its application.
           maxLength: 200
           nullable: true
-    BulkEntityError:
+    TagsList:
+      type: array
+      items:
+        $ref: '#/components/schemas/Tag'
+    TagToCreate:
+      allOf:
+      - $ref: '#/components/schemas/Tag'
+      required:
+      - name
+    ResultsPerPage:
       type: object
-      additionalProperties: false
       properties:
-        id:
+        results_per_page:
           type: integer
-          description: The unique identifier of the entity that could not be processed.
-        message:
-          type: string
-          description: A message explaining the reason for the failure for this specific entity.
-  responses:
-    ErrorResponse:
-      description: 'Indicates an error occurred while processing the request. The `code` provides an HTTP status code, `message` offers a human-readable explanation or an array of validation errors, and `fields` (if present) specifies which input fields were problematic.
+          nullable: true
+          minimum: 0
+          maximum: 50
+          default: 30
+          description: 'Specifies the maximum number of items to return in a single page of results.
 
-        '
+            Used for pagination. Default is 30, maximum is 50.
+
+            '
+    Pagination:
+      type: object
+      properties:
+        current_page:
+          description: The current page number being displayed from the paginated set.
+          type: integer
+          minimum: 1
+        items_count:
+          description: The total number of items available across all pages for the current filter criteria.
+          type: integer
+          minimum: 0
+        items_per_page:
+          description: The number of items included in the current page of results (matches `results_per_page` from the request).
+          type: integer
+          minimum: 0
+        pages_count:
+          description: The total number of pages available for the current filter criteria and `results_per_page` setting.
+          type: integer
+          minimum: 0
+    CreateTagRequestData:
+      allOf:
+      - $ref: '#/components/schemas/TagToCreate'
+    Extra:
+      type: object
+      properties:
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+    UpdateTagRequestData:
+      allOf:
+      - $ref: '#/components/schemas/Tag'
+    TagsListResponseData:
+      type: object
+      description: Response containing a list of tags defined within a project, along with pagination details if applicable.
+      properties:
+        data:
+          $ref: '#/components/schemas/TagsList'
+        extra:
+          $ref: '#/components/schemas/Extra'
+    TagsListDataOptions:
+      allOf:
+      - $ref: '#/components/schemas/ResultsPerPage'
+  responses:
+    TagsListResponse:
+      description: A list of tags defined within a project. Each tag has an `id`, `name`, and `description`. Tags are used for organizing entities like experiences or goals.
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/ErrorData'
-    TagResponse:
-      description: Details for a single tag, including its `id`, `name`, and `description`.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Tag'
+            $ref: '#/components/schemas/TagsListResponseData'
     SuccessResponse:
       description: 'A generic success response, typically used for operations that don''t return specific data (like deletions or some updates). The `code` is usually 200, and `message` confirms the successful action.
 
@@ -418,12 +410,6 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/SuccessData'
-    TagsListResponse:
-      description: A list of tags defined within a project. Each tag has an `id`, `name`, and `description`. Tags are used for organizing entities like experiences or goals.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/TagsListResponseData'
     BulkSuccessResponse:
       description: 'Indicates the outcome of a bulk operation (e.g., bulk update or delete). Provides a general success `message` and an `errors` array listing any entities that could not be processed, along with the reason for failure for each.
 
@@ -432,6 +418,20 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/BulkSuccessData'
+    TagResponse:
+      description: Details for a single tag, including its `id`, `name`, and `description`.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Tag'
+    ErrorResponse:
+      description: 'Indicates an error occurred while processing the request. The `code` provides an HTTP status code, `message` offers a human-readable explanation or an array of validation errors, and `fields` (if present) specifies which input fields were problematic.
+
+        '
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorData'
   requestBodies:
     BulkDeleteTagsRequest:
       content:

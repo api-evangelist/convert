@@ -384,609 +384,89 @@ paths:
           $ref: '#/components/responses/ErrorResponse'
 components:
   schemas:
-    ProjectLiveFilteringOptions:
-      type: object
-      description: Filters for the live data feed of a single project.
-      properties:
-        experiences:
-          type: array
-          nullable: true
-          description: A list of Experience IDs to filter events for. Only events related to these experiences will be returned.
-          items:
-            type: integer
-        event_types:
-          type: array
-          nullable: true
-          items:
-            $ref: '#/components/schemas/LiveDataEventTypes'
-        goals:
-          type: array
-          nullable: true
-          description: A list of Goal IDs to filter conversion/transaction events for.
-          maxItems: 20
-          items:
-            type: integer
-        segments:
-          nullable: true
-          allOf:
-          - $ref: '#/components/schemas/ReportingSegmentsFilters'
-    ErrorData:
-      type: object
-      properties:
-        code:
-          type: integer
-          format: int32
-        message:
-          oneOf:
-          - type: string
-          - type: array
-            items:
-              type: string
-        fields:
-          oneOf:
-          - type: string
-          - type: array
-            items:
-              type: string
-    ProjectsList:
-      type: array
-      description: A list of project objects.
-      items:
-        $ref: '#/components/schemas/Project'
-    SimpleExperienceVariation:
-      type: object
-      properties:
-        id:
-          description: The unique numerical identifier of the variation.
-          type: integer
-        name:
-          description: The user-defined, friendly name of the variation.
-          type: string
-    Percentiles:
-      type: number
-      description: 'Standard percentile values used for outlier detection thresholds.
-
-        For example, a `min` of 5 and `max` of 95 means orders in the bottom 5% and top 5% of values are considered outliers and capped.
-
-        '
-      enum:
-      - 1
-      - 5
-      - 10
-      - 25
-      - 50
-      - 75
-      - 90
-      - 95
-      - 99
-    ReportingSegmentsCountry:
-      type: string
-      description: 'The two-letter ISO 3166-1 alpha-2 country code of the visitor, determined by IP geolocation.
-
-        Used for segmenting reports by country to analyze geographical performance.
-
-        Knowledge Base: "How Do I Target by Geographic Location Like City, Region or Country?".
-
-        '
-      maxLength: 2
-      minLength: 2
     ProjectIntegrationGA3:
       allOf:
       - $ref: '#/components/schemas/ProjectGASettingsBase'
       - $ref: '#/components/schemas/IntegrationGA3'
-    IntegrationGA3:
-      type: object
-      properties:
-        type:
-          enum:
-          - ga3
-        property_UA:
-          type: string
-          maxLength: 150
-          nullable: true
-          description: The Universal Analytics Property ID (e.g., "UA-XXXXXXXX-Y") to which Convert experiment data will be sent.
-    SE_ProcSettingsBase:
-      type: object
-      properties:
-        stats_type:
-          $ref: '#/components/schemas/SE_ProcTypes'
-    SimpleProjectExpandable:
-      oneOf:
-      - type: integer
-        description: Project ID
-      - $ref: '#/components/schemas/SimpleProject'
-    ChangeHistoryExpandFields:
-      type: string
-      enum:
-      - project
-    ChangeHistory:
-      type: object
-      description: Represents a single logged change event, providing an audit trail for actions performed on Convert entities.
-      properties:
-        event:
-          type: string
-          description: The type of action performed (e.g., 'create', 'update', 'delete', 'activate', 'pause').
-        info:
-          type: object
-          description: (Deprecated) Additional context about the change. Modern implementations use the `changes` object.
-          deprecated: true
-          properties:
-            isAdminChange:
-              type: boolean
-              description: Whether the change was made by a Convert super-admin.
-            text:
-              type: string
-              description: Legacy textual description of the change.
-        changes:
-          type: object
-          description: 'Detailed record of what was modified. Contains `old` and `new` value snapshots for the changed fields.
-
-            For a ''create'' event, `old` will be null. For a ''delete'' event, `new` will be null.
-
-            This allows tracking specific attribute modifications.
-
-            '
-          properties:
-            old:
-              type: object
-              description: A snapshot of the relevant fields and their values *before* the change was applied. Null for creation events.
-              nullable: true
-            new:
-              type: object
-              description: A snapshot of the relevant fields and their values *after* the change was applied. Null for deletion events.
-              nullable: true
-        method:
-          type: string
-          description: 'How the change was initiated: ''api'' (programmatic) or ''app'' (via Convert UI).
-
-            '
-          items:
-            $ref: '#/components/schemas/ChangeHistoryMethods'
-        object:
-          type: string
-          description: 'The type of Convert entity that was changed (e.g., ''experience'', ''goal'', ''audience'').
-
-            '
-        object_id:
-          type: string
-          description: The unique identifier of the specific entity that was changed.
-        parent_object_id:
-          type: string
-          nullable: true
-          description: The unique identifier of the parent entity related to this change. For example, for a 'variation' or 'change', this will be the corresponding 'experience' id.
-        user:
-          type: string
-          description: The name or email of the user (or API key name) that performed the action.
-        timestamp:
-          type: integer
-          description: Unix timestamp (UTC) indicating when the change occurred.
-        request_id:
-          type: string
-          nullable: true
-          description: A unique identifier for the specific API request or UI action that resulted in this change, useful for tracing and debugging.
-        project:
-          nullable: true
-          allOf:
-          - $ref: '#/components/schemas/SimpleProjectExpandable'
-    ImportProjectRequestData:
-      allOf:
-      - type: object
-        properties:
-          file:
-            type: string
-            format: json
-            description: 'The JSON file containing project data to be imported.
-
-              '
-        required:
-        - file
-    CustomDomainOwnershipVerificationItem:
-      type: object
-      properties:
-        name:
-          type: string
-          description: The name of the DNS record.
-        type:
-          $ref: '#/components/schemas/DNSRecordTypes'
-        value:
-          type: string
-          description: The value of the DNS record.
-    ProjectsListFilteringOptions:
-      allOf:
-      - $ref: '#/components/schemas/ResultsPerPage'
-      - $ref: '#/components/schemas/SortDirection'
-      - type: object
-        properties:
-          status:
-            type: array
-            nullable: true
-            items:
-              type: string
-              enum:
-              - active
-              - inactive
-            description: Filters projects by their status
-          search:
-            type: string
-            maxLength: 200
-            nullable: true
-            description: A search string that would be used to search against Project's name and description
-          legacy_script:
-            type: boolean
-            nullable: true
-            enum:
-            - true
-            - false
-            description: Filters projects based on whether they use the legacy script (`true`) or the new script (`false`).
-          tracking_script_release_type:
-            type: array
-            nullable: true
-            items:
-              $ref: '#/components/schemas/TrackingScriptReleaseTypes'
-            description: Filters projects by their tracking script release type.
-          tracking_script_version:
-            type: object
-            nullable: true
-            description: 'Filters projects by their tracking script version.
-
-              '
-            properties:
-              is:
-                type: string
-              isNot:
-                type: string
-          only:
-            description: 'Only retrieve projects with the given ids.
-
-              '
-            type: array
-            nullable: true
-            items:
-              type: integer
-            maxItems: 100
-          except:
-            description: 'Except projects with the given ids.
-
-              '
-            type: array
-            items:
-              type: integer
-            maxItems: 100
-          sort_by:
-            type: string
-            nullable: true
-            default: id
-            description: 'A value to sort projects by specific field(s)
-
-
-              Defaults to **id** if not provided
-
-              '
-            enum:
-            - id
-            - active_tests
-            - project_name
-            - project_type
-            - status
-            - used_visitors
-          project_type:
-            type: array
-            nullable: true
-            items:
-              type: string
-              enum:
-              - web
-              - fullstack
-            description: Filters projects by their type.
-    ProjectHistoryRequestData:
-      allOf:
-      - $ref: '#/components/schemas/OnlyCount'
-      - $ref: '#/components/schemas/PageNumber'
-      - $ref: '#/components/schemas/ProjectHistoryFilteringOptions'
-    LiveDataEventsList:
+    BulkProjectIds:
       type: array
-      description: A list of live data event objects, showing real-time interactions.
+      description: A list of project unique numerical identifiers to be affected by a bulk operation.
       items:
-        $ref: '#/components/schemas/LiveDataEvent'
-    SimpleLocation:
+        type: integer
+      minItems: 1
+      maxItems: 100
+    GeneratedDebugTokenDataResponse:
       type: object
       properties:
-        id:
-          type: integer
-          description: The unique numerical identifier of the location.
-          readOnly: true
-        name:
-          type: string
-          description: The user-defined, friendly name of the location.
-          maxLength: 100
-    ExportProjectRequestData:
+        data:
+          $ref: '#/components/schemas/GenerateDebugTokenData'
+    TrackingScriptAvailableVersions:
+      type: array
+      description: A list of available versions for the Convert tracking script, each with a version tag, changelog, release date, and potentially the date it was or will be applied to the project.
+      readOnly: true
+      items:
+        type: object
+        properties:
+          version:
+            type: string
+            description: The version tag string (e.g., "v2.11.3", "v3.0.0-beta1").
+          changelog:
+            type: string
+            nullable: true
+            description: A summary of changes, improvements, and bug fixes included in this script version.
+          released_date:
+            type: integer
+            format: int64
+            description: Unix timestamp (UTC) when this script version was officially released by Convert.
+          apply_date:
+            type: integer
+            format: int64
+            nullable: true
+            description: Unix timestamp (UTC) when this version was (or is scheduled to be) applied to the project, if using manual or scheduled updates.
+    ReportingSegmentsSource:
+      type: string
+      description: 'The traffic source that brought the visitor to the site (e.g., ''google'', ''facebook.com'', ''direct'', ''newsletter'').
+
+        Derived from `utm_source` URL parameters or the HTTP referrer. Enables report segmentation by traffic source.
+
+        Knowledge Base: "How Do You Fill Medium, Keyword and Source Name?".
+
+        '
+      enum:
+      - campaign
+      - search
+      - referral
+      - direct
+      - ai_tool
+    VisitorInsightsBase:
       type: object
       properties:
-        includeProject:
+        enabled:
+          type: boolean
+          description: 'If true, Convert Signals™ is enabled for the project, allowing the system to capture sessions exhibiting user frustration or usability issues.
+
+            '
+        obfuscate_text:
           type: boolean
           default: true
-          description: If true (default), includes the main project settings and configurations in the export. If false, only selected sub-entities (experiences, goals, etc.) might be exported.
-        experiences:
-          $ref: '#/components/schemas/ProjectExportObject'
-        audiences:
-          $ref: '#/components/schemas/ProjectExportObject'
-        locations:
-          $ref: '#/components/schemas/ProjectExportObject'
-        goals:
-          $ref: '#/components/schemas/ProjectExportObject'
-        hypothesis:
-          $ref: '#/components/schemas/ProjectExportObject'
-    MetricTypes:
-      type: string
-      description: 'The primary types of performance metrics calculated by the reporting engine for each goal.
-
-        - `conversion_rate`: The percentage of visitors who completed the goal (Conversions / Visitors).
-
-        - `avg_revenue_visitor`: Average Revenue Per Visitor (RPV = Total Revenue / Total Visitors). Applicable for revenue goals.
-
-        - `avg_products_ordered_visitor`: Average Products Per Visitor (APPV = Total Products Ordered / Total Visitors). Applicable for revenue goals tracking product counts.
-
-        - `average_order_value`: Average Order Value (AOV = Total Revenue / Total Conversions). Applicable for revenue goals tracking order value.
-
-        - `average_products_per_order`: Average Products Per Order (APPO = Total Products Ordered Per Visitor / Total Conversions). Applicable for revenue goals tracking product counts.
-
-        Knowledge Base: "Understanding Report Metrics in Convert".
-
-        '
-      enum:
-      - conversion_rate
-      - avg_revenue_visitor
-      - avg_products_ordered_visitor
-      - average_order_value
-      - average_products_per_order
-    TrackingScriptReleaseManual:
-      allOf:
-      - $ref: '#/components/schemas/TrackingScriptReleaseBase'
-      - type: object
-        additionalProperties: false
-        properties:
-          type:
-            enum:
-            - manual
-    ProjectIntegrationGA4:
-      allOf:
-      - $ref: '#/components/schemas/ProjectGASettingsBase'
-      - $ref: '#/components/schemas/IntegrationGA4'
-      - type: object
-        properties:
-          no_wait_pageview:
-            type: boolean
-            description: Boolean indicating whether to wait for the page view event to complete before sending other events.
-    ReportingSegmentsVisitorType:
-      type: string
-      description: 'Classifies the visitor as either ''new'' or ''returning'' based on their site visit history (tracked by Convert cookies).
-
-        - `new`: First-time visitor to the site (or no existing Convert cookie).
-
-        - `returning`: Visitor has been to the site before.
-
-        Allows report segmentation to compare behavior of new vs. returning users.
-
-        Knowledge Base: "What is a New/Returning Visitor as Defined in an Experiment''s Audience?".
-
-        '
-      enum:
-      - new
-      - returning
-    TrackingScriptReleaseBase:
-      type: object
-      description: Base settings for managing how new versions of the Convert tracking script are applied to the project.
-      properties:
-        type:
-          type: string
-          description: 'The chosen strategy for updating the tracking script: ''manual'', ''latest'' (auto-update), or ''scheduled''.
+          description: 'True when all text elements (apart from placeholders) should be obfuscated inside a recording.
 
             '
-    SimpleExperienceFlat:
-      type: object
-      properties:
-        id:
-          description: The unique numerical identifier of the experience.
+        sampling_rate:
           type: integer
-        variation:
-          $ref: '#/components/schemas/SimpleExperienceVariationExpandable'
-    LiveDataEventTypes:
-      type: string
-      enum:
-      - view_experience
-      - conversion
-      - transaction
-    ProjectsListIncludeField:
-      $ref: '#/components/schemas/ProjectIncludeFields'
-    GA_Settings:
-      oneOf:
-      - $ref: '#/components/schemas/ProjectIntegrationGA3'
-      - $ref: '#/components/schemas/ProjectIntegrationGA4'
-      discriminator:
-        propertyName: type
-        mapping:
-          ga3: '#/components/schemas/ProjectIntegrationGA3'
-          ga4: '#/components/schemas/ProjectIntegrationGA4'
-    NumericOutlierBase:
-      type: object
-      properties:
-        detection_type:
-          $ref: '#/components/schemas/NumericOutlierTypes'
-      required:
-      - detection_type
-    LiveDataExpandParameter:
-      type: object
-      properties:
-        expand:
-          type: array
-          nullable: true
-          description: 'Specifies linked objects to expand in the live data response.
+          default: 5
+          enum:
+          - 5
+          - 10
+          - 20
+          - 30
+          - 40
+          - 50
+          description: 'The percentage of visitors included in sampling for Convert Signals session recordings and Heatmaps for this project.
 
-            Refer to the [Expanding Fields](#tag/Expandable-Fields) section.
+            Higher values collect data from a larger share of traffic and consume allocation faster.
 
             '
-          items:
-            $ref: '#/components/schemas/LiveDataExpandFields'
-    Domain:
-      type: object
-      description: A website domain data.
-      properties:
-        id:
-          type: integer
-          description: Domain ID.
-          readOnly: true
-        url:
-          type: string
-          maxLength: 150
-          pattern: ^(http|https)://
-          description: Domain's homepage url
-        code_installed:
-          type: boolean
-          description: Indicating whether code installed check passed sometimes in the past.
-          default: false
-    SimpleAudienceSegmentExpandable:
-      oneOf:
-      - type: integer
-        description: Segment ID
-      - $ref: '#/components/schemas/SimpleAudienceSegment'
-    LiveDataEvent:
-      type: object
-      description: Represents a single real-time tracking event, such as a visitor being exposed to an experience or triggering a conversion goal.
-      properties:
-        devices:
-          description: 'A list of device categories the visitor''s device belongs to (e.g., "DESK" for desktop, "IPH" for iPhone, "ALLTAB" for any tablet).
-
-            Based on User-Agent parsing. KB: "Targeting Mobile, Tablet, and Desktop".
-
-            '
-          type: array
-          items:
-            $ref: '#/components/schemas/ReportingSegmentsDeviceCategories'
-        browser:
-          $ref: '#/components/schemas/ReportingSegmentsBrowser'
-        country:
-          $ref: '#/components/schemas/ReportingSegmentsCountry'
-        visitor_type:
-          $ref: '#/components/schemas/ReportingSegmentsVisitorType'
-        campaign:
-          allOf:
-          - $ref: '#/components/schemas/ReportingSegmentsCampaign'
-          nullable: true
-        custom_segments:
-          description: A list of custom Convert Audiences (of type 'segmentation') that this visitor is currently a member of.
-          type: array
-          items:
-            $ref: '#/components/schemas/SimpleAudienceSegmentExpandable'
-          nullable: true
-        sources:
-          description: The traffic source(s) attributed to the visitor's session (e.g., 'direct', 'referral', 'Search', 'Campaign'). Derived from UTM parameters or referrer.
-          type: array
-          items:
-            $ref: '#/components/schemas/ReportingSegmentsSource'
-          nullable: true
-        event_type:
-          $ref: '#/components/schemas/LiveDataEventTypes'
-        experiences:
-          type: array
-          description: 'A list of experiences relevant to this event.
-
-            - If `event_type` is ''view_experience'', this list contains the experience(s) the visitor was just bucketed into.
-
-            - If `event_type` is ''conversion'' or ''transaction'', this list contains the experience(s) the visitor was part of when they triggered the goal/transaction.
-
-            Each item can be an experience ID or an expanded simple experience object (ID, name, variation ID/name).
-
-            '
-          items:
-            $ref: '#/components/schemas/SimpleExperienceExpandable'
-          nullable: true
-        conversion:
-          description: Details about the conversion event, present if `event_type` is 'conversion' or 'transaction'.
-          type: object
-          nullable: true
-          properties:
-            goals:
-              type: array
-              items:
-                $ref: '#/components/schemas/SimpleGoalExpandable'
-            products_ordered_count:
-              type: integer
-              description: For 'transaction' events, the number of distinct products included in the order.
-              nullable: true
-            revenue:
-              type: number
-              description: For 'transaction' events, the monetary value of the order.
-              nullable: true
-        project:
-          allOf:
-          - $ref: '#/components/schemas/SimpleProjectExpandable'
-        timestamp:
-          type: integer
-          description: Unix timestamp (UTC) indicating precisely when this event occurred.
-    SimpleAudienceSegment:
-      type: object
-      properties:
-        id:
-          description: The unique numerical identifier of the segment (audience).
-          type: integer
-        name:
-          description: The user-defined, friendly name of the segment.
-          type: string
-    IntegrationGA4:
-      allOf:
-      - $ref: '#/components/schemas/IntegrationGA4Base'
-      - type: object
-        properties:
-          propertyId:
-            type: string
-            description: ID of the ga4 property where data will be sent. Used internally for API calls to GoogleAnalytics
-    NumericOutlierMinMax:
-      allOf:
-      - $ref: '#/components/schemas/NumericOutlierBase'
-      - type: object
-        additionalProperties: false
-        properties:
-          detection_type:
-            enum:
-            - min_max
-          min:
-            type: number
-            description: Minimum value for the outlier detection, under which, the value is considered an outlier
-          max:
-            type: number
-            description: Maximum value for the outlier detection, over which, the value is considered an outlier
-    SimpleProject:
-      type: object
-      properties:
-        id:
-          description: The unique numerical identifier of the project.
-          type: integer
-        name:
-          description: The user-defined, friendly name of the project.
-          type: string
-        reporting_settings:
-          type: object
-          description: Essential reporting settings for the project.
-          properties:
-            currency_symbol:
-              type: string
-              description: The default currency symbol used in reports for this project (e.g., "$", "€").
-              maxLength: 10
-        settings:
-          type: object
-          description: Essential general settings for the project.
-          properties:
-            time_zone:
-              type: string
-              description: The configured timezone for the project (e.g., "America/New_York").
-            utc_offset:
-              $ref: '#/components/schemas/UTC_Offset'
-            time_format:
-              type: string
-              description: Preferred time display format ('12h' or '24h') in the UI for this project.
-              enum:
-              - 12h
-              - 24h
     TrackingScriptRelease:
       oneOf:
       - $ref: '#/components/schemas/TrackingScriptReleaseManual'
@@ -998,183 +478,53 @@ components:
           manual: '#/components/schemas/TrackingScriptReleaseManual'
           latest: '#/components/schemas/TrackingScriptReleaseLatest'
           scheduled: '#/components/schemas/TrackingScriptReleaseScheduled'
-    ChangeHistoryListResponseData:
+    SimpleGoalExpandable:
+      oneOf:
+      - type: integer
+        description: Goal ID
+      - $ref: '#/components/schemas/SimpleGoal'
+    PageNumber:
       type: object
       properties:
-        data:
-          $ref: '#/components/schemas/ChangeHistoryList'
-        extra:
-          $ref: '#/components/schemas/Extra'
-    BulkProjectIds:
-      type: array
-      description: A list of project unique numerical identifiers to be affected by a bulk operation.
-      items:
-        type: integer
-      minItems: 1
-      maxItems: 100
-    BulkUpdateProjectsRequestData:
-      type: object
-      description: Request body for bulk updating settings (like tracking script version) for multiple projects.
-      additionalProperties: false
-      properties:
-        id:
-          $ref: '#/components/schemas/BulkProjectIds'
-        settings:
-          type: object
-          description: Project settings to be updated across the specified projects.
-          additionalProperties: false
-          properties:
-            tracking_script:
-              type: object
-              description: Tracking script settings to apply, specifically the `current_version`.
-              additionalProperties: false
-              properties:
-                current_version:
-                  type: string
-                  description: The target tracking script version string to apply to all selected projects.
-      required:
-      - id
-    ImportProjectDataSuccess:
+        page:
+          type: integer
+          minimum: 1
+          description: 'The page number for paginated results. For example, if `results_per_page` is 30, `page: 2` will retrieve items 31-60.
+
+            Defaults to 1 if not specified.
+
+            '
+    ChangeHistoryExpandFields:
+      type: string
+      enum:
+      - project
+    ProjectsListIncludeField:
+      $ref: '#/components/schemas/ProjectIncludeFields'
+    UTC_Offset:
+      type: integer
+      description: 'The time offset from Coordinated Universal Time (UTC) in seconds.
+
+        For example, UTC-5 (EST) would be -18000. UTC+2 would be 7200.
+
+        Used for interpreting or displaying date/time information according to a specific timezone.
+
+        '
+      default: 0
+      minimum: -43200
+      maximum: 50400
+    BulkSuccessData:
       allOf:
       - $ref: '#/components/schemas/SuccessData'
       - type: object
         properties:
-          imported:
-            type: object
-            description: List of imported objects
-            properties:
-              experiences:
-                type: array
-                description: List of created experiences. Empty if nothing imported
-                items:
-                  type: integer
-              audiences:
-                type: array
-                description: List of created audiences. Empty if nothing imported
-                items:
-                  type: integer
-              locations:
-                type: array
-                description: List of created locations. Empty if nothing imported
-                items:
-                  type: integer
-              goals:
-                type: array
-                description: List of created goals. Empty if nothing imported
-                items:
-                  type: integer
-              hypothesis:
-                type: array
-                description: List of created hypothesis. Empty if nothing imported
-                items:
-                  type: integer
-    ProjectsListResponseData:
-      type: object
-      description: Response containing a list of projects accessible to the user, along with pagination details if applicable.
-      properties:
-        data:
-          $ref: '#/components/schemas/ProjectsList'
-        extra:
-          $ref: '#/components/schemas/Extra'
-    ProjectsExportResponseFile:
-      type: object
-      description: Represents the structure of the JSON file exported for a project, containing all its configurations (experiences, goals, audiences, etc.).
-    ChangeHistoryMethods:
-      type: string
-      enum:
-      - api
-      - app
-    SE_ProcSettingsFrequentist:
-      allOf:
-      - $ref: '#/components/schemas/SE_ProcSettingsBase'
-      - type: object
-        description: Stats Engine Settings needed for the Frequentist processing
-        properties:
-          stats_type:
-            enum:
-            - frequentist
-          confidence:
-            description: Confidence value to be used (in percent)
-            type: number
-            minimum: 50
-            maximum: 99
-            multipleOf: 1
-          power:
-            description: Statistical power value to be used (in percent)
-            type: number
-            minimum: 10
-            maximum: 99
-            multipleOf: 1
-          test_type:
-            description: The type of test applied to the data
-            type: string
-            default: two_tails
-            enum:
-            - one_tail
-            - one_tail_left
-            - one_tail_right
-            - two_tails
-            - sequential
-          multiple_comparison_correction:
-            description: Multiple comparison correction
-            type: string
-            enum:
-            - none
-            - bonferroni
-            - sidak
-          power_calculation_type:
-            description: Power calculation type
-            type: string
-            default: dynamic_mde
-            enum:
-            - dynamic_mde
-            - fixed_mde
-          fixed_mde:
-            description: Fixed minimum detectable effect (corresponding to the relative improvement in percent)
-            type: number
-            minimum: 0
-            maximum: 10000
-          mab_settings:
-            allOf:
-            - $ref: '#/components/schemas/SE_MabSettings'
-            nullable: true
-    DomainToCreate:
-      required:
-      - url
-      allOf:
-      - $ref: '#/components/schemas/Domain'
-    ReportingSegmentsCampaign:
-      type: string
-      description: 'The campaign name associated with the visitor''s session, typically derived from `utm_campaign` URL parameters.
-
-        Allows report segmentation by marketing campaign.
-
-        Knowledge Base: "How Do You Fill Medium, Keyword and Source Name?".
-
-        '
-    NumericOutlierNone:
-      allOf:
-      - $ref: '#/components/schemas/NumericOutlierBase'
-      - type: object
-        additionalProperties: false
-        properties:
-          detection_type:
-            enum:
-            - none
-    GeneratedDebugTokenDataResponse:
-      type: object
-      properties:
-        data:
-          $ref: '#/components/schemas/GenerateDebugTokenData'
-    SimpleGoal:
-      type: object
-      properties:
-        id:
-          description: The unique numerical identifier of the goal.
-          type: integer
-        name:
-          description: The user-defined, friendly name of the goal.
-          type: string
+          code:
+            type: integer
+            format: int32
+          errors:
+            type: array
+            description: List of unprocessed entities. Would be empty, if all passed entities processed
+            items:
+              $ref: '#/components/schemas/BulkEntityError'
     Project:
       description: 'Represents a Convert project, which is a container for organizing a set of related optimization activities (experiences),
 
@@ -1350,6 +700,469 @@ components:
             readOnly: true
             nullable: true
             description: An autogenerated hash key used to retrieve data of fullstack project. Available only for fullstack projects type.
+    ChangeHistoryListResponseData:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/ChangeHistoryList'
+        extra:
+          $ref: '#/components/schemas/Extra'
+    ImportProjectDataSuccess:
+      allOf:
+      - $ref: '#/components/schemas/SuccessData'
+      - type: object
+        properties:
+          imported:
+            type: object
+            description: List of imported objects
+            properties:
+              experiences:
+                type: array
+                description: List of created experiences. Empty if nothing imported
+                items:
+                  type: integer
+              audiences:
+                type: array
+                description: List of created audiences. Empty if nothing imported
+                items:
+                  type: integer
+              locations:
+                type: array
+                description: List of created locations. Empty if nothing imported
+                items:
+                  type: integer
+              goals:
+                type: array
+                description: List of created goals. Empty if nothing imported
+                items:
+                  type: integer
+              hypothesis:
+                type: array
+                description: List of created hypothesis. Empty if nothing imported
+                items:
+                  type: integer
+    ReportingSegmentsDeviceCategories:
+      type: string
+      description: 'The category of device used by the visitor. Enables report segmentation by device type.
+
+        - `iPhone`, `other_phones`, `all_phones`: Mobile phone categories.
+
+        - `desktop`: Desktop or laptop computer.
+
+        - `iPad`, `other_tablets`, `all_tablets`: Tablet categories.
+
+        Note: Some devices might fall into multiple categories (e.g., an iPhone is both ''iPhone'' and ''all_phones'').
+
+        Knowledge Base: "Targeting Mobile, Tablet, and Desktop".
+
+        '
+      enum:
+      - iPhone
+      - all_phones
+      - other_phones
+      - desktop
+      - iPad
+      - all_tablets
+      - other_tablets
+    ProjectStatuses:
+      description: 'The overall status of a project:
+
+        - `active`: The project is active, and experiences within it can run and track data.
+
+        - `inactive`: The project is inactive (archived or paused). No experiences within it will run, and no new data will be tracked.
+
+        - `suspended`: The project (or account) has been suspended, typically due to billing issues or terms of service violations. Services are disabled.
+
+        '
+      type: string
+      enum:
+      - active
+      - inactive
+      - suspended
+    CreateProjectRequestData:
+      allOf:
+      - $ref: '#/components/schemas/BaseProject'
+      - type: object
+        properties:
+          domains:
+            type: array
+            items:
+              $ref: '#/components/schemas/DomainToCreate'
+            description: The list of websites included in this project.
+        required:
+        - name
+      - $ref: '#/components/schemas/ProjectsRequestIncludeExpand'
+    TrackingScriptReleaseLatest:
+      allOf:
+      - $ref: '#/components/schemas/TrackingScriptReleaseBase'
+      - type: object
+        additionalProperties: false
+        properties:
+          type:
+            enum:
+            - latest
+    SE_MabSettings:
+      type: object
+      description: 'Configuration for Multi-Armed Bandit (MAB) traffic allocation. If `null`, MAB is disabled and manual traffic allocation is used.
+
+        MAB dynamically allocates more traffic to better-performing variations based on the `primary_metric` of the `primary_goal`.
+
+        KB: "Multi-Armed Bandit (MAB) & Auto-Allocation in Convert".
+
+        '
+      properties:
+        strategy:
+          description: 'The MAB algorithm used for dynamic traffic allocation:
+
+            - `epsilon_greedy`: Mostly exploits the best-known variation, but explores others with a small probability (epsilon).
+
+            - `ucb`: Upper Confidence Bound, balances exploration and exploitation based on uncertainty and potential.
+
+            - `thompson_sampling`: (Default) A Bayesian approach that samples from posterior distributions to choose variations.
+
+            '
+          type: string
+          enum:
+          - epsilon_greedy
+          - ucb
+          - thompson_sampling
+          default: thompson_sampling
+        exploration_rate:
+          description: 'For `epsilon_greedy` strategy, this is the ''epsilon'' value (0 to 1) representing the probability of choosing a random variation for exploration instead of the current best-performing one.
+
+            A higher value means more exploration. Default is often 0.1 or 0.3.
+
+            '
+          type: number
+          minimum: 0
+          maximum: 1
+          enum:
+          - 0
+          - 0.1
+          - 0.2
+          - 0.3
+          - 0.4
+          - 0.5
+          - 0.6
+          - 0.7
+          - 0.8
+          - 0.9
+          - 1
+          default: 0.3
+    SimpleAudienceSegment:
+      type: object
+      properties:
+        id:
+          description: The unique numerical identifier of the segment (audience).
+          type: integer
+        name:
+          description: The user-defined, friendly name of the segment.
+          type: string
+    SimpleExperienceVariation:
+      type: object
+      properties:
+        id:
+          description: The unique numerical identifier of the variation.
+          type: integer
+        name:
+          description: The user-defined, friendly name of the variation.
+          type: string
+    LiveDataExpandParameter:
+      type: object
+      properties:
+        expand:
+          type: array
+          nullable: true
+          description: 'Specifies linked objects to expand in the live data response.
+
+            Refer to the [Expanding Fields](#tag/Expandable-Fields) section.
+
+            '
+          items:
+            $ref: '#/components/schemas/LiveDataExpandFields'
+    SE_ProcSettingsFrequentist:
+      allOf:
+      - $ref: '#/components/schemas/SE_ProcSettingsBase'
+      - type: object
+        description: Stats Engine Settings needed for the Frequentist processing
+        properties:
+          stats_type:
+            enum:
+            - frequentist
+          confidence:
+            description: Confidence value to be used (in percent)
+            type: number
+            minimum: 50
+            maximum: 99
+            multipleOf: 1
+          power:
+            description: Statistical power value to be used (in percent)
+            type: number
+            minimum: 10
+            maximum: 99
+            multipleOf: 1
+          test_type:
+            description: The type of test applied to the data
+            type: string
+            default: two_tails
+            enum:
+            - one_tail
+            - one_tail_left
+            - one_tail_right
+            - two_tails
+            - sequential
+          multiple_comparison_correction:
+            description: Multiple comparison correction
+            type: string
+            enum:
+            - none
+            - bonferroni
+            - sidak
+          power_calculation_type:
+            description: Power calculation type
+            type: string
+            default: dynamic_mde
+            enum:
+            - dynamic_mde
+            - fixed_mde
+          fixed_mde:
+            description: Fixed minimum detectable effect (corresponding to the relative improvement in percent)
+            type: number
+            minimum: 0
+            maximum: 10000
+          mab_settings:
+            allOf:
+            - $ref: '#/components/schemas/SE_MabSettings'
+            nullable: true
+    ProjectsExportResponseFile:
+      type: object
+      description: Represents the structure of the JSON file exported for a project, containing all its configurations (experiences, goals, audiences, etc.).
+    ReportingSegmentsCountry:
+      type: string
+      description: 'The two-letter ISO 3166-1 alpha-2 country code of the visitor, determined by IP geolocation.
+
+        Used for segmenting reports by country to analyze geographical performance.
+
+        Knowledge Base: "How Do I Target by Geographic Location Like City, Region or Country?".
+
+        '
+      maxLength: 2
+      minLength: 2
+    NumericOutlierNone:
+      allOf:
+      - $ref: '#/components/schemas/NumericOutlierBase'
+      - type: object
+        additionalProperties: false
+        properties:
+          detection_type:
+            enum:
+            - none
+    ProjectIncludeFields:
+      type: string
+      enum:
+      - global_javascript
+      - domains
+      - stats.usage
+      - stats.active_experiences_count
+      - stats.active_experiments_count
+      - stats.experiences_count
+      - stats.segments_count
+      - stats.active_segments_count
+      - stats.active_goals_count
+      - stats.google_analytics
+      - stats.visitor_data
+      - stats.visitor_insights
+      - default_goals
+      - default_audiences
+      - default_locations
+      - settings.tracking_script.available_versions
+    SE_ProcSettingsBayesian:
+      allOf:
+      - $ref: '#/components/schemas/SE_ProcSettingsBase'
+      - type: object
+        description: Stats Engine Settings needed for the Bayesian processing
+        properties:
+          stats_type:
+            enum:
+            - bayesian
+          decision_threshold:
+            description: Threshold after which a decision can be made
+            type: number
+            minimum: 50
+            maximum: 99
+            multipleOf: 1
+          risk_threshold:
+            description: The maximum acceptable level of potential loss if the chosen variant turns out to be worse than the control. It represents the threshold below which the relative risk of preferring a variant over the control must fall to consider the variant as a strong and relatively safe choice.
+            type: number
+            minimum: 1
+            maximum: 100
+            multipleOf: 1
+          mab_settings:
+            allOf:
+            - $ref: '#/components/schemas/SE_MabSettings'
+            nullable: true
+    SimpleProject:
+      type: object
+      properties:
+        id:
+          description: The unique numerical identifier of the project.
+          type: integer
+        name:
+          description: The user-defined, friendly name of the project.
+          type: string
+        reporting_settings:
+          type: object
+          description: Essential reporting settings for the project.
+          properties:
+            currency_symbol:
+              type: string
+              description: The default currency symbol used in reports for this project (e.g., "$", "€").
+              maxLength: 10
+        settings:
+          type: object
+          description: Essential general settings for the project.
+          properties:
+            time_zone:
+              type: string
+              description: The configured timezone for the project (e.g., "America/New_York").
+            utc_offset:
+              $ref: '#/components/schemas/UTC_Offset'
+            time_format:
+              type: string
+              description: Preferred time display format ('12h' or '24h') in the UI for this project.
+              enum:
+              - 12h
+              - 24h
+    NumericOutlierMinMax:
+      allOf:
+      - $ref: '#/components/schemas/NumericOutlierBase'
+      - type: object
+        additionalProperties: false
+        properties:
+          detection_type:
+            enum:
+            - min_max
+          min:
+            type: number
+            description: Minimum value for the outlier detection, under which, the value is considered an outlier
+          max:
+            type: number
+            description: Maximum value for the outlier detection, over which, the value is considered an outlier
+    TrackingScriptReleaseBase:
+      type: object
+      description: Base settings for managing how new versions of the Convert tracking script are applied to the project.
+      properties:
+        type:
+          type: string
+          description: 'The chosen strategy for updating the tracking script: ''manual'', ''latest'' (auto-update), or ''scheduled''.
+
+            '
+    ReportingSegmentsBrowser:
+      type: string
+      description: 'The web browser used by the visitor. Used for segmenting reports to understand how experiences perform across different browsers.
+
+        Knowledge Base: "Using Basic and Advanced Post segmentation".
+
+        '
+      enum:
+      - internet_explorer
+      - chrome
+      - firefox
+      - safari
+      - edge
+      - other
+    ProjectExpandFields:
+      type: string
+      enum:
+      - default_goals
+      - default_audiences
+      - default_locations
+    SortDirection:
+      type: object
+      properties:
+        sort_direction:
+          type: string
+          nullable: true
+          default: desc
+          description: 'The direction for sorting the list results, based on the `sort_by` field.
+
+            - `asc`: Ascending order (e.g., A-Z, 1-10, oldest to newest).
+
+            - `desc`: Descending order (e.g., Z-A, 10-1, newest to oldest).
+
+            Defaults to `desc` (newest/highest first) if not specified.
+
+            '
+          enum:
+          - asc
+          - desc
+    ErrorData:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          oneOf:
+          - type: string
+          - type: array
+            items:
+              type: string
+        fields:
+          oneOf:
+          - type: string
+          - type: array
+            items:
+              type: string
+    MetricTypes:
+      type: string
+      description: 'The primary types of performance metrics calculated by the reporting engine for each goal.
+
+        - `conversion_rate`: The percentage of visitors who completed the goal (Conversions / Visitors).
+
+        - `avg_revenue_visitor`: Average Revenue Per Visitor (RPV = Total Revenue / Total Visitors). Applicable for revenue goals.
+
+        - `avg_products_ordered_visitor`: Average Products Per Visitor (APPV = Total Products Ordered / Total Visitors). Applicable for revenue goals tracking product counts.
+
+        - `average_order_value`: Average Order Value (AOV = Total Revenue / Total Conversions). Applicable for revenue goals tracking order value.
+
+        - `average_products_per_order`: Average Products Per Order (APPO = Total Products Ordered Per Visitor / Total Conversions). Applicable for revenue goals tracking product counts.
+
+        Knowledge Base: "Understanding Report Metrics in Convert".
+
+        '
+      enum:
+      - conversion_rate
+      - avg_revenue_visitor
+      - avg_products_ordered_visitor
+      - average_order_value
+      - average_products_per_order
+    ProjectGASettingsBase:
+      allOf:
+      - $ref: '#/components/schemas/GA_SettingsBase'
+      - type: object
+        properties:
+          auto_revenue_tracking:
+            type: boolean
+            description: Attempt to pull revenue data from Google Analytics Revenue Tracking code.
+    LiveDataEventsListResponseData:
+      type: object
+      description: Response containing a list of recent live tracking events for a project or account.
+      properties:
+        data:
+          $ref: '#/components/schemas/LiveDataEventsList'
+    ImportProjectRequestData:
+      allOf:
+      - type: object
+        properties:
+          file:
+            type: string
+            format: json
+            description: 'The JSON file containing project data to be imported.
+
+              '
+        required:
+        - file
     LiveDataExpandFields:
       type: string
       enum:
@@ -1358,6 +1171,190 @@ components:
       - experiences.variation
       - conversion.goals
       - project
+    LiveDataEvent:
+      type: object
+      description: Represents a single real-time tracking event, such as a visitor being exposed to an experience or triggering a conversion goal.
+      properties:
+        devices:
+          description: 'A list of device categories the visitor''s device belongs to (e.g., "DESK" for desktop, "IPH" for iPhone, "ALLTAB" for any tablet).
+
+            Based on User-Agent parsing. KB: "Targeting Mobile, Tablet, and Desktop".
+
+            '
+          type: array
+          items:
+            $ref: '#/components/schemas/ReportingSegmentsDeviceCategories'
+        browser:
+          $ref: '#/components/schemas/ReportingSegmentsBrowser'
+        country:
+          $ref: '#/components/schemas/ReportingSegmentsCountry'
+        visitor_type:
+          $ref: '#/components/schemas/ReportingSegmentsVisitorType'
+        campaign:
+          allOf:
+          - $ref: '#/components/schemas/ReportingSegmentsCampaign'
+          nullable: true
+        custom_segments:
+          description: A list of custom Convert Audiences (of type 'segmentation') that this visitor is currently a member of.
+          type: array
+          items:
+            $ref: '#/components/schemas/SimpleAudienceSegmentExpandable'
+          nullable: true
+        sources:
+          description: The traffic source(s) attributed to the visitor's session (e.g., 'direct', 'referral', 'Search', 'Campaign'). Derived from UTM parameters or referrer.
+          type: array
+          items:
+            $ref: '#/components/schemas/ReportingSegmentsSource'
+          nullable: true
+        event_type:
+          $ref: '#/components/schemas/LiveDataEventTypes'
+        experiences:
+          type: array
+          description: 'A list of experiences relevant to this event.
+
+            - If `event_type` is ''view_experience'', this list contains the experience(s) the visitor was just bucketed into.
+
+            - If `event_type` is ''conversion'' or ''transaction'', this list contains the experience(s) the visitor was part of when they triggered the goal/transaction.
+
+            Each item can be an experience ID or an expanded simple experience object (ID, name, variation ID/name).
+
+            '
+          items:
+            $ref: '#/components/schemas/SimpleExperienceExpandable'
+          nullable: true
+        conversion:
+          description: Details about the conversion event, present if `event_type` is 'conversion' or 'transaction'.
+          type: object
+          nullable: true
+          properties:
+            goals:
+              type: array
+              items:
+                $ref: '#/components/schemas/SimpleGoalExpandable'
+            products_ordered_count:
+              type: integer
+              description: For 'transaction' events, the number of distinct products included in the order.
+              nullable: true
+            revenue:
+              type: number
+              description: For 'transaction' events, the monetary value of the order.
+              nullable: true
+        project:
+          allOf:
+          - $ref: '#/components/schemas/SimpleProjectExpandable'
+        timestamp:
+          type: integer
+          description: Unix timestamp (UTC) indicating precisely when this event occurred.
+    TrackingScriptReleaseManual:
+      allOf:
+      - $ref: '#/components/schemas/TrackingScriptReleaseBase'
+      - type: object
+        additionalProperties: false
+        properties:
+          type:
+            enum:
+            - manual
+    ProjectHistoryRequestData:
+      allOf:
+      - $ref: '#/components/schemas/OnlyCount'
+      - $ref: '#/components/schemas/PageNumber'
+      - $ref: '#/components/schemas/ProjectHistoryFilteringOptions'
+    Extra:
+      type: object
+      properties:
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+    NumericOutlierTypes:
+      description: 'The method used for detecting and handling order outliers in revenue or product count tracking:
+
+        - `none`: No outlier detection is applied.
+
+        - `min_max`: Orders with values below a specified minimum or above a specified maximum are capped at those boundaries.
+
+        - `percentile`: Orders falling below a lower percentile or above an upper percentile are capped at the values corresponding to those percentiles.
+
+        '
+      type: string
+      enum:
+      - none
+      - min_max
+      - percentile
+    IntegrationGA4:
+      allOf:
+      - $ref: '#/components/schemas/IntegrationGA4Base'
+      - type: object
+        properties:
+          propertyId:
+            type: string
+            description: ID of the ga4 property where data will be sent. Used internally for API calls to GoogleAnalytics
+    ExportProjectRequestData:
+      type: object
+      properties:
+        includeProject:
+          type: boolean
+          default: true
+          description: If true (default), includes the main project settings and configurations in the export. If false, only selected sub-entities (experiences, goals, etc.) might be exported.
+        experiences:
+          $ref: '#/components/schemas/ProjectExportObject'
+        audiences:
+          $ref: '#/components/schemas/ProjectExportObject'
+        locations:
+          $ref: '#/components/schemas/ProjectExportObject'
+        goals:
+          $ref: '#/components/schemas/ProjectExportObject'
+        hypothesis:
+          $ref: '#/components/schemas/ProjectExportObject'
+    DomainToCreate:
+      required:
+      - url
+      allOf:
+      - $ref: '#/components/schemas/Domain'
+    NumericOutlier:
+      oneOf:
+      - $ref: '#/components/schemas/NumericOutlierNone'
+      - $ref: '#/components/schemas/NumericOutlierMinMax'
+      - $ref: '#/components/schemas/NumericOutlierPercentile'
+      discriminator:
+        propertyName: detection_type
+        mapping:
+          none: '#/components/schemas/NumericOutlierNone'
+          min_max: '#/components/schemas/NumericOutlierMinMax'
+          percentile: '#/components/schemas/NumericOutlierPercentile'
+    Domain:
+      type: object
+      description: A website domain data.
+      properties:
+        id:
+          type: integer
+          description: Domain ID.
+          readOnly: true
+        url:
+          type: string
+          maxLength: 150
+          pattern: ^(http|https)://
+          description: Domain's homepage url
+        code_installed:
+          type: boolean
+          description: Indicating whether code installed check passed sometimes in the past.
+          default: false
+    ProjectsListResponseData:
+      type: object
+      description: Response containing a list of projects accessible to the user, along with pagination details if applicable.
+      properties:
+        data:
+          $ref: '#/components/schemas/ProjectsList'
+        extra:
+          $ref: '#/components/schemas/Extra'
+    OnlyCount:
+      type: object
+      properties:
+        onlyCount:
+          type: boolean
+          description: 'If set to `true` in a list request, the response will only contain the total count of matching items (`extra.pagination.items_count`)
+
+            and will not include the actual item data. Useful for quickly getting totals without fetching full datasets.
+
+            '
     ProjectExportObject:
       type: object
       description: 'Defines filtering for a specific type of entity (e.g., experiences, goals) within a project export.
@@ -1386,188 +1383,33 @@ components:
             If provided, all items of this entity type except these will be exported. Cannot be used with `include`.
 
             '
-    GetProjectLiveDataRequestData:
+    SE_ProcSettingsBase:
+      type: object
+      properties:
+        stats_type:
+          $ref: '#/components/schemas/SE_ProcTypes'
+    NumericOutlierPercentile:
       allOf:
-      - $ref: '#/components/schemas/ProjectLiveFilteringOptions'
-      - $ref: '#/components/schemas/LiveDataExpandParameter'
-    ProjectGASettingsBase:
-      allOf:
-      - $ref: '#/components/schemas/GA_SettingsBase'
+      - $ref: '#/components/schemas/NumericOutlierBase'
       - type: object
+        additionalProperties: false
         properties:
-          auto_revenue_tracking:
-            type: boolean
-            description: Attempt to pull revenue data from Google Analytics Revenue Tracking code.
-    SimpleAudienceExpandable:
-      anyOf:
-      - type: integer
-        description: Audience ID
-      - $ref: '#/components/schemas/SimpleAudience'
-    ReportingSegmentsBrowser:
-      type: string
-      description: 'The web browser used by the visitor. Used for segmenting reports to understand how experiences perform across different browsers.
-
-        Knowledge Base: "Using Basic and Advanced Post segmentation".
-
-        '
-      enum:
-      - internet_explorer
-      - chrome
-      - firefox
-      - safari
-      - edge
-      - other
-    SimpleLocationExpandable:
-      anyOf:
-      - type: integer
-        description: Location ID
-      - $ref: '#/components/schemas/SimpleLocation'
-    ChangeHistoryList:
+          detection_type:
+            enum:
+            - percentile
+          min:
+            allOf:
+            - description: Minimum percentile value for the outlier detection; values outside this percentile are considered outliers
+            - $ref: '#/components/schemas/Percentiles'
+          max:
+            allOf:
+            - description: Maximum percentile value for the outlier detection; values outside this percentile are considered outliers
+            - $ref: '#/components/schemas/Percentiles'
+    LiveDataEventsList:
       type: array
-      description: A list of change history records.
+      description: A list of live data event objects, showing real-time interactions.
       items:
-        $ref: '#/components/schemas/ChangeHistory'
-    BulkEntityError:
-      type: object
-      additionalProperties: false
-      properties:
-        id:
-          type: integer
-          description: The unique identifier of the entity that could not be processed.
-        message:
-          type: string
-          description: A message explaining the reason for the failure for this specific entity.
-    AccessRoleNames:
-      type: string
-      description: 'The predefined names for user access roles within the Convert system. Each role grants a specific set of permissions.
-
-        - `owner`: Highest level, full control over account, billing, users, and all projects. Typically the account creator.
-
-        - `account_manager`: Broad administrative rights over the account, often including billing and user management, but might not be able to delete the account itself.
-
-        - `admin`: Full control over projects they are assigned to, including creating/editing/deleting experiences, goals, audiences, and managing project settings. May also manage project-level collaborators.
-
-        - `browse`: Read-only access. Can view experiences, reports, and settings but cannot make changes.
-
-        - `edit`: Can create and modify entities like experiences, goals, audiences within assigned projects, but typically cannot activate/publish experiences or manage project settings.
-
-        - `publish`: Can do everything an ''editor'' can, plus activate/pause/complete experiences.
-
-        - `review`: Can view and comment, but not make direct changes. Suited for stakeholders who need to approve or provide feedback.
-
-        Knowledge Base: "Collaborators - Share With Multiple Users / Accounts" (describes access levels).
-
-        '
-      enum:
-      - owner
-      - account_manager
-      - admin
-      - browse
-      - edit
-      - publish
-      - review
-    NumericOutlier:
-      oneOf:
-      - $ref: '#/components/schemas/NumericOutlierNone'
-      - $ref: '#/components/schemas/NumericOutlierMinMax'
-      - $ref: '#/components/schemas/NumericOutlierPercentile'
-      discriminator:
-        propertyName: detection_type
-        mapping:
-          none: '#/components/schemas/NumericOutlierNone'
-          min_max: '#/components/schemas/NumericOutlierMinMax'
-          percentile: '#/components/schemas/NumericOutlierPercentile'
-    NumericOutlierTypes:
-      description: 'The method used for detecting and handling order outliers in revenue or product count tracking:
-
-        - `none`: No outlier detection is applied.
-
-        - `min_max`: Orders with values below a specified minimum or above a specified maximum are capped at those boundaries.
-
-        - `percentile`: Orders falling below a lower percentile or above an upper percentile are capped at the values corresponding to those percentiles.
-
-        '
-      type: string
-      enum:
-      - none
-      - min_max
-      - percentile
-    TrackingScriptAvailableVersions:
-      type: array
-      description: A list of available versions for the Convert tracking script, each with a version tag, changelog, release date, and potentially the date it was or will be applied to the project.
-      readOnly: true
-      items:
-        type: object
-        properties:
-          version:
-            type: string
-            description: The version tag string (e.g., "v2.11.3", "v3.0.0-beta1").
-          changelog:
-            type: string
-            nullable: true
-            description: A summary of changes, improvements, and bug fixes included in this script version.
-          released_date:
-            type: integer
-            format: int64
-            description: Unix timestamp (UTC) when this script version was officially released by Convert.
-          apply_date:
-            type: integer
-            format: int64
-            nullable: true
-            description: Unix timestamp (UTC) when this version was (or is scheduled to be) applied to the project, if using manual or scheduled updates.
-    PageNumber:
-      type: object
-      properties:
-        page:
-          type: integer
-          minimum: 1
-          description: 'The page number for paginated results. For example, if `results_per_page` is 30, `page: 2` will retrieve items 31-60.
-
-            Defaults to 1 if not specified.
-
-            '
-    VisualEditorUserAgents:
-      description: Predefined User-Agent strings that the Visual Editor can emulate for responsive design and device-specific testing.
-      type: string
-      nullable: true
-      enum:
-      - chrome_desktop
-      - chrome_ipad
-      - chrome_iphone
-      - chrome_android
-      - safari_mac
-      - safari_ipad
-      - safari_iphone
-      - firefox_desktop
-      - firefox_ipad
-      - firefox_iphone
-      - firefox_android
-      - edge_desktop
-      - edge_tablet
-      - brave_desktop
-      - brave_ipad
-      - brave_iphone
-      - brave_android
-      - opera_desktop
-      - opera_ipad
-      - opera_iphone
-      - opera_android
-    LiveDataEventsListResponseData:
-      type: object
-      description: Response containing a list of recent live tracking events for a project or account.
-      properties:
-        data:
-          $ref: '#/components/schemas/LiveDataEventsList'
-    OnlyCount:
-      type: object
-      properties:
-        onlyCount:
-          type: boolean
-          description: 'If set to `true` in a list request, the response will only contain the total count of matching items (`extra.pagination.items_count`)
-
-            and will not include the actual item data. Useful for quickly getting totals without fetching full datasets.
-
-            '
+        $ref: '#/components/schemas/LiveDataEvent'
     ExperienceReportingSettings:
       type: object
       description: Comprehensive settings governing how an experience's results are reported and analyzed.
@@ -1736,6 +1578,197 @@ components:
               nullable: true
             user_agent:
               $ref: '#/components/schemas/VisualEditorUserAgents'
+    BulkEntityError:
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          description: The unique identifier of the entity that could not be processed.
+        message:
+          type: string
+          description: A message explaining the reason for the failure for this specific entity.
+    BulkUpdateProjectsRequestData:
+      type: object
+      description: Request body for bulk updating settings (like tracking script version) for multiple projects.
+      additionalProperties: false
+      properties:
+        id:
+          $ref: '#/components/schemas/BulkProjectIds'
+        settings:
+          type: object
+          description: Project settings to be updated across the specified projects.
+          additionalProperties: false
+          properties:
+            tracking_script:
+              type: object
+              description: Tracking script settings to apply, specifically the `current_version`.
+              additionalProperties: false
+              properties:
+                current_version:
+                  type: string
+                  description: The target tracking script version string to apply to all selected projects.
+      required:
+      - id
+    SimpleAudience:
+      type: object
+      properties:
+        id:
+          description: The unique numerical identifier of the audience.
+          type: integer
+        name:
+          description: The user-defined, friendly name of the audience.
+          type: string
+    SimpleAudienceExpandable:
+      anyOf:
+      - type: integer
+        description: Audience ID
+      - $ref: '#/components/schemas/SimpleAudience'
+    ProjectsListFilteringOptions:
+      allOf:
+      - $ref: '#/components/schemas/ResultsPerPage'
+      - $ref: '#/components/schemas/SortDirection'
+      - type: object
+        properties:
+          status:
+            type: array
+            nullable: true
+            items:
+              type: string
+              enum:
+              - active
+              - inactive
+            description: Filters projects by their status
+          search:
+            type: string
+            maxLength: 200
+            nullable: true
+            description: A search string that would be used to search against Project's name and description
+          legacy_script:
+            type: boolean
+            nullable: true
+            enum:
+            - true
+            - false
+            description: Filters projects based on whether they use the legacy script (`true`) or the new script (`false`).
+          tracking_script_release_type:
+            type: array
+            nullable: true
+            items:
+              $ref: '#/components/schemas/TrackingScriptReleaseTypes'
+            description: Filters projects by their tracking script release type.
+          tracking_script_version:
+            type: object
+            nullable: true
+            description: 'Filters projects by their tracking script version.
+
+              '
+            properties:
+              is:
+                type: string
+              isNot:
+                type: string
+          only:
+            description: 'Only retrieve projects with the given ids.
+
+              '
+            type: array
+            nullable: true
+            items:
+              type: integer
+            maxItems: 100
+          except:
+            description: 'Except projects with the given ids.
+
+              '
+            type: array
+            items:
+              type: integer
+            maxItems: 100
+          sort_by:
+            type: string
+            nullable: true
+            default: id
+            description: 'A value to sort projects by specific field(s)
+
+
+              Defaults to **id** if not provided
+
+              '
+            enum:
+            - id
+            - active_tests
+            - project_name
+            - project_type
+            - status
+            - used_visitors
+          project_type:
+            type: array
+            nullable: true
+            items:
+              type: string
+              enum:
+              - web
+              - fullstack
+            description: Filters projects by their type.
+    SuccessData:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+    SimpleGoal:
+      type: object
+      properties:
+        id:
+          description: The unique numerical identifier of the goal.
+          type: integer
+        name:
+          description: The user-defined, friendly name of the goal.
+          type: string
+    GetProjectsListRequestData:
+      allOf:
+      - $ref: '#/components/schemas/OnlyCount'
+      - $ref: '#/components/schemas/ProjectsListFilteringOptions'
+      - $ref: '#/components/schemas/PageNumber'
+      - $ref: '#/components/schemas/ProjectsRequestIncludeExpand'
+    SimpleExperienceExpandable:
+      description: Represents an experience in a simplified form, either as its ID and a variation context, or including its name.
+      oneOf:
+      - $ref: '#/components/schemas/SimpleExperienceFlat'
+      - $ref: '#/components/schemas/SimpleExperience'
+    NumericOutlierBase:
+      type: object
+      properties:
+        detection_type:
+          $ref: '#/components/schemas/NumericOutlierTypes'
+      required:
+      - detection_type
+    TrackingScriptReleaseTypes:
+      type: string
+      description: 'Defines the update strategy for the project''s Convert tracking script:
+
+        - `manual`: (Default) The project remains on its current script version. Updates to newer versions must be initiated manually by an administrator. Allows for controlled rollouts and rollbacks to the immediate previous version.
+
+        - `latest`: The project''s tracking script will automatically update to the newest stable version as soon as Convert releases it. Ensures access to the latest features and fixes with minimal intervention.
+
+        - `scheduled`: Updates to the latest script version are automatically applied at a predefined day and time of the week, allowing updates during off-peak hours.
+
+        KB: "Tracking Script Version Management".
+
+        '
+      enum:
+      - manual
+      - latest
+      - scheduled
+    GA_SettingsBase:
+      type: object
+      properties:
+        enabled:
+          type: boolean
+          description: If true, integration with Google Analytics is enabled for this project or experience, allowing experiment data to be sent to GA.
     ResultsPerPage:
       type: object
       properties:
@@ -1750,94 +1783,45 @@ components:
             Used for pagination. Default is 30, maximum is 50.
 
             '
-    VisitorInsightsBase:
-      type: object
-      properties:
-        enabled:
-          type: boolean
-          description: 'If true, Convert Signals™ is enabled for the project, allowing the system to capture sessions exhibiting user frustration or usability issues.
-
-            '
-        obfuscate_text:
-          type: boolean
-          default: true
-          description: 'True when all text elements (apart from placeholders) should be obfuscated inside a recording.
-
-            '
-        sampling_rate:
-          type: integer
-          default: 5
-          enum:
-          - 5
-          - 10
-          - 20
-          - 30
-          - 40
-          - 50
-          description: 'The percentage of visitors included in sampling for Convert Signals session recordings and Heatmaps for this project.
-
-            Higher values collect data from a larger share of traffic and consume allocation faster.
-
-            '
-    UpdateProjectRequestData:
-      allOf:
-      - $ref: '#/components/schemas/BaseProject'
-      - type: object
-        properties:
-          domains:
-            type: array
-            items:
-              $ref: '#/components/schemas/DomainExpandableRequest'
-            description: 'The list of domains included in this project. If a domain ID is provided, that domain will just be updated.
-
-
-              Otherwise the domain will be created.
-
-
-              **Caution:** Any domain not in the provided list would be deleted from the project
-
-              '
-      - $ref: '#/components/schemas/ProjectsRequestIncludeExpand'
-    ReportingSegmentsDeviceCategories:
+    AccessRoleNames:
       type: string
-      description: 'The category of device used by the visitor. Enables report segmentation by device type.
+      description: 'The predefined names for user access roles within the Convert system. Each role grants a specific set of permissions.
 
-        - `iPhone`, `other_phones`, `all_phones`: Mobile phone categories.
+        - `owner`: Highest level, full control over account, billing, users, and all projects. Typically the account creator.
 
-        - `desktop`: Desktop or laptop computer.
+        - `account_manager`: Broad administrative rights over the account, often including billing and user management, but might not be able to delete the account itself.
 
-        - `iPad`, `other_tablets`, `all_tablets`: Tablet categories.
+        - `admin`: Full control over projects they are assigned to, including creating/editing/deleting experiences, goals, audiences, and managing project settings. May also manage project-level collaborators.
 
-        Note: Some devices might fall into multiple categories (e.g., an iPhone is both ''iPhone'' and ''all_phones'').
+        - `browse`: Read-only access. Can view experiences, reports, and settings but cannot make changes.
 
-        Knowledge Base: "Targeting Mobile, Tablet, and Desktop".
+        - `edit`: Can create and modify entities like experiences, goals, audiences within assigned projects, but typically cannot activate/publish experiences or manage project settings.
+
+        - `publish`: Can do everything an ''editor'' can, plus activate/pause/complete experiences.
+
+        - `review`: Can view and comment, but not make direct changes. Suited for stakeholders who need to approve or provide feedback.
+
+        Knowledge Base: "Collaborators - Share With Multiple Users / Accounts" (describes access levels).
 
         '
       enum:
-      - iPhone
-      - all_phones
-      - other_phones
-      - desktop
-      - iPad
-      - all_tablets
-      - other_tablets
-    ProjectExpandFields:
-      type: string
-      enum:
-      - default_goals
-      - default_audiences
-      - default_locations
-    TrackingScriptReleaseScheduled:
+      - owner
+      - account_manager
+      - admin
+      - browse
+      - edit
+      - publish
+      - review
+    SimpleExperience:
       allOf:
-      - $ref: '#/components/schemas/TrackingScriptReleaseBase'
+      - $ref: '#/components/schemas/SimpleExperienceFlat'
       - type: object
-        additionalProperties: false
         properties:
-          type:
-            enum:
-            - scheduled
-          automatic_apply_on:
-            $ref: '#/components/schemas/TrackingScriptReleaseAutomaticApplyOn'
+          name:
+            description: Experience name
+            type: string
+        required:
+        - name
     ProjectHistoryFilteringOptions:
       allOf:
       - $ref: '#/components/schemas/SortDirection'
@@ -1919,32 +1903,11 @@ components:
             - event
             - object
       - $ref: '#/components/schemas/ChangeHistoryExpandParameter'
-    ReportingSegmentsCustomSegment:
-      description: 'The numerical ID of a custom Convert Audience (of type ''segmentation'') that the visitor is a member of.
-
-        Allows report segmentation based on predefined custom segments (e.g., "High-Value Customers", "Engaged Users").
-
-        Knowledge Base: "Create Custom Segments".
-
-        '
-      type: integer
-    TrackingScriptReleaseAutomaticApplyOn:
-      type: object
-      description: Configuration for scheduled tracking script updates, specifying the day of the week and time for automatic application of new versions.
-      additionalProperties: false
-      properties:
-        day:
-          type: integer
-          description: Day of the week for scheduled updates (e.g., 1 for Monday, 7 for Sunday - convention needs to be clear).
-          minimum: 1
-          maximum: 7
-        time:
-          type: string
-          pattern: ^([01]?[0-9]|2[0-4]):([0-5][0-9])$
-          description: Time of day (in project's timezone or UTC, needs clarification) in HH:MM format for scheduled updates (e.g., "03:00" for 3 AM).
-      required:
-      - day
-      - time
+    SimpleProjectExpandable:
+      oneOf:
+      - type: integer
+        description: Project ID
+      - $ref: '#/components/schemas/SimpleProject'
     IntegrationGA4Base:
       type: object
       properties:
@@ -1954,355 +1917,79 @@ components:
         measurementId:
           type: string
           description: The GA4 Measurement ID (e.g., "G-XXXXXXXXXX") for the data stream where Convert experiment data will be sent.
-    ReportingSegmentsFilters:
-      type: object
-      description: 'A collection of filters used to segment experience report data based on various visitor attributes and traffic sources.
-
-        Applying these filters allows for deeper analysis of how different user groups interact with experience variations.
-
-        Knowledge Base: "Using Basic and Advanced Post segmentation".
-
-        '
-      properties:
-        devices:
-          type: array
-          items:
-            $ref: '#/components/schemas/ReportingSegmentsDeviceCategories'
-          nullable: true
-        browsers:
-          description: Filter report data for visitors using one or more specified web browsers.
-          type: array
-          items:
-            $ref: '#/components/schemas/ReportingSegmentsBrowser'
-          nullable: true
-        countries:
-          description: Filter report data for visitors from one or more specified countries (using 2-letter ISO codes).
-          type: array
-          items:
-            $ref: '#/components/schemas/ReportingSegmentsCountry'
-          nullable: true
-        visitor_types:
-          description: Filter report data for 'new' or 'returning' visitors.
-          type: array
-          items:
-            $ref: '#/components/schemas/ReportingSegmentsVisitorType'
-          nullable: true
-        campaigns:
-          description: Filter report data for visitors attributed to one or more specified marketing campaign names (from `utm_campaign`).
-          type: array
-          items:
-            $ref: '#/components/schemas/ReportingSegmentsCampaign'
-          nullable: true
-        custom_segments:
-          description: Filter report data for visitors belonging to one or more specified custom Convert Audience segments (by segment ID).
-          type: array
-          items:
-            $ref: '#/components/schemas/ReportingSegmentsCustomSegment'
-          nullable: true
-        sources:
-          description: Filter report data for visitors from one or more specified traffic sources (e.g., 'direct', 'search', 'referral').
-          type: array
-          items:
-            $ref: '#/components/schemas/ReportingSegmentsSource'
-          nullable: true
-    SimpleAudience:
+    IntegrationGA3:
       type: object
       properties:
-        id:
-          description: The unique numerical identifier of the audience.
-          type: integer
-        name:
-          description: The user-defined, friendly name of the audience.
+        type:
+          enum:
+          - ga3
+        property_UA:
           type: string
-    SimpleExperience:
+          maxLength: 150
+          nullable: true
+          description: The Universal Analytics Property ID (e.g., "UA-XXXXXXXX-Y") to which Convert experiment data will be sent.
+    ProjectIntegrationGA4:
       allOf:
-      - $ref: '#/components/schemas/SimpleExperienceFlat'
+      - $ref: '#/components/schemas/ProjectGASettingsBase'
+      - $ref: '#/components/schemas/IntegrationGA4'
       - type: object
         properties:
-          name:
-            description: Experience name
-            type: string
-        required:
-        - name
-    DNSRecordTypes:
-      description: The type of the DNS record.
-      type: string
-      enum:
-      - TXT
-      - CNAME
-    TrackingScriptReleaseTypes:
-      type: string
-      description: 'Defines the update strategy for the project''s Convert tracking script:
-
-        - `manual`: (Default) The project remains on its current script version. Updates to newer versions must be initiated manually by an administrator. Allows for controlled rollouts and rollbacks to the immediate previous version.
-
-        - `latest`: The project''s tracking script will automatically update to the newest stable version as soon as Convert releases it. Ensures access to the latest features and fixes with minimal intervention.
-
-        - `scheduled`: Updates to the latest script version are automatically applied at a predefined day and time of the week, allowing updates during off-peak hours.
-
-        KB: "Tracking Script Version Management".
-
-        '
-      enum:
-      - manual
-      - latest
-      - scheduled
-    SuccessData:
-      type: object
-      properties:
-        code:
-          type: integer
-          format: int32
-        message:
-          type: string
-    BulkSuccessData:
-      allOf:
-      - $ref: '#/components/schemas/SuccessData'
-      - type: object
-        properties:
-          code:
-            type: integer
-            format: int32
-          errors:
-            type: array
-            description: List of unprocessed entities. Would be empty, if all passed entities processed
-            items:
-              $ref: '#/components/schemas/BulkEntityError'
-    GA_SettingsBase:
-      type: object
-      properties:
-        enabled:
-          type: boolean
-          description: If true, integration with Google Analytics is enabled for this project or experience, allowing experiment data to be sent to GA.
-    ProjectStatuses:
-      description: 'The overall status of a project:
-
-        - `active`: The project is active, and experiences within it can run and track data.
-
-        - `inactive`: The project is inactive (archived or paused). No experiences within it will run, and no new data will be tracked.
-
-        - `suspended`: The project (or account) has been suspended, typically due to billing issues or terms of service violations. Services are disabled.
-
-        '
-      type: string
-      enum:
-      - active
-      - inactive
-      - suspended
-    ChangeHistoryObjects:
-      type: string
-      enum:
-      - audience
-      - feature
-      - domain
-      - goal
-      - hypothesis
-      - experience
-      - tag
-      - location
-    UTC_Offset:
-      type: integer
-      description: 'The time offset from Coordinated Universal Time (UTC) in seconds.
-
-        For example, UTC-5 (EST) would be -18000. UTC+2 would be 7200.
-
-        Used for interpreting or displaying date/time information according to a specific timezone.
-
-        '
-      default: 0
-      minimum: -43200
-      maximum: 50400
-    CreateProjectRequestData:
-      allOf:
-      - $ref: '#/components/schemas/BaseProject'
-      - type: object
-        properties:
-          domains:
-            type: array
-            items:
-              $ref: '#/components/schemas/DomainToCreate'
-            description: The list of websites included in this project.
-        required:
-        - name
-      - $ref: '#/components/schemas/ProjectsRequestIncludeExpand'
+          no_wait_pageview:
+            type: boolean
+            description: Boolean indicating whether to wait for the page view event to complete before sending other events.
+    SimpleLocationExpandable:
+      anyOf:
+      - type: integer
+        description: Location ID
+      - $ref: '#/components/schemas/SimpleLocation'
     ProjectsListExpandFields:
       $ref: '#/components/schemas/ProjectExpandFields'
-    SimpleExperienceVariationExpandable:
-      oneOf:
-      - type: integer
-        description: Variation ID
-      - $ref: '#/components/schemas/SimpleExperienceVariation'
-    Extra:
+    CustomDomainOwnershipVerificationItem:
       type: object
       properties:
-        pagination:
-          $ref: '#/components/schemas/Pagination'
-    NumericOutlierPercentile:
-      allOf:
-      - $ref: '#/components/schemas/NumericOutlierBase'
-      - type: object
-        additionalProperties: false
-        properties:
-          detection_type:
-            enum:
-            - percentile
-          min:
-            allOf:
-            - description: Minimum percentile value for the outlier detection; values outside this percentile are considered outliers
-            - $ref: '#/components/schemas/Percentiles'
-          max:
-            allOf:
-            - description: Maximum percentile value for the outlier detection; values outside this percentile are considered outliers
-            - $ref: '#/components/schemas/Percentiles'
-    GetProjectsListRequestData:
-      allOf:
-      - $ref: '#/components/schemas/OnlyCount'
-      - $ref: '#/components/schemas/ProjectsListFilteringOptions'
-      - $ref: '#/components/schemas/PageNumber'
-      - $ref: '#/components/schemas/ProjectsRequestIncludeExpand'
-    DomainExpandableRequest:
-      description: Domain object sent inside request when creating/updating other related objects
-      oneOf:
-      - type: integer
-        description: Domain ID
-      - $ref: '#/components/schemas/DomainToCreate'
-    ReportingSegmentsSource:
-      type: string
-      description: 'The traffic source that brought the visitor to the site (e.g., ''google'', ''facebook.com'', ''direct'', ''newsletter'').
+        name:
+          type: string
+          description: The name of the DNS record.
+        type:
+          $ref: '#/components/schemas/DNSRecordTypes'
+        value:
+          type: string
+          description: The value of the DNS record.
+    ReportingSegmentsCustomSegment:
+      description: 'The numerical ID of a custom Convert Audience (of type ''segmentation'') that the visitor is a member of.
 
-        Derived from `utm_source` URL parameters or the HTTP referrer. Enables report segmentation by traffic source.
+        Allows report segmentation based on predefined custom segments (e.g., "High-Value Customers", "Engaged Users").
+
+        Knowledge Base: "Create Custom Segments".
+
+        '
+      type: integer
+    ReportingSegmentsCampaign:
+      type: string
+      description: 'The campaign name associated with the visitor''s session, typically derived from `utm_campaign` URL parameters.
+
+        Allows report segmentation by marketing campaign.
 
         Knowledge Base: "How Do You Fill Medium, Keyword and Source Name?".
 
         '
-      enum:
-      - campaign
-      - search
-      - referral
-      - direct
-      - ai_tool
-    TrackingScriptReleaseLatest:
-      allOf:
-      - $ref: '#/components/schemas/TrackingScriptReleaseBase'
-      - type: object
-        additionalProperties: false
-        properties:
-          type:
-            enum:
-            - latest
-    SE_MabSettings:
-      type: object
-      description: 'Configuration for Multi-Armed Bandit (MAB) traffic allocation. If `null`, MAB is disabled and manual traffic allocation is used.
+    Percentiles:
+      type: number
+      description: 'Standard percentile values used for outlier detection thresholds.
 
-        MAB dynamically allocates more traffic to better-performing variations based on the `primary_metric` of the `primary_goal`.
-
-        KB: "Multi-Armed Bandit (MAB) & Auto-Allocation in Convert".
-
-        '
-      properties:
-        strategy:
-          description: 'The MAB algorithm used for dynamic traffic allocation:
-
-            - `epsilon_greedy`: Mostly exploits the best-known variation, but explores others with a small probability (epsilon).
-
-            - `ucb`: Upper Confidence Bound, balances exploration and exploitation based on uncertainty and potential.
-
-            - `thompson_sampling`: (Default) A Bayesian approach that samples from posterior distributions to choose variations.
-
-            '
-          type: string
-          enum:
-          - epsilon_greedy
-          - ucb
-          - thompson_sampling
-          default: thompson_sampling
-        exploration_rate:
-          description: 'For `epsilon_greedy` strategy, this is the ''epsilon'' value (0 to 1) representing the probability of choosing a random variation for exploration instead of the current best-performing one.
-
-            A higher value means more exploration. Default is often 0.1 or 0.3.
-
-            '
-          type: number
-          minimum: 0
-          maximum: 1
-          enum:
-          - 0
-          - 0.1
-          - 0.2
-          - 0.3
-          - 0.4
-          - 0.5
-          - 0.6
-          - 0.7
-          - 0.8
-          - 0.9
-          - 1
-          default: 0.3
-    SE_ProcSettings:
-      description: Overall settings for the statistical engine processing results for this experience.
-      oneOf:
-      - $ref: '#/components/schemas/SE_ProcSettingsFrequentist'
-      - $ref: '#/components/schemas/SE_ProcSettingsBayesian'
-      discriminator:
-        propertyName: stats_type
-        mapping:
-          frequentist: '#/components/schemas/SE_ProcSettingsFrequentist'
-          bayesian: '#/components/schemas/SE_ProcSettingsBayesian'
-    ChangeHistoryExpandParameter:
-      type: object
-      properties:
-        expand:
-          type: array
-          nullable: true
-          description: 'Specifies linked objects to expand in the response, e.g., ''project''.
-
-            Refer to the [Expanding Fields](#tag/Expandable-Fields) section.
-
-            '
-          items:
-            $ref: '#/components/schemas/ChangeHistoryExpandFields'
-    ProjectsRequestIncludeExpand:
-      type: object
-      properties:
-        include:
-          description: 'Specifies optional related data fields to include for each project in the list.
-
-            Refer to the [Optional Fields](#tag/Optional-Fields) section.
-
-            '
-          type: array
-          items:
-            $ref: '#/components/schemas/ProjectsListIncludeField'
-        expand:
-          description: 'Specifies linked objects to expand for each project in the list.
-
-            Refer to the [Expanding Fields](#tag/Expandable-Fields) section.
-
-            '
-          type: array
-          items:
-            $ref: '#/components/schemas/ProjectsListExpandFields'
-    SE_ProcTypes:
-      type: string
-      description: 'The statistical methodology used for analyzing experiment results and determining winners.
-
-        - `frequentist`: Traditional hypothesis testing approach using p-values and confidence intervals (e.g., T-tests). KB: "Statistical Methods Used".
-
-        - `bayesian`: Bayesian statistical approach providing probabilities of one variation being better than another (e.g., Chance to Win). KB: "Statistical Models in Convert.com''s A/B Testing Platform".
+        For example, a `min` of 5 and `max` of 95 means orders in the bottom 5% and top 5% of values are considered outliers and capped.
 
         '
       enum:
-      - frequentist
-      - bayesian
-    GenerateDebugTokenData:
-      type: object
-      readOnly: true
-      properties:
-        value:
-          type: string
-        ttl:
-          type: integer
-          description: Unix timestamp (UTC) indicating when this debug token will expire and become invalid.
+      - 1
+      - 5
+      - 10
+      - 25
+      - 50
+      - 75
+      - 90
+      - 95
+      - 99
     BaseProject:
       type: object
       properties:
@@ -2765,16 +2452,258 @@ components:
           description: A list of Location IDs that will be automatically added to any new experience created within this project.
           items:
             $ref: '#/components/schemas/SimpleLocationExpandable'
-    SimpleGoalExpandable:
+    TrackingScriptReleaseScheduled:
+      allOf:
+      - $ref: '#/components/schemas/TrackingScriptReleaseBase'
+      - type: object
+        additionalProperties: false
+        properties:
+          type:
+            enum:
+            - scheduled
+          automatic_apply_on:
+            $ref: '#/components/schemas/TrackingScriptReleaseAutomaticApplyOn'
+    SE_ProcSettings:
+      description: Overall settings for the statistical engine processing results for this experience.
+      oneOf:
+      - $ref: '#/components/schemas/SE_ProcSettingsFrequentist'
+      - $ref: '#/components/schemas/SE_ProcSettingsBayesian'
+      discriminator:
+        propertyName: stats_type
+        mapping:
+          frequentist: '#/components/schemas/SE_ProcSettingsFrequentist'
+          bayesian: '#/components/schemas/SE_ProcSettingsBayesian'
+    SimpleExperienceVariationExpandable:
       oneOf:
       - type: integer
-        description: Goal ID
-      - $ref: '#/components/schemas/SimpleGoal'
-    SimpleExperienceExpandable:
-      description: Represents an experience in a simplified form, either as its ID and a variation context, or including its name.
+        description: Variation ID
+      - $ref: '#/components/schemas/SimpleExperienceVariation'
+    SimpleLocation:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The unique numerical identifier of the location.
+          readOnly: true
+        name:
+          type: string
+          description: The user-defined, friendly name of the location.
+          maxLength: 100
+    UpdateProjectRequestData:
+      allOf:
+      - $ref: '#/components/schemas/BaseProject'
+      - type: object
+        properties:
+          domains:
+            type: array
+            items:
+              $ref: '#/components/schemas/DomainExpandableRequest'
+            description: 'The list of domains included in this project. If a domain ID is provided, that domain will just be updated.
+
+
+              Otherwise the domain will be created.
+
+
+              **Caution:** Any domain not in the provided list would be deleted from the project
+
+              '
+      - $ref: '#/components/schemas/ProjectsRequestIncludeExpand'
+    ChangeHistory:
+      type: object
+      description: Represents a single logged change event, providing an audit trail for actions performed on Convert entities.
+      properties:
+        event:
+          type: string
+          description: The type of action performed (e.g., 'create', 'update', 'delete', 'activate', 'pause').
+        info:
+          type: object
+          description: (Deprecated) Additional context about the change. Modern implementations use the `changes` object.
+          deprecated: true
+          properties:
+            isAdminChange:
+              type: boolean
+              description: Whether the change was made by a Convert super-admin.
+            text:
+              type: string
+              description: Legacy textual description of the change.
+        changes:
+          type: object
+          description: 'Detailed record of what was modified. Contains `old` and `new` value snapshots for the changed fields.
+
+            For a ''create'' event, `old` will be null. For a ''delete'' event, `new` will be null.
+
+            This allows tracking specific attribute modifications.
+
+            '
+          properties:
+            old:
+              type: object
+              description: A snapshot of the relevant fields and their values *before* the change was applied. Null for creation events.
+              nullable: true
+            new:
+              type: object
+              description: A snapshot of the relevant fields and their values *after* the change was applied. Null for deletion events.
+              nullable: true
+        method:
+          type: string
+          description: 'How the change was initiated: ''api'' (programmatic) or ''app'' (via Convert UI).
+
+            '
+          items:
+            $ref: '#/components/schemas/ChangeHistoryMethods'
+        object:
+          type: string
+          description: 'The type of Convert entity that was changed (e.g., ''experience'', ''goal'', ''audience'').
+
+            '
+        object_id:
+          type: string
+          description: The unique identifier of the specific entity that was changed.
+        parent_object_id:
+          type: string
+          nullable: true
+          description: The unique identifier of the parent entity related to this change. For example, for a 'variation' or 'change', this will be the corresponding 'experience' id.
+        user:
+          type: string
+          description: The name or email of the user (or API key name) that performed the action.
+        timestamp:
+          type: integer
+          description: Unix timestamp (UTC) indicating when the change occurred.
+        request_id:
+          type: string
+          nullable: true
+          description: A unique identifier for the specific API request or UI action that resulted in this change, useful for tracing and debugging.
+        project:
+          nullable: true
+          allOf:
+          - $ref: '#/components/schemas/SimpleProjectExpandable'
+    ChangeHistoryList:
+      type: array
+      description: A list of change history records.
+      items:
+        $ref: '#/components/schemas/ChangeHistory'
+    ChangeHistoryMethods:
+      type: string
+      enum:
+      - api
+      - app
+    GA_Settings:
       oneOf:
-      - $ref: '#/components/schemas/SimpleExperienceFlat'
-      - $ref: '#/components/schemas/SimpleExperience'
+      - $ref: '#/components/schemas/ProjectIntegrationGA3'
+      - $ref: '#/components/schemas/ProjectIntegrationGA4'
+      discriminator:
+        propertyName: type
+        mapping:
+          ga3: '#/components/schemas/ProjectIntegrationGA3'
+          ga4: '#/components/schemas/ProjectIntegrationGA4'
+    ReportingSegmentsFilters:
+      type: object
+      description: 'A collection of filters used to segment experience report data based on various visitor attributes and traffic sources.
+
+        Applying these filters allows for deeper analysis of how different user groups interact with experience variations.
+
+        Knowledge Base: "Using Basic and Advanced Post segmentation".
+
+        '
+      properties:
+        devices:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReportingSegmentsDeviceCategories'
+          nullable: true
+        browsers:
+          description: Filter report data for visitors using one or more specified web browsers.
+          type: array
+          items:
+            $ref: '#/components/schemas/ReportingSegmentsBrowser'
+          nullable: true
+        countries:
+          description: Filter report data for visitors from one or more specified countries (using 2-letter ISO codes).
+          type: array
+          items:
+            $ref: '#/components/schemas/ReportingSegmentsCountry'
+          nullable: true
+        visitor_types:
+          description: Filter report data for 'new' or 'returning' visitors.
+          type: array
+          items:
+            $ref: '#/components/schemas/ReportingSegmentsVisitorType'
+          nullable: true
+        campaigns:
+          description: Filter report data for visitors attributed to one or more specified marketing campaign names (from `utm_campaign`).
+          type: array
+          items:
+            $ref: '#/components/schemas/ReportingSegmentsCampaign'
+          nullable: true
+        custom_segments:
+          description: Filter report data for visitors belonging to one or more specified custom Convert Audience segments (by segment ID).
+          type: array
+          items:
+            $ref: '#/components/schemas/ReportingSegmentsCustomSegment'
+          nullable: true
+        sources:
+          description: Filter report data for visitors from one or more specified traffic sources (e.g., 'direct', 'search', 'referral').
+          type: array
+          items:
+            $ref: '#/components/schemas/ReportingSegmentsSource'
+          nullable: true
+    DomainExpandableRequest:
+      description: Domain object sent inside request when creating/updating other related objects
+      oneOf:
+      - type: integer
+        description: Domain ID
+      - $ref: '#/components/schemas/DomainToCreate'
+    GenerateDebugTokenData:
+      type: object
+      readOnly: true
+      properties:
+        value:
+          type: string
+        ttl:
+          type: integer
+          description: Unix timestamp (UTC) indicating when this debug token will expire and become invalid.
+    VisualEditorUserAgents:
+      description: Predefined User-Agent strings that the Visual Editor can emulate for responsive design and device-specific testing.
+      type: string
+      nullable: true
+      enum:
+      - chrome_desktop
+      - chrome_ipad
+      - chrome_iphone
+      - chrome_android
+      - safari_mac
+      - safari_ipad
+      - safari_iphone
+      - firefox_desktop
+      - firefox_ipad
+      - firefox_iphone
+      - firefox_android
+      - edge_desktop
+      - edge_tablet
+      - brave_desktop
+      - brave_ipad
+      - brave_iphone
+      - brave_android
+      - opera_desktop
+      - opera_ipad
+      - opera_iphone
+      - opera_android
+    ChangeHistoryObjects:
+      type: string
+      enum:
+      - audience
+      - feature
+      - domain
+      - goal
+      - hypothesis
+      - experience
+      - tag
+      - location
+    SimpleAudienceSegmentExpandable:
+      oneOf:
+      - type: integer
+        description: Segment ID
+      - $ref: '#/components/schemas/SimpleAudienceSegment'
     Pagination:
       type: object
       properties:
@@ -2794,84 +2723,159 @@ components:
           description: The total number of pages available for the current filter criteria and `results_per_page` setting.
           type: integer
           minimum: 0
-    SortDirection:
-      type: object
-      properties:
-        sort_direction:
-          type: string
-          nullable: true
-          default: desc
-          description: 'The direction for sorting the list results, based on the `sort_by` field.
-
-            - `asc`: Ascending order (e.g., A-Z, 1-10, oldest to newest).
-
-            - `desc`: Descending order (e.g., Z-A, 10-1, newest to oldest).
-
-            Defaults to `desc` (newest/highest first) if not specified.
-
-            '
-          enum:
-          - asc
-          - desc
-    SE_ProcSettingsBayesian:
-      allOf:
-      - $ref: '#/components/schemas/SE_ProcSettingsBase'
-      - type: object
-        description: Stats Engine Settings needed for the Bayesian processing
-        properties:
-          stats_type:
-            enum:
-            - bayesian
-          decision_threshold:
-            description: Threshold after which a decision can be made
-            type: number
-            minimum: 50
-            maximum: 99
-            multipleOf: 1
-          risk_threshold:
-            description: The maximum acceptable level of potential loss if the chosen variant turns out to be worse than the control. It represents the threshold below which the relative risk of preferring a variant over the control must fall to consider the variant as a strong and relatively safe choice.
-            type: number
-            minimum: 1
-            maximum: 100
-            multipleOf: 1
-          mab_settings:
-            allOf:
-            - $ref: '#/components/schemas/SE_MabSettings'
-            nullable: true
-    ProjectIncludeFields:
+    DNSRecordTypes:
+      description: The type of the DNS record.
       type: string
       enum:
-      - global_javascript
-      - domains
-      - stats.usage
-      - stats.active_experiences_count
-      - stats.active_experiments_count
-      - stats.experiences_count
-      - stats.segments_count
-      - stats.active_segments_count
-      - stats.active_goals_count
-      - stats.google_analytics
-      - stats.visitor_data
-      - stats.visitor_insights
-      - default_goals
-      - default_audiences
-      - default_locations
-      - settings.tracking_script.available_versions
-  responses:
-    ProjectsListResponse:
-      description: A list of projects accessible to the user within an account. Each project entry includes its ID, name, type (web/fullstack), status, and potentially other summary information depending on `include` parameters.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ProjectsListResponseData'
-    ErrorResponse:
-      description: 'Indicates an error occurred while processing the request. The `code` provides an HTTP status code, `message` offers a human-readable explanation or an array of validation errors, and `fields` (if present) specifies which input fields were problematic.
+      - TXT
+      - CNAME
+    ReportingSegmentsVisitorType:
+      type: string
+      description: 'Classifies the visitor as either ''new'' or ''returning'' based on their site visit history (tracked by Convert cookies).
+
+        - `new`: First-time visitor to the site (or no existing Convert cookie).
+
+        - `returning`: Visitor has been to the site before.
+
+        Allows report segmentation to compare behavior of new vs. returning users.
+
+        Knowledge Base: "What is a New/Returning Visitor as Defined in an Experiment''s Audience?".
 
         '
+      enum:
+      - new
+      - returning
+    SE_ProcTypes:
+      type: string
+      description: 'The statistical methodology used for analyzing experiment results and determining winners.
+
+        - `frequentist`: Traditional hypothesis testing approach using p-values and confidence intervals (e.g., T-tests). KB: "Statistical Methods Used".
+
+        - `bayesian`: Bayesian statistical approach providing probabilities of one variation being better than another (e.g., Chance to Win). KB: "Statistical Models in Convert.com''s A/B Testing Platform".
+
+        '
+      enum:
+      - frequentist
+      - bayesian
+    ChangeHistoryExpandParameter:
+      type: object
+      properties:
+        expand:
+          type: array
+          nullable: true
+          description: 'Specifies linked objects to expand in the response, e.g., ''project''.
+
+            Refer to the [Expanding Fields](#tag/Expandable-Fields) section.
+
+            '
+          items:
+            $ref: '#/components/schemas/ChangeHistoryExpandFields'
+    ProjectLiveFilteringOptions:
+      type: object
+      description: Filters for the live data feed of a single project.
+      properties:
+        experiences:
+          type: array
+          nullable: true
+          description: A list of Experience IDs to filter events for. Only events related to these experiences will be returned.
+          items:
+            type: integer
+        event_types:
+          type: array
+          nullable: true
+          items:
+            $ref: '#/components/schemas/LiveDataEventTypes'
+        goals:
+          type: array
+          nullable: true
+          description: A list of Goal IDs to filter conversion/transaction events for.
+          maxItems: 20
+          items:
+            type: integer
+        segments:
+          nullable: true
+          allOf:
+          - $ref: '#/components/schemas/ReportingSegmentsFilters'
+    ProjectsList:
+      type: array
+      description: A list of project objects.
+      items:
+        $ref: '#/components/schemas/Project'
+    ProjectsRequestIncludeExpand:
+      type: object
+      properties:
+        include:
+          description: 'Specifies optional related data fields to include for each project in the list.
+
+            Refer to the [Optional Fields](#tag/Optional-Fields) section.
+
+            '
+          type: array
+          items:
+            $ref: '#/components/schemas/ProjectsListIncludeField'
+        expand:
+          description: 'Specifies linked objects to expand for each project in the list.
+
+            Refer to the [Expanding Fields](#tag/Expandable-Fields) section.
+
+            '
+          type: array
+          items:
+            $ref: '#/components/schemas/ProjectsListExpandFields'
+    SimpleExperienceFlat:
+      type: object
+      properties:
+        id:
+          description: The unique numerical identifier of the experience.
+          type: integer
+        variation:
+          $ref: '#/components/schemas/SimpleExperienceVariationExpandable'
+    LiveDataEventTypes:
+      type: string
+      enum:
+      - view_experience
+      - conversion
+      - transaction
+    TrackingScriptReleaseAutomaticApplyOn:
+      type: object
+      description: Configuration for scheduled tracking script updates, specifying the day of the week and time for automatic application of new versions.
+      additionalProperties: false
+      properties:
+        day:
+          type: integer
+          description: Day of the week for scheduled updates (e.g., 1 for Monday, 7 for Sunday - convention needs to be clear).
+          minimum: 1
+          maximum: 7
+        time:
+          type: string
+          pattern: ^([01]?[0-9]|2[0-4]):([0-5][0-9])$
+          description: Time of day (in project's timezone or UTC, needs clarification) in HH:MM format for scheduled updates (e.g., "03:00" for 3 AM).
+      required:
+      - day
+      - time
+    GetProjectLiveDataRequestData:
+      allOf:
+      - $ref: '#/components/schemas/ProjectLiveFilteringOptions'
+      - $ref: '#/components/schemas/LiveDataExpandParameter'
+  responses:
+    ProjectResponse:
+      description: Detailed information for a single project, including its settings, associated domains, default goals/audiences/locations, integrations, and usage statistics (if requested via `include`).
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/ErrorData'
+            $ref: '#/components/schemas/Project'
+    ChangeHistoryListResponse:
+      description: A log of changes made within an account or project. Each entry details the `event` (e.g., 'create', 'update', 'delete'), the `object` changed (e.g., 'experience', 'goal'), `object_id`, `user` who made the change, `timestamp`, and `changes` (old and new values).
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ChangeHistoryListResponseData'
+    ProjectExportResponse:
+      description: A JSON file containing the exported data for a project, including its settings, experiences, goals, audiences, etc. This file can be used for backup or migration.
+      content:
+        download/json:
+          schema:
+            $ref: '#/components/schemas/ProjectsExportResponseFile'
     SuccessResponse:
       description: 'A generic success response, typically used for operations that don''t return specific data (like deletions or some updates). The `code` is usually 200, and `message` confirms the successful action.
 
@@ -2880,20 +2884,6 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/SuccessData'
-    ProjectResponse:
-      description: Detailed information for a single project, including its settings, associated domains, default goals/audiences/locations, integrations, and usage statistics (if requested via `include`).
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Project'
-    ImportProjectDataSuccessResponse:
-      description: 'Confirms successful import of project data. Includes a list of `imported` entities (experiences, audiences, locations, goals, hypotheses) with their newly assigned IDs in the target project.
-
-        '
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ImportProjectDataSuccess'
     BulkSuccessResponse:
       description: 'Indicates the outcome of a bulk operation (e.g., bulk update or delete). Provides a general success `message` and an `errors` array listing any entities that could not be processed, along with the reason for failure for each.
 
@@ -2902,18 +2892,6 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/BulkSuccessData'
-    ProjectExportResponse:
-      description: A JSON file containing the exported data for a project, including its settings, experiences, goals, audiences, etc. This file can be used for backup or migration.
-      content:
-        download/json:
-          schema:
-            $ref: '#/components/schemas/ProjectsExportResponseFile'
-    ChangeHistoryListResponse:
-      description: A log of changes made within an account or project. Each entry details the `event` (e.g., 'create', 'update', 'delete'), the `object` changed (e.g., 'experience', 'goal'), `object_id`, `user` who made the change, `timestamp`, and `changes` (old and new values).
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ChangeHistoryListResponseData'
     LiveDataEventsListResponse:
       description: A list of recent live tracking events, each detailing the event type (view_experience, conversion, transaction), associated experience/variation, visitor segments (device, browser, country), and timestamp.
       content:
@@ -2928,6 +2906,28 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/GeneratedDebugTokenDataResponse'
+    ErrorResponse:
+      description: 'Indicates an error occurred while processing the request. The `code` provides an HTTP status code, `message` offers a human-readable explanation or an array of validation errors, and `fields` (if present) specifies which input fields were problematic.
+
+        '
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorData'
+    ProjectsListResponse:
+      description: A list of projects accessible to the user within an account. Each project entry includes its ID, name, type (web/fullstack), status, and potentially other summary information depending on `include` parameters.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ProjectsListResponseData'
+    ImportProjectDataSuccessResponse:
+      description: 'Confirms successful import of project data. Includes a list of `imported` entities (experiences, audiences, locations, goals, hypotheses) with their newly assigned IDs in the target project.
+
+        '
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ImportProjectDataSuccess'
   requestBodies:
     ImportProjectRequest:
       content:
@@ -2936,32 +2936,25 @@ components:
             $ref: '#/components/schemas/ImportProjectRequestData'
       description: Contains the JSON `file` (previously exported from Convert) with the project data to be imported. This is used for creating a new project from an export or updating an existing one.
       required: true
-    UpdateProjectRequest:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/UpdateProjectRequestData'
-      description: Contains the fields of the project to be updated. Any `domains` provided will replace the existing list. Other modifiable fields include `name`, `global_javascript`, `reporting_settings`, `settings` (like time zone, jQuery inclusion, GDPR options), and `integrations_settings`.
-      required: true
     GetProjectHistoryRequest:
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/ProjectHistoryRequestData'
       description: Filters for retrieving the change history log for a specific project. Allows specifying date ranges, users, types of project entities changed (e.g., 'experience', 'goal', 'audience'), and methods of change.
+    ExportProjectRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ExportProjectRequestData'
+      description: Specifies which components of the project to include in the JSON export. You can choose to include/exclude the main project settings, and lists of specific experiences, audiences, locations, goals, or hypotheses by their IDs. Useful for backups or migrations.
+      required: true
     GetProjectLiveDataRequest:
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/GetProjectLiveDataRequestData'
       description: Optional filters for project-specific live data. You can specify `experiences` (by ID), `event_types` (view_experience, conversion, transaction), `goals` (by ID), or `segments` to narrow down the real-time event feed.
-      required: false
-    GetProjectsListRequest:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/GetProjectsListRequestData'
-      description: Optional filters for listing projects. You can search by `name` or `description`, filter by `status` (active/inactive), `project_type` (web/fullstack), `tracking_script_release_type`, specific `tracking_script_version`, or use pagination (`page`, `results_per_page`). Also supports `only` and `except` for specific project IDs.
       required: false
     CreateProjectRequest:
       content:
@@ -2977,13 +2970,20 @@ components:
             $ref: '#/components/schemas/BulkUpdateProjectsRequestData'
       description: Contains a list of project `id`s and the `settings` (specifically `tracking_script.current_version`) to be applied to all specified projects. Useful for rolling out tracking script updates.
       required: true
-    ExportProjectRequest:
+    UpdateProjectRequest:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/ExportProjectRequestData'
-      description: Specifies which components of the project to include in the JSON export. You can choose to include/exclude the main project settings, and lists of specific experiences, audiences, locations, goals, or hypotheses by their IDs. Useful for backups or migrations.
+            $ref: '#/components/schemas/UpdateProjectRequestData'
+      description: Contains the fields of the project to be updated. Any `domains` provided will replace the existing list. Other modifiable fields include `name`, `global_javascript`, `reporting_settings`, `settings` (like time zone, jQuery inclusion, GDPR options), and `integrations_settings`.
       required: true
+    GetProjectsListRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GetProjectsListRequestData'
+      description: Optional filters for listing projects. You can search by `name` or `description`, filter by `status` (active/inactive), `project_type` (web/fullstack), `tracking_script_release_type`, specific `tracking_script_version`, or use pagination (`page`, `results_per_page`). Also supports `only` and `except` for specific project IDs.
+      required: false
   securitySchemes:
     requestSigning:
       type: apiKey

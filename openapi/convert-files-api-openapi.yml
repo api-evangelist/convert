@@ -107,6 +107,20 @@ paths:
           $ref: '#/components/responses/ErrorResponse'
 components:
   responses:
+    FileDataResponse:
+      description: Contains the base64 encoded `content` of a requested file, along with its metadata like `key`, `file_name`, and `mime_type`.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/FileData'
+    SuccessResponse:
+      description: 'A generic success response, typically used for operations that don''t return specific data (like deletions or some updates). The `code` is usually 200, and `message` confirms the successful action.
+
+        '
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SuccessData'
     FileResponse:
       description: Details of a single uploaded file, including its access `url`, storage `key`, original `file_name`, `file_size`, and `mime_type`.
       content:
@@ -121,20 +135,6 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorData'
-    SuccessResponse:
-      description: 'A generic success response, typically used for operations that don''t return specific data (like deletions or some updates). The `code` is usually 200, and `message` confirms the successful action.
-
-        '
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/SuccessData'
-    FileDataResponse:
-      description: Contains the base64 encoded `content` of a requested file, along with its metadata like `key`, `file_name`, and `mime_type`.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/FileData'
   schemas:
     FileData:
       allOf:
@@ -146,43 +146,6 @@ components:
             description: Base64 encoded content of the file
             type: string
             example: JVBERi0xLjMKJcTl8uXrp/Og0MTGCjQgMCBvYmoKPDwgL0xlbg...
-    UploadFileRequestData:
-      type: object
-      description: 'Request body for uploading a generic file. Uses multipart/form-data.
-
-        Supported file types include PDF, DOC(X), XLS(X), PPT(X), TXT, CSV, and common image formats (JPG, PNG, GIF, WEBP, SVG).
-
-        Maximum file size is 5MB.
-
-        '
-      properties:
-        file_name:
-          description: The desired name for the file as it will be stored and identified in Convert (e.g., "campaign_brief.pdf", "logo_variation.svg"). Include the file extension.
-          type: string
-          maxLength: 200
-        file:
-          description: 'The actual binary file content to be uploaded.
-
-            Constraints:
-
-            - Maximum file size: 5MB.
-
-            - Supported types: PDF, DOC, DOCX, XLS, XLSX, PPT, PPTX, TXT, CSV, JPG, JPEG, BMP, GIF, PNG, WEBP, SVG.
-
-            '
-          type: string
-          format: binary
-      required:
-      - file_name
-      - file
-    SuccessData:
-      type: object
-      properties:
-        code:
-          type: integer
-          format: int32
-        message:
-          type: string
     ErrorData:
       type: object
       properties:
@@ -216,6 +179,14 @@ components:
           message:
             description: Message related to the file upload status
             type: string
+    SuccessData:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
     FileBase:
       type: object
       description: Base properties common to an uploaded file in Convert's storage.
@@ -253,6 +224,35 @@ components:
         message:
           description: A message related to the file's status, providing more details in case of an error during upload.
           type: string
+    UploadFileRequestData:
+      type: object
+      description: 'Request body for uploading a generic file. Uses multipart/form-data.
+
+        Supported file types include PDF, DOC(X), XLS(X), PPT(X), TXT, CSV, and common image formats (JPG, PNG, GIF, WEBP, SVG).
+
+        Maximum file size is 5MB.
+
+        '
+      properties:
+        file_name:
+          description: The desired name for the file as it will be stored and identified in Convert (e.g., "campaign_brief.pdf", "logo_variation.svg"). Include the file extension.
+          type: string
+          maxLength: 200
+        file:
+          description: 'The actual binary file content to be uploaded.
+
+            Constraints:
+
+            - Maximum file size: 5MB.
+
+            - Supported types: PDF, DOC, DOCX, XLS, XLSX, PPT, PPTX, TXT, CSV, JPG, JPEG, BMP, GIF, PNG, WEBP, SVG.
+
+            '
+          type: string
+          format: binary
+      required:
+      - file_name
+      - file
   requestBodies:
     UploadFileRequest:
       content:

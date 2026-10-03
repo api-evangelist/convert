@@ -31,6 +31,21 @@ paths:
         default:
           $ref: '#/components/responses/ErrorResponse'
 components:
+  responses:
+    OAuthTokenResponse:
+      description: One-time code exchanged for a scoped OAuth bearer session token.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/OAuthTokenResponseData'
+    ErrorResponse:
+      description: 'Indicates an error occurred while processing the request. The `code` provides an HTTP status code, `message` offers a human-readable explanation or an array of validation errors, and `fields` (if present) specifies which input fields were problematic.
+
+        '
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorData'
   requestBodies:
     OAuthTokenRequest:
       required: true
@@ -40,52 +55,33 @@ components:
           schema:
             $ref: '#/components/schemas/OAuthTokenRequestData'
   schemas:
-    OAuthScopeProject:
+    OAuthTokenRequestData:
       type: object
       required:
-      - project_id
-      - role
+      - grant_type
+      - code
+      - client_id
+      - code_verifier
       properties:
-        project_id:
-          type: integer
-          minimum: 1
-        role:
-          description: User's role for this project.
-          type: string
-        name:
-          description: Display name of the project.
-          type: string
-    OAuthTokenResponseData:
-      type: object
-      required:
-      - access_token
-      - token_type
-      - expires_at
-      - scope
-      properties:
-        access_token:
-          description: Opaque OAuth session bearer token.
-          type: string
-        token_type:
+        grant_type:
+          description: Authorization grant type.
           type: string
           enum:
-          - Bearer
-        expires_at:
-          type: integer
-          description: Absolute expiration timestamp (unix seconds).
-        scope:
-          $ref: '#/components/schemas/OAuthScopeResponse'
-    OAuthScopeResponse:
-      type: object
-      required:
-      - mode
-      properties:
-        mode:
-          $ref: '#/components/schemas/OAuthScopeMode'
-        accounts:
-          type: array
-          items:
-            $ref: '#/components/schemas/OAuthScopeAccountResponse'
+          - authorization_code
+          default: authorization_code
+        code:
+          description: One-time authorization code from consent redirect.
+          type: string
+          minLength: 1
+        client_id:
+          description: Identifier of the OAuth client application that initiated the authorization request.
+          type: string
+        code_verifier:
+          description: PKCE verifier for code challenge validation.
+          type: string
+          minLength: 43
+          maxLength: 128
+          pattern: ^[A-Za-z0-9\-._~]+$
     ErrorData:
       type: object
       properties:
@@ -119,52 +115,56 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/OAuthScopeProject'
+    OAuthScopeProject:
+      type: object
+      required:
+      - project_id
+      - role
+      properties:
+        project_id:
+          type: integer
+          minimum: 1
+        role:
+          description: User's role for this project.
+          type: string
+        name:
+          description: Display name of the project.
+          type: string
+    OAuthScopeResponse:
+      type: object
+      required:
+      - mode
+      properties:
+        mode:
+          $ref: '#/components/schemas/OAuthScopeMode'
+        accounts:
+          type: array
+          items:
+            $ref: '#/components/schemas/OAuthScopeAccountResponse'
+    OAuthTokenResponseData:
+      type: object
+      required:
+      - access_token
+      - token_type
+      - expires_at
+      - scope
+      properties:
+        access_token:
+          description: Opaque OAuth session bearer token.
+          type: string
+        token_type:
+          type: string
+          enum:
+          - Bearer
+        expires_at:
+          type: integer
+          description: Absolute expiration timestamp (unix seconds).
+        scope:
+          $ref: '#/components/schemas/OAuthScopeResponse'
     OAuthScopeMode:
       type: string
       enum:
       - selected_accounts_projects
-    OAuthTokenRequestData:
-      type: object
-      required:
-      - grant_type
-      - code
-      - client_id
-      - code_verifier
-      properties:
-        grant_type:
-          description: Authorization grant type.
-          type: string
-          enum:
-          - authorization_code
-          default: authorization_code
-        code:
-          description: One-time authorization code from consent redirect.
-          type: string
-          minLength: 1
-        client_id:
-          description: Identifier of the OAuth client application that initiated the authorization request.
-          type: string
-        code_verifier:
-          description: PKCE verifier for code challenge validation.
-          type: string
-          minLength: 43
-          maxLength: 128
-          pattern: ^[A-Za-z0-9\-._~]+$
-  responses:
-    ErrorResponse:
-      description: 'Indicates an error occurred while processing the request. The `code` provides an HTTP status code, `message` offers a human-readable explanation or an array of validation errors, and `fields` (if present) specifies which input fields were problematic.
-
-        '
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorData'
-    OAuthTokenResponse:
-      description: One-time code exchanged for a scoped OAuth bearer session token.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/OAuthTokenResponseData'
   securitySchemes:
     requestSigning:
       type: apiKey
