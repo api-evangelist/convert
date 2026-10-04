@@ -132,121 +132,36 @@ paths:
         default:
           $ref: '#/components/responses/ErrorResponse'
 components:
+  responses:
+    VisitorsDataListResponse:
+      description: A list of visitors data for a project
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/VisitorDataListResponseData'
+    VisitorDataItemResponse:
+      description: Single visitor data item.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/VisitorDataItem'
+    ErrorResponse:
+      description: 'Indicates an error occurred while processing the request. The `code` provides an HTTP status code, `message` offers a human-readable explanation or an array of validation errors, and `fields` (if present) specifies which input fields were problematic.
+
+        '
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorData'
+    SuccessResponse:
+      description: 'A generic success response, typically used for operations that don''t return specific data (like deletions or some updates). The `code` is usually 200, and `message` confirms the successful action.
+
+        '
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SuccessData'
   schemas:
-    VisitorDataListResponseData:
-      type: object
-      description: Response containing list of visitor data and extra list metadata
-      properties:
-        data:
-          $ref: '#/components/schemas/VisitorDataList'
-        extra:
-          $ref: '#/components/schemas/Extra'
-    VisitorDataItem:
-      allOf:
-      - $ref: '#/components/schemas/BaseVisitorData'
-      - type: object
-        properties:
-          source:
-            type: string
-            description: The source of imported visitor data
-            example: csv
-          created_at:
-            type: integer
-            readOnly: true
-            description: Unix timestamp (UTC) indicating when this visitor data was created in the system.
-            example: 1753821567
-    PageNumber:
-      type: object
-      properties:
-        page:
-          type: integer
-          minimum: 1
-          description: 'The page number for paginated results. For example, if `results_per_page` is 30, `page: 2` will retrieve items 31-60.
-
-            Defaults to 1 if not specified.
-
-            '
-    ErrorData:
-      type: object
-      properties:
-        code:
-          type: integer
-          format: int32
-        message:
-          oneOf:
-          - type: string
-          - type: array
-            items:
-              type: string
-        fields:
-          oneOf:
-          - type: string
-          - type: array
-            items:
-              type: string
-    ImportVisitorsDataPushRequestData:
-      type: object
-      properties:
-        source:
-          $ref: '#/components/schemas/ImportVisitorsDataPushSource'
-        data:
-          type: array
-          description: The visitor data list of objects. visitor_id is required for each item in the list.
-          items:
-            $ref: '#/components/schemas/ImportVisitorsDataPushItem'
-      required:
-      - source
-      - data
-    SuccessData:
-      type: object
-      properties:
-        code:
-          type: integer
-          format: int32
-        message:
-          type: string
-    ImportVisitorsDataPushItem:
-      $ref: '#/components/schemas/BaseVisitorData'
-    BaseDataItem:
-      type: object
-      description: The visitor data as key-value pairs containing placeholder data
-      additionalProperties: true
-      example:
-        placeholder: testing
-        location: New York
-    ResultsPerPage:
-      type: object
-      properties:
-        results_per_page:
-          type: integer
-          nullable: true
-          minimum: 0
-          maximum: 50
-          default: 30
-          description: 'Specifies the maximum number of items to return in a single page of results.
-
-            Used for pagination. Default is 30, maximum is 50.
-
-            '
-    Pagination:
-      type: object
-      properties:
-        current_page:
-          description: The current page number being displayed from the paginated set.
-          type: integer
-          minimum: 1
-        items_count:
-          description: The total number of items available across all pages for the current filter criteria.
-          type: integer
-          minimum: 0
-        items_per_page:
-          description: The number of items included in the current page of results (matches `results_per_page` from the request).
-          type: integer
-          minimum: 0
-        pages_count:
-          description: The total number of pages available for the current filter criteria and `results_per_page` setting.
-          type: integer
-          minimum: 0
     BaseVisitorData:
       type: object
       properties:
@@ -268,19 +183,43 @@ components:
             maxLength: 200
             nullable: true
             description: A search string that would be used to search against visitor data
-    ImportVisitorsDataPushSource:
-      type: string
-      description: The source of the visitor data - can be any string value
     VisitorDataList:
       type: array
       description: List of visitor data items
       items:
         $ref: '#/components/schemas/VisitorDataItem'
-    Extra:
+    ImportVisitorsDataPushRequestData:
       type: object
       properties:
-        pagination:
-          $ref: '#/components/schemas/Pagination'
+        source:
+          $ref: '#/components/schemas/ImportVisitorsDataPushSource'
+        data:
+          type: array
+          description: The visitor data list of objects. visitor_id is required for each item in the list.
+          items:
+            $ref: '#/components/schemas/ImportVisitorsDataPushItem'
+      required:
+      - source
+      - data
+    Pagination:
+      type: object
+      properties:
+        current_page:
+          description: The current page number being displayed from the paginated set.
+          type: integer
+          minimum: 1
+        items_count:
+          description: The total number of items available across all pages for the current filter criteria.
+          type: integer
+          minimum: 0
+        items_per_page:
+          description: The number of items included in the current page of results (matches `results_per_page` from the request).
+          type: integer
+          minimum: 0
+        pages_count:
+          description: The total number of pages available for the current filter criteria and `results_per_page` setting.
+          type: integer
+          minimum: 0
     ImportVisitorsDataCsvRequestData:
       type: object
       properties:
@@ -322,6 +261,46 @@ components:
             '
       required:
       - file
+    Extra:
+      type: object
+      properties:
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+    ImportVisitorsDataPushSource:
+      type: string
+      description: The source of the visitor data - can be any string value
+    ResultsPerPage:
+      type: object
+      properties:
+        results_per_page:
+          type: integer
+          nullable: true
+          minimum: 0
+          maximum: 50
+          default: 30
+          description: 'Specifies the maximum number of items to return in a single page of results.
+
+            Used for pagination. Default is 30, maximum is 50.
+
+            '
+    ErrorData:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          oneOf:
+          - type: string
+          - type: array
+            items:
+              type: string
+        fields:
+          oneOf:
+          - type: string
+          - type: array
+            items:
+              type: string
     OnlyCount:
       type: object
       properties:
@@ -332,7 +311,86 @@ components:
             and will not include the actual item data. Useful for quickly getting totals without fetching full datasets.
 
             '
+    VisitorDataListResponseData:
+      type: object
+      description: Response containing list of visitor data and extra list metadata
+      properties:
+        data:
+          $ref: '#/components/schemas/VisitorDataList'
+        extra:
+          $ref: '#/components/schemas/Extra'
+    PageNumber:
+      type: object
+      properties:
+        page:
+          type: integer
+          minimum: 1
+          description: 'The page number for paginated results. For example, if `results_per_page` is 30, `page: 2` will retrieve items 31-60.
+
+            Defaults to 1 if not specified.
+
+            '
+    VisitorDataItem:
+      allOf:
+      - $ref: '#/components/schemas/BaseVisitorData'
+      - type: object
+        properties:
+          source:
+            type: string
+            description: The source of imported visitor data
+            example: csv
+          created_at:
+            type: integer
+            readOnly: true
+            description: Unix timestamp (UTC) indicating when this visitor data was created in the system.
+            example: 1753821567
+    ImportVisitorsDataPushItem:
+      $ref: '#/components/schemas/BaseVisitorData'
+    SuccessData:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+    BaseDataItem:
+      type: object
+      description: The visitor data as key-value pairs containing placeholder data
+      additionalProperties: true
+      example:
+        placeholder: testing
+        location: New York
+  parameters:
+    ProjectId:
+      name: project_id
+      in: path
+      required: true
+      description: ID of the project to be retrieved
+      schema:
+        type: integer
+    AccountId:
+      name: account_id
+      in: path
+      required: true
+      description: ID of the account that owns the retrieved/saved data
+      schema:
+        type: integer
+    VisitorId:
+      name: visitor_id
+      in: path
+      required: true
+      description: The visitor identifier for visitor data operations
+      schema:
+        type: string
   requestBodies:
+    ImportVisitorsDataCsvRequest:
+      content:
+        multipart/form-data:
+          schema:
+            $ref: '#/components/schemas/ImportVisitorsDataCsvRequestData'
+      description: Import Visitors Data Csv
+      required: true
     CreateVisitorDataItemRequest:
       required: true
       content:
@@ -355,12 +413,12 @@ components:
             properties:
               data:
                 $ref: '#/components/schemas/BaseDataItem'
-    ImportVisitorsDataCsvRequest:
+    ImportVisitorsDataPushRequest:
       content:
-        multipart/form-data:
+        application/json:
           schema:
-            $ref: '#/components/schemas/ImportVisitorsDataCsvRequestData'
-      description: Import Visitors Data Csv
+            $ref: '#/components/schemas/ImportVisitorsDataPushRequestData'
+      description: Import Visitor Data Push Request
       required: true
     GetVisitorDataListRequest:
       content:
@@ -369,64 +427,6 @@ components:
             $ref: '#/components/schemas/GetVisitorDataListRequestData'
       description: Optional filters for listing visitor data. You can search by visitor_id, or general search term. Also supports pagination (page, results_per_page) and sorting (sort_by, sort_direction).
       required: false
-    ImportVisitorsDataPushRequest:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ImportVisitorsDataPushRequestData'
-      description: Import Visitor Data Push Request
-      required: true
-  responses:
-    VisitorDataItemResponse:
-      description: Single visitor data item.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/VisitorDataItem'
-    SuccessResponse:
-      description: 'A generic success response, typically used for operations that don''t return specific data (like deletions or some updates). The `code` is usually 200, and `message` confirms the successful action.
-
-        '
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/SuccessData'
-    VisitorsDataListResponse:
-      description: A list of visitors data for a project
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/VisitorDataListResponseData'
-    ErrorResponse:
-      description: 'Indicates an error occurred while processing the request. The `code` provides an HTTP status code, `message` offers a human-readable explanation or an array of validation errors, and `fields` (if present) specifies which input fields were problematic.
-
-        '
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorData'
-  parameters:
-    AccountId:
-      name: account_id
-      in: path
-      required: true
-      description: ID of the account that owns the retrieved/saved data
-      schema:
-        type: integer
-    ProjectId:
-      name: project_id
-      in: path
-      required: true
-      description: ID of the project to be retrieved
-      schema:
-        type: integer
-    VisitorId:
-      name: visitor_id
-      in: path
-      required: true
-      description: The visitor identifier for visitor data operations
-      schema:
-        type: string
   securitySchemes:
     requestSigning:
       type: apiKey

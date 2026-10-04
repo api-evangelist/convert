@@ -273,94 +273,80 @@ paths:
         default:
           $ref: '#/components/responses/ErrorResponse'
 components:
-  schemas:
-    BulkEntityError:
-      type: object
-      additionalProperties: false
-      properties:
-        id:
-          type: integer
-          description: The unique identifier of the entity that could not be processed.
-        message:
-          type: string
-          description: A message explaining the reason for the failure for this specific entity.
-    CheckCodeDomainRequestData:
-      type: object
-      description: Check if tracking code is installed on the given URL;
-      properties:
-        url:
-          type: string
-          maxLength: 255
-          description: 'URL on which to check the tracking code installed.
+  responses:
+    BulkSuccessResponse:
+      description: 'Indicates the outcome of a bulk operation (e.g., bulk update or delete). Provides a general success `message` and an `errors` array listing any entities that could not be processed, along with the reason for failure for each.
 
-            The given URL needs to be under the domain passes as parameter or otherwise an error would be returned.
+        '
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BulkSuccessData'
+    ErrorResponse:
+      description: 'Indicates an error occurred while processing the request. The `code` provides an HTTP status code, `message` offers a human-readable explanation or an array of validation errors, and `fields` (if present) specifies which input fields were problematic.
 
-            '
-    DomainsList:
-      type: array
-      description: List of domains
-      items:
-        $ref: '#/components/schemas/Domain'
+        '
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorData'
+    DomainResponse:
+      description: Details for a single domain associated with a project, including its `id`, `url`, and `code_installed` status.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Domain'
+    SuccessResponse:
+      description: 'A generic success response, typically used for operations that don''t return specific data (like deletions or some updates). The `code` is usually 200, and `message` confirms the successful action.
+
+        '
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SuccessData'
+    DomainsListResponse:
+      description: A list of website domains associated with a project. Each entry includes the domain `id`, `url`, and a flag `code_installed` indicating if the Convert tracking script was detected.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/DomainsListResponseData'
+  requestBodies:
+    GetDomainByUrlRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GetDomainByUrlRequestData'
+      description: Contains the `url` (which can be an exact match or include wildcards like `*.example.com`) to search for among the project's associated domains.
+    CreateDomainRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CreateDomainRequestData'
+      required: true
+    CheckCodeDomainRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CheckCodeDomainRequestData'
+      description: Contains the specific `url` (which must fall under the path-parameter `domain_id`) on which to check for the presence and correct installation of the Convert tracking script.
+    GetDomainsListRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GetDomainsListRequestData'
+      description: Optional filters for listing domains within a project, primarily pagination parameters (`page`, `results_per_page`).
     UpdateDomainRequestData:
-      allOf:
-      - $ref: '#/components/schemas/Domain'
-    DomainsListResponseData:
-      type: object
-      description: Response containing a list of domains and extra domains list metadata
-      properties:
-        data:
-          $ref: '#/components/schemas/DomainsList'
-        extra:
-          $ref: '#/components/schemas/Extra'
-    CreateDomainRequestData:
-      allOf:
-      - $ref: '#/components/schemas/DomainToCreate'
-    PageNumber:
-      type: object
-      properties:
-        page:
-          type: integer
-          minimum: 1
-          description: 'The page number for paginated results. For example, if `results_per_page` is 30, `page: 2` will retrieve items 31-60.
-
-            Defaults to 1 if not specified.
-
-            '
-    ErrorData:
-      type: object
-      properties:
-        code:
-          type: integer
-          format: int32
-        message:
-          oneOf:
-          - type: string
-          - type: array
-            items:
-              type: string
-        fields:
-          oneOf:
-          - type: string
-          - type: array
-            items:
-              type: string
-    BulkDeleteDomainRequestData:
-      type: object
-      description: Bulk Delete provided domains
-      additionalProperties: false
-      properties:
-        id:
-          $ref: '#/components/schemas/BulkDomainsIds'
-      required:
-      - id
-    SuccessData:
-      type: object
-      properties:
-        code:
-          type: integer
-          format: int32
-        message:
-          type: string
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UpdateDomainRequestData'
+      required: true
+    BulkDeleteDomainsRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BulkDeleteDomainRequestData'
+  schemas:
     BulkSuccessData:
       allOf:
       - $ref: '#/components/schemas/SuccessData'
@@ -374,52 +360,41 @@ components:
             description: List of unprocessed entities. Would be empty, if all passed entities processed
             items:
               $ref: '#/components/schemas/BulkEntityError'
-    ResultsPerPage:
+    CreateDomainRequestData:
+      allOf:
+      - $ref: '#/components/schemas/DomainToCreate'
+    DomainsList:
+      type: array
+      description: List of domains
+      items:
+        $ref: '#/components/schemas/Domain'
+    DomainsListDataOptions:
       type: object
-      properties:
-        results_per_page:
-          type: integer
-          nullable: true
-          minimum: 0
-          maximum: 50
-          default: 30
-          description: 'Specifies the maximum number of items to return in a single page of results.
-
-            Used for pagination. Default is 30, maximum is 50.
-
-            '
-    GetDomainByUrlRequestData:
+      description: Filter domains list.
+      allOf:
+      - $ref: '#/components/schemas/ResultsPerPage'
+    CheckCodeDomainRequestData:
       type: object
-      description: Get domain by URL request data
+      description: Check if tracking code is installed on the given URL;
       properties:
         url:
           type: string
           maxLength: 255
-          description: URL by which to search the domain. The match can be an exact one or an wildcard one.
-    GetDomainsListRequestData:
-      allOf:
-      - $ref: '#/components/schemas/OnlyCount'
-      - $ref: '#/components/schemas/DomainsListDataOptions'
-      - $ref: '#/components/schemas/PageNumber'
-      - type: object
-        properties:
-          only:
-            description: 'Only retrieve domains with the given ids.
+          description: 'URL on which to check the tracking code installed.
 
-              '
-            type: array
-            nullable: true
-            items:
-              type: integer
-            maxItems: 100
-          except:
-            description: 'Except domains with the given ids.
+            The given URL needs to be under the domain passes as parameter or otherwise an error would be returned.
 
-              '
-            type: array
-            items:
-              type: integer
-            maxItems: 100
+            '
+    BulkEntityError:
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          description: The unique identifier of the entity that could not be processed.
+        message:
+          type: string
+          description: A message explaining the reason for the failure for this specific entity.
     Pagination:
       type: object
       properties:
@@ -444,11 +419,36 @@ components:
       properties:
         pagination:
           $ref: '#/components/schemas/Pagination'
-    DomainsListDataOptions:
+    ResultsPerPage:
       type: object
-      description: Filter domains list.
-      allOf:
-      - $ref: '#/components/schemas/ResultsPerPage'
+      properties:
+        results_per_page:
+          type: integer
+          nullable: true
+          minimum: 0
+          maximum: 50
+          default: 30
+          description: 'Specifies the maximum number of items to return in a single page of results.
+
+            Used for pagination. Default is 30, maximum is 50.
+
+            '
+    DomainsListResponseData:
+      type: object
+      description: Response containing a list of domains and extra domains list metadata
+      properties:
+        data:
+          $ref: '#/components/schemas/DomainsList'
+        extra:
+          $ref: '#/components/schemas/Extra'
+    GetDomainByUrlRequestData:
+      type: object
+      description: Get domain by URL request data
+      properties:
+        url:
+          type: string
+          maxLength: 255
+          description: URL by which to search the domain. The match can be an exact one or an wildcard one.
     BulkDomainsIds:
       type: array
       description: The list of domains id to delete
@@ -456,11 +456,37 @@ components:
         type: integer
       minItems: 1
       maxItems: 100
-    DomainToCreate:
-      required:
-      - url
+    ErrorData:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          oneOf:
+          - type: string
+          - type: array
+            items:
+              type: string
+        fields:
+          oneOf:
+          - type: string
+          - type: array
+            items:
+              type: string
+    UpdateDomainRequestData:
       allOf:
       - $ref: '#/components/schemas/Domain'
+    OnlyCount:
+      type: object
+      properties:
+        onlyCount:
+          type: boolean
+          description: 'If set to `true` in a list request, the response will only contain the total count of matching items (`extra.pagination.items_count`)
+
+            and will not include the actual item data. Useful for quickly getting totals without fetching full datasets.
+
+            '
     Domain:
       type: object
       description: A website domain data.
@@ -478,89 +504,63 @@ components:
           type: boolean
           description: Indicating whether code installed check passed sometimes in the past.
           default: false
-    OnlyCount:
+    GetDomainsListRequestData:
+      allOf:
+      - $ref: '#/components/schemas/OnlyCount'
+      - $ref: '#/components/schemas/DomainsListDataOptions'
+      - $ref: '#/components/schemas/PageNumber'
+      - type: object
+        properties:
+          only:
+            description: 'Only retrieve domains with the given ids.
+
+              '
+            type: array
+            nullable: true
+            items:
+              type: integer
+            maxItems: 100
+          except:
+            description: 'Except domains with the given ids.
+
+              '
+            type: array
+            items:
+              type: integer
+            maxItems: 100
+    BulkDeleteDomainRequestData:
+      type: object
+      description: Bulk Delete provided domains
+      additionalProperties: false
+      properties:
+        id:
+          $ref: '#/components/schemas/BulkDomainsIds'
+      required:
+      - id
+    PageNumber:
       type: object
       properties:
-        onlyCount:
-          type: boolean
-          description: 'If set to `true` in a list request, the response will only contain the total count of matching items (`extra.pagination.items_count`)
+        page:
+          type: integer
+          minimum: 1
+          description: 'The page number for paginated results. For example, if `results_per_page` is 30, `page: 2` will retrieve items 31-60.
 
-            and will not include the actual item data. Useful for quickly getting totals without fetching full datasets.
+            Defaults to 1 if not specified.
 
             '
-  responses:
-    SuccessResponse:
-      description: 'A generic success response, typically used for operations that don''t return specific data (like deletions or some updates). The `code` is usually 200, and `message` confirms the successful action.
-
-        '
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/SuccessData'
-    DomainsListResponse:
-      description: A list of website domains associated with a project. Each entry includes the domain `id`, `url`, and a flag `code_installed` indicating if the Convert tracking script was detected.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/DomainsListResponseData'
-    BulkSuccessResponse:
-      description: 'Indicates the outcome of a bulk operation (e.g., bulk update or delete). Provides a general success `message` and an `errors` array listing any entities that could not be processed, along with the reason for failure for each.
-
-        '
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/BulkSuccessData'
-    DomainResponse:
-      description: Details for a single domain associated with a project, including its `id`, `url`, and `code_installed` status.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Domain'
-    ErrorResponse:
-      description: 'Indicates an error occurred while processing the request. The `code` provides an HTTP status code, `message` offers a human-readable explanation or an array of validation errors, and `fields` (if present) specifies which input fields were problematic.
-
-        '
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorData'
-  requestBodies:
-    CreateDomainRequest:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/CreateDomainRequestData'
-      required: true
-    BulkDeleteDomainsRequest:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/BulkDeleteDomainRequestData'
-    GetDomainsListRequest:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/GetDomainsListRequestData'
-      description: Optional filters for listing domains within a project, primarily pagination parameters (`page`, `results_per_page`).
-    UpdateDomainRequestData:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/UpdateDomainRequestData'
-      required: true
-    GetDomainByUrlRequest:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/GetDomainByUrlRequestData'
-      description: Contains the `url` (which can be an exact match or include wildcards like `*.example.com`) to search for among the project's associated domains.
-    CheckCodeDomainRequest:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/CheckCodeDomainRequestData'
-      description: Contains the specific `url` (which must fall under the path-parameter `domain_id`) on which to check for the presence and correct installation of the Convert tracking script.
+    DomainToCreate:
+      required:
+      - url
+      allOf:
+      - $ref: '#/components/schemas/Domain'
+    SuccessData:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
   securitySchemes:
     requestSigning:
       type: apiKey

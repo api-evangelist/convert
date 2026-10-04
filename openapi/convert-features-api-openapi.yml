@@ -305,37 +305,114 @@ paths:
         default:
           $ref: '#/components/responses/ErrorResponse'
 components:
-  requestBodies:
-    GetFeaturesListRequest:
+  responses:
+    BulkSuccessResponse:
+      description: 'Indicates the outcome of a bulk operation (e.g., bulk update or delete). Provides a general success `message` and an `errors` array listing any entities that could not be processed, along with the reason for failure for each.
+
+        '
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/GetFeaturesListRequestData'
-    UpdateFeatureRequest:
+            $ref: '#/components/schemas/BulkSuccessData'
+    ErrorResponse:
+      description: 'Indicates an error occurred while processing the request. The `code` provides an HTTP status code, `message` offers a human-readable explanation or an array of validation errors, and `fields` (if present) specifies which input fields were problematic.
+
+        '
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/UpdateFeatureRequestData'
-      required: true
-    CreateFeatureRequest:
+            $ref: '#/components/schemas/ErrorData'
+    FeatureResponse:
+      description: Detailed information for a single feature in a Full Stack project, including its name, key, status, description, and an array of its `variables` (each with a key, type, and default value).
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/CreateFeatureRequestData'
-      required: true
-    BulkUpdateFeaturesRequest:
+            $ref: '#/components/schemas/Feature'
+    FeaturesListResponse:
+      description: A list of features defined within a Full Stack project. Each feature entry includes its ID, name, key, status, and potentially usage statistics if requested.
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/BulkUpdateFeatureRequestData'
-      description: Contains a list of feature `id`s and the target `status` (e.g., 'active', 'archived') to apply to all of them.
-      required: true
-    BulkDeleteFeaturesRequest:
+            $ref: '#/components/schemas/FeaturesListResponseData'
+    SuccessResponse:
+      description: 'A generic success response, typically used for operations that don''t return specific data (like deletions or some updates). The `code` is usually 200, and `message` confirms the successful action.
+
+        '
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/BulkDeleteFeatureRequestData'
+            $ref: '#/components/schemas/SuccessData'
   schemas:
+    UpdateFeatureRequestData:
+      allOf:
+      - type: object
+        properties:
+          id:
+            description: Feature ID
+            type: integer
+      - $ref: '#/components/schemas/Feature'
+    BulkSuccessData:
+      allOf:
+      - $ref: '#/components/schemas/SuccessData'
+      - type: object
+        properties:
+          code:
+            type: integer
+            format: int32
+          errors:
+            type: array
+            description: List of unprocessed entities. Would be empty, if all passed entities processed
+            items:
+              $ref: '#/components/schemas/BulkEntityError'
+    FeatureStatuses:
+      type: string
+      description: 'The current status of a feature:
+
+        - `active`: The feature is active and can be used in Full Stack experiments. Its variables can be controlled by experiences.
+
+        - `archived`: The feature is archived and no longer available for new experiments. Existing experiments using it might behave based on last known configuration or default values.
+
+        '
+      enum:
+      - active
+      - archived
+      default: active
+    FeatureVariableNumeric:
+      allOf:
+      - $ref: '#/components/schemas/FeatureVariableBase'
+      - type: object
+        properties:
+          type:
+            enum:
+            - float
+            - integer
+          default_value:
+            type: number
+            nullable: true
+    BulkUpdateFeatureRequestData:
+      type: object
+      description: Request body for bulk updating the status of multiple features.
+      additionalProperties: false
+      properties:
+        id:
+          $ref: '#/components/schemas/BulkFeaturesIds'
+        status:
+          $ref: '#/components/schemas/FeatureStatuses'
+      required:
+      - id
+      - status
+    FeatureVariableString:
+      allOf:
+      - $ref: '#/components/schemas/FeatureVariableBase'
+      - type: object
+        properties:
+          type:
+            enum:
+            - json
+            - string
+          default_value:
+            type: string
+            nullable: true
     BulkEntityError:
       type: object
       additionalProperties: false
@@ -346,11 +423,148 @@ components:
         message:
           type: string
           description: A message explaining the reason for the failure for this specific entity.
+    Pagination:
+      type: object
+      properties:
+        current_page:
+          description: The current page number being displayed from the paginated set.
+          type: integer
+          minimum: 1
+        items_count:
+          description: The total number of items available across all pages for the current filter criteria.
+          type: integer
+          minimum: 0
+        items_per_page:
+          description: The number of items included in the current page of results (matches `results_per_page` from the request).
+          type: integer
+          minimum: 0
+        pages_count:
+          description: The total number of pages available for the current filter criteria and `results_per_page` setting.
+          type: integer
+          minimum: 0
     FeaturesList:
       type: array
       description: A list of feature objects.
       items:
         $ref: '#/components/schemas/Feature'
+    Extra:
+      type: object
+      properties:
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+    FeatureStats:
+      type: object
+      readOnly: true
+      properties:
+        times_used:
+          type: integer
+          description: The number of currently active experiences (e.g., 'a/b_fullstack', 'feature_rollout') that are using this feature to control variations.
+    ResultsPerPage:
+      type: object
+      properties:
+        results_per_page:
+          type: integer
+          nullable: true
+          minimum: 0
+          maximum: 50
+          default: 30
+          description: 'Specifies the maximum number of items to return in a single page of results.
+
+            Used for pagination. Default is 30, maximum is 50.
+
+            '
+    FeaturesListResponseData:
+      type: object
+      description: Response containing a list of features defined within a Full Stack project, along with pagination details if applicable.
+      properties:
+        data:
+          $ref: '#/components/schemas/FeaturesList'
+        extra:
+          $ref: '#/components/schemas/Extra'
+    GetFeaturesListRequestData:
+      allOf:
+      - $ref: '#/components/schemas/OnlyCount'
+      - $ref: '#/components/schemas/FeaturesListFilteringOptions'
+      - $ref: '#/components/schemas/PageNumber'
+      - type: object
+        properties:
+          include:
+            description: Specifies the list of fields to be included in the response, which otherwise would not be sent.
+            type: array
+            items:
+              $ref: '#/components/schemas/FeatureOptionalFields'
+    ErrorData:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          oneOf:
+          - type: string
+          - type: array
+            items:
+              type: string
+        fields:
+          oneOf:
+          - type: string
+          - type: array
+            items:
+              type: string
+    OnlyCount:
+      type: object
+      properties:
+        onlyCount:
+          type: boolean
+          description: 'If set to `true` in a list request, the response will only contain the total count of matching items (`extra.pagination.items_count`)
+
+            and will not include the actual item data. Useful for quickly getting totals without fetching full datasets.
+
+            '
+    BulkFeaturesIds:
+      type: array
+      description: A list of feature unique numerical identifiers to be affected by a bulk operation.
+      items:
+        type: integer
+      minItems: 1
+      maxItems: 100
+    FeatureVariableBase:
+      type: object
+      description: Base properties for a variable within a feature. Each variable has a key, a type, and a default value.
+      properties:
+        key:
+          type: string
+          description: 'A unique, machine-readable string key for this variable within the feature (e.g., "buttonColor", "discountPercentage", "showHeader").
+
+            This key is used by SDKs to retrieve the variable''s value for the active variation.
+
+            '
+          maxLength: 32
+        type:
+          type: string
+          description: 'The data type of the variable. This determines the kind of values it can hold and how it''s treated by the SDKs.
+
+            - `json`: A JSON object or array.
+
+            - `string`: A text string.
+
+            - `boolean`: A true/false value.
+
+            - `float`: A floating-point number.
+
+            - `integer`: A whole number.
+
+            '
+        default_value:
+          description: 'The default value for this variable. This value is used if the feature is not part of an active experiment for a user, or if no specific value is set for the variation a user is bucketed into.
+
+            The type of `default_value` must match the specified `type` of the variable.
+
+            '
+          nullable: true
+      required:
+      - key
+      - type
     FeatureVariable:
       oneOf:
       - $ref: '#/components/schemas/FeatureVariableString'
@@ -364,18 +578,6 @@ components:
           json: '#/components/schemas/FeatureVariableString'
           integer: '#/components/schemas/FeatureVariableNumeric'
           string: '#/components/schemas/FeatureVariableString'
-    FeatureVariableNumeric:
-      allOf:
-      - $ref: '#/components/schemas/FeatureVariableBase'
-      - type: object
-        properties:
-          type:
-            enum:
-            - float
-            - integer
-          default_value:
-            type: number
-            nullable: true
     FeaturesListFilteringOptions:
       allOf:
       - $ref: '#/components/schemas/ResultsPerPage'
@@ -419,6 +621,12 @@ components:
             - status
             nullable: true
             default: id
+    CreateFeatureRequestData:
+      allOf:
+      - $ref: '#/components/schemas/Feature'
+      required:
+      - name
+      - variables
     PageNumber:
       type: object
       properties:
@@ -430,170 +638,21 @@ components:
             Defaults to 1 if not specified.
 
             '
-    FeatureVariableString:
+    FeatureVariableBool:
       allOf:
       - $ref: '#/components/schemas/FeatureVariableBase'
       - type: object
         properties:
           type:
             enum:
-            - json
-            - string
+            - boolean
           default_value:
-            type: string
+            type: boolean
             nullable: true
-    ErrorData:
-      type: object
-      properties:
-        code:
-          type: integer
-          format: int32
-        message:
-          oneOf:
-          - type: string
-          - type: array
-            items:
-              type: string
-        fields:
-          oneOf:
-          - type: string
-          - type: array
-            items:
-              type: string
-    SortDirection:
-      type: object
-      properties:
-        sort_direction:
-          type: string
-          nullable: true
-          default: desc
-          description: 'The direction for sorting the list results, based on the `sort_by` field.
-
-            - `asc`: Ascending order (e.g., A-Z, 1-10, oldest to newest).
-
-            - `desc`: Descending order (e.g., Z-A, 10-1, newest to oldest).
-
-            Defaults to `desc` (newest/highest first) if not specified.
-
-            '
-          enum:
-          - asc
-          - desc
-    SuccessData:
-      type: object
-      properties:
-        code:
-          type: integer
-          format: int32
-        message:
-          type: string
-    UpdateFeatureRequestData:
-      allOf:
-      - type: object
-        properties:
-          id:
-            description: Feature ID
-            type: integer
-      - $ref: '#/components/schemas/Feature'
-    BulkSuccessData:
-      allOf:
-      - $ref: '#/components/schemas/SuccessData'
-      - type: object
-        properties:
-          code:
-            type: integer
-            format: int32
-          errors:
-            type: array
-            description: List of unprocessed entities. Would be empty, if all passed entities processed
-            items:
-              $ref: '#/components/schemas/BulkEntityError'
-    GetFeaturesListRequestData:
-      allOf:
-      - $ref: '#/components/schemas/OnlyCount'
-      - $ref: '#/components/schemas/FeaturesListFilteringOptions'
-      - $ref: '#/components/schemas/PageNumber'
-      - type: object
-        properties:
-          include:
-            description: Specifies the list of fields to be included in the response, which otherwise would not be sent.
-            type: array
-            items:
-              $ref: '#/components/schemas/FeatureOptionalFields'
-    BulkFeaturesIds:
-      type: array
-      description: A list of feature unique numerical identifiers to be affected by a bulk operation.
-      items:
-        type: integer
-      minItems: 1
-      maxItems: 100
-    ResultsPerPage:
-      type: object
-      properties:
-        results_per_page:
-          type: integer
-          nullable: true
-          minimum: 0
-          maximum: 50
-          default: 30
-          description: 'Specifies the maximum number of items to return in a single page of results.
-
-            Used for pagination. Default is 30, maximum is 50.
-
-            '
-    FeatureVariableBase:
-      type: object
-      description: Base properties for a variable within a feature. Each variable has a key, a type, and a default value.
-      properties:
-        key:
-          type: string
-          description: 'A unique, machine-readable string key for this variable within the feature (e.g., "buttonColor", "discountPercentage", "showHeader").
-
-            This key is used by SDKs to retrieve the variable''s value for the active variation.
-
-            '
-          maxLength: 32
-        type:
-          type: string
-          description: 'The data type of the variable. This determines the kind of values it can hold and how it''s treated by the SDKs.
-
-            - `json`: A JSON object or array.
-
-            - `string`: A text string.
-
-            - `boolean`: A true/false value.
-
-            - `float`: A floating-point number.
-
-            - `integer`: A whole number.
-
-            '
-        default_value:
-          description: 'The default value for this variable. This value is used if the feature is not part of an active experiment for a user, or if no specific value is set for the variation a user is bucketed into.
-
-            The type of `default_value` must match the specified `type` of the variable.
-
-            '
-          nullable: true
-      required:
-      - key
-      - type
-    BulkDeleteFeatureRequestData:
-      type: object
-      description: Request body for bulk deleting multiple features. Contains a list of feature IDs to be permanently removed.
-      additionalProperties: false
-      properties:
-        id:
-          $ref: '#/components/schemas/BulkFeaturesIds'
-      required:
-      - id
-    FeatureStats:
-      type: object
-      readOnly: true
-      properties:
-        times_used:
-          type: integer
-          description: The number of currently active experiences (e.g., 'a/b_fullstack', 'feature_rollout') that are using this feature to control variations.
+    FeatureOptionalFields:
+      type: string
+      enum:
+      - stats
     Feature:
       type: object
       description: 'Represents a feature flag or a set of configurable variables within a Full Stack project.
@@ -643,131 +702,72 @@ components:
             '
           items:
             $ref: '#/components/schemas/FeatureVariable'
-    Pagination:
+    SuccessData:
       type: object
       properties:
-        current_page:
-          description: The current page number being displayed from the paginated set.
+        code:
           type: integer
-          minimum: 1
-        items_count:
-          description: The total number of items available across all pages for the current filter criteria.
-          type: integer
-          minimum: 0
-        items_per_page:
-          description: The number of items included in the current page of results (matches `results_per_page` from the request).
-          type: integer
-          minimum: 0
-        pages_count:
-          description: The total number of pages available for the current filter criteria and `results_per_page` setting.
-          type: integer
-          minimum: 0
-    FeatureVariableBool:
-      allOf:
-      - $ref: '#/components/schemas/FeatureVariableBase'
-      - type: object
-        properties:
-          type:
-            enum:
-            - boolean
-          default_value:
-            type: boolean
-            nullable: true
-    BulkUpdateFeatureRequestData:
+          format: int32
+        message:
+          type: string
+    BulkDeleteFeatureRequestData:
       type: object
-      description: Request body for bulk updating the status of multiple features.
+      description: Request body for bulk deleting multiple features. Contains a list of feature IDs to be permanently removed.
       additionalProperties: false
       properties:
         id:
           $ref: '#/components/schemas/BulkFeaturesIds'
-        status:
-          $ref: '#/components/schemas/FeatureStatuses'
       required:
       - id
-      - status
-    Extra:
+    SortDirection:
       type: object
       properties:
-        pagination:
-          $ref: '#/components/schemas/Pagination'
-    FeaturesListResponseData:
-      type: object
-      description: Response containing a list of features defined within a Full Stack project, along with pagination details if applicable.
-      properties:
-        data:
-          $ref: '#/components/schemas/FeaturesList'
-        extra:
-          $ref: '#/components/schemas/Extra'
-    CreateFeatureRequestData:
-      allOf:
-      - $ref: '#/components/schemas/Feature'
-      required:
-      - name
-      - variables
-    FeatureOptionalFields:
-      type: string
-      enum:
-      - stats
-    FeatureStatuses:
-      type: string
-      description: 'The current status of a feature:
+        sort_direction:
+          type: string
+          nullable: true
+          default: desc
+          description: 'The direction for sorting the list results, based on the `sort_by` field.
 
-        - `active`: The feature is active and can be used in Full Stack experiments. Its variables can be controlled by experiences.
+            - `asc`: Ascending order (e.g., A-Z, 1-10, oldest to newest).
 
-        - `archived`: The feature is archived and no longer available for new experiments. Existing experiments using it might behave based on last known configuration or default values.
+            - `desc`: Descending order (e.g., Z-A, 10-1, newest to oldest).
 
-        '
-      enum:
-      - active
-      - archived
-      default: active
-    OnlyCount:
-      type: object
-      properties:
-        onlyCount:
-          type: boolean
-          description: 'If set to `true` in a list request, the response will only contain the total count of matching items (`extra.pagination.items_count`)
-
-            and will not include the actual item data. Useful for quickly getting totals without fetching full datasets.
+            Defaults to `desc` (newest/highest first) if not specified.
 
             '
-  responses:
-    FeaturesListResponse:
-      description: A list of features defined within a Full Stack project. Each feature entry includes its ID, name, key, status, and potentially usage statistics if requested.
+          enum:
+          - asc
+          - desc
+  requestBodies:
+    BulkDeleteFeaturesRequest:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/FeaturesListResponseData'
-    SuccessResponse:
-      description: 'A generic success response, typically used for operations that don''t return specific data (like deletions or some updates). The `code` is usually 200, and `message` confirms the successful action.
-
-        '
+            $ref: '#/components/schemas/BulkDeleteFeatureRequestData'
+    UpdateFeatureRequest:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/SuccessData'
-    BulkSuccessResponse:
-      description: 'Indicates the outcome of a bulk operation (e.g., bulk update or delete). Provides a general success `message` and an `errors` array listing any entities that could not be processed, along with the reason for failure for each.
-
-        '
+            $ref: '#/components/schemas/UpdateFeatureRequestData'
+      required: true
+    GetFeaturesListRequest:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/BulkSuccessData'
-    FeatureResponse:
-      description: Detailed information for a single feature in a Full Stack project, including its name, key, status, description, and an array of its `variables` (each with a key, type, and default value).
+            $ref: '#/components/schemas/GetFeaturesListRequestData'
+    CreateFeatureRequest:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Feature'
-    ErrorResponse:
-      description: 'Indicates an error occurred while processing the request. The `code` provides an HTTP status code, `message` offers a human-readable explanation or an array of validation errors, and `fields` (if present) specifies which input fields were problematic.
-
-        '
+            $ref: '#/components/schemas/CreateFeatureRequestData'
+      required: true
+    BulkUpdateFeaturesRequest:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/ErrorData'
+            $ref: '#/components/schemas/BulkUpdateFeatureRequestData'
+      description: Contains a list of feature `id`s and the target `status` (e.g., 'active', 'archived') to apply to all of them.
+      required: true
   securitySchemes:
     requestSigning:
       type: apiKey

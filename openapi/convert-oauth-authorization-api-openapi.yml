@@ -46,60 +46,7 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorData'
-  requestBodies:
-    OAuthTokenRequest:
-      required: true
-      description: Exchanges a one-time authorization code for an OAuth bearer session token.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/OAuthTokenRequestData'
   schemas:
-    OAuthTokenRequestData:
-      type: object
-      required:
-      - grant_type
-      - code
-      - client_id
-      - code_verifier
-      properties:
-        grant_type:
-          description: Authorization grant type.
-          type: string
-          enum:
-          - authorization_code
-          default: authorization_code
-        code:
-          description: One-time authorization code from consent redirect.
-          type: string
-          minLength: 1
-        client_id:
-          description: Identifier of the OAuth client application that initiated the authorization request.
-          type: string
-        code_verifier:
-          description: PKCE verifier for code challenge validation.
-          type: string
-          minLength: 43
-          maxLength: 128
-          pattern: ^[A-Za-z0-9\-._~]+$
-    ErrorData:
-      type: object
-      properties:
-        code:
-          type: integer
-          format: int32
-        message:
-          oneOf:
-          - type: string
-          - type: array
-            items:
-              type: string
-        fields:
-          oneOf:
-          - type: string
-          - type: array
-            items:
-              type: string
     OAuthScopeAccountResponse:
       type: object
       required:
@@ -130,6 +77,28 @@ components:
         name:
           description: Display name of the project.
           type: string
+    OAuthScopeMode:
+      type: string
+      enum:
+      - selected_accounts_projects
+    ErrorData:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          oneOf:
+          - type: string
+          - type: array
+            items:
+              type: string
+        fields:
+          oneOf:
+          - type: string
+          - type: array
+            items:
+              type: string
     OAuthScopeResponse:
       type: object
       required:
@@ -141,6 +110,33 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/OAuthScopeAccountResponse'
+    OAuthTokenRequestData:
+      type: object
+      required:
+      - grant_type
+      - code
+      - client_id
+      - code_verifier
+      properties:
+        grant_type:
+          description: Authorization grant type.
+          type: string
+          enum:
+          - authorization_code
+          default: authorization_code
+        code:
+          description: One-time authorization code from consent redirect.
+          type: string
+          minLength: 1
+        client_id:
+          description: Identifier of the OAuth client application that initiated the authorization request.
+          type: string
+        code_verifier:
+          description: PKCE verifier for code challenge validation.
+          type: string
+          minLength: 43
+          maxLength: 128
+          pattern: ^[A-Za-z0-9\-._~]+$
     OAuthTokenResponseData:
       type: object
       required:
@@ -161,10 +157,14 @@ components:
           description: Absolute expiration timestamp (unix seconds).
         scope:
           $ref: '#/components/schemas/OAuthScopeResponse'
-    OAuthScopeMode:
-      type: string
-      enum:
-      - selected_accounts_projects
+  requestBodies:
+    OAuthTokenRequest:
+      required: true
+      description: Exchanges a one-time authorization code for an OAuth bearer session token.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/OAuthTokenRequestData'
   securitySchemes:
     requestSigning:
       type: apiKey

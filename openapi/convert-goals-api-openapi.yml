@@ -357,191 +357,6 @@ paths:
           $ref: '#/components/responses/ErrorResponse'
 components:
   schemas:
-    JsConditionMatchRule:
-      allOf:
-      - $ref: '#/components/schemas/BaseRuleWithJsCodeValue'
-      - type: object
-        required:
-        - rule_type
-        properties:
-          rule_type:
-            $ref: '#/components/schemas/JsConditionMatchRulesTypes'
-          matching:
-            allOf:
-            - $ref: '#/components/schemas/BaseMatch'
-            - type: object
-              properties:
-                match_type:
-                  $ref: '#/components/schemas/ChoiceMatchingOptions'
-    BaseRuleWithBrowserNameValue:
-      allOf:
-      - $ref: '#/components/schemas/BaseRule'
-      - type: object
-        properties:
-          value:
-            description: Browser name used for matching
-            type: string
-            enum:
-            - chrome
-            - microsoft_ie
-            - firefox
-            - microsoft_edge
-            - mozilla
-            - opera
-            - safari
-    CreateAdvancedGoal:
-      allOf:
-      - $ref: '#/components/schemas/AdvancedGoal'
-      required:
-      - triggering_rule
-      - name
-      - type
-    CreateDomInteractionGoal:
-      allOf:
-      - $ref: '#/components/schemas/DomInteractionGoal'
-      required:
-      - name
-      - type
-      - settings
-    BaseRuleWithVisitorTypeValue:
-      allOf:
-      - $ref: '#/components/schemas/BaseRule'
-      - type: object
-        properties:
-          value:
-            description: Type of the visitors
-            type: string
-            enum:
-            - new
-            - returning
-    CreateGoal:
-      oneOf:
-      - $ref: '#/components/schemas/CreateDomInteractionGoal'
-      - $ref: '#/components/schemas/CreateScrollPercentageGoal'
-      - $ref: '#/components/schemas/CreateRevenueGoal'
-      - $ref: '#/components/schemas/CreateSubmitsFormGoal'
-      - $ref: '#/components/schemas/CreateClicksLinkGoal'
-      - $ref: '#/components/schemas/CreateClicksElementGoal'
-      - $ref: '#/components/schemas/CreateAdvancedGoal'
-      - $ref: '#/components/schemas/CreateNoSettingsGoal'
-      - $ref: '#/components/schemas/CreateGaGoal'
-      discriminator:
-        propertyName: type
-        mapping:
-          advanced: '#/components/schemas/CreateAdvancedGoal'
-          visits_page: '#/components/schemas/CreateNoSettingsGoal'
-          revenue: '#/components/schemas/CreateRevenueGoal'
-          clicks_link: '#/components/schemas/CreateClicksLinkGoal'
-          submits_form: '#/components/schemas/CreateSubmitsFormGoal'
-          clicks_element: '#/components/schemas/CreateClicksElementGoal'
-          dom_interaction: '#/components/schemas/CreateDomInteractionGoal'
-          scroll_percentage: '#/components/schemas/CreateScrollPercentageGoal'
-          ga_import: '#/components/schemas/CreateGaGoal'
-          code_trigger: '#/components/schemas/CreateNoSettingsGoal'
-    SegmentBucketedMatchRule:
-      allOf:
-      - $ref: '#/components/schemas/BaseRuleWithSegmentBucketedValue'
-      - type: object
-        required:
-        - rule_type
-        properties:
-          rule_type:
-            $ref: '#/components/schemas/SegmentBucketedMatchRulesTypes'
-          matching:
-            allOf:
-            - $ref: '#/components/schemas/BaseMatch'
-            - type: object
-              properties:
-                match_type:
-                  $ref: '#/components/schemas/ChoiceMatchingOptions'
-    CreateClicksLinkGoal:
-      allOf:
-      - $ref: '#/components/schemas/ClicksLinkGoal'
-      required:
-      - name
-      - type
-      - settings
-    BaseRuleWithBooleanValue:
-      allOf:
-      - $ref: '#/components/schemas/BaseRule'
-      - type: object
-        properties:
-          value:
-            description: The value used to match against 'rule_type' using 'matching'
-            type: boolean
-    PageNumber:
-      type: object
-      properties:
-        page:
-          type: integer
-          minimum: 1
-          description: 'The page number for paginated results. For example, if `results_per_page` is 30, `page: 2` will retrieve items 31-60.
-
-            Defaults to 1 if not specified.
-
-            '
-    TextMatchRulesTypes:
-      type: string
-      enum:
-      - url
-      - url_with_query
-      - query_string
-      - campaign
-      - keyword
-      - medium
-      - source_name
-      - city
-      - region
-      - browser_version
-      - user_agent
-      - page_tag_page_type
-      - page_tag_category_id
-      - page_tag_category_name
-      - page_tag_product_sku
-      - page_tag_product_name
-      - page_tag_customer_id
-      - page_tag_custom_1
-      - page_tag_custom_2
-      - page_tag_custom_3
-      - page_tag_custom_4
-      - visitor_id
-    BulkSuccessData:
-      allOf:
-      - $ref: '#/components/schemas/SuccessData'
-      - type: object
-        properties:
-          code:
-            type: integer
-            format: int32
-          errors:
-            type: array
-            description: List of unprocessed entities. Would be empty, if all passed entities processed
-            items:
-              $ref: '#/components/schemas/BulkEntityError'
-    ClicksLinkGoal:
-      allOf:
-      - $ref: '#/components/schemas/GoalBase'
-      - type: object
-        properties:
-          type:
-            enum:
-            - clicks_link
-          settings:
-            $ref: '#/components/schemas/ClicksLinkGoalSettings'
-    BaseRuleWithMinuteOfHourValue:
-      allOf:
-      - $ref: '#/components/schemas/BaseRule'
-      - type: object
-        properties:
-          value:
-            description: Minute of hour used for matching
-            type: number
-            minimum: 1
-            maximum: 60
-    GenericBoolKeyValueMatchRulesTypes:
-      type: string
-      enum:
-      - generic_bool_key_value
     GoalTriggeredMatchRule:
       allOf:
       - $ref: '#/components/schemas/BaseRuleWithGoalTriggeredValue'
@@ -558,22 +373,83 @@ components:
               properties:
                 match_type:
                   $ref: '#/components/schemas/ChoiceMatchingOptions'
-    CreateRevenueGoal:
+    OsMatchRulesTypes:
+      type: string
+      enum:
+      - os
+    CookieMatchingOptions:
+      type: string
+      enum:
+      - matches
+      - regexMatches
+      - contains
+      - endsWith
+      - startsWith
+      - exists
+      - doesNotExist
+    BaseRuleWithHourOfDayValue:
       allOf:
-      - $ref: '#/components/schemas/RevenueGoal'
-      required:
-      - name
-      - type
-      - settings
-    VisitorTypeMatchRule:
+      - $ref: '#/components/schemas/BaseRule'
+      - type: object
+        properties:
+          value:
+            description: Hour of day used for matching
+            type: number
+            minimum: 0
+            maximum: 24
+    BaseRuleWithVisitorTypeValue:
       allOf:
-      - $ref: '#/components/schemas/BaseRuleWithVisitorTypeValue'
+      - $ref: '#/components/schemas/BaseRule'
+      - type: object
+        properties:
+          value:
+            description: Type of the visitors
+            type: string
+            enum:
+            - new
+            - returning
+    BaseRuleWithLanguageCodeValue:
+      allOf:
+      - $ref: '#/components/schemas/BaseRule'
+      - type: object
+        properties:
+          value:
+            description: The 2 letter ISO language code used for matching
+            type: string
+            minLength: 2
+            maxLength: 2
+    WeatherConditionMatchRulesTypes:
+      type: string
+      enum:
+      - weather_condition
+    CookieMatchRule:
+      allOf:
+      - $ref: '#/components/schemas/BaseRuleWithStringValue'
       - type: object
         required:
         - rule_type
         properties:
           rule_type:
-            $ref: '#/components/schemas/VisitorTypeMatchRulesTypes'
+            $ref: '#/components/schemas/CookieMatchRulesTypes'
+          matching:
+            allOf:
+            - $ref: '#/components/schemas/BaseMatch'
+            - type: object
+              properties:
+                match_type:
+                  $ref: '#/components/schemas/CookieMatchingOptions'
+          key:
+            description: The name of the cookie which value is compared to the given rule value
+            type: string
+    CountryMatchRule:
+      allOf:
+      - $ref: '#/components/schemas/BaseRuleWithCountryCodeValue'
+      - type: object
+        required:
+        - rule_type
+        properties:
+          rule_type:
+            $ref: '#/components/schemas/CountryMatchRulesTypes'
           matching:
             allOf:
             - $ref: '#/components/schemas/BaseMatch'
@@ -581,60 +457,6 @@ components:
               properties:
                 match_type:
                   $ref: '#/components/schemas/ChoiceMatchingOptions'
-    BaseRuleWithWeatherConditionValue:
-      allOf:
-      - $ref: '#/components/schemas/BaseRule'
-      - type: object
-        properties:
-          value:
-            description: 'Weather Condition name used for matching. Full or partial condition.
-
-
-              The weather provider used by Convert detects the following conditions:
-
-              - Blizzard
-
-              - Blowing snow
-
-              - Cloudy
-
-              - Fog
-
-              - Freezing drizzle
-
-              - Freezing fog
-
-              - Heavy freezing drizzle
-
-              - Heavy rain
-
-              - Heavy rain at times
-
-              - Light drizzle
-
-              - Light freezing rain
-
-              - Light rain
-
-              - Mist
-
-              - Moderate rain
-
-              - Moderate rain at times
-
-              - Overcast
-
-              - Partly cloudy
-
-              '
-            type: string
-    GaGoalSettings:
-      type: object
-      additionalProperties: false
-      properties:
-        ga_event:
-          description: The name of the event in Google Analytics (GA4) or the Goal configuration in Universal Analytics that this Convert goal corresponds to. When this GA event/goal occurs, the Convert goal is triggered.
-          type: string
     RuleObject:
       type: object
       nullable: true
@@ -667,70 +489,76 @@ components:
                       type: array
                       items:
                         $ref: '#/components/schemas/RuleElement'
-    GoalStats:
-      type: object
-      readOnly: true
-      properties:
-        conversions_last_48h:
-          type: integer
-          description: The total number of times this goal has been triggered (converted) across all experiences in the last 48 hours. Useful for verifying if a goal is actively tracking.
-        times_used:
-          type: integer
-          description: The number of active (non-archived) experiences that currently have this goal attached for tracking.
-    CookieMatchRulesTypes:
-      type: string
-      enum:
-      - cookie
-    CreateSubmitsFormGoal:
+    GetGoalsRequestData:
       allOf:
-      - $ref: '#/components/schemas/SubmitsFormGoal'
-      required:
-      - name
-      - type
-      - settings
-    GoalsListResponseData:
-      type: object
-      description: Response containing a list of conversion goals defined within a project, along with pagination details if applicable.
-      properties:
-        data:
-          $ref: '#/components/schemas/GoalsList'
-        extra:
-          $ref: '#/components/schemas/Extra'
-    SubmitsFormGoal:
-      allOf:
-      - $ref: '#/components/schemas/GoalBase'
+      - $ref: '#/components/schemas/OnlyCount'
+      - $ref: '#/components/schemas/GoalsListFilteringOptions'
+      - $ref: '#/components/schemas/PageNumber'
       - type: object
         properties:
-          type:
-            enum:
-            - submits_form
-          settings:
-            $ref: '#/components/schemas/SubmitsFormGoalSettings'
-    GenericTextKeyValueMatchRule:
+          include:
+            description: Specifies the list of fields to be included in the response, which otherwise would not be sent.
+            type: array
+            items:
+              $ref: '#/components/schemas/GoalOptionalFields'
+          only:
+            description: 'Only retrieve goals with the given ids. Including ''stats'' reduces the maximum number of ''only'' items to 50.
+
+              '
+            type: array
+            nullable: true
+            items:
+              type: integer
+            maxItems: 200
+          except:
+            description: 'Except goals with the given ids.  Including ''stats'' reduces the maximum number of ''except'' items to 50.
+
+              '
+            type: array
+            items:
+              type: integer
+            maxItems: 200
+    GenericNumericKeyValueMatchRule:
       allOf:
-      - $ref: '#/components/schemas/BaseRuleWithStringValue'
+      - $ref: '#/components/schemas/BaseRuleWithNumericValue'
       - type: object
         required:
         - rule_type
         properties:
           rule_type:
-            $ref: '#/components/schemas/GenericTextKeyValueMatchRulesTypes'
+            $ref: '#/components/schemas/GenericNumericKeyValueMatchRulesTypes'
           matching:
             allOf:
             - $ref: '#/components/schemas/BaseMatch'
             - type: object
               properties:
                 match_type:
-                  $ref: '#/components/schemas/TextMatchingOptions'
+                  $ref: '#/components/schemas/NumericMatchingOptions'
       - $ref: '#/components/schemas/GenericKey'
-    TextMatchingOptions:
-      type: string
-      enum:
-      - matches
-      - regexMatches
-      - contains
-      - endsWith
-      - startsWith
+    BaseRuleWithSegmentBucketedValue:
+      allOf:
+      - $ref: '#/components/schemas/BaseRule'
+      - type: object
+        properties:
+          value:
+            description: ID of the segment used for matching
+            type: number
+    HourOfDayMatchRule:
+      allOf:
+      - $ref: '#/components/schemas/BaseRuleWithHourOfDayValue'
+      - type: object
+        required:
+        - rule_type
+        properties:
+          rule_type:
+            $ref: '#/components/schemas/HourOfDayMatchRulesTypes'
+          matching:
+            allOf:
+            - $ref: '#/components/schemas/BaseMatch'
+            - type: object
+              properties:
+                match_type:
+                  $ref: '#/components/schemas/NumericMatchingOptions'
     ScrollPercentageGoal:
       allOf:
       - $ref: '#/components/schemas/GoalBase'
@@ -741,15 +569,33 @@ components:
             - scroll_percentage
           settings:
             $ref: '#/components/schemas/ScrollPercentageGoalSettings'
-    OsMatchRule:
+    RevenueGoalSettings:
+      type: object
+      additionalProperties: false
+      properties:
+        triggering_type:
+          type: string
+          description: 'How this revenue goal is triggered:
+
+            - `manual`: The goal is triggered by a specific JavaScript call (`_conv_q.push(["pushRevenue", ...])`) on the purchase confirmation page, which includes revenue amount and product count. The `triggering_rule` should be empty or not set.
+
+            - `ga`: Convert attempts to automatically capture revenue data from a standard Google Analytics E-commerce tracking implementation when the `triggering_rule` (e.g., matching the confirmation page URL) is met.
+
+            '
+          enum:
+          - manual
+          - ga
+      required:
+      - triggering_type
+    BrowserNameMatchRule:
       allOf:
-      - $ref: '#/components/schemas/BaseRuleWithOsValue'
+      - $ref: '#/components/schemas/BaseRuleWithBrowserNameValue'
       - type: object
         required:
         - rule_type
         properties:
           rule_type:
-            $ref: '#/components/schemas/OsMatchRulesTypes'
+            $ref: '#/components/schemas/BrowserNameMatchRulesTypes'
           matching:
             allOf:
             - $ref: '#/components/schemas/BaseMatch'
@@ -757,47 +603,42 @@ components:
               properties:
                 match_type:
                   $ref: '#/components/schemas/ChoiceMatchingOptions'
-    SegmentBucketedMatchRulesTypes:
-      type: string
-      enum:
-      - bucketed_into_segment
-    VisitorTypeMatchRulesTypes:
-      type: string
-      enum:
-      - visitor_type
-    BulkGoalsIds:
-      type: array
-      description: The list of goals id to delete
-      items:
-        type: integer
-      minItems: 1
-      maxItems: 100
-    BaseRuleWithOsValue:
+    UpdateGoalRequestData:
+      anyOf:
+      - $ref: '#/components/schemas/Goal'
+    CreateAdvancedGoal:
+      allOf:
+      - $ref: '#/components/schemas/AdvancedGoal'
+      required:
+      - triggering_rule
+      - name
+      - type
+    BaseRuleWithMinuteOfHourValue:
       allOf:
       - $ref: '#/components/schemas/BaseRule'
       - type: object
         properties:
           value:
-            description: Operating System name used for matching
-            type: string
-            enum:
-            - android
-            - iphone
-            - ipod
-            - ipad
-            - windows
-            - macos
-            - linux
-    BaseRuleWithLanguageCodeValue:
+            description: Minute of hour used for matching
+            type: number
+            minimum: 1
+            maximum: 60
+    WeatherConditionMatchRule:
       allOf:
-      - $ref: '#/components/schemas/BaseRule'
+      - $ref: '#/components/schemas/BaseRuleWithWeatherConditionValue'
       - type: object
+        required:
+        - rule_type
         properties:
-          value:
-            description: The 2 letter ISO language code used for matching
-            type: string
-            minLength: 2
-            maxLength: 2
+          rule_type:
+            $ref: '#/components/schemas/WeatherConditionMatchRulesTypes'
+          matching:
+            allOf:
+            - $ref: '#/components/schemas/BaseMatch'
+            - type: object
+              properties:
+                match_type:
+                  $ref: '#/components/schemas/TextMatchingOptions'
     BaseRuleWithCountryCodeValue:
       allOf:
       - $ref: '#/components/schemas/BaseRule'
@@ -808,53 +649,14 @@ components:
             type: string
             minLength: 2
             maxLength: 2
-    JsConditionMatchRulesTypes:
-      type: string
-      enum:
-      - js_condition
-    GenericKey:
-      type: object
-      properties:
-        key:
-          description: The name of the key whose value will be retrieved and compared against the rule's `value`.
-          type: string
-    ErrorData:
+    SuccessData:
       type: object
       properties:
         code:
           type: integer
           format: int32
         message:
-          oneOf:
-          - type: string
-          - type: array
-            items:
-              type: string
-        fields:
-          oneOf:
-          - type: string
-          - type: array
-            items:
-              type: string
-    SortDirection:
-      type: object
-      properties:
-        sort_direction:
           type: string
-          nullable: true
-          default: desc
-          description: 'The direction for sorting the list results, based on the `sort_by` field.
-
-            - `asc`: Ascending order (e.g., A-Z, 1-10, oldest to newest).
-
-            - `desc`: Descending order (e.g., Z-A, 10-1, newest to oldest).
-
-            Defaults to `desc` (newest/highest first) if not specified.
-
-            '
-          enum:
-          - asc
-          - desc
     Goal:
       oneOf:
       - $ref: '#/components/schemas/DomInteractionGoal'
@@ -879,193 +681,15 @@ components:
           scroll_percentage: '#/components/schemas/ScrollPercentageGoal'
           ga_import: '#/components/schemas/GaGoal'
           code_trigger: '#/components/schemas/NoSettingsGoal'
-    DomInteractionGoal:
+    JsConditionMatchRule:
       allOf:
-      - $ref: '#/components/schemas/GoalBase'
-      - type: object
-        properties:
-          type:
-            enum:
-            - dom_interaction
-          settings:
-            $ref: '#/components/schemas/DomInteractionGoalSettings'
-    DayOfWeekMatchRulesTypes:
-      type: string
-      enum:
-      - local_time_day_of_week
-      - project_time_day_of_week
-    DomInteractionGoalSettings:
-      type: object
-      additionalProperties: false
-      properties:
-        tracked_items:
-          type: array
-          description: An array defining one or more DOM elements and the interaction events on them that should trigger this goal.
-          items:
-            type: object
-            description: Defines a single DOM element and event to track.
-            properties:
-              selector:
-                type: string
-                description: A CSS selector that identifies the HTML element(s) to monitor for interactions (e.g., "#submitButton", ".product-image").
-              event:
-                type: string
-                description: The specific DOM event to listen for on the selected element(s) (e.g., "click", "mouseover", "change", "focus").
-      required:
-      - tracked_items
-    CreateClicksElementGoal:
-      allOf:
-      - $ref: '#/components/schemas/ClicksElementGoal'
-      required:
-      - name
-      - type
-      - settings
-    BaseRule:
-      type: object
-      required:
-      - rule_type
-      properties:
-        rule_type:
-          description: 'The specific attribute or condition to evaluate. Examples: ''url'', ''cookie'', ''browser_name'', ''js_condition'', ''page_tag_product_price''.
-
-            The allowed `rule_type` values depend on whether the rule is for an Audience (which can use visitor and page content attributes if it''s a ''segmentation'' type) or a Location (typically URL or page tag based).
-
-            '
-          type: string
-    GoalsListFilteringOptions:
-      allOf:
-      - $ref: '#/components/schemas/ResultsPerPage'
-      - $ref: '#/components/schemas/SortDirection'
-      - type: object
-        properties:
-          status:
-            type: array
-            nullable: true
-            description: List of goal statuses to be returned
-            items:
-              $ref: '#/components/schemas/GoalStatuses'
-          is_default:
-            type: boolean
-            nullable: true
-            description: "A value that would be used to filter by default or not default goals. if not provided, all goals will be returned \n"
-          search:
-            type: string
-            maxLength: 200
-            nullable: true
-            description: A search string that would be used to search against Goal's name and description
-          tracking:
-            type: string
-            nullable: true
-            description: A value that would be used to filter by tracked or not tracked goals
-            enum:
-            - tracked
-            - not_tracked
-            - null
-          usage:
-            type: string
-            nullable: true
-            description: A value that would be used to filter by using in at least one experiment
-            enum:
-            - used
-            - not_used
-            - null
-          goal_type:
-            type: array
-            nullable: true
-            description: List of goal types to be returned
-            items:
-              $ref: '#/components/schemas/GoalTypes'
-          experiences:
-            type: array
-            nullable: true
-            description: List of experiences to be returned
-            items:
-              type: integer
-            maxItems: 100
-          sort_by:
-            type: string
-            nullable: true
-            default: id
-            description: 'A value to sort audiences by specific field
-
-
-              Defaults to **id** if not provided
-
-              '
-            enum:
-            - id
-            - goal_tracking_status
-            - name
-            - times_used
-            - type
-            - key
-            - status
-    Extra:
-      type: object
-      properties:
-        pagination:
-          $ref: '#/components/schemas/Pagination'
-    ChoiceMatchingOptions:
-      type: string
-      enum:
-      - equals
-    NumericMatchingOptions:
-      type: string
-      enum:
-      - equalsNumber
-      - less
-      - lessEqual
-    OnlyCount:
-      type: object
-      properties:
-        onlyCount:
-          type: boolean
-          description: 'If set to `true` in a list request, the response will only contain the total count of matching items (`extra.pagination.items_count`)
-
-            and will not include the actual item data. Useful for quickly getting totals without fetching full datasets.
-
-            '
-    GenericTextKeyValueMatchRulesTypes:
-      type: string
-      enum:
-      - generic_text_key_value
-    BaseRuleWithDayOfWeekValue:
-      allOf:
-      - $ref: '#/components/schemas/BaseRule'
-      - type: object
-        properties:
-          value:
-            description: Day of week used for matching
-            type: number
-            minimum: 1
-            maximum: 7
-    BaseRuleWithSegmentBucketedValue:
-      allOf:
-      - $ref: '#/components/schemas/BaseRule'
-      - type: object
-        properties:
-          value:
-            description: ID of the segment used for matching
-            type: number
-    BulkEntityError:
-      type: object
-      additionalProperties: false
-      properties:
-        id:
-          type: integer
-          description: The unique identifier of the entity that could not be processed.
-        message:
-          type: string
-          description: A message explaining the reason for the failure for this specific entity.
-    CountryMatchRule:
-      allOf:
-      - $ref: '#/components/schemas/BaseRuleWithCountryCodeValue'
+      - $ref: '#/components/schemas/BaseRuleWithJsCodeValue'
       - type: object
         required:
         - rule_type
         properties:
           rule_type:
-            $ref: '#/components/schemas/CountryMatchRulesTypes'
+            $ref: '#/components/schemas/JsConditionMatchRulesTypes'
           matching:
             allOf:
             - $ref: '#/components/schemas/BaseMatch'
@@ -1073,152 +697,85 @@ components:
               properties:
                 match_type:
                   $ref: '#/components/schemas/ChoiceMatchingOptions'
-    NumericMatchRulesTypes:
+    BulkGoalsIds:
+      type: array
+      description: The list of goals id to delete
+      items:
+        type: integer
+      minItems: 1
+      maxItems: 100
+    SubmitsFormGoalSettings:
+      type: object
+      additionalProperties: false
+      properties:
+        action:
+          type: string
+          description: 'The URL specified in the `action` attribute of the HTML form(s) to be tracked.
+
+            When a form submitting to this URL is successfully submitted, the goal triggers.
+
+            The page(s) where the form resides are defined in the goal''s `triggering_rule`.
+
+            '
+      required:
+      - action
+    BoolMatchRulesTypes:
       type: string
       enum:
-      - avg_time_page
-      - days_since_last_visit
-      - pages_visited_count
-      - visit_duration
-      - visits_count
-      - page_tag_product_price
-    GaGoal:
+      - bucketed_into_experience
+      - is_desktop
+      - is_mobile
+      - is_tablet
+    NoSettingsGoal:
       allOf:
       - $ref: '#/components/schemas/GoalBase'
       - type: object
         properties:
           type:
             enum:
-            - ga_import
-          settings:
-            $ref: '#/components/schemas/GaGoalSettings'
-    GoalTriggeredMatchRulesTypes:
+            - visits_page
+            - code_trigger
+    TextMatchingOptions:
       type: string
       enum:
-      - goal_triggered
-    SuccessData:
-      type: object
-      properties:
-        code:
-          type: integer
-          format: int32
-        message:
-          type: string
-    GoalOptionalFields:
-      type: string
-      enum:
-      - triggering_rule
-      - stats
-    BaseRuleWithGoalTriggeredValue:
+      - matches
+      - regexMatches
+      - contains
+      - endsWith
+      - startsWith
+    OsMatchRule:
       allOf:
-      - $ref: '#/components/schemas/BaseRule'
-      - type: object
-        properties:
-          value:
-            description: ID of the goal used for matching
-            type: number
-    ClicksLinkGoalSettings:
-      type: object
-      additionalProperties: false
-      properties:
-        href:
-          type: string
-          description: 'The exact URL (or a pattern if regex is supported by the `triggering_rule`''s match type for this setting) found in the `href` attribute of the hyperlink(s) to be tracked.
-
-            When a link with this `href` is clicked, the goal triggers.
-
-            The page(s) where the link resides are defined in the goal''s `triggering_rule`.
-
-            '
-      required:
-      - href
-    MinuteOfHourMatchRulesTypes:
-      type: string
-      enum:
-      - local_time_minute_of_hour
-      - project_time_minute_of_hour
-    RevenueGoalSettings:
-      type: object
-      additionalProperties: false
-      properties:
-        triggering_type:
-          type: string
-          description: 'How this revenue goal is triggered:
-
-            - `manual`: The goal is triggered by a specific JavaScript call (`_conv_q.push(["pushRevenue", ...])`) on the purchase confirmation page, which includes revenue amount and product count. The `triggering_rule` should be empty or not set.
-
-            - `ga`: Convert attempts to automatically capture revenue data from a standard Google Analytics E-commerce tracking implementation when the `triggering_rule` (e.g., matching the confirmation page URL) is met.
-
-            '
-          enum:
-          - manual
-          - ga
-      required:
-      - triggering_type
-    BaseRuleWithNumericValue:
-      allOf:
-      - $ref: '#/components/schemas/BaseRule'
-      - type: object
-        properties:
-          value:
-            description: The value used to match against 'rule_type' using 'matching'
-            type: number
-    MinuteOfHourMatchRule:
-      allOf:
-      - $ref: '#/components/schemas/BaseRuleWithMinuteOfHourValue'
+      - $ref: '#/components/schemas/BaseRuleWithOsValue'
       - type: object
         required:
         - rule_type
         properties:
           rule_type:
-            $ref: '#/components/schemas/MinuteOfHourMatchRulesTypes'
+            $ref: '#/components/schemas/OsMatchRulesTypes'
           matching:
             allOf:
             - $ref: '#/components/schemas/BaseMatch'
             - type: object
               properties:
                 match_type:
-                  $ref: '#/components/schemas/NumericMatchingOptions'
-    ResultsPerPage:
-      type: object
-      properties:
-        results_per_page:
-          type: integer
-          nullable: true
-          minimum: 0
-          maximum: 50
-          default: 30
-          description: 'Specifies the maximum number of items to return in a single page of results.
-
-            Used for pagination. Default is 30, maximum is 50.
-
-            '
-    ClicksElementGoalSettings:
-      type: object
-      additionalProperties: false
-      properties:
-        selector:
-          type: string
-          description: 'A CSS selector that identifies the HTML element(s) to be tracked.
-
-            When any element matching this selector is clicked, the goal triggers.
-
-            The page(s) where the element(s) reside are defined in the goal''s `triggering_rule`.
-
-            '
-        only_where_experience_runs:
-          type: boolean
-          description: 'If true, triggers only on pages where the associated experience runs (Experience Location).
-
-            Does not apply sitewide or to unrelated pages.
-
-            '
-      required:
-      - selector
+                  $ref: '#/components/schemas/ChoiceMatchingOptions'
     GenericNumericKeyValueMatchRulesTypes:
       type: string
       enum:
       - generic_numeric_key_value
+    BulkSuccessData:
+      allOf:
+      - $ref: '#/components/schemas/SuccessData'
+      - type: object
+        properties:
+          code:
+            type: integer
+            format: int32
+          errors:
+            type: array
+            description: List of unprocessed entities. Would be empty, if all passed entities processed
+            items:
+              $ref: '#/components/schemas/BulkEntityError'
     GoalTypes:
       type: string
       description: 'The type of user action or event that this goal tracks as a conversion.
@@ -1255,6 +812,22 @@ components:
       - scroll_percentage
       - ga_import
       - code_trigger
+    GenericTextKeyValueMatchRulesTypes:
+      type: string
+      enum:
+      - generic_text_key_value
+    MinuteOfHourMatchRulesTypes:
+      type: string
+      enum:
+      - local_time_minute_of_hour
+      - project_time_minute_of_hour
+    GaGoalSettings:
+      type: object
+      additionalProperties: false
+      properties:
+        ga_event:
+          description: The name of the event in Google Analytics (GA4) or the Goal configuration in Universal Analytics that this Convert goal corresponds to. When this GA event/goal occurs, the Convert goal is triggered.
+          type: string
     GenericBoolMatchRule:
       allOf:
       - $ref: '#/components/schemas/BaseRuleWithBooleanValue'
@@ -1271,132 +844,6 @@ components:
               properties:
                 match_type:
                   $ref: '#/components/schemas/ChoiceMatchingOptions'
-    CookieMatchingOptions:
-      type: string
-      enum:
-      - matches
-      - regexMatches
-      - contains
-      - endsWith
-      - startsWith
-      - exists
-      - doesNotExist
-    GoalBase:
-      type: object
-      description: Base properties common to all types of conversion goals.
-      properties:
-        id:
-          description: The unique numerical identifier for the goal.
-          readOnly: true
-          type: integer
-        name:
-          description: A user-defined, friendly name for the goal (e.g., "Completed Purchase", "Newsletter Signup", "Viewed Pricing Page"). This name appears in reports and when selecting goals for experiences.
-          type: string
-          maxLength: 100
-        key:
-          description: 'A unique, machine-readable string key for this goal within the project.
-
-            Often auto-generated from the name if not specified, but can be user-defined for easier programmatic reference.
-
-            Example: "completed_purchase_main_flow".
-
-            '
-          type: string
-          maxLength: 32
-        description:
-          description: An optional, more detailed explanation of what this goal measures or its significance to business objectives.
-          type: string
-          maxLength: 500
-        is_system:
-          type: boolean
-          readOnly: true
-          description: Indicates if this is a system-defined default goal (e.g., "Decrease Bounce Rate", "Increase Engagement"). System goals cannot be deleted but their usage can be controlled.
-        stats:
-          $ref: '#/components/schemas/GoalStats'
-        triggering_rule:
-          nullable: true
-          allOf:
-          - $ref: '#/components/schemas/RuleObject'
-        selected_default:
-          type: boolean
-          description: If true, this goal will be automatically pre-selected when creating new experiences within the project. Useful for commonly tracked primary conversions.
-        status:
-          $ref: '#/components/schemas/GoalStatuses'
-    LanguageMatchRule:
-      allOf:
-      - $ref: '#/components/schemas/BaseRuleWithLanguageCodeValue'
-      - type: object
-        required:
-        - rule_type
-        properties:
-          rule_type:
-            $ref: '#/components/schemas/LanguageMatchRulesTypes'
-          matching:
-            allOf:
-            - $ref: '#/components/schemas/BaseMatch'
-            - type: object
-              properties:
-                match_type:
-                  $ref: '#/components/schemas/ChoiceMatchingOptions'
-    RevenueGoal:
-      allOf:
-      - $ref: '#/components/schemas/GoalBase'
-      - type: object
-        properties:
-          type:
-            enum:
-            - revenue
-          settings:
-            $ref: '#/components/schemas/RevenueGoalSettings'
-    GenericNumericKeyValueMatchRule:
-      allOf:
-      - $ref: '#/components/schemas/BaseRuleWithNumericValue'
-      - type: object
-        required:
-        - rule_type
-        properties:
-          rule_type:
-            $ref: '#/components/schemas/GenericNumericKeyValueMatchRulesTypes'
-          matching:
-            allOf:
-            - $ref: '#/components/schemas/BaseMatch'
-            - type: object
-              properties:
-                match_type:
-                  $ref: '#/components/schemas/NumericMatchingOptions'
-      - $ref: '#/components/schemas/GenericKey'
-    BoolMatchRulesTypes:
-      type: string
-      enum:
-      - bucketed_into_experience
-      - is_desktop
-      - is_mobile
-      - is_tablet
-    ScrollPercentageGoalSettings:
-      type: object
-      additionalProperties: false
-      properties:
-        percentage:
-          type: number
-          description: The scroll depth percentage (e.g., 25, 50, 75, 100) that a visitor must reach on a page for this goal to trigger. The page(s) are defined in the goal's `triggering_rule`.
-      required:
-      - percentage
-    HourOfDayMatchRule:
-      allOf:
-      - $ref: '#/components/schemas/BaseRuleWithHourOfDayValue'
-      - type: object
-        required:
-        - rule_type
-        properties:
-          rule_type:
-            $ref: '#/components/schemas/HourOfDayMatchRulesTypes'
-          matching:
-            allOf:
-            - $ref: '#/components/schemas/BaseMatch'
-            - type: object
-              properties:
-                match_type:
-                  $ref: '#/components/schemas/NumericMatchingOptions'
     GenericNumericMatchRule:
       allOf:
       - $ref: '#/components/schemas/BaseRuleWithNumericValue'
@@ -1413,147 +860,15 @@ components:
               properties:
                 match_type:
                   $ref: '#/components/schemas/NumericMatchingOptions'
-    BrowserNameMatchRule:
-      allOf:
-      - $ref: '#/components/schemas/BaseRuleWithBrowserNameValue'
-      - type: object
-        required:
-        - rule_type
-        properties:
-          rule_type:
-            $ref: '#/components/schemas/BrowserNameMatchRulesTypes'
-          matching:
-            allOf:
-            - $ref: '#/components/schemas/BaseMatch'
-            - type: object
-              properties:
-                match_type:
-                  $ref: '#/components/schemas/ChoiceMatchingOptions'
-    CookieMatchRule:
-      allOf:
-      - $ref: '#/components/schemas/BaseRuleWithStringValue'
-      - type: object
-        required:
-        - rule_type
-        properties:
-          rule_type:
-            $ref: '#/components/schemas/CookieMatchRulesTypes'
-          matching:
-            allOf:
-            - $ref: '#/components/schemas/BaseMatch'
-            - type: object
-              properties:
-                match_type:
-                  $ref: '#/components/schemas/CookieMatchingOptions'
-          key:
-            description: The name of the cookie which value is compared to the given rule value
-            type: string
-    WeatherConditionMatchRule:
-      allOf:
-      - $ref: '#/components/schemas/BaseRuleWithWeatherConditionValue'
-      - type: object
-        required:
-        - rule_type
-        properties:
-          rule_type:
-            $ref: '#/components/schemas/WeatherConditionMatchRulesTypes'
-          matching:
-            allOf:
-            - $ref: '#/components/schemas/BaseMatch'
-            - type: object
-              properties:
-                match_type:
-                  $ref: '#/components/schemas/TextMatchingOptions'
-    GoalsList:
-      type: array
-      description: A list of goal objects.
-      items:
-        $ref: '#/components/schemas/Goal'
-    CreateGaGoal:
-      allOf:
-      - $ref: '#/components/schemas/GaGoal'
-      required:
-      - name
-      - type
-    CreateGoalRequestData:
-      anyOf:
-      - $ref: '#/components/schemas/CreateGoal'
-    CreateNoSettingsGoal:
-      allOf:
-      - $ref: '#/components/schemas/NoSettingsGoal'
-      required:
-      - name
-      - type
-    BaseRuleWithJsCodeValue:
-      allOf:
-      - $ref: '#/components/schemas/BaseRule'
-      - type: object
-        properties:
-          value:
-            description: 'The JS code that would be executed when rule is checked. The return value of this JS code is what is gonna be matched
-
-
-              against **true**(or **false** if **matching.negated = true** is provided)
-
-              '
-            type: string
-    HourOfDayMatchRulesTypes:
-      type: string
-      enum:
-      - local_time_hour_of_day
-      - project_time_hour_of_day
-    NoSettingsGoal:
-      allOf:
-      - $ref: '#/components/schemas/GoalBase'
-      - type: object
-        properties:
-          type:
-            enum:
-            - visits_page
-            - code_trigger
-    BulkUpdateGoalRequestData:
-      type: object
-      description: Request body for bulk updating the status of multiple goals.
-      additionalProperties: false
-      properties:
-        id:
-          $ref: '#/components/schemas/BulkGoalsIds'
-        status:
-          $ref: '#/components/schemas/GoalStatuses'
-      required:
-      - id
-      - status
-    CountryMatchRulesTypes:
-      type: string
-      enum:
-      - country
-    AdvancedGoal:
-      allOf:
-      - $ref: '#/components/schemas/GoalBase'
-      - type: object
-        properties:
-          type:
-            enum:
-            - advanced
-    LanguageMatchRulesTypes:
-      type: string
-      enum:
-      - language
-    SubmitsFormGoalSettings:
+    ScrollPercentageGoalSettings:
       type: object
       additionalProperties: false
       properties:
-        action:
-          type: string
-          description: 'The URL specified in the `action` attribute of the HTML form(s) to be tracked.
-
-            When a form submitting to this URL is successfully submitted, the goal triggers.
-
-            The page(s) where the form resides are defined in the goal''s `triggering_rule`.
-
-            '
+        percentage:
+          type: number
+          description: The scroll depth percentage (e.g., 25, 50, 75, 100) that a visitor must reach on a page for this goal to trigger. The page(s) are defined in the goal's `triggering_rule`.
       required:
-      - action
+      - percentage
     RuleElement:
       oneOf:
       - $ref: '#/components/schemas/GenericTextMatchRule'
@@ -1628,62 +943,264 @@ components:
           generic_text_key_value: '#/components/schemas/GenericTextKeyValueMatchRule'
           generic_numeric_key_value: '#/components/schemas/GenericNumericKeyValueMatchRule'
           generic_bool_key_value: '#/components/schemas/GenericBoolKeyValueMatchRule'
-    DayOfWeekMatchRule:
-      allOf:
-      - $ref: '#/components/schemas/BaseRuleWithDayOfWeekValue'
-      - type: object
-        required:
-        - rule_type
-        properties:
-          rule_type:
-            $ref: '#/components/schemas/DayOfWeekMatchRulesTypes'
-          matching:
-            allOf:
-            - $ref: '#/components/schemas/BaseMatch'
-            - type: object
-              properties:
-                match_type:
-                  $ref: '#/components/schemas/NumericMatchingOptions'
-    GetGoalsRequestData:
-      allOf:
-      - $ref: '#/components/schemas/OnlyCount'
-      - $ref: '#/components/schemas/GoalsListFilteringOptions'
-      - $ref: '#/components/schemas/PageNumber'
-      - type: object
-        properties:
-          include:
-            description: Specifies the list of fields to be included in the response, which otherwise would not be sent.
-            type: array
-            items:
-              $ref: '#/components/schemas/GoalOptionalFields'
-          only:
-            description: 'Only retrieve goals with the given ids. Including ''stats'' reduces the maximum number of ''only'' items to 50.
+    ClicksLinkGoalSettings:
+      type: object
+      additionalProperties: false
+      properties:
+        href:
+          type: string
+          description: 'The exact URL (or a pattern if regex is supported by the `triggering_rule`''s match type for this setting) found in the `href` attribute of the hyperlink(s) to be tracked.
 
-              '
-            type: array
-            nullable: true
-            items:
-              type: integer
-            maxItems: 200
-          except:
-            description: 'Except goals with the given ids.  Including ''stats'' reduces the maximum number of ''except'' items to 50.
+            When a link with this `href` is clicked, the goal triggers.
 
-              '
-            type: array
-            items:
-              type: integer
-            maxItems: 200
-    BaseRuleWithStringValue:
+            The page(s) where the link resides are defined in the goal''s `triggering_rule`.
+
+            '
+      required:
+      - href
+    BaseRule:
+      type: object
+      required:
+      - rule_type
+      properties:
+        rule_type:
+          description: 'The specific attribute or condition to evaluate. Examples: ''url'', ''cookie'', ''browser_name'', ''js_condition'', ''page_tag_product_price''.
+
+            The allowed `rule_type` values depend on whether the rule is for an Audience (which can use visitor and page content attributes if it''s a ''segmentation'' type) or a Location (typically URL or page tag based).
+
+            '
+          type: string
+    CreateGoal:
+      oneOf:
+      - $ref: '#/components/schemas/CreateDomInteractionGoal'
+      - $ref: '#/components/schemas/CreateScrollPercentageGoal'
+      - $ref: '#/components/schemas/CreateRevenueGoal'
+      - $ref: '#/components/schemas/CreateSubmitsFormGoal'
+      - $ref: '#/components/schemas/CreateClicksLinkGoal'
+      - $ref: '#/components/schemas/CreateClicksElementGoal'
+      - $ref: '#/components/schemas/CreateAdvancedGoal'
+      - $ref: '#/components/schemas/CreateNoSettingsGoal'
+      - $ref: '#/components/schemas/CreateGaGoal'
+      discriminator:
+        propertyName: type
+        mapping:
+          advanced: '#/components/schemas/CreateAdvancedGoal'
+          visits_page: '#/components/schemas/CreateNoSettingsGoal'
+          revenue: '#/components/schemas/CreateRevenueGoal'
+          clicks_link: '#/components/schemas/CreateClicksLinkGoal'
+          submits_form: '#/components/schemas/CreateSubmitsFormGoal'
+          clicks_element: '#/components/schemas/CreateClicksElementGoal'
+          dom_interaction: '#/components/schemas/CreateDomInteractionGoal'
+          scroll_percentage: '#/components/schemas/CreateScrollPercentageGoal'
+          ga_import: '#/components/schemas/CreateGaGoal'
+          code_trigger: '#/components/schemas/CreateNoSettingsGoal'
+    GoalsListResponseData:
+      type: object
+      description: Response containing a list of conversion goals defined within a project, along with pagination details if applicable.
+      properties:
+        data:
+          $ref: '#/components/schemas/GoalsList'
+        extra:
+          $ref: '#/components/schemas/Extra'
+    BaseRuleWithNumericValue:
       allOf:
       - $ref: '#/components/schemas/BaseRule'
       - type: object
         properties:
           value:
             description: The value used to match against 'rule_type' using 'matching'
+            type: number
+    LanguageMatchRulesTypes:
+      type: string
+      enum:
+      - language
+    SegmentBucketedMatchRule:
+      allOf:
+      - $ref: '#/components/schemas/BaseRuleWithSegmentBucketedValue'
+      - type: object
+        required:
+        - rule_type
+        properties:
+          rule_type:
+            $ref: '#/components/schemas/SegmentBucketedMatchRulesTypes'
+          matching:
+            allOf:
+            - $ref: '#/components/schemas/BaseMatch'
+            - type: object
+              properties:
+                match_type:
+                  $ref: '#/components/schemas/ChoiceMatchingOptions'
+    GenericKey:
+      type: object
+      properties:
+        key:
+          description: The name of the key whose value will be retrieved and compared against the rule's `value`.
+          type: string
+    ClicksElementGoalSettings:
+      type: object
+      additionalProperties: false
+      properties:
+        selector:
+          type: string
+          description: 'A CSS selector that identifies the HTML element(s) to be tracked.
+
+            When any element matching this selector is clicked, the goal triggers.
+
+            The page(s) where the element(s) reside are defined in the goal''s `triggering_rule`.
+
+            '
+        only_where_experience_runs:
+          type: boolean
+          description: 'If true, triggers only on pages where the associated experience runs (Experience Location).
+
+            Does not apply sitewide or to unrelated pages.
+
+            '
+      required:
+      - selector
+    GoalsListFilteringOptions:
+      allOf:
+      - $ref: '#/components/schemas/ResultsPerPage'
+      - $ref: '#/components/schemas/SortDirection'
+      - type: object
+        properties:
+          status:
+            type: array
+            nullable: true
+            description: List of goal statuses to be returned
+            items:
+              $ref: '#/components/schemas/GoalStatuses'
+          is_default:
+            type: boolean
+            nullable: true
+            description: "A value that would be used to filter by default or not default goals. if not provided, all goals will be returned \n"
+          search:
             type: string
-    UpdateGoalRequestData:
+            maxLength: 200
+            nullable: true
+            description: A search string that would be used to search against Goal's name and description
+          tracking:
+            type: string
+            nullable: true
+            description: A value that would be used to filter by tracked or not tracked goals
+            enum:
+            - tracked
+            - not_tracked
+            - null
+          usage:
+            type: string
+            nullable: true
+            description: A value that would be used to filter by using in at least one experiment
+            enum:
+            - used
+            - not_used
+            - null
+          goal_type:
+            type: array
+            nullable: true
+            description: List of goal types to be returned
+            items:
+              $ref: '#/components/schemas/GoalTypes'
+          experiences:
+            type: array
+            nullable: true
+            description: List of experiences to be returned
+            items:
+              type: integer
+            maxItems: 100
+          sort_by:
+            type: string
+            nullable: true
+            default: id
+            description: 'A value to sort audiences by specific field
+
+
+              Defaults to **id** if not provided
+
+              '
+            enum:
+            - id
+            - goal_tracking_status
+            - name
+            - times_used
+            - type
+            - key
+            - status
+    OnlyCount:
+      type: object
+      properties:
+        onlyCount:
+          type: boolean
+          description: 'If set to `true` in a list request, the response will only contain the total count of matching items (`extra.pagination.items_count`)
+
+            and will not include the actual item data. Useful for quickly getting totals without fetching full datasets.
+
+            '
+    CreateGoalRequestData:
       anyOf:
-      - $ref: '#/components/schemas/Goal'
+      - $ref: '#/components/schemas/CreateGoal'
+    GoalBase:
+      type: object
+      description: Base properties common to all types of conversion goals.
+      properties:
+        id:
+          description: The unique numerical identifier for the goal.
+          readOnly: true
+          type: integer
+        name:
+          description: A user-defined, friendly name for the goal (e.g., "Completed Purchase", "Newsletter Signup", "Viewed Pricing Page"). This name appears in reports and when selecting goals for experiences.
+          type: string
+          maxLength: 100
+        key:
+          description: 'A unique, machine-readable string key for this goal within the project.
+
+            Often auto-generated from the name if not specified, but can be user-defined for easier programmatic reference.
+
+            Example: "completed_purchase_main_flow".
+
+            '
+          type: string
+          maxLength: 32
+        description:
+          description: An optional, more detailed explanation of what this goal measures or its significance to business objectives.
+          type: string
+          maxLength: 500
+        is_system:
+          type: boolean
+          readOnly: true
+          description: Indicates if this is a system-defined default goal (e.g., "Decrease Bounce Rate", "Increase Engagement"). System goals cannot be deleted but their usage can be controlled.
+        stats:
+          $ref: '#/components/schemas/GoalStats'
+        triggering_rule:
+          nullable: true
+          allOf:
+          - $ref: '#/components/schemas/RuleObject'
+        selected_default:
+          type: boolean
+          description: If true, this goal will be automatically pre-selected when creating new experiences within the project. Useful for commonly tracked primary conversions.
+        status:
+          $ref: '#/components/schemas/GoalStatuses'
+    PageNumber:
+      type: object
+      properties:
+        page:
+          type: integer
+          minimum: 1
+          description: 'The page number for paginated results. For example, if `results_per_page` is 30, `page: 2` will retrieve items 31-60.
+
+            Defaults to 1 if not specified.
+
+            '
+    ChoiceMatchingOptions:
+      type: string
+      enum:
+      - equals
+    NumericMatchingOptions:
+      type: string
+      enum:
+      - equalsNumber
+      - less
+      - lessEqual
     BaseMatch:
       type: object
       properties:
@@ -1694,6 +1211,72 @@ components:
 
             '
           type: boolean
+    ClicksElementGoal:
+      allOf:
+      - $ref: '#/components/schemas/GoalBase'
+      - type: object
+        properties:
+          type:
+            enum:
+            - clicks_element
+          settings:
+            $ref: '#/components/schemas/ClicksElementGoalSettings'
+    GoalOptionalFields:
+      type: string
+      enum:
+      - triggering_rule
+      - stats
+    DayOfWeekMatchRulesTypes:
+      type: string
+      enum:
+      - local_time_day_of_week
+      - project_time_day_of_week
+    BrowserNameMatchRulesTypes:
+      type: string
+      enum:
+      - browser_name
+    CreateDomInteractionGoal:
+      allOf:
+      - $ref: '#/components/schemas/DomInteractionGoal'
+      required:
+      - name
+      - type
+      - settings
+    AdvancedGoal:
+      allOf:
+      - $ref: '#/components/schemas/GoalBase'
+      - type: object
+        properties:
+          type:
+            enum:
+            - advanced
+    BulkEntityError:
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          description: The unique identifier of the entity that could not be processed.
+        message:
+          type: string
+          description: A message explaining the reason for the failure for this specific entity.
+    GenericBoolKeyValueMatchRule:
+      allOf:
+      - $ref: '#/components/schemas/BaseRuleWithBooleanValue'
+      - type: object
+        required:
+        - rule_type
+        properties:
+          rule_type:
+            $ref: '#/components/schemas/GenericBoolKeyValueMatchRulesTypes'
+          matching:
+            allOf:
+            - $ref: '#/components/schemas/BaseMatch'
+            - type: object
+              properties:
+                match_type:
+                  $ref: '#/components/schemas/ChoiceMatchingOptions'
+      - $ref: '#/components/schemas/GenericKey'
     Pagination:
       type: object
       properties:
@@ -1713,31 +1296,29 @@ components:
           description: The total number of pages available for the current filter criteria and `results_per_page` setting.
           type: integer
           minimum: 0
-    WeatherConditionMatchRulesTypes:
+    Extra:
+      type: object
+      properties:
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+    CookieMatchRulesTypes:
       type: string
       enum:
-      - weather_condition
-    OsMatchRulesTypes:
-      type: string
-      enum:
-      - os
-    GenericBoolKeyValueMatchRule:
-      allOf:
-      - $ref: '#/components/schemas/BaseRuleWithBooleanValue'
-      - type: object
-        required:
-        - rule_type
-        properties:
-          rule_type:
-            $ref: '#/components/schemas/GenericBoolKeyValueMatchRulesTypes'
-          matching:
-            allOf:
-            - $ref: '#/components/schemas/BaseMatch'
-            - type: object
-              properties:
-                match_type:
-                  $ref: '#/components/schemas/ChoiceMatchingOptions'
-      - $ref: '#/components/schemas/GenericKey'
+      - cookie
+    ResultsPerPage:
+      type: object
+      properties:
+        results_per_page:
+          type: integer
+          nullable: true
+          minimum: 0
+          maximum: 50
+          default: 30
+          description: 'Specifies the maximum number of items to return in a single page of results.
+
+            Used for pagination. Default is 30, maximum is 50.
+
+            '
     GenericTextMatchRule:
       allOf:
       - $ref: '#/components/schemas/BaseRuleWithStringValue'
@@ -1754,6 +1335,465 @@ components:
               properties:
                 match_type:
                   $ref: '#/components/schemas/TextMatchingOptions'
+    CreateGaGoal:
+      allOf:
+      - $ref: '#/components/schemas/GaGoal'
+      required:
+      - name
+      - type
+    BulkUpdateGoalRequestData:
+      type: object
+      description: Request body for bulk updating the status of multiple goals.
+      additionalProperties: false
+      properties:
+        id:
+          $ref: '#/components/schemas/BulkGoalsIds'
+        status:
+          $ref: '#/components/schemas/GoalStatuses'
+      required:
+      - id
+      - status
+    CreateNoSettingsGoal:
+      allOf:
+      - $ref: '#/components/schemas/NoSettingsGoal'
+      required:
+      - name
+      - type
+    ErrorData:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          oneOf:
+          - type: string
+          - type: array
+            items:
+              type: string
+        fields:
+          oneOf:
+          - type: string
+          - type: array
+            items:
+              type: string
+    HourOfDayMatchRulesTypes:
+      type: string
+      enum:
+      - local_time_hour_of_day
+      - project_time_hour_of_day
+    NumericMatchRulesTypes:
+      type: string
+      enum:
+      - avg_time_page
+      - days_since_last_visit
+      - pages_visited_count
+      - visit_duration
+      - visits_count
+      - page_tag_product_price
+    MinuteOfHourMatchRule:
+      allOf:
+      - $ref: '#/components/schemas/BaseRuleWithMinuteOfHourValue'
+      - type: object
+        required:
+        - rule_type
+        properties:
+          rule_type:
+            $ref: '#/components/schemas/MinuteOfHourMatchRulesTypes'
+          matching:
+            allOf:
+            - $ref: '#/components/schemas/BaseMatch'
+            - type: object
+              properties:
+                match_type:
+                  $ref: '#/components/schemas/NumericMatchingOptions'
+    DomInteractionGoalSettings:
+      type: object
+      additionalProperties: false
+      properties:
+        tracked_items:
+          type: array
+          description: An array defining one or more DOM elements and the interaction events on them that should trigger this goal.
+          items:
+            type: object
+            description: Defines a single DOM element and event to track.
+            properties:
+              selector:
+                type: string
+                description: A CSS selector that identifies the HTML element(s) to monitor for interactions (e.g., "#submitButton", ".product-image").
+              event:
+                type: string
+                description: The specific DOM event to listen for on the selected element(s) (e.g., "click", "mouseover", "change", "focus").
+      required:
+      - tracked_items
+    CreateScrollPercentageGoal:
+      allOf:
+      - $ref: '#/components/schemas/ScrollPercentageGoal'
+      required:
+      - name
+      - type
+      - settings
+    BaseRuleWithBooleanValue:
+      allOf:
+      - $ref: '#/components/schemas/BaseRule'
+      - type: object
+        properties:
+          value:
+            description: The value used to match against 'rule_type' using 'matching'
+            type: boolean
+    GoalStats:
+      type: object
+      readOnly: true
+      properties:
+        conversions_last_48h:
+          type: integer
+          description: The total number of times this goal has been triggered (converted) across all experiences in the last 48 hours. Useful for verifying if a goal is actively tracking.
+        times_used:
+          type: integer
+          description: The number of active (non-archived) experiences that currently have this goal attached for tracking.
+    BaseRuleWithStringValue:
+      allOf:
+      - $ref: '#/components/schemas/BaseRule'
+      - type: object
+        properties:
+          value:
+            description: The value used to match against 'rule_type' using 'matching'
+            type: string
+    BaseRuleWithOsValue:
+      allOf:
+      - $ref: '#/components/schemas/BaseRule'
+      - type: object
+        properties:
+          value:
+            description: Operating System name used for matching
+            type: string
+            enum:
+            - android
+            - iphone
+            - ipod
+            - ipad
+            - windows
+            - macos
+            - linux
+    RevenueGoal:
+      allOf:
+      - $ref: '#/components/schemas/GoalBase'
+      - type: object
+        properties:
+          type:
+            enum:
+            - revenue
+          settings:
+            $ref: '#/components/schemas/RevenueGoalSettings'
+    CreateClicksElementGoal:
+      allOf:
+      - $ref: '#/components/schemas/ClicksElementGoal'
+      required:
+      - name
+      - type
+      - settings
+    CreateSubmitsFormGoal:
+      allOf:
+      - $ref: '#/components/schemas/SubmitsFormGoal'
+      required:
+      - name
+      - type
+      - settings
+    VisitorTypeMatchRule:
+      allOf:
+      - $ref: '#/components/schemas/BaseRuleWithVisitorTypeValue'
+      - type: object
+        required:
+        - rule_type
+        properties:
+          rule_type:
+            $ref: '#/components/schemas/VisitorTypeMatchRulesTypes'
+          matching:
+            allOf:
+            - $ref: '#/components/schemas/BaseMatch'
+            - type: object
+              properties:
+                match_type:
+                  $ref: '#/components/schemas/ChoiceMatchingOptions'
+    GoalTriggeredMatchRulesTypes:
+      type: string
+      enum:
+      - goal_triggered
+    ClicksLinkGoal:
+      allOf:
+      - $ref: '#/components/schemas/GoalBase'
+      - type: object
+        properties:
+          type:
+            enum:
+            - clicks_link
+          settings:
+            $ref: '#/components/schemas/ClicksLinkGoalSettings'
+    DomInteractionGoal:
+      allOf:
+      - $ref: '#/components/schemas/GoalBase'
+      - type: object
+        properties:
+          type:
+            enum:
+            - dom_interaction
+          settings:
+            $ref: '#/components/schemas/DomInteractionGoalSettings'
+    JsConditionMatchRulesTypes:
+      type: string
+      enum:
+      - js_condition
+    BaseRuleWithDayOfWeekValue:
+      allOf:
+      - $ref: '#/components/schemas/BaseRule'
+      - type: object
+        properties:
+          value:
+            description: Day of week used for matching
+            type: number
+            minimum: 1
+            maximum: 7
+    TextMatchRulesTypes:
+      type: string
+      enum:
+      - url
+      - url_with_query
+      - query_string
+      - campaign
+      - keyword
+      - medium
+      - source_name
+      - city
+      - region
+      - browser_version
+      - user_agent
+      - page_tag_page_type
+      - page_tag_category_id
+      - page_tag_category_name
+      - page_tag_product_sku
+      - page_tag_product_name
+      - page_tag_customer_id
+      - page_tag_custom_1
+      - page_tag_custom_2
+      - page_tag_custom_3
+      - page_tag_custom_4
+      - visitor_id
+    BulkDeleteGoalRequestData:
+      type: object
+      description: Request body for bulk deleting multiple goals. Contains a list of goal IDs to be permanently removed.
+      additionalProperties: false
+      properties:
+        id:
+          $ref: '#/components/schemas/BulkGoalsIds'
+      required:
+      - id
+    CountryMatchRulesTypes:
+      type: string
+      enum:
+      - country
+    SegmentBucketedMatchRulesTypes:
+      type: string
+      enum:
+      - bucketed_into_segment
+    BaseRuleWithBrowserNameValue:
+      allOf:
+      - $ref: '#/components/schemas/BaseRule'
+      - type: object
+        properties:
+          value:
+            description: Browser name used for matching
+            type: string
+            enum:
+            - chrome
+            - microsoft_ie
+            - firefox
+            - microsoft_edge
+            - mozilla
+            - opera
+            - safari
+    GaGoal:
+      allOf:
+      - $ref: '#/components/schemas/GoalBase'
+      - type: object
+        properties:
+          type:
+            enum:
+            - ga_import
+          settings:
+            $ref: '#/components/schemas/GaGoalSettings'
+    DayOfWeekMatchRule:
+      allOf:
+      - $ref: '#/components/schemas/BaseRuleWithDayOfWeekValue'
+      - type: object
+        required:
+        - rule_type
+        properties:
+          rule_type:
+            $ref: '#/components/schemas/DayOfWeekMatchRulesTypes'
+          matching:
+            allOf:
+            - $ref: '#/components/schemas/BaseMatch'
+            - type: object
+              properties:
+                match_type:
+                  $ref: '#/components/schemas/NumericMatchingOptions'
+    GenericTextKeyValueMatchRule:
+      allOf:
+      - $ref: '#/components/schemas/BaseRuleWithStringValue'
+      - type: object
+        required:
+        - rule_type
+        properties:
+          rule_type:
+            $ref: '#/components/schemas/GenericTextKeyValueMatchRulesTypes'
+          matching:
+            allOf:
+            - $ref: '#/components/schemas/BaseMatch'
+            - type: object
+              properties:
+                match_type:
+                  $ref: '#/components/schemas/TextMatchingOptions'
+      - $ref: '#/components/schemas/GenericKey'
+    GoalsList:
+      type: array
+      description: A list of goal objects.
+      items:
+        $ref: '#/components/schemas/Goal'
+    BaseRuleWithJsCodeValue:
+      allOf:
+      - $ref: '#/components/schemas/BaseRule'
+      - type: object
+        properties:
+          value:
+            description: 'The JS code that would be executed when rule is checked. The return value of this JS code is what is gonna be matched
+
+
+              against **true**(or **false** if **matching.negated = true** is provided)
+
+              '
+            type: string
+    LanguageMatchRule:
+      allOf:
+      - $ref: '#/components/schemas/BaseRuleWithLanguageCodeValue'
+      - type: object
+        required:
+        - rule_type
+        properties:
+          rule_type:
+            $ref: '#/components/schemas/LanguageMatchRulesTypes'
+          matching:
+            allOf:
+            - $ref: '#/components/schemas/BaseMatch'
+            - type: object
+              properties:
+                match_type:
+                  $ref: '#/components/schemas/ChoiceMatchingOptions'
+    VisitorTypeMatchRulesTypes:
+      type: string
+      enum:
+      - visitor_type
+    BaseRuleWithWeatherConditionValue:
+      allOf:
+      - $ref: '#/components/schemas/BaseRule'
+      - type: object
+        properties:
+          value:
+            description: 'Weather Condition name used for matching. Full or partial condition.
+
+
+              The weather provider used by Convert detects the following conditions:
+
+              - Blizzard
+
+              - Blowing snow
+
+              - Cloudy
+
+              - Fog
+
+              - Freezing drizzle
+
+              - Freezing fog
+
+              - Heavy freezing drizzle
+
+              - Heavy rain
+
+              - Heavy rain at times
+
+              - Light drizzle
+
+              - Light freezing rain
+
+              - Light rain
+
+              - Mist
+
+              - Moderate rain
+
+              - Moderate rain at times
+
+              - Overcast
+
+              - Partly cloudy
+
+              '
+            type: string
+    SubmitsFormGoal:
+      allOf:
+      - $ref: '#/components/schemas/GoalBase'
+      - type: object
+        properties:
+          type:
+            enum:
+            - submits_form
+          settings:
+            $ref: '#/components/schemas/SubmitsFormGoalSettings'
+    CreateClicksLinkGoal:
+      allOf:
+      - $ref: '#/components/schemas/ClicksLinkGoal'
+      required:
+      - name
+      - type
+      - settings
+    BaseRuleWithGoalTriggeredValue:
+      allOf:
+      - $ref: '#/components/schemas/BaseRule'
+      - type: object
+        properties:
+          value:
+            description: ID of the goal used for matching
+            type: number
+    CreateRevenueGoal:
+      allOf:
+      - $ref: '#/components/schemas/RevenueGoal'
+      required:
+      - name
+      - type
+      - settings
+    GenericBoolKeyValueMatchRulesTypes:
+      type: string
+      enum:
+      - generic_bool_key_value
+    SortDirection:
+      type: object
+      properties:
+        sort_direction:
+          type: string
+          nullable: true
+          default: desc
+          description: 'The direction for sorting the list results, based on the `sort_by` field.
+
+            - `asc`: Ascending order (e.g., A-Z, 1-10, oldest to newest).
+
+            - `desc`: Descending order (e.g., Z-A, 10-1, newest to oldest).
+
+            Defaults to `desc` (newest/highest first) if not specified.
+
+            '
+          enum:
+          - asc
+          - desc
     GoalStatuses:
       type: string
       description: 'The current status of a goal:
@@ -1768,47 +1808,56 @@ components:
       enum:
       - active
       - archived
-    BulkDeleteGoalRequestData:
-      type: object
-      description: Request body for bulk deleting multiple goals. Contains a list of goal IDs to be permanently removed.
-      additionalProperties: false
-      properties:
-        id:
-          $ref: '#/components/schemas/BulkGoalsIds'
-      required:
-      - id
-    BaseRuleWithHourOfDayValue:
-      allOf:
-      - $ref: '#/components/schemas/BaseRule'
-      - type: object
-        properties:
-          value:
-            description: Hour of day used for matching
-            type: number
-            minimum: 0
-            maximum: 24
-    ClicksElementGoal:
-      allOf:
-      - $ref: '#/components/schemas/GoalBase'
-      - type: object
-        properties:
-          type:
-            enum:
-            - clicks_element
-          settings:
-            $ref: '#/components/schemas/ClicksElementGoalSettings'
-    BrowserNameMatchRulesTypes:
-      type: string
-      enum:
-      - browser_name
-    CreateScrollPercentageGoal:
-      allOf:
-      - $ref: '#/components/schemas/ScrollPercentageGoal'
-      required:
-      - name
-      - type
-      - settings
+  responses:
+    GoalResponse:
+      description: Detailed information for a single conversion goal, including its name, type (e.g., 'visits_page', 'revenue'), configuration settings (like target URL or CSS selector), and triggering rules for advanced goals.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Goal'
+    SuccessResponse:
+      description: 'A generic success response, typically used for operations that don''t return specific data (like deletions or some updates). The `code` is usually 200, and `message` confirms the successful action.
+
+        '
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SuccessData'
+    BulkSuccessResponse:
+      description: 'Indicates the outcome of a bulk operation (e.g., bulk update or delete). Provides a general success `message` and an `errors` array listing any entities that could not be processed, along with the reason for failure for each.
+
+        '
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BulkSuccessData'
+    GoalsListResponse:
+      description: A list of conversion goals defined within a project. Each goal entry includes its ID, name, type, status, and potentially usage statistics if requested.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GoalsListResponseData'
+    ErrorResponse:
+      description: 'Indicates an error occurred while processing the request. The `code` provides an HTTP status code, `message` offers a human-readable explanation or an array of validation errors, and `fields` (if present) specifies which input fields were problematic.
+
+        '
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorData'
   requestBodies:
+    BulkDeleteGoalsRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BulkDeleteGoalRequestData'
+    BulkUpdateGoalsRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BulkUpdateGoalRequestData'
+      description: Contains a list of goal `id`s and the target `status` (e.g., 'active', 'archived') to apply to all of them.
+      required: true
     CreateGoalRequest:
       content:
         application/json:
@@ -1830,55 +1879,6 @@ components:
 
         '
       required: true
-    BulkUpdateGoalsRequest:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/BulkUpdateGoalRequestData'
-      description: Contains a list of goal `id`s and the target `status` (e.g., 'active', 'archived') to apply to all of them.
-      required: true
-    BulkDeleteGoalsRequest:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/BulkDeleteGoalRequestData'
-  responses:
-    GoalsListResponse:
-      description: A list of conversion goals defined within a project. Each goal entry includes its ID, name, type, status, and potentially usage statistics if requested.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/GoalsListResponseData'
-    SuccessResponse:
-      description: 'A generic success response, typically used for operations that don''t return specific data (like deletions or some updates). The `code` is usually 200, and `message` confirms the successful action.
-
-        '
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/SuccessData'
-    BulkSuccessResponse:
-      description: 'Indicates the outcome of a bulk operation (e.g., bulk update or delete). Provides a general success `message` and an `errors` array listing any entities that could not be processed, along with the reason for failure for each.
-
-        '
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/BulkSuccessData'
-    GoalResponse:
-      description: Detailed information for a single conversion goal, including its name, type (e.g., 'visits_page', 'revenue'), configuration settings (like target URL or CSS selector), and triggering rules for advanced goals.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Goal'
-    ErrorResponse:
-      description: 'Indicates an error occurred while processing the request. The `code` provides an HTTP status code, `message` offers a human-readable explanation or an array of validation errors, and `fields` (if present) specifies which input fields were problematic.
-
-        '
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorData'
   securitySchemes:
     requestSigning:
       type: apiKey

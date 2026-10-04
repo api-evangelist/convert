@@ -98,6 +98,50 @@ components:
           description: 'Enable this when the OAuth client is used by a third-party or embedded integration. An embedded client stays active even if the user who created it is later deleted, so integrations that depend on it continue to work.
 
             '
+    OAuthDeleteClientResponseData:
+      type: object
+      required:
+      - code
+      - message
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
+    OAuthClientData:
+      type: object
+      required:
+      - id
+      - name
+      - callback_url
+      - embedded
+      properties:
+        id:
+          type: string
+          readOnly: true
+        name:
+          type: string
+        callback_url:
+          type: string
+          format: uri
+        description:
+          type: string
+        embedded:
+          type: boolean
+          description: 'Enable this when the OAuth client is used by a third-party or embedded integration. An embedded client stays active even if the user who created it is later deleted, so integrations that depend on it continue to work.
+
+            '
+        created_at:
+          type: integer
+    OAuthClientsListResponseData:
+      type: object
+      required:
+      - data
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/OAuthClientData'
     ErrorData:
       type: object
       properties:
@@ -140,25 +184,6 @@ components:
             '
         created_at:
           type: integer
-    OAuthClientsListResponseData:
-      type: object
-      required:
-      - data
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/OAuthClientData'
-    OAuthDeleteClientResponseData:
-      type: object
-      required:
-      - code
-      - message
-      properties:
-        code:
-          type: integer
-        message:
-          type: string
     OAuthCreateClientRequestData:
       type: object
       required:
@@ -181,58 +206,6 @@ components:
           description: 'Enable this when the OAuth client is used by a third-party or embedded integration. An embedded client stays active even if the user who created it is later deleted, so integrations that depend on it continue to work.
 
             '
-    OAuthClientData:
-      type: object
-      required:
-      - id
-      - name
-      - callback_url
-      - embedded
-      properties:
-        id:
-          type: string
-          readOnly: true
-        name:
-          type: string
-        callback_url:
-          type: string
-          format: uri
-        description:
-          type: string
-        embedded:
-          type: boolean
-          description: 'Enable this when the OAuth client is used by a third-party or embedded integration. An embedded client stays active even if the user who created it is later deleted, so integrations that depend on it continue to work.
-
-            '
-        created_at:
-          type: integer
-  responses:
-    OAuthClientResponse:
-      description: Single OAuth client.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/OAuthClientResponseData'
-    OAuthClientsListResponse:
-      description: List of OAuth clients for the current user.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/OAuthClientsListResponseData'
-    ErrorResponse:
-      description: 'Indicates an error occurred while processing the request. The `code` provides an HTTP status code, `message` offers a human-readable explanation or an array of validation errors, and `fields` (if present) specifies which input fields were problematic.
-
-        '
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorData'
-    OAuthDeleteClientResponse:
-      description: OAuth client deletion confirmation.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/OAuthDeleteClientResponseData'
   requestBodies:
     OAuthUpdateClientRequest:
       required: true
@@ -248,6 +221,33 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/OAuthCreateClientRequestData'
+  responses:
+    OAuthClientsListResponse:
+      description: List of OAuth clients for the current user.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/OAuthClientsListResponseData'
+    OAuthDeleteClientResponse:
+      description: OAuth client deletion confirmation.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/OAuthDeleteClientResponseData'
+    OAuthClientResponse:
+      description: Single OAuth client.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/OAuthClientResponseData'
+    ErrorResponse:
+      description: 'Indicates an error occurred while processing the request. The `code` provides an HTTP status code, `message` offers a human-readable explanation or an array of validation errors, and `fields` (if present) specifies which input fields were problematic.
+
+        '
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorData'
   securitySchemes:
     requestSigning:
       type: apiKey
