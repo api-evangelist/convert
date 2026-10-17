@@ -99,63 +99,51 @@ paths:
         default:
           $ref: '#/components/responses/ErrorResponse'
 components:
-  parameters:
-    ProjectId:
-      name: project_id
-      in: path
-      required: true
-      description: ID of the project to be retrieved
-      schema:
-        type: integer
-    AccountId:
-      name: account_id
-      in: path
-      required: true
-      description: ID of the account that owns the retrieved/saved data
-      schema:
-        type: integer
-    PlaceholderId:
-      name: placeholder_id
-      in: path
-      required: true
-      description: ID of the placeholder to be retrieved/updated/deleted
-      schema:
-        type: integer
-  responses:
-    ErrorResponse:
-      description: 'Indicates an error occurred while processing the request. The `code` provides an HTTP status code, `message` offers a human-readable explanation or an array of validation errors, and `fields` (if present) specifies which input fields were problematic.
-
-        '
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorData'
-    VisitorDataPlaceholderResponse:
-      description: Response object containing a single visitor data placeholder
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/VisitorDataPlaceholder'
-    VisitorDataPlaceholdersListResponse:
-      description: Response object containing the list of visitor data placeholders defined in the project
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/PlaceholdersListResponseData'
-    SuccessResponse:
-      description: 'A generic success response, typically used for operations that don''t return specific data (like deletions or some updates). The `code` is usually 200, and `message` confirms the successful action.
-
-        '
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/SuccessData'
   schemas:
-    CreatePlaceholderRequestData:
-      allOf:
-      - $ref: '#/components/schemas/VisitorDataPlaceholder'
-      required:
-      - placeholder
+    ErrorData:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          oneOf:
+          - type: string
+          - type: array
+            items:
+              type: string
+        fields:
+          oneOf:
+          - type: string
+          - type: array
+            items:
+              type: string
+    PlaceholdersList:
+      type: array
+      description: List of visitor data placeholders
+      items:
+        $ref: '#/components/schemas/VisitorDataPlaceholder'
+    Extra:
+      type: object
+      properties:
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+    PlaceholdersListResponseData:
+      type: object
+      description: Response containing list of visitor data placeholders and extra list metadata
+      properties:
+        data:
+          $ref: '#/components/schemas/PlaceholdersList'
+        extra:
+          $ref: '#/components/schemas/Extra'
+    SuccessData:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
     Pagination:
       type: object
       properties:
@@ -175,11 +163,6 @@ components:
           description: The total number of pages available for the current filter criteria and `results_per_page` setting.
           type: integer
           minimum: 0
-    Extra:
-      type: object
-      properties:
-        pagination:
-          $ref: '#/components/schemas/Pagination'
     ResultsPerPage:
       type: object
       properties:
@@ -194,24 +177,6 @@ components:
             Used for pagination. Default is 30, maximum is 50.
 
             '
-    ErrorData:
-      type: object
-      properties:
-        code:
-          type: integer
-          format: int32
-        message:
-          oneOf:
-          - type: string
-          - type: array
-            items:
-              type: string
-        fields:
-          oneOf:
-          - type: string
-          - type: array
-            items:
-              type: string
     OnlyCount:
       type: object
       properties:
@@ -220,6 +185,17 @@ components:
           description: 'If set to `true` in a list request, the response will only contain the total count of matching items (`extra.pagination.items_count`)
 
             and will not include the actual item data. Useful for quickly getting totals without fetching full datasets.
+
+            '
+    PageNumber:
+      type: object
+      properties:
+        page:
+          type: integer
+          minimum: 1
+          description: 'The page number for paginated results. For example, if `results_per_page` is 30, `page: 2` will retrieve items 31-60.
+
+            Defaults to 1 if not specified.
 
             '
     UpdatePlaceholderRequestData:
@@ -234,49 +210,11 @@ components:
           description: A unique per project level identifier for the placeholder. Used in {{placeholder}} syntax.
           type: string
           maxLength: 128
-    PlaceholdersListResponseData:
-      type: object
-      description: Response containing list of visitor data placeholders and extra list metadata
-      properties:
-        data:
-          $ref: '#/components/schemas/PlaceholdersList'
-        extra:
-          $ref: '#/components/schemas/Extra'
-    PageNumber:
-      type: object
-      properties:
-        page:
-          type: integer
-          minimum: 1
-          description: 'The page number for paginated results. For example, if `results_per_page` is 30, `page: 2` will retrieve items 31-60.
-
-            Defaults to 1 if not specified.
-
-            '
-    GetPlaceholdersListRequestData:
+    CreatePlaceholderRequestData:
       allOf:
-      - $ref: '#/components/schemas/OnlyCount'
-      - $ref: '#/components/schemas/ResultsPerPage'
-      - $ref: '#/components/schemas/PageNumber'
-      - type: object
-        properties:
-          search:
-            type: string
-            maxLength: 200
-            nullable: true
-            description: 'A search query used to filter placeholders. Matches are case-insensitive and return results where
-
-              the `placeholder` value contains the given string.
-
-              '
-    SuccessData:
-      type: object
-      properties:
-        code:
-          type: integer
-          format: int32
-        message:
-          type: string
+      - $ref: '#/components/schemas/VisitorDataPlaceholder'
+      required:
+      - placeholder
     VisitorDataPlaceholder:
       type: object
       description: Base Visitor Data Placeholder Object
@@ -297,12 +235,30 @@ components:
           description: Unix timestamp (UTC) indicating when the placeholder was created
           type: integer
           readOnly: true
-    PlaceholdersList:
-      type: array
-      description: List of visitor data placeholders
-      items:
-        $ref: '#/components/schemas/VisitorDataPlaceholder'
+    GetPlaceholdersListRequestData:
+      allOf:
+      - $ref: '#/components/schemas/OnlyCount'
+      - $ref: '#/components/schemas/ResultsPerPage'
+      - $ref: '#/components/schemas/PageNumber'
+      - type: object
+        properties:
+          search:
+            type: string
+            maxLength: 200
+            nullable: true
+            description: 'A search query used to filter placeholders. Matches are case-insensitive and return results where
+
+              the `placeholder` value contains the given string.
+
+              '
   requestBodies:
+    CreateVisitorDataPlaceholderRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CreatePlaceholderRequestData'
+      description: Create visitor data placeholder schema
+      required: true
     GetVisitorDataPlaceholdersListRequest:
       content:
         application/json:
@@ -317,13 +273,57 @@ components:
             $ref: '#/components/schemas/UpdatePlaceholderRequestData'
       description: Update visitor data placeholder schema
       required: true
-    CreateVisitorDataPlaceholderRequest:
+  responses:
+    VisitorDataPlaceholdersListResponse:
+      description: Response object containing the list of visitor data placeholders defined in the project
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/CreatePlaceholderRequestData'
-      description: Create visitor data placeholder schema
+            $ref: '#/components/schemas/PlaceholdersListResponseData'
+    SuccessResponse:
+      description: 'A generic success response, typically used for operations that don''t return specific data (like deletions or some updates). The `code` is usually 200, and `message` confirms the successful action.
+
+        '
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SuccessData'
+    VisitorDataPlaceholderResponse:
+      description: Response object containing a single visitor data placeholder
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/VisitorDataPlaceholder'
+    ErrorResponse:
+      description: 'Indicates an error occurred while processing the request. The `code` provides an HTTP status code, `message` offers a human-readable explanation or an array of validation errors, and `fields` (if present) specifies which input fields were problematic.
+
+        '
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorData'
+  parameters:
+    PlaceholderId:
+      name: placeholder_id
+      in: path
       required: true
+      description: ID of the placeholder to be retrieved/updated/deleted
+      schema:
+        type: integer
+    AccountId:
+      name: account_id
+      in: path
+      required: true
+      description: ID of the account that owns the retrieved/saved data
+      schema:
+        type: integer
+    ProjectId:
+      name: project_id
+      in: path
+      required: true
+      description: ID of the project to be retrieved
+      schema:
+        type: integer
   securitySchemes:
     requestSigning:
       type: apiKey

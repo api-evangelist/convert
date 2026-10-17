@@ -159,15 +159,74 @@ paths:
           $ref: '#/components/responses/ErrorResponse'
 components:
   schemas:
-    SimpleLocationExpandable:
-      anyOf:
-      - type: integer
-        description: Location ID
-      - $ref: '#/components/schemas/SimpleLocation'
-    AccountUserAccessesDelete:
+    ProjectStatuses:
+      description: 'The overall status of a project:
+
+        - `active`: The project is active, and experiences within it can run and track data.
+
+        - `inactive`: The project is inactive (archived or paused). No experiences within it will run, and no new data will be tracked.
+
+        - `suspended`: The project (or account) has been suspended, typically due to billing issues or terms of service violations. Services are disabled.
+
+        '
+      type: string
+      enum:
+      - active
+      - inactive
+      - suspended
+    SE_ProcSettings:
+      description: Overall settings for the statistical engine processing results for this experience.
       oneOf:
-      - $ref: '#/components/schemas/DeleteAccountUserAccessesByUserId'
-      - $ref: '#/components/schemas/DeleteAccountUserAccessesByUserEmail'
+      - $ref: '#/components/schemas/SE_ProcSettingsFrequentist'
+      - $ref: '#/components/schemas/SE_ProcSettingsBayesian'
+      discriminator:
+        propertyName: stats_type
+        mapping:
+          frequentist: '#/components/schemas/SE_ProcSettingsFrequentist'
+          bayesian: '#/components/schemas/SE_ProcSettingsBayesian'
+    DeleteAccountUserAccessesByUserId:
+      allOf:
+      - $ref: '#/components/schemas/UserById'
+      - $ref: '#/components/schemas/BaseAccesses'
+    SimpleAudience:
+      type: object
+      properties:
+        id:
+          description: The unique numerical identifier of the audience.
+          type: integer
+        name:
+          description: The user-defined, friendly name of the audience.
+          type: string
+    BaseAccesses:
+      type: object
+      properties:
+        accesses:
+          type: array
+          description: 'A list defining the user''s access to specific projects or all projects within the account.
+
+            Each item specifies a `project` (ID or null for all projects) and the `role` granted.
+
+            '
+          items:
+            type: object
+            properties:
+              project:
+                nullable: true
+                anyOf:
+                - type: integer
+                  nullable: true
+                  description: Project ID. If null , than access is referring to all projects inside the account
+                - $ref: '#/components/schemas/Project'
+    AccessRoleNamesNoOwner:
+      type: string
+      description: Access roles that can be assigned to collaborators or API keys (excludes the 'owner' role, which is typically unique to the account creator).
+      enum:
+      - admin
+      - account_manager
+      - browse
+      - edit
+      - publish
+      - review
     SE_ProcSettingsBayesian:
       allOf:
       - $ref: '#/components/schemas/SE_ProcSettingsBase'
@@ -193,283 +252,67 @@ components:
             allOf:
             - $ref: '#/components/schemas/SE_MabSettings'
             nullable: true
-    AccountUserAccessesExpandFields:
-      type: string
-      enum:
-      - accesses.project
-    AccessStatuses:
-      type: string
-      readOnly: true
-      enum:
-      - active
-      - pending
-    SimpleAudienceExpandable:
-      anyOf:
-      - type: integer
-        description: Audience ID
-      - $ref: '#/components/schemas/SimpleAudience'
-    ProjectIntegrationGA3:
-      allOf:
-      - $ref: '#/components/schemas/ProjectGASettingsBase'
-      - $ref: '#/components/schemas/IntegrationGA3'
-    ExperienceReportingSettings:
+    AccountUserAccessesExpandParams:
       type: object
-      description: Comprehensive settings governing how an experience's results are reported and analyzed.
       properties:
-        primary_metric:
-          description: 'The key performance indicator (KPI) that the statistical engine will primarily use to evaluate variations and determine winners, especially for MAB allocation or automated decisions.
+        expand:
+          description: 'Specifies linked objects to expand in the response, e.g., ''accesses.project''.
 
-            - `conversion_rate`: Based on the conversion rate of the primary goal. (Default)
-
-            - `avg_revenue_visitor`: Based on Revenue Per Visitor (RPV) from a revenue goal.
-
-            - `avg_products_ordered_visitor`: Based on Average Products Per Visitor (APPV) from a revenue goal.
+            Refer to the [Expanding Fields](#tag/Expandable-Fields) section.
 
             '
-          default: conversion_rate
-          allOf:
-          - $ref: '#/components/schemas/MetricTypes'
-        stats_engine_processing:
-          $ref: '#/components/schemas/SE_ProcSettings'
-        confidence:
-          description: (Deprecated) Legacy setting for confidence level. Use `stats_engine_processing.confidence` for Frequentist settings instead.
-          deprecated: true
-          type: number
-          minimum: 0
-        keep_winner:
-          description: 'If true, after an experience is marked as ''Completed'' because a winning variation was found, that winning variation will continue to receive 100% of the experience traffic.
+          type: array
+          items:
+            $ref: '#/components/schemas/AccountUserAccessesExpandFields'
+    SE_MabSettings:
+      type: object
+      description: 'Configuration for Multi-Armed Bandit (MAB) traffic allocation. If `null`, MAB is disabled and manual traffic allocation is used.
 
-            If false (default), traffic might revert to the original or be evenly split, or the experience might simply stop serving.
+        MAB dynamically allocates more traffic to better-performing variations based on the `primary_metric` of the `primary_goal`.
 
-            KB: "My Experiments Stopped, What Happened?" - "An experiment can keep winning variation running".
-
-            '
-          type: boolean
-        min_order_value:
-          description: (Deprecated) Minimum order value for transaction outliers. Use `outliers.order_value.min` instead.
-          type: number
-          minimum: 0
-          deprecated: true
-        max_order_value:
-          description: (Deprecated) Maximum order value for transaction outliers. Use `outliers.order_value.max` instead.
-          type: number
-          deprecated: true
-          minimum: 0
-        outliers:
-          description: 'Configuration for handling statistical outliers in order-related data (revenue and product counts) to prevent skewed results.
-
-            KB: "Setting limits for Order Outliers" and "How Outlier Detection Works in Convert Reports and Exports".
-
-            '
-          type: object
-          additionalProperties: false
-          properties:
-            order_value:
-              description: Outlier detection settings for the monetary value of orders.
-              allOf:
-              - $ref: '#/components/schemas/NumericOutlier'
-            products_ordered_count:
-              description: Outlier detection settings for the number of products in an order.
-              allOf:
-              - $ref: '#/components/schemas/NumericOutlier'
-        max_running_time:
-          description: 'The maximum number of days the experience should run. If no clear winner is found by this time, the experience may be automatically completed or paused.
-
-            Set to 0 for no maximum limit.
-
-            KB: "Setting an end date for running an experiment." (Mentions max days in Stats section).
-
-            '
-          type: integer
-          minimum: 0
-          maximum: 999
-        max_variation_visitors:
-          description: (Deprecated) Maximum number of visitors per variation. Use `max_experience_visitors` or rely on statistical significance.
-          deprecated: true
-          type: integer
-          minimum: 0
-        max_experience_visitors:
-          description: The maximum total number of unique visitors to be included in the entire experience. Once reached, the experience may be automatically paused or completed. Set to 0 for no limit.
-          type: integer
-          minimum: 0
-        min_variation_conversions:
-          type: integer
-          minimum: 0
-          description: 'The minimum number of conversions a variation must achieve before its statistical significance (confidence/chance to win) is calculated and displayed in reports.
-
-            Default is often 5. Helps avoid premature conclusions based on very small conversion numbers.
-
-            KB: "Experiment Report" - "Confidence Level (statistical significance)".
-
-            '
-        min_conversion_value:
-          description: (Deprecated or unclear) Minimum conversion value per variation. Might relate to revenue goals or be a legacy setting.
-          type: integer
-          minimum: 0
-          deprecated: true
-        min_running_time:
-          description: 'The minimum number of days the experience must run before it can be automatically completed, even if a winner is found earlier.
-
-            Helps ensure stability and account for weekly variations. Set to 0 for no minimum.
-
-            KB: "My Experiments Stopped, What Happened?".
-
-            '
-          type: integer
-          minimum: 0
-          maximum: 999
-        min_variation_visitors:
-          description: 'The minimum number of unique visitors each variation (including the original) must receive before statistical significance is calculated.
-
-            Helps ensure a sufficient sample size for reliable results.
-
-            '
-          type: integer
-          minimum: 0
-        stop_loser:
-          description: 'If true, variations that are statistically determined to be performing significantly worse than the baseline (losing variations) will be automatically stopped.
-
-            Their traffic is then redistributed among the remaining active variations.
-
-            KB: "My Experiments Stopped, What Happened?" - "An experiment can stop losing variations".
-
-            '
-          type: boolean
-        keep_running_until_confidence:
-          type: boolean
-          description: 'If true, the experiment does not auto-complete when planned sample size (100% progress) is reached alone.
-
-            It only auto-completes when both planned sample size is reached and the confidence threshold is met.
-
-            If false, the experiment completes automatically when planned sample size is reached, regardless of confidence level.
-
-            Default depends on automation toggle: when keep_winner or stop_loser is enabled, default is true; otherwise false.
-
-            '
-        srm_check:
-          type: boolean
-          nullable: true
-          description: 'If true, enables Sample Ratio Mismatch (SRM) checks for the experience.
-
-            SRM occurs when the distribution of visitors to variations significantly deviates from the intended traffic allocation, potentially indicating a problem with the experiment setup.
-
-            If not provided at experience level, project-level setting is used.
-
-            KB: "What is SRM?".
-
-            '
-        visual_editor:
-          description: Settings related to the behavior and configuration of Convert's Visual Editor when used for this experience.
-          type: object
-          properties:
-            selector_blacklist:
-              description: 'A list of keywords (newline-separated string). If an element''s attribute (class, ID) contains any of these keywords, that attribute part will be ignored when Convert generates CSS selectors for changes.
-
-                Useful for avoiding dynamic or unstable selectors (e.g., from Squarespace, Bootstrap).
-
-                KB: "My changes created on the Visual Editor don''t get saved when using Squarespace", "Issues while editing websites on Bootstrap".
-
-                '
-              type: string
-              nullable: true
-            screen_width:
-              description: The emulated screen width (in pixels) used when loading the page in the Visual Editor. Allows previewing and editing for different responsive views.
-              type: number
-              minimum: 240
-              maximum: 7680
-              nullable: true
-            user_agent:
-              $ref: '#/components/schemas/VisualEditorUserAgents'
-    SE_ProcSettingsFrequentist:
-      allOf:
-      - $ref: '#/components/schemas/SE_ProcSettingsBase'
-      - type: object
-        description: Stats Engine Settings needed for the Frequentist processing
-        properties:
-          stats_type:
-            enum:
-            - frequentist
-          confidence:
-            description: Confidence value to be used (in percent)
-            type: number
-            minimum: 50
-            maximum: 99
-            multipleOf: 1
-          power:
-            description: Statistical power value to be used (in percent)
-            type: number
-            minimum: 10
-            maximum: 99
-            multipleOf: 1
-          test_type:
-            description: The type of test applied to the data
-            type: string
-            default: two_tails
-            enum:
-            - one_tail
-            - one_tail_left
-            - one_tail_right
-            - two_tails
-            - sequential
-          multiple_comparison_correction:
-            description: Multiple comparison correction
-            type: string
-            enum:
-            - none
-            - bonferroni
-            - sidak
-          power_calculation_type:
-            description: Power calculation type
-            type: string
-            default: dynamic_mde
-            enum:
-            - dynamic_mde
-            - fixed_mde
-          fixed_mde:
-            description: Fixed minimum detectable effect (corresponding to the relative improvement in percent)
-            type: number
-            minimum: 0
-            maximum: 10000
-          mab_settings:
-            allOf:
-            - $ref: '#/components/schemas/SE_MabSettings'
-            nullable: true
-    DNSRecordTypes:
-      description: The type of the DNS record.
-      type: string
-      enum:
-      - TXT
-      - CNAME
-    AccessRoleNames:
-      type: string
-      description: 'The predefined names for user access roles within the Convert system. Each role grants a specific set of permissions.
-
-        - `owner`: Highest level, full control over account, billing, users, and all projects. Typically the account creator.
-
-        - `account_manager`: Broad administrative rights over the account, often including billing and user management, but might not be able to delete the account itself.
-
-        - `admin`: Full control over projects they are assigned to, including creating/editing/deleting experiences, goals, audiences, and managing project settings. May also manage project-level collaborators.
-
-        - `browse`: Read-only access. Can view experiences, reports, and settings but cannot make changes.
-
-        - `edit`: Can create and modify entities like experiences, goals, audiences within assigned projects, but typically cannot activate/publish experiences or manage project settings.
-
-        - `publish`: Can do everything an ''editor'' can, plus activate/pause/complete experiences.
-
-        - `review`: Can view and comment, but not make direct changes. Suited for stakeholders who need to approve or provide feedback.
-
-        Knowledge Base: "Collaborators - Share With Multiple Users / Accounts" (describes access levels).
+        KB: "Multi-Armed Bandit (MAB) & Auto-Allocation in Convert".
 
         '
-      enum:
-      - owner
-      - account_manager
-      - admin
-      - browse
-      - edit
-      - publish
-      - review
-    NumericOutlierMinMax:
+      properties:
+        strategy:
+          description: 'The MAB algorithm used for dynamic traffic allocation:
+
+            - `epsilon_greedy`: Mostly exploits the best-known variation, but explores others with a small probability (epsilon).
+
+            - `ucb`: Upper Confidence Bound, balances exploration and exploitation based on uncertainty and potential.
+
+            - `thompson_sampling`: (Default) A Bayesian approach that samples from posterior distributions to choose variations.
+
+            '
+          type: string
+          enum:
+          - epsilon_greedy
+          - ucb
+          - thompson_sampling
+          default: thompson_sampling
+        exploration_rate:
+          description: 'For `epsilon_greedy` strategy, this is the ''epsilon'' value (0 to 1) representing the probability of choosing a random variation for exploration instead of the current best-performing one.
+
+            A higher value means more exploration. Default is often 0.1 or 0.3.
+
+            '
+          type: number
+          minimum: 0
+          maximum: 1
+          enum:
+          - 0
+          - 0.1
+          - 0.2
+          - 0.3
+          - 0.4
+          - 0.5
+          - 0.6
+          - 0.7
+          - 0.8
+          - 0.9
+          - 1
+          default: 0.3
+    NumericOutlierNone:
       allOf:
       - $ref: '#/components/schemas/NumericOutlierBase'
       - type: object
@@ -477,288 +320,32 @@ components:
         properties:
           detection_type:
             enum:
-            - min_max
-          min:
-            type: number
-            description: Minimum value for the outlier detection, under which, the value is considered an outlier
-          max:
-            type: number
-            description: Maximum value for the outlier detection, over which, the value is considered an outlier
-    AccountUserAccessesResponse:
+            - none
+    NumericOutlierTypes:
+      description: 'The method used for detecting and handling order outliers in revenue or product count tracking:
+
+        - `none`: No outlier detection is applied.
+
+        - `min_max`: Orders with values below a specified minimum or above a specified maximum are capped at those boundaries.
+
+        - `percentile`: Orders falling below a lower percentile or above an upper percentile are capped at the values corresponding to those percentiles.
+
+        '
+      type: string
+      enum:
+      - none
+      - min_max
+      - percentile
+    AccountUserAccessesDelete:
+      oneOf:
+      - $ref: '#/components/schemas/DeleteAccountUserAccessesByUserId'
+      - $ref: '#/components/schemas/DeleteAccountUserAccessesByUserEmail'
+    AccountUsersAccessesListResponse:
       type: object
-      description: Response detailing the access permissions for a single specified user within an account.
+      description: Response containing a list of users who have collaborator access to a specific account, detailing their permissions.
       properties:
         data:
-          $ref: '#/components/schemas/AccountUserAccesses'
-    ProjectGASettingsBase:
-      allOf:
-      - $ref: '#/components/schemas/GA_SettingsBase'
-      - type: object
-        properties:
-          auto_revenue_tracking:
-            type: boolean
-            description: Attempt to pull revenue data from Google Analytics Revenue Tracking code.
-    UserByEmail:
-      type: object
-      properties:
-        email:
-          description: The email address of the collaborator or invitee.
-          type: string
-          maxLength: 100
-    SuccessData:
-      type: object
-      properties:
-        code:
-          type: integer
-          format: int32
-        message:
-          type: string
-    ProjectIntegrationGA4:
-      allOf:
-      - $ref: '#/components/schemas/ProjectGASettingsBase'
-      - $ref: '#/components/schemas/IntegrationGA4'
-      - type: object
-        properties:
-          no_wait_pageview:
-            type: boolean
-            description: Boolean indicating whether to wait for the page view event to complete before sending other events.
-    SE_ProcTypes:
-      type: string
-      description: 'The statistical methodology used for analyzing experiment results and determining winners.
-
-        - `frequentist`: Traditional hypothesis testing approach using p-values and confidence intervals (e.g., T-tests). KB: "Statistical Methods Used".
-
-        - `bayesian`: Bayesian statistical approach providing probabilities of one variation being better than another (e.g., Chance to Win). KB: "Statistical Models in Convert.com''s A/B Testing Platform".
-
-        '
-      enum:
-      - frequentist
-      - bayesian
-    AccountUserAccesses:
-      allOf:
-      - $ref: '#/components/schemas/BaseAccountUserAccesses'
-      - $ref: '#/components/schemas/UserByEmail'
-      - $ref: '#/components/schemas/UserById'
-      - type: object
-        properties:
-          accesses:
-            type: array
-            description: List of user's accesses
-            items:
-              type: object
-              properties:
-                role:
-                  $ref: '#/components/schemas/AccessRoleNames'
-    SimpleGoal:
-      type: object
-      properties:
-        id:
-          description: The unique numerical identifier of the goal.
-          type: integer
-        name:
-          description: The user-defined, friendly name of the goal.
-          type: string
-    BaseAccesses:
-      type: object
-      properties:
-        accesses:
-          type: array
-          description: 'A list defining the user''s access to specific projects or all projects within the account.
-
-            Each item specifies a `project` (ID or null for all projects) and the `role` granted.
-
-            '
-          items:
-            type: object
-            properties:
-              project:
-                nullable: true
-                anyOf:
-                - type: integer
-                  nullable: true
-                  description: Project ID. If null , than access is referring to all projects inside the account
-                - $ref: '#/components/schemas/Project'
-    GA_Settings:
-      oneOf:
-      - $ref: '#/components/schemas/ProjectIntegrationGA3'
-      - $ref: '#/components/schemas/ProjectIntegrationGA4'
-      discriminator:
-        propertyName: type
-        mapping:
-          ga3: '#/components/schemas/ProjectIntegrationGA3'
-          ga4: '#/components/schemas/ProjectIntegrationGA4'
-    AccessCreateUpdateRole:
-      type: object
-      properties:
-        accesses:
-          type: array
-          description: (Misplaced Array) Defines the role for a specific project.
-          items:
-            type: object
-            properties:
-              role:
-                $ref: '#/components/schemas/AccessRoleNamesNoOwner'
-        custom_message:
-          description: (For invitations) A custom message to include in the invitation email sent to a new collaborator.
-          type: string
-          maxLength: 200
-    TrackingScriptReleaseAutomaticApplyOn:
-      type: object
-      description: Configuration for scheduled tracking script updates, specifying the day of the week and time for automatic application of new versions.
-      additionalProperties: false
-      properties:
-        day:
-          type: integer
-          description: Day of the week for scheduled updates (e.g., 1 for Monday, 7 for Sunday - convention needs to be clear).
-          minimum: 1
-          maximum: 7
-        time:
-          type: string
-          pattern: ^([01]?[0-9]|2[0-4]):([0-5][0-9])$
-          description: Time of day (in project's timezone or UTC, needs clarification) in HH:MM format for scheduled updates (e.g., "03:00" for 3 AM).
-      required:
-      - day
-      - time
-    UserById:
-      type: object
-      properties:
-        user_id:
-          description: The unique system identifier for an active Convert user. Null if the user is only an invitee (pending acceptance).
-          type: string
-          nullable: true
-    GenerateDebugTokenData:
-      type: object
-      readOnly: true
-      properties:
-        value:
-          type: string
-        ttl:
-          type: integer
-          description: Unix timestamp (UTC) indicating when this debug token will expire and become invalid.
-    IntegrationGA4:
-      allOf:
-      - $ref: '#/components/schemas/IntegrationGA4Base'
-      - type: object
-        properties:
-          propertyId:
-            type: string
-            description: ID of the ga4 property where data will be sent. Used internally for API calls to GoogleAnalytics
-    SE_ProcSettings:
-      description: Overall settings for the statistical engine processing results for this experience.
-      oneOf:
-      - $ref: '#/components/schemas/SE_ProcSettingsFrequentist'
-      - $ref: '#/components/schemas/SE_ProcSettingsBayesian'
-      discriminator:
-        propertyName: stats_type
-        mapping:
-          frequentist: '#/components/schemas/SE_ProcSettingsFrequentist'
-          bayesian: '#/components/schemas/SE_ProcSettingsBayesian'
-    Domain:
-      type: object
-      description: A website domain data.
-      properties:
-        id:
-          type: integer
-          description: Domain ID.
-          readOnly: true
-        url:
-          type: string
-          maxLength: 150
-          pattern: ^(http|https)://
-          description: Domain's homepage url
-        code_installed:
-          type: boolean
-          description: Indicating whether code installed check passed sometimes in the past.
-          default: false
-    NumericOutlier:
-      oneOf:
-      - $ref: '#/components/schemas/NumericOutlierNone'
-      - $ref: '#/components/schemas/NumericOutlierMinMax'
-      - $ref: '#/components/schemas/NumericOutlierPercentile'
-      discriminator:
-        propertyName: detection_type
-        mapping:
-          none: '#/components/schemas/NumericOutlierNone'
-          min_max: '#/components/schemas/NumericOutlierMinMax'
-          percentile: '#/components/schemas/NumericOutlierPercentile'
-    GA_SettingsBase:
-      type: object
-      properties:
-        enabled:
-          type: boolean
-          description: If true, integration with Google Analytics is enabled for this project or experience, allowing experiment data to be sent to GA.
-    SimpleGoalExpandable:
-      oneOf:
-      - type: integer
-        description: Goal ID
-      - $ref: '#/components/schemas/SimpleGoal'
-    NumericOutlierBase:
-      type: object
-      properties:
-        detection_type:
-          $ref: '#/components/schemas/NumericOutlierTypes'
-      required:
-      - detection_type
-    TrackingScriptRelease:
-      oneOf:
-      - $ref: '#/components/schemas/TrackingScriptReleaseManual'
-      - $ref: '#/components/schemas/TrackingScriptReleaseLatest'
-      - $ref: '#/components/schemas/TrackingScriptReleaseScheduled'
-      discriminator:
-        propertyName: type
-        mapping:
-          manual: '#/components/schemas/TrackingScriptReleaseManual'
-          latest: '#/components/schemas/TrackingScriptReleaseLatest'
-          scheduled: '#/components/schemas/TrackingScriptReleaseScheduled'
-    DeleteAccountUserAccessesByUserId:
-      allOf:
-      - $ref: '#/components/schemas/UserById'
-      - $ref: '#/components/schemas/BaseAccesses'
-    Percentiles:
-      type: number
-      description: 'Standard percentile values used for outlier detection thresholds.
-
-        For example, a `min` of 5 and `max` of 95 means orders in the bottom 5% and top 5% of values are considered outliers and capped.
-
-        '
-      enum:
-      - 1
-      - 5
-      - 10
-      - 25
-      - 50
-      - 75
-      - 90
-      - 95
-      - 99
-    AccountUserAccessesList:
-      type: array
-      description: A list of `AccountUserAccesses` objects, each representing a collaborator and their permissions.
-      items:
-        $ref: '#/components/schemas/AccountUserAccesses'
-    CheckPartnerData:
-      type: object
-      properties:
-        email:
-          type: string
-          description: The email address that was checked.
-          maxLength: 100
-        allowed:
-          type: boolean
-          description: True if the email is associated with a valid partner eligible for extended API access.
-        alreadyGranted:
-          type: boolean
-          description: True if extended API access has already been granted to this partner.
-    AccessRoleNamesNoOwner:
-      type: string
-      description: Access roles that can be assigned to collaborators or API keys (excludes the 'owner' role, which is typically unique to the account creator).
-      enum:
-      - admin
-      - account_manager
-      - browse
-      - edit
-      - publish
-      - review
+          $ref: '#/components/schemas/AccountUserAccessesList'
     Project:
       description: 'Represents a Convert project, which is a container for organizing a set of related optimization activities (experiences),
 
@@ -934,36 +521,93 @@ components:
             readOnly: true
             nullable: true
             description: An autogenerated hash key used to retrieve data of fullstack project. Available only for fullstack projects type.
-    SimpleAudience:
+    SimpleAudienceExpandable:
+      anyOf:
+      - type: integer
+        description: Audience ID
+      - $ref: '#/components/schemas/SimpleAudience'
+    Percentiles:
+      type: number
+      description: 'Standard percentile values used for outlier detection thresholds.
+
+        For example, a `min` of 5 and `max` of 95 means orders in the bottom 5% and top 5% of values are considered outliers and capped.
+
+        '
+      enum:
+      - 1
+      - 5
+      - 10
+      - 25
+      - 50
+      - 75
+      - 90
+      - 95
+      - 99
+    SuccessData:
       type: object
       properties:
-        id:
-          description: The unique numerical identifier of the audience.
+        code:
           type: integer
-        name:
-          description: The user-defined, friendly name of the audience.
+          format: int32
+        message:
           type: string
-    SE_ProcSettingsBase:
+    AcceptInvitationRequestData:
       type: object
       properties:
-        stats_type:
-          $ref: '#/components/schemas/SE_ProcTypes'
-    AccountUserAccessesCreateRequestData:
-      allOf:
-      - $ref: '#/components/schemas/BaseAccountUserAccesses'
-      - $ref: '#/components/schemas/UserByEmail'
-      - $ref: '#/components/schemas/AccessCreateUpdateRole'
-      - $ref: '#/components/schemas/AccountUserAccessesExpandParams'
-      - type: object
-        required:
-        - accesses
-        - email
+        hash:
+          description: The unique invitation token from the collaborator invitation email.
+          type: string
+          maxLength: 200
     UpdateAccountUserAccessesByUserEmail:
       allOf:
       - $ref: '#/components/schemas/UserByEmail'
       - $ref: '#/components/schemas/BaseAccountUserAccesses'
       - $ref: '#/components/schemas/AccessCreateUpdateRole'
       - $ref: '#/components/schemas/AccountUserAccessesExpandParams'
+    CustomDomainOwnershipVerificationItem:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the DNS record.
+        type:
+          $ref: '#/components/schemas/DNSRecordTypes'
+        value:
+          type: string
+          description: The value of the DNS record.
+    ProjectIntegrationGA3:
+      allOf:
+      - $ref: '#/components/schemas/ProjectGASettingsBase'
+      - $ref: '#/components/schemas/IntegrationGA3'
+    SimpleLocation:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The unique numerical identifier of the location.
+          readOnly: true
+        name:
+          type: string
+          description: The user-defined, friendly name of the location.
+          maxLength: 100
+    UTC_Offset:
+      type: integer
+      description: 'The time offset from Coordinated Universal Time (UTC) in seconds.
+
+        For example, UTC-5 (EST) would be -18000. UTC+2 would be 7200.
+
+        Used for interpreting or displaying date/time information according to a specific timezone.
+
+        '
+      default: 0
+      minimum: -43200
+      maximum: 50400
+    AccessStatuses:
+      type: string
+      readOnly: true
+      enum:
+      - active
+      - pending
     BaseAccountUserAccesses:
       allOf:
       - type: object
@@ -991,79 +635,167 @@ components:
                   allOf:
                   - $ref: '#/components/schemas/AccessStatuses'
       - $ref: '#/components/schemas/BaseAccesses'
-    VisualEditorUserAgents:
-      description: Predefined User-Agent strings that the Visual Editor can emulate for responsive design and device-specific testing.
-      type: string
-      nullable: true
-      enum:
-      - chrome_desktop
-      - chrome_ipad
-      - chrome_iphone
-      - chrome_android
-      - safari_mac
-      - safari_ipad
-      - safari_iphone
-      - firefox_desktop
-      - firefox_ipad
-      - firefox_iphone
-      - firefox_android
-      - edge_desktop
-      - edge_tablet
-      - brave_desktop
-      - brave_ipad
-      - brave_iphone
-      - brave_android
-      - opera_desktop
-      - opera_ipad
-      - opera_iphone
-      - opera_android
-    TrackingScriptReleaseScheduled:
+    Domain:
+      type: object
+      description: A website domain data.
+      properties:
+        id:
+          type: integer
+          description: Domain ID.
+          readOnly: true
+        url:
+          type: string
+          maxLength: 150
+          pattern: ^(http|https)://
+          description: Domain's homepage url
+        code_installed:
+          type: boolean
+          description: Indicating whether code installed check passed sometimes in the past.
+          default: false
+    SimpleLocationExpandable:
+      anyOf:
+      - type: integer
+        description: Location ID
+      - $ref: '#/components/schemas/SimpleLocation'
+    SE_ProcSettingsFrequentist:
       allOf:
-      - $ref: '#/components/schemas/TrackingScriptReleaseBase'
+      - $ref: '#/components/schemas/SE_ProcSettingsBase'
       - type: object
-        additionalProperties: false
+        description: Stats Engine Settings needed for the Frequentist processing
         properties:
-          type:
+          stats_type:
             enum:
-            - scheduled
-          automatic_apply_on:
-            $ref: '#/components/schemas/TrackingScriptReleaseAutomaticApplyOn'
-    ErrorData:
+            - frequentist
+          confidence:
+            description: Confidence value to be used (in percent)
+            type: number
+            minimum: 50
+            maximum: 99
+            multipleOf: 1
+          power:
+            description: Statistical power value to be used (in percent)
+            type: number
+            minimum: 10
+            maximum: 99
+            multipleOf: 1
+          test_type:
+            description: The type of test applied to the data
+            type: string
+            default: two_tails
+            enum:
+            - one_tail
+            - one_tail_left
+            - one_tail_right
+            - two_tails
+            - sequential
+          multiple_comparison_correction:
+            description: Multiple comparison correction
+            type: string
+            enum:
+            - none
+            - bonferroni
+            - sidak
+          power_calculation_type:
+            description: Power calculation type
+            type: string
+            default: dynamic_mde
+            enum:
+            - dynamic_mde
+            - fixed_mde
+          fixed_mde:
+            description: Fixed minimum detectable effect (corresponding to the relative improvement in percent)
+            type: number
+            minimum: 0
+            maximum: 10000
+          mab_settings:
+            allOf:
+            - $ref: '#/components/schemas/SE_MabSettings'
+            nullable: true
+    VisitorInsightsBase:
       type: object
       properties:
-        code:
+        enabled:
+          type: boolean
+          description: 'If true, Convert Signals™ is enabled for the project, allowing the system to capture sessions exhibiting user frustration or usability issues.
+
+            '
+        obfuscate_text:
+          type: boolean
+          default: true
+          description: 'True when all text elements (apart from placeholders) should be obfuscated inside a recording.
+
+            '
+        sampling_rate:
           type: integer
-          format: int32
-        message:
-          oneOf:
-          - type: string
-          - type: array
-            items:
-              type: string
-        fields:
-          oneOf:
-          - type: string
-          - type: array
-            items:
-              type: string
-    TrackingScriptReleaseLatest:
+          default: 5
+          enum:
+          - 5
+          - 10
+          - 20
+          - 30
+          - 40
+          - 50
+          description: 'The percentage of visitors included in sampling for Convert Signals session recordings and Heatmaps for this project.
+
+            Higher values collect data from a larger share of traffic and consume allocation faster.
+
+            '
+    GA_SettingsBase:
+      type: object
+      properties:
+        enabled:
+          type: boolean
+          description: If true, integration with Google Analytics is enabled for this project or experience, allowing experiment data to be sent to GA.
+    ProjectIntegrationGA4:
       allOf:
-      - $ref: '#/components/schemas/TrackingScriptReleaseBase'
+      - $ref: '#/components/schemas/ProjectGASettingsBase'
+      - $ref: '#/components/schemas/IntegrationGA4'
       - type: object
-        additionalProperties: false
         properties:
-          type:
-            enum:
-            - latest
-    TrackingScriptReleaseManual:
-      allOf:
-      - $ref: '#/components/schemas/TrackingScriptReleaseBase'
-      - type: object
-        additionalProperties: false
+          no_wait_pageview:
+            type: boolean
+            description: Boolean indicating whether to wait for the page view event to complete before sending other events.
+    TrackingScriptReleaseBase:
+      type: object
+      description: Base settings for managing how new versions of the Convert tracking script are applied to the project.
+      properties:
+        type:
+          type: string
+          description: 'The chosen strategy for updating the tracking script: ''manual'', ''latest'' (auto-update), or ''scheduled''.
+
+            '
+    SimpleGoal:
+      type: object
+      properties:
+        id:
+          description: The unique numerical identifier of the goal.
+          type: integer
+        name:
+          description: The user-defined, friendly name of the goal.
+          type: string
+    TrackingScriptAvailableVersions:
+      type: array
+      description: A list of available versions for the Convert tracking script, each with a version tag, changelog, release date, and potentially the date it was or will be applied to the project.
+      readOnly: true
+      items:
+        type: object
         properties:
-          type:
-            enum:
-            - manual
+          version:
+            type: string
+            description: The version tag string (e.g., "v2.11.3", "v3.0.0-beta1").
+          changelog:
+            type: string
+            nullable: true
+            description: A summary of changes, improvements, and bug fixes included in this script version.
+          released_date:
+            type: integer
+            format: int64
+            description: Unix timestamp (UTC) when this script version was officially released by Convert.
+          apply_date:
+            type: integer
+            format: int64
+            nullable: true
+            description: Unix timestamp (UTC) when this version was (or is scheduled to be) applied to the project, if using manual or scheduled updates.
     MetricTypes:
       type: string
       description: 'The primary types of performance metrics calculated by the reporting engine for each goal.
@@ -1087,48 +819,6 @@ components:
       - avg_products_ordered_visitor
       - average_order_value
       - average_products_per_order
-    UTC_Offset:
-      type: integer
-      description: 'The time offset from Coordinated Universal Time (UTC) in seconds.
-
-        For example, UTC-5 (EST) would be -18000. UTC+2 would be 7200.
-
-        Used for interpreting or displaying date/time information according to a specific timezone.
-
-        '
-      default: 0
-      minimum: -43200
-      maximum: 50400
-    TrackingScriptReleaseBase:
-      type: object
-      description: Base settings for managing how new versions of the Convert tracking script are applied to the project.
-      properties:
-        type:
-          type: string
-          description: 'The chosen strategy for updating the tracking script: ''manual'', ''latest'' (auto-update), or ''scheduled''.
-
-            '
-    UpdateAccountUserAccessesByUserId:
-      allOf:
-      - $ref: '#/components/schemas/UserById'
-      - $ref: '#/components/schemas/BaseAccountUserAccesses'
-      - $ref: '#/components/schemas/AccessCreateUpdateRole'
-      - $ref: '#/components/schemas/AccountUserAccessesExpandParams'
-    NumericOutlierTypes:
-      description: 'The method used for detecting and handling order outliers in revenue or product count tracking:
-
-        - `none`: No outlier detection is applied.
-
-        - `min_max`: Orders with values below a specified minimum or above a specified maximum are capped at those boundaries.
-
-        - `percentile`: Orders falling below a lower percentile or above an upper percentile are capped at the values corresponding to those percentiles.
-
-        '
-      type: string
-      enum:
-      - none
-      - min_max
-      - percentile
     BaseProject:
       type: object
       properties:
@@ -1591,77 +1281,196 @@ components:
           description: A list of Location IDs that will be automatically added to any new experience created within this project.
           items:
             $ref: '#/components/schemas/SimpleLocationExpandable'
+    ErrorData:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          oneOf:
+          - type: string
+          - type: array
+            items:
+              type: string
+        fields:
+          oneOf:
+          - type: string
+          - type: array
+            items:
+              type: string
+    SimpleGoalExpandable:
+      oneOf:
+      - type: integer
+        description: Goal ID
+      - $ref: '#/components/schemas/SimpleGoal'
+    SE_ProcTypes:
+      type: string
+      description: 'The statistical methodology used for analyzing experiment results and determining winners.
+
+        - `frequentist`: Traditional hypothesis testing approach using p-values and confidence intervals (e.g., T-tests). KB: "Statistical Methods Used".
+
+        - `bayesian`: Bayesian statistical approach providing probabilities of one variation being better than another (e.g., Chance to Win). KB: "Statistical Models in Convert.com''s A/B Testing Platform".
+
+        '
+      enum:
+      - frequentist
+      - bayesian
+    GenerateDebugTokenData:
+      type: object
+      readOnly: true
+      properties:
+        value:
+          type: string
+        ttl:
+          type: integer
+          description: Unix timestamp (UTC) indicating when this debug token will expire and become invalid.
+    IntegrationGA4Base:
+      type: object
+      properties:
+        type:
+          enum:
+          - ga4
+        measurementId:
+          type: string
+          description: The GA4 Measurement ID (e.g., "G-XXXXXXXXXX") for the data stream where Convert experiment data will be sent.
+    AccountUserAccessesResponse:
+      type: object
+      description: Response detailing the access permissions for a single specified user within an account.
+      properties:
+        data:
+          $ref: '#/components/schemas/AccountUserAccesses'
+    VisualEditorUserAgents:
+      description: Predefined User-Agent strings that the Visual Editor can emulate for responsive design and device-specific testing.
+      type: string
+      nullable: true
+      enum:
+      - chrome_desktop
+      - chrome_ipad
+      - chrome_iphone
+      - chrome_android
+      - safari_mac
+      - safari_ipad
+      - safari_iphone
+      - firefox_desktop
+      - firefox_ipad
+      - firefox_iphone
+      - firefox_android
+      - edge_desktop
+      - edge_tablet
+      - brave_desktop
+      - brave_ipad
+      - brave_iphone
+      - brave_android
+      - opera_desktop
+      - opera_ipad
+      - opera_iphone
+      - opera_android
+    TrackingScriptReleaseScheduled:
+      allOf:
+      - $ref: '#/components/schemas/TrackingScriptReleaseBase'
+      - type: object
+        additionalProperties: false
+        properties:
+          type:
+            enum:
+            - scheduled
+          automatic_apply_on:
+            $ref: '#/components/schemas/TrackingScriptReleaseAutomaticApplyOn'
     AccountUserAccessesUpdateRequestData:
       anyOf:
       - $ref: '#/components/schemas/UpdateAccountUserAccessesByUserId'
       - $ref: '#/components/schemas/UpdateAccountUserAccessesByUserEmail'
-    NumericOutlierNone:
+    GA_Settings:
+      oneOf:
+      - $ref: '#/components/schemas/ProjectIntegrationGA3'
+      - $ref: '#/components/schemas/ProjectIntegrationGA4'
+      discriminator:
+        propertyName: type
+        mapping:
+          ga3: '#/components/schemas/ProjectIntegrationGA3'
+          ga4: '#/components/schemas/ProjectIntegrationGA4'
+    AccountUserAccessesCreateRequestData:
       allOf:
-      - $ref: '#/components/schemas/NumericOutlierBase'
+      - $ref: '#/components/schemas/BaseAccountUserAccesses'
+      - $ref: '#/components/schemas/UserByEmail'
+      - $ref: '#/components/schemas/AccessCreateUpdateRole'
+      - $ref: '#/components/schemas/AccountUserAccessesExpandParams'
       - type: object
-        additionalProperties: false
-        properties:
-          detection_type:
-            enum:
-            - none
-    AccountUsersAccessesListResponse:
-      type: object
-      description: Response containing a list of users who have collaborator access to a specific account, detailing their permissions.
-      properties:
-        data:
-          $ref: '#/components/schemas/AccountUserAccessesList'
-    VisitorInsightsBase:
-      type: object
-      properties:
-        enabled:
-          type: boolean
-          description: 'If true, Convert Signals™ is enabled for the project, allowing the system to capture sessions exhibiting user frustration or usability issues.
-
-            '
-        obfuscate_text:
-          type: boolean
-          default: true
-          description: 'True when all text elements (apart from placeholders) should be obfuscated inside a recording.
-
-            '
-        sampling_rate:
-          type: integer
-          default: 5
-          enum:
-          - 5
-          - 10
-          - 20
-          - 30
-          - 40
-          - 50
-          description: 'The percentage of visitors included in sampling for Convert Signals session recordings and Heatmaps for this project.
-
-            Higher values collect data from a larger share of traffic and consume allocation faster.
-
-            '
-    TrackingScriptAvailableVersions:
+        required:
+        - accesses
+        - email
+    AccountUserAccessesList:
       type: array
-      description: A list of available versions for the Convert tracking script, each with a version tag, changelog, release date, and potentially the date it was or will be applied to the project.
-      readOnly: true
+      description: A list of `AccountUserAccesses` objects, each representing a collaborator and their permissions.
       items:
-        type: object
+        $ref: '#/components/schemas/AccountUserAccesses'
+    SE_ProcSettingsBase:
+      type: object
+      properties:
+        stats_type:
+          $ref: '#/components/schemas/SE_ProcTypes'
+    IntegrationGA4:
+      allOf:
+      - $ref: '#/components/schemas/IntegrationGA4Base'
+      - type: object
         properties:
-          version:
+          propertyId:
             type: string
-            description: The version tag string (e.g., "v2.11.3", "v3.0.0-beta1").
-          changelog:
-            type: string
-            nullable: true
-            description: A summary of changes, improvements, and bug fixes included in this script version.
-          released_date:
-            type: integer
-            format: int64
-            description: Unix timestamp (UTC) when this script version was officially released by Convert.
-          apply_date:
-            type: integer
-            format: int64
-            nullable: true
-            description: Unix timestamp (UTC) when this version was (or is scheduled to be) applied to the project, if using manual or scheduled updates.
+            description: ID of the ga4 property where data will be sent. Used internally for API calls to GoogleAnalytics
+    NumericOutlier:
+      oneOf:
+      - $ref: '#/components/schemas/NumericOutlierNone'
+      - $ref: '#/components/schemas/NumericOutlierMinMax'
+      - $ref: '#/components/schemas/NumericOutlierPercentile'
+      discriminator:
+        propertyName: detection_type
+        mapping:
+          none: '#/components/schemas/NumericOutlierNone'
+          min_max: '#/components/schemas/NumericOutlierMinMax'
+          percentile: '#/components/schemas/NumericOutlierPercentile'
+    UserByEmail:
+      type: object
+      properties:
+        email:
+          description: The email address of the collaborator or invitee.
+          type: string
+          maxLength: 100
+    AccessRoleNames:
+      type: string
+      description: 'The predefined names for user access roles within the Convert system. Each role grants a specific set of permissions.
+
+        - `owner`: Highest level, full control over account, billing, users, and all projects. Typically the account creator.
+
+        - `account_manager`: Broad administrative rights over the account, often including billing and user management, but might not be able to delete the account itself.
+
+        - `admin`: Full control over projects they are assigned to, including creating/editing/deleting experiences, goals, audiences, and managing project settings. May also manage project-level collaborators.
+
+        - `browse`: Read-only access. Can view experiences, reports, and settings but cannot make changes.
+
+        - `edit`: Can create and modify entities like experiences, goals, audiences within assigned projects, but typically cannot activate/publish experiences or manage project settings.
+
+        - `publish`: Can do everything an ''editor'' can, plus activate/pause/complete experiences.
+
+        - `review`: Can view and comment, but not make direct changes. Suited for stakeholders who need to approve or provide feedback.
+
+        Knowledge Base: "Collaborators - Share With Multiple Users / Accounts" (describes access levels).
+
+        '
+      enum:
+      - owner
+      - account_manager
+      - admin
+      - browse
+      - edit
+      - publish
+      - review
+    DNSRecordTypes:
+      description: The type of the DNS record.
+      type: string
+      enum:
+      - TXT
+      - CNAME
     IntegrationGA3:
       type: object
       properties:
@@ -1673,71 +1482,6 @@ components:
           maxLength: 150
           nullable: true
           description: The Universal Analytics Property ID (e.g., "UA-XXXXXXXX-Y") to which Convert experiment data will be sent.
-    SimpleLocation:
-      type: object
-      properties:
-        id:
-          type: integer
-          description: The unique numerical identifier of the location.
-          readOnly: true
-        name:
-          type: string
-          description: The user-defined, friendly name of the location.
-          maxLength: 100
-    IntegrationGA4Base:
-      type: object
-      properties:
-        type:
-          enum:
-          - ga4
-        measurementId:
-          type: string
-          description: The GA4 Measurement ID (e.g., "G-XXXXXXXXXX") for the data stream where Convert experiment data will be sent.
-    ProjectStatuses:
-      description: 'The overall status of a project:
-
-        - `active`: The project is active, and experiences within it can run and track data.
-
-        - `inactive`: The project is inactive (archived or paused). No experiences within it will run, and no new data will be tracked.
-
-        - `suspended`: The project (or account) has been suspended, typically due to billing issues or terms of service violations. Services are disabled.
-
-        '
-      type: string
-      enum:
-      - active
-      - inactive
-      - suspended
-    AccountUserAccessesExpandParams:
-      type: object
-      properties:
-        expand:
-          description: 'Specifies linked objects to expand in the response, e.g., ''accesses.project''.
-
-            Refer to the [Expanding Fields](#tag/Expandable-Fields) section.
-
-            '
-          type: array
-          items:
-            $ref: '#/components/schemas/AccountUserAccessesExpandFields'
-    CustomDomainOwnershipVerificationItem:
-      type: object
-      properties:
-        name:
-          type: string
-          description: The name of the DNS record.
-        type:
-          $ref: '#/components/schemas/DNSRecordTypes'
-        value:
-          type: string
-          description: The value of the DNS record.
-    CheckPartnerRequestData:
-      type: object
-      properties:
-        email:
-          description: The email address of the potential partner to verify.
-          type: string
-          maxLength: 100
     NumericOutlierPercentile:
       allOf:
       - $ref: '#/components/schemas/NumericOutlierBase'
@@ -1755,117 +1499,322 @@ components:
             allOf:
             - description: Maximum percentile value for the outlier detection; values outside this percentile are considered outliers
             - $ref: '#/components/schemas/Percentiles'
-    AcceptInvitationRequestData:
+    UpdateAccountUserAccessesByUserId:
+      allOf:
+      - $ref: '#/components/schemas/UserById'
+      - $ref: '#/components/schemas/BaseAccountUserAccesses'
+      - $ref: '#/components/schemas/AccessCreateUpdateRole'
+      - $ref: '#/components/schemas/AccountUserAccessesExpandParams'
+    AccessCreateUpdateRole:
       type: object
       properties:
-        hash:
-          description: The unique invitation token from the collaborator invitation email.
+        accesses:
+          type: array
+          description: (Misplaced Array) Defines the role for a specific project.
+          items:
+            type: object
+            properties:
+              role:
+                $ref: '#/components/schemas/AccessRoleNamesNoOwner'
+        custom_message:
+          description: (For invitations) A custom message to include in the invitation email sent to a new collaborator.
           type: string
           maxLength: 200
-    SE_MabSettings:
+    UserById:
       type: object
-      description: 'Configuration for Multi-Armed Bandit (MAB) traffic allocation. If `null`, MAB is disabled and manual traffic allocation is used.
-
-        MAB dynamically allocates more traffic to better-performing variations based on the `primary_metric` of the `primary_goal`.
-
-        KB: "Multi-Armed Bandit (MAB) & Auto-Allocation in Convert".
-
-        '
       properties:
-        strategy:
-          description: 'The MAB algorithm used for dynamic traffic allocation:
-
-            - `epsilon_greedy`: Mostly exploits the best-known variation, but explores others with a small probability (epsilon).
-
-            - `ucb`: Upper Confidence Bound, balances exploration and exploitation based on uncertainty and potential.
-
-            - `thompson_sampling`: (Default) A Bayesian approach that samples from posterior distributions to choose variations.
-
-            '
+        user_id:
+          description: The unique system identifier for an active Convert user. Null if the user is only an invitee (pending acceptance).
           type: string
-          enum:
-          - epsilon_greedy
-          - ucb
-          - thompson_sampling
-          default: thompson_sampling
-        exploration_rate:
-          description: 'For `epsilon_greedy` strategy, this is the ''epsilon'' value (0 to 1) representing the probability of choosing a random variation for exploration instead of the current best-performing one.
+          nullable: true
+    TrackingScriptReleaseManual:
+      allOf:
+      - $ref: '#/components/schemas/TrackingScriptReleaseBase'
+      - type: object
+        additionalProperties: false
+        properties:
+          type:
+            enum:
+            - manual
+    AccountUserAccessesExpandFields:
+      type: string
+      enum:
+      - accesses.project
+    ExperienceReportingSettings:
+      type: object
+      description: Comprehensive settings governing how an experience's results are reported and analyzed.
+      properties:
+        primary_metric:
+          description: 'The key performance indicator (KPI) that the statistical engine will primarily use to evaluate variations and determine winners, especially for MAB allocation or automated decisions.
 
-            A higher value means more exploration. Default is often 0.1 or 0.3.
+            - `conversion_rate`: Based on the conversion rate of the primary goal. (Default)
+
+            - `avg_revenue_visitor`: Based on Revenue Per Visitor (RPV) from a revenue goal.
+
+            - `avg_products_ordered_visitor`: Based on Average Products Per Visitor (APPV) from a revenue goal.
 
             '
+          default: conversion_rate
+          allOf:
+          - $ref: '#/components/schemas/MetricTypes'
+        stats_engine_processing:
+          $ref: '#/components/schemas/SE_ProcSettings'
+        confidence:
+          description: (Deprecated) Legacy setting for confidence level. Use `stats_engine_processing.confidence` for Frequentist settings instead.
+          deprecated: true
           type: number
           minimum: 0
-          maximum: 1
-          enum:
-          - 0
-          - 0.1
-          - 0.2
-          - 0.3
-          - 0.4
-          - 0.5
-          - 0.6
-          - 0.7
-          - 0.8
-          - 0.9
-          - 1
-          default: 0.3
+        keep_winner:
+          description: 'If true, after an experience is marked as ''Completed'' because a winning variation was found, that winning variation will continue to receive 100% of the experience traffic.
+
+            If false (default), traffic might revert to the original or be evenly split, or the experience might simply stop serving.
+
+            KB: "My Experiments Stopped, What Happened?" - "An experiment can keep winning variation running".
+
+            '
+          type: boolean
+        min_order_value:
+          description: (Deprecated) Minimum order value for transaction outliers. Use `outliers.order_value.min` instead.
+          type: number
+          minimum: 0
+          deprecated: true
+        max_order_value:
+          description: (Deprecated) Maximum order value for transaction outliers. Use `outliers.order_value.max` instead.
+          type: number
+          deprecated: true
+          minimum: 0
+        outliers:
+          description: 'Configuration for handling statistical outliers in order-related data (revenue and product counts) to prevent skewed results.
+
+            KB: "Setting limits for Order Outliers" and "How Outlier Detection Works in Convert Reports and Exports".
+
+            '
+          type: object
+          additionalProperties: false
+          properties:
+            order_value:
+              description: Outlier detection settings for the monetary value of orders.
+              allOf:
+              - $ref: '#/components/schemas/NumericOutlier'
+            products_ordered_count:
+              description: Outlier detection settings for the number of products in an order.
+              allOf:
+              - $ref: '#/components/schemas/NumericOutlier'
+        max_running_time:
+          description: 'The maximum number of days the experience should run. If no clear winner is found by this time, the experience may be automatically completed or paused.
+
+            Set to 0 for no maximum limit.
+
+            KB: "Setting an end date for running an experiment." (Mentions max days in Stats section).
+
+            '
+          type: integer
+          minimum: 0
+          maximum: 999
+        max_variation_visitors:
+          description: (Deprecated) Maximum number of visitors per variation. Use `max_experience_visitors` or rely on statistical significance.
+          deprecated: true
+          type: integer
+          minimum: 0
+        max_experience_visitors:
+          description: The maximum total number of unique visitors to be included in the entire experience. Once reached, the experience may be automatically paused or completed. Set to 0 for no limit.
+          type: integer
+          minimum: 0
+        min_variation_conversions:
+          type: integer
+          minimum: 0
+          description: 'The minimum number of conversions a variation must achieve before its statistical significance (confidence/chance to win) is calculated and displayed in reports.
+
+            Default is often 5. Helps avoid premature conclusions based on very small conversion numbers.
+
+            KB: "Experiment Report" - "Confidence Level (statistical significance)".
+
+            '
+        min_conversion_value:
+          description: (Deprecated or unclear) Minimum conversion value per variation. Might relate to revenue goals or be a legacy setting.
+          type: integer
+          minimum: 0
+          deprecated: true
+        min_running_time:
+          description: 'The minimum number of days the experience must run before it can be automatically completed, even if a winner is found earlier.
+
+            Helps ensure stability and account for weekly variations. Set to 0 for no minimum.
+
+            KB: "My Experiments Stopped, What Happened?".
+
+            '
+          type: integer
+          minimum: 0
+          maximum: 999
+        min_variation_visitors:
+          description: 'The minimum number of unique visitors each variation (including the original) must receive before statistical significance is calculated.
+
+            Helps ensure a sufficient sample size for reliable results.
+
+            '
+          type: integer
+          minimum: 0
+        stop_loser:
+          description: 'If true, variations that are statistically determined to be performing significantly worse than the baseline (losing variations) will be automatically stopped.
+
+            Their traffic is then redistributed among the remaining active variations.
+
+            KB: "My Experiments Stopped, What Happened?" - "An experiment can stop losing variations".
+
+            '
+          type: boolean
+        keep_running_until_confidence:
+          type: boolean
+          description: 'If true, the experiment does not auto-complete when planned sample size (100% progress) is reached alone.
+
+            It only auto-completes when both planned sample size is reached and the confidence threshold is met.
+
+            If false, the experiment completes automatically when planned sample size is reached, regardless of confidence level.
+
+            Default depends on automation toggle: when keep_winner or stop_loser is enabled, default is true; otherwise false.
+
+            '
+        srm_check:
+          type: boolean
+          nullable: true
+          description: 'If true, enables Sample Ratio Mismatch (SRM) checks for the experience.
+
+            SRM occurs when the distribution of visitors to variations significantly deviates from the intended traffic allocation, potentially indicating a problem with the experiment setup.
+
+            If not provided at experience level, project-level setting is used.
+
+            KB: "What is SRM?".
+
+            '
+        visual_editor:
+          description: Settings related to the behavior and configuration of Convert's Visual Editor when used for this experience.
+          type: object
+          properties:
+            selector_blacklist:
+              description: 'A list of keywords (newline-separated string). If an element''s attribute (class, ID) contains any of these keywords, that attribute part will be ignored when Convert generates CSS selectors for changes.
+
+                Useful for avoiding dynamic or unstable selectors (e.g., from Squarespace, Bootstrap).
+
+                KB: "My changes created on the Visual Editor don''t get saved when using Squarespace", "Issues while editing websites on Bootstrap".
+
+                '
+              type: string
+              nullable: true
+            screen_width:
+              description: The emulated screen width (in pixels) used when loading the page in the Visual Editor. Allows previewing and editing for different responsive views.
+              type: number
+              minimum: 240
+              maximum: 7680
+              nullable: true
+            user_agent:
+              $ref: '#/components/schemas/VisualEditorUserAgents'
+    AccountUserAccesses:
+      allOf:
+      - $ref: '#/components/schemas/BaseAccountUserAccesses'
+      - $ref: '#/components/schemas/UserByEmail'
+      - $ref: '#/components/schemas/UserById'
+      - type: object
+        properties:
+          accesses:
+            type: array
+            description: List of user's accesses
+            items:
+              type: object
+              properties:
+                role:
+                  $ref: '#/components/schemas/AccessRoleNames'
+    NumericOutlierMinMax:
+      allOf:
+      - $ref: '#/components/schemas/NumericOutlierBase'
+      - type: object
+        additionalProperties: false
+        properties:
+          detection_type:
+            enum:
+            - min_max
+          min:
+            type: number
+            description: Minimum value for the outlier detection, under which, the value is considered an outlier
+          max:
+            type: number
+            description: Maximum value for the outlier detection, over which, the value is considered an outlier
+    CheckPartnerData:
+      type: object
+      properties:
+        email:
+          type: string
+          description: The email address that was checked.
+          maxLength: 100
+        allowed:
+          type: boolean
+          description: True if the email is associated with a valid partner eligible for extended API access.
+        alreadyGranted:
+          type: boolean
+          description: True if extended API access has already been granted to this partner.
+    TrackingScriptReleaseAutomaticApplyOn:
+      type: object
+      description: Configuration for scheduled tracking script updates, specifying the day of the week and time for automatic application of new versions.
+      additionalProperties: false
+      properties:
+        day:
+          type: integer
+          description: Day of the week for scheduled updates (e.g., 1 for Monday, 7 for Sunday - convention needs to be clear).
+          minimum: 1
+          maximum: 7
+        time:
+          type: string
+          pattern: ^([01]?[0-9]|2[0-4]):([0-5][0-9])$
+          description: Time of day (in project's timezone or UTC, needs clarification) in HH:MM format for scheduled updates (e.g., "03:00" for 3 AM).
+      required:
+      - day
+      - time
+    TrackingScriptRelease:
+      oneOf:
+      - $ref: '#/components/schemas/TrackingScriptReleaseManual'
+      - $ref: '#/components/schemas/TrackingScriptReleaseLatest'
+      - $ref: '#/components/schemas/TrackingScriptReleaseScheduled'
+      discriminator:
+        propertyName: type
+        mapping:
+          manual: '#/components/schemas/TrackingScriptReleaseManual'
+          latest: '#/components/schemas/TrackingScriptReleaseLatest'
+          scheduled: '#/components/schemas/TrackingScriptReleaseScheduled'
+    TrackingScriptReleaseLatest:
+      allOf:
+      - $ref: '#/components/schemas/TrackingScriptReleaseBase'
+      - type: object
+        additionalProperties: false
+        properties:
+          type:
+            enum:
+            - latest
+    NumericOutlierBase:
+      type: object
+      properties:
+        detection_type:
+          $ref: '#/components/schemas/NumericOutlierTypes'
+      required:
+      - detection_type
+    CheckPartnerRequestData:
+      type: object
+      properties:
+        email:
+          description: The email address of the potential partner to verify.
+          type: string
+          maxLength: 100
     DeleteAccountUserAccessesByUserEmail:
       allOf:
       - $ref: '#/components/schemas/UserByEmail'
       - $ref: '#/components/schemas/BaseAccesses'
-  responses:
-    SuccessResponse:
-      description: 'A generic success response, typically used for operations that don''t return specific data (like deletions or some updates). The `code` is usually 200, and `message` confirms the successful action.
-
-        '
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/SuccessData'
-    AccountUserAccesses:
-      description: Details the access permissions for a single user within a specific account, including their roles for various projects.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/AccountUserAccessesResponse'
-    AccountUsersAccessesListResponse:
-      description: A list of users who are collaborators on the specified account, detailing their names, emails, and the specific projects/roles they have access to.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/AccountUsersAccessesListResponse'
-    ErrorResponse:
-      description: 'Indicates an error occurred while processing the request. The `code` provides an HTTP status code, `message` offers a human-readable explanation or an array of validation errors, and `fields` (if present) specifies which input fields were problematic.
-
-        '
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorData'
-    CheckPartnerResponse:
-      description: 'Indicates whether the queried email `allowed` for extended partner API access and if this access was `alreadyGranted`.
-
-        '
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/CheckPartnerData'
+    ProjectGASettingsBase:
+      allOf:
+      - $ref: '#/components/schemas/GA_SettingsBase'
+      - type: object
+        properties:
+          auto_revenue_tracking:
+            type: boolean
+            description: Attempt to pull revenue data from Google Analytics Revenue Tracking code.
   requestBodies:
-    CheckPartnerRequest:
-      required: true
-      description: Contains the email address to check if it belongs to a registered Convert partner, for potential extended API access (internal use).
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/CheckPartnerRequestData'
-    UpdateAccountUserAccessesRequest:
-      required: true
-      description: Contains the user identifier (either `email` for pending invitations or `user_id` for active collaborators) and the updated list of project accesses and their corresponding roles (e.g., 'admin', 'editor') for that user within the account.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/AccountUserAccessesUpdateRequestData'
     AcceptInvitationRequest:
       required: true
       description: Contains the unique hash token that a user received in an email invitation to collaborate on an account, used to accept the invitation.
@@ -1887,6 +1836,57 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/AccountUserAccessesDelete'
+    UpdateAccountUserAccessesRequest:
+      required: true
+      description: Contains the user identifier (either `email` for pending invitations or `user_id` for active collaborators) and the updated list of project accesses and their corresponding roles (e.g., 'admin', 'editor') for that user within the account.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/AccountUserAccessesUpdateRequestData'
+    CheckPartnerRequest:
+      required: true
+      description: Contains the email address to check if it belongs to a registered Convert partner, for potential extended API access (internal use).
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CheckPartnerRequestData'
+  responses:
+    AccountUserAccesses:
+      description: Details the access permissions for a single user within a specific account, including their roles for various projects.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/AccountUserAccessesResponse'
+    ErrorResponse:
+      description: 'Indicates an error occurred while processing the request. The `code` provides an HTTP status code, `message` offers a human-readable explanation or an array of validation errors, and `fields` (if present) specifies which input fields were problematic.
+
+        '
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorData'
+    SuccessResponse:
+      description: 'A generic success response, typically used for operations that don''t return specific data (like deletions or some updates). The `code` is usually 200, and `message` confirms the successful action.
+
+        '
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SuccessData'
+    CheckPartnerResponse:
+      description: 'Indicates whether the queried email `allowed` for extended partner API access and if this access was `alreadyGranted`.
+
+        '
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CheckPartnerData'
+    AccountUsersAccessesListResponse:
+      description: A list of users who are collaborators on the specified account, detailing their names, emails, and the specific projects/roles they have access to.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/AccountUsersAccessesListResponse'
   securitySchemes:
     requestSigning:
       type: apiKey

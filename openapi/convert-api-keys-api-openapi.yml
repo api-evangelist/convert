@@ -91,6 +91,17 @@ paths:
           $ref: '#/components/responses/ErrorResponse'
 components:
   schemas:
+    ApiKeyRole:
+      allOf:
+      - $ref: '#/components/schemas/AccessRoleNamesNoOwner'
+      description: 'The role assigned to this API key, which determines its permissions.
+
+        Must have equal or lower permissions than the creator''s role when creating.
+
+        If not specified, inherits the creator''s role.For legacy keys, a default role of account_manager is returned.
+
+        '
+      example: browse
     CreateApiKeyRequestData:
       allOf:
       - $ref: '#/components/schemas/ApiKey'
@@ -103,28 +114,6 @@ components:
             $ref: '#/components/schemas/ApiKeyRole'
         required:
         - name
-    AccessRoleNamesNoOwner:
-      type: string
-      description: Access roles that can be assigned to collaborators or API keys (excludes the 'owner' role, which is typically unique to the account creator).
-      enum:
-      - admin
-      - account_manager
-      - browse
-      - edit
-      - publish
-      - review
-    ApiKeyAuthTypes:
-      type: string
-      description: 'The authentication type for this API key:
-
-        - requestSigning: Each request must be signed with the key and a hash sent in the header (most secure)
-
-        - secretKey: A simpler authentication method using the secret key as a Bearer token in the Authorization header (good security)
-
-        '
-      enum:
-      - requestSigning
-      - secretKey
     ErrorData:
       type: object
       properties:
@@ -143,36 +132,11 @@ components:
           - type: array
             items:
               type: string
-    SuccessData:
-      type: object
-      properties:
-        code:
-          type: integer
-          format: int32
-        message:
-          type: string
-    ApiKeysListResponse:
-      type: object
-      description: Response containing a list of API keys defined for a specific account, used for server-to-server authentication.
-      properties:
-        data:
-          $ref: '#/components/schemas/ApiKeysList'
     ApiKeysList:
       type: array
       description: A list of API key objects.
       items:
         $ref: '#/components/schemas/ApiKey'
-    ApiKeyRole:
-      allOf:
-      - $ref: '#/components/schemas/AccessRoleNamesNoOwner'
-      description: 'The role assigned to this API key, which determines its permissions.
-
-        Must have equal or lower permissions than the creator''s role when creating.
-
-        If not specified, inherits the creator''s role.For legacy keys, a default role of account_manager is returned.
-
-        '
-      example: browse
     ApiKey:
       type: object
       description: Defines an API key used for authenticating server-side requests to the Convert API.
@@ -209,15 +173,51 @@ components:
           readOnly: true
         role:
           $ref: '#/components/schemas/ApiKeyRole'
-  responses:
-    SuccessResponse:
-      description: 'A generic success response, typically used for operations that don''t return specific data (like deletions or some updates). The `code` is usually 200, and `message` confirms the successful action.
+    AccessRoleNamesNoOwner:
+      type: string
+      description: Access roles that can be assigned to collaborators or API keys (excludes the 'owner' role, which is typically unique to the account creator).
+      enum:
+      - admin
+      - account_manager
+      - browse
+      - edit
+      - publish
+      - review
+    ApiKeyAuthTypes:
+      type: string
+      description: 'The authentication type for this API key:
+
+        - requestSigning: Each request must be signed with the key and a hash sent in the header (most secure)
+
+        - secretKey: A simpler authentication method using the secret key as a Bearer token in the Authorization header (good security)
 
         '
+      enum:
+      - requestSigning
+      - secretKey
+    ApiKeysListResponse:
+      type: object
+      description: Response containing a list of API keys defined for a specific account, used for server-to-server authentication.
+      properties:
+        data:
+          $ref: '#/components/schemas/ApiKeysList'
+    SuccessData:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+  requestBodies:
+    CreateApiKeyRequest:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/SuccessData'
+            $ref: '#/components/schemas/CreateApiKeyRequestData'
+      description: Contains the `name` for the new API key for easy identification, and an optional list of `projects` (by ID) to which this key will grant access. If `projects` is omitted, the key typically grants access to all projects in the account.
+      required: true
+  responses:
     ApiKeysListResponse:
       description: A list of API keys configured for the account. Each entry includes the key's name, its ID (part of the key itself), and the projects it's scoped to. The secret is masked for existing keys.
       content:
@@ -238,14 +238,14 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ApiKey'
-  requestBodies:
-    CreateApiKeyRequest:
+    SuccessResponse:
+      description: 'A generic success response, typically used for operations that don''t return specific data (like deletions or some updates). The `code` is usually 200, and `message` confirms the successful action.
+
+        '
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/CreateApiKeyRequestData'
-      description: Contains the `name` for the new API key for easy identification, and an optional list of `projects` (by ID) to which this key will grant access. If `projects` is omitted, the key typically grants access to all projects in the account.
-      required: true
+            $ref: '#/components/schemas/SuccessData'
   securitySchemes:
     requestSigning:
       type: apiKey

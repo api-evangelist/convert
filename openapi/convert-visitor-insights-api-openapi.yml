@@ -106,26 +106,43 @@ paths:
         default:
           $ref: '#/components/responses/ErrorResponse'
 components:
-  requestBodies:
-    GetSignalSessionsRequest:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/GetSignalSessionsListRequestData'
-    GetSessionsRequest:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/GetSessionsListRequestData'
   schemas:
-    GetSessionsListRequestData:
-      allOf:
-      - $ref: '#/components/schemas/SessionsListFilteringOptions'
-    SessionsList:
+    SignalSessionsList:
       type: array
-      description: A list of raw session objects.
+      description: A list of Convert Signals™ session objects. Each object represents a recorded session where user frustration or usability issues were detected.
       items:
-        $ref: '#/components/schemas/Session'
+        $ref: '#/components/schemas/SignalSession'
+    ErrorData:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          oneOf:
+          - type: string
+          - type: array
+            items:
+              type: string
+        fields:
+          oneOf:
+          - type: string
+          - type: array
+            items:
+              type: string
+    Extra:
+      type: object
+      properties:
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+    SuccessData:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
     Pagination:
       type: object
       properties:
@@ -145,11 +162,150 @@ components:
           description: The total number of pages available for the current filter criteria and `results_per_page` setting.
           type: integer
           minimum: 0
-    Extra:
+    SignalSessionsListResponseData:
+      type: object
+      description: Response containing a list of Convert Signals™ sessions (highlighting user frustrations), along with pagination and filtering metadata.
+      properties:
+        data:
+          $ref: '#/components/schemas/SignalSessionsList'
+        extra:
+          allOf:
+          - type: object
+            properties:
+              tk:
+                type: string
+                nullable: true
+                description: Extra property
+          - $ref: '#/components/schemas/Extra'
+    ResultsPerPage:
       type: object
       properties:
-        pagination:
-          $ref: '#/components/schemas/Pagination'
+        results_per_page:
+          type: integer
+          nullable: true
+          minimum: 0
+          maximum: 50
+          default: 30
+          description: 'Specifies the maximum number of items to return in a single page of results.
+
+            Used for pagination. Default is 30, maximum is 50.
+
+            '
+    GetSessionsListRequestData:
+      allOf:
+      - $ref: '#/components/schemas/SessionsListFilteringOptions'
+    OnlyCount:
+      type: object
+      properties:
+        onlyCount:
+          type: boolean
+          description: 'If set to `true` in a list request, the response will only contain the total count of matching items (`extra.pagination.items_count`)
+
+            and will not include the actual item data. Useful for quickly getting totals without fetching full datasets.
+
+            '
+    GetSignalSessionsListRequestData:
+      $ref: '#/components/schemas/SignalSessionsListFilteringOptions'
+    PageNumber:
+      type: object
+      properties:
+        page:
+          type: integer
+          minimum: 1
+          description: 'The page number for paginated results. For example, if `results_per_page` is 30, `page: 2` will retrieve items 31-60.
+
+            Defaults to 1 if not specified.
+
+            '
+    UTC_Offset:
+      type: integer
+      description: 'The time offset from Coordinated Universal Time (UTC) in seconds.
+
+        For example, UTC-5 (EST) would be -18000. UTC+2 would be 7200.
+
+        Used for interpreting or displaying date/time information according to a specific timezone.
+
+        '
+      default: 0
+      minimum: -43200
+      maximum: 50400
+    SignalSession:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier for this Convert Signals™ session recording.
+          readOnly: true
+        duration:
+          type: integer
+          description: The total duration of the recorded session in seconds.
+        visited_pages:
+          type: array
+          items:
+            type: object
+            properties:
+              url:
+                type: string
+              duration:
+                type: integer
+              timestamp:
+                type: integer
+                format: int64
+        visited_pages_count:
+          type: integer
+          description: The total number of unique pages visited during this session.
+        entry_page:
+          type: string
+          description: The URL of the first page visited in this session (landing page for the session).
+        exit_page:
+          type: string
+          description: The URL of the last page visited before the session ended or the visitor exited.
+        session_start_time:
+          type: integer
+          format: int64
+          description: Unix timestamp (UTC) indicating when this session recording started.
+        device:
+          type: string
+          description: The type of device used by the visitor during this session (e.g., "Desktop", "Mobile", "Tablet").
+        browser:
+          type: string
+          description: The web browser used by the visitor (e.g., "Chrome", "Firefox", "Safari").
+        country_code:
+          type: string
+          description: The two-letter ISO country code of the visitor's location, based on IP geolocation.
+        watched:
+          type: boolean
+          description: True if this session recording has been watched by a user in the Convert UI.
+    SessionsListFilteringOptions:
+      allOf:
+      - $ref: '#/components/schemas/TimeRange'
+      - type: object
+        properties:
+          tags:
+            type: object
+            nullable: true
+            additionalProperties:
+              type: string
+            description: 'The tags object containing key-value pairs where each key is the tag name and the value is a string representing the tag''s value.
+
+              '
+            example:
+              property1: value1
+              property2: value2
+    SessionsListResponseData:
+      type: object
+      description: Response containing a list of recorded raw visitor sessions for a project, along with pagination details. (This endpoint seems to be for general session data, distinct from Convert Signals).
+      properties:
+        data:
+          $ref: '#/components/schemas/SessionsList'
+        extra:
+          allOf:
+          - type: object
+            properties:
+              tk:
+                type: string
+                nullable: true
+                description: Extra property
     SignalSessionsListFilteringOptions:
       allOf:
       - $ref: '#/components/schemas/TimeRange'
@@ -282,130 +438,18 @@ components:
           recordingId:
             type: string
             nullable: true
-    SessionsListResponseData:
-      type: object
-      description: Response containing a list of recorded raw visitor sessions for a project, along with pagination details. (This endpoint seems to be for general session data, distinct from Convert Signals).
-      properties:
-        data:
-          $ref: '#/components/schemas/SessionsList'
-        extra:
-          allOf:
-          - type: object
-            properties:
-              tk:
-                type: string
-                nullable: true
-                description: Extra property
-    SignalSessionsList:
-      type: array
-      description: A list of Convert Signals™ session objects. Each object represents a recorded session where user frustration or usability issues were detected.
-      items:
-        $ref: '#/components/schemas/SignalSession'
-    ResultsPerPage:
-      type: object
-      properties:
-        results_per_page:
-          type: integer
-          nullable: true
-          minimum: 0
-          maximum: 50
-          default: 30
-          description: 'Specifies the maximum number of items to return in a single page of results.
-
-            Used for pagination. Default is 30, maximum is 50.
-
-            '
-    SessionsListFilteringOptions:
-      allOf:
-      - $ref: '#/components/schemas/TimeRange'
-      - type: object
-        properties:
-          tags:
-            type: object
-            nullable: true
-            additionalProperties:
-              type: string
-            description: 'The tags object containing key-value pairs where each key is the tag name and the value is a string representing the tag''s value.
-
-              '
-            example:
-              property1: value1
-              property2: value2
-    SignalSession:
+    Session:
       type: object
       properties:
         id:
-          type: string
-          description: The unique identifier for this Convert Signals™ session recording.
+          type: integer
+          description: The unique numerical identifier for this raw session.
           readOnly: true
-        duration:
-          type: integer
-          description: The total duration of the recorded session in seconds.
-        visited_pages:
-          type: array
-          items:
-            type: object
-            properties:
-              url:
-                type: string
-              duration:
-                type: integer
-              timestamp:
-                type: integer
-                format: int64
-        visited_pages_count:
-          type: integer
-          description: The total number of unique pages visited during this session.
-        entry_page:
-          type: string
-          description: The URL of the first page visited in this session (landing page for the session).
-        exit_page:
-          type: string
-          description: The URL of the last page visited before the session ended or the visitor exited.
-        session_start_time:
-          type: integer
-          format: int64
-          description: Unix timestamp (UTC) indicating when this session recording started.
-        device:
-          type: string
-          description: The type of device used by the visitor during this session (e.g., "Desktop", "Mobile", "Tablet").
-        browser:
-          type: string
-          description: The web browser used by the visitor (e.g., "Chrome", "Firefox", "Safari").
-        country_code:
-          type: string
-          description: The two-letter ISO country code of the visitor's location, based on IP geolocation.
-        watched:
-          type: boolean
-          description: True if this session recording has been watched by a user in the Convert UI.
-    ErrorData:
-      type: object
-      properties:
-        code:
-          type: integer
-          format: int32
-        message:
-          oneOf:
-          - type: string
-          - type: array
-            items:
-              type: string
-        fields:
-          oneOf:
-          - type: string
-          - type: array
-            items:
-              type: string
-    OnlyCount:
-      type: object
-      properties:
-        onlyCount:
-          type: boolean
-          description: 'If set to `true` in a list request, the response will only contain the total count of matching items (`extra.pagination.items_count`)
-
-            and will not include the actual item data. Useful for quickly getting totals without fetching full datasets.
-
-            '
+    SessionsList:
+      type: array
+      description: A list of raw session objects.
+      items:
+        $ref: '#/components/schemas/Session'
     TimeRange:
       type: object
       properties:
@@ -419,70 +463,24 @@ components:
           description: Unix timestamp (seconds since epoch, UTC) marking the end of the time range. If null, implies up to the current time.
         utc_offset:
           $ref: '#/components/schemas/UTC_Offset'
-    GetSignalSessionsListRequestData:
-      $ref: '#/components/schemas/SignalSessionsListFilteringOptions'
-    PageNumber:
-      type: object
-      properties:
-        page:
-          type: integer
-          minimum: 1
-          description: 'The page number for paginated results. For example, if `results_per_page` is 30, `page: 2` will retrieve items 31-60.
-
-            Defaults to 1 if not specified.
-
-            '
-    UTC_Offset:
-      type: integer
-      description: 'The time offset from Coordinated Universal Time (UTC) in seconds.
-
-        For example, UTC-5 (EST) would be -18000. UTC+2 would be 7200.
-
-        Used for interpreting or displaying date/time information according to a specific timezone.
-
-        '
-      default: 0
-      minimum: -43200
-      maximum: 50400
-    SuccessData:
-      type: object
-      properties:
-        code:
-          type: integer
-          format: int32
-        message:
-          type: string
-    Session:
-      type: object
-      properties:
-        id:
-          type: integer
-          description: The unique numerical identifier for this raw session.
-          readOnly: true
-    SignalSessionsListResponseData:
-      type: object
-      description: Response containing a list of Convert Signals™ sessions (highlighting user frustrations), along with pagination and filtering metadata.
-      properties:
-        data:
-          $ref: '#/components/schemas/SignalSessionsList'
-        extra:
-          allOf:
-          - type: object
-            properties:
-              tk:
-                type: string
-                nullable: true
-                description: Extra property
-          - $ref: '#/components/schemas/Extra'
-  responses:
-    ErrorResponse:
-      description: 'Indicates an error occurred while processing the request. The `code` provides an HTTP status code, `message` offers a human-readable explanation or an array of validation errors, and `fields` (if present) specifies which input fields were problematic.
-
-        '
+  requestBodies:
+    GetSignalSessionsRequest:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/ErrorData'
+            $ref: '#/components/schemas/GetSignalSessionsListRequestData'
+    GetSessionsRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GetSessionsListRequestData'
+  responses:
+    SignalSessionsListResponse:
+      description: A list of Convert Signals™ sessions, highlighting visitor interactions that indicate potential frustration or usability issues (e.g., rage clicks, dead clicks). Includes session duration, visited pages, location, and other metadata.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SignalSessionsListResponseData'
     SessionsListResponse:
       description: A list of recorded raw visitor sessions for a project, typically used for deep-dive analytics or integrations requiring session-level data.
       content:
@@ -497,12 +495,14 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/SuccessData'
-    SignalSessionsListResponse:
-      description: A list of Convert Signals™ sessions, highlighting visitor interactions that indicate potential frustration or usability issues (e.g., rage clicks, dead clicks). Includes session duration, visited pages, location, and other metadata.
+    ErrorResponse:
+      description: 'Indicates an error occurred while processing the request. The `code` provides an HTTP status code, `message` offers a human-readable explanation or an array of validation errors, and `fields` (if present) specifies which input fields were problematic.
+
+        '
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/SignalSessionsListResponseData'
+            $ref: '#/components/schemas/ErrorData'
   securitySchemes:
     requestSigning:
       type: apiKey

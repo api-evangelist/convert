@@ -81,8 +81,73 @@ paths:
           $ref: '#/components/responses/ErrorResponse'
 components:
   schemas:
-    OAuthUpdateClientRequestData:
+    ErrorData:
       type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          oneOf:
+          - type: string
+          - type: array
+            items:
+              type: string
+        fields:
+          oneOf:
+          - type: string
+          - type: array
+            items:
+              type: string
+    OAuthDeleteClientResponseData:
+      type: object
+      required:
+      - code
+      - message
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
+    OAuthClientResponseData:
+      type: object
+      required:
+      - id
+      - name
+      - callback_url
+      - embedded
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        callback_url:
+          type: string
+          format: uri
+        description:
+          type: string
+        embedded:
+          type: boolean
+          description: 'Enable this when the OAuth client is used by a third-party or embedded integration. An embedded client stays active even if the user who created it is later deleted, so integrations that depend on it continue to work.
+
+            '
+        created_at:
+          type: integer
+    OAuthClientsListResponseData:
+      type: object
+      required:
+      - data
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/OAuthClientData'
+    OAuthCreateClientRequestData:
+      type: object
+      required:
+      - name
+      - callback_url
+      - embedded
       properties:
         name:
           type: string
@@ -95,19 +160,10 @@ components:
           maxLength: 500
         embedded:
           type: boolean
+          default: false
           description: 'Enable this when the OAuth client is used by a third-party or embedded integration. An embedded client stays active even if the user who created it is later deleted, so integrations that depend on it continue to work.
 
             '
-    OAuthDeleteClientResponseData:
-      type: object
-      required:
-      - code
-      - message
-      properties:
-        code:
-          type: integer
-        message:
-          type: string
     OAuthClientData:
       type: object
       required:
@@ -133,63 +189,8 @@ components:
             '
         created_at:
           type: integer
-    OAuthClientsListResponseData:
+    OAuthUpdateClientRequestData:
       type: object
-      required:
-      - data
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/OAuthClientData'
-    ErrorData:
-      type: object
-      properties:
-        code:
-          type: integer
-          format: int32
-        message:
-          oneOf:
-          - type: string
-          - type: array
-            items:
-              type: string
-        fields:
-          oneOf:
-          - type: string
-          - type: array
-            items:
-              type: string
-    OAuthClientResponseData:
-      type: object
-      required:
-      - id
-      - name
-      - callback_url
-      - embedded
-      properties:
-        id:
-          type: string
-        name:
-          type: string
-        callback_url:
-          type: string
-          format: uri
-        description:
-          type: string
-        embedded:
-          type: boolean
-          description: 'Enable this when the OAuth client is used by a third-party or embedded integration. An embedded client stays active even if the user who created it is later deleted, so integrations that depend on it continue to work.
-
-            '
-        created_at:
-          type: integer
-    OAuthCreateClientRequestData:
-      type: object
-      required:
-      - name
-      - callback_url
-      - embedded
       properties:
         name:
           type: string
@@ -202,7 +203,6 @@ components:
           maxLength: 500
         embedded:
           type: boolean
-          default: false
           description: 'Enable this when the OAuth client is used by a third-party or embedded integration. An embedded client stays active even if the user who created it is later deleted, so integrations that depend on it continue to work.
 
             '
@@ -222,12 +222,6 @@ components:
           schema:
             $ref: '#/components/schemas/OAuthCreateClientRequestData'
   responses:
-    OAuthClientsListResponse:
-      description: List of OAuth clients for the current user.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/OAuthClientsListResponseData'
     OAuthDeleteClientResponse:
       description: OAuth client deletion confirmation.
       content:
@@ -240,6 +234,12 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/OAuthClientResponseData'
+    OAuthClientsListResponse:
+      description: List of OAuth clients for the current user.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/OAuthClientsListResponseData'
     ErrorResponse:
       description: 'Indicates an error occurred while processing the request. The `code` provides an HTTP status code, `message` offers a human-readable explanation or an array of validation errors, and `fields` (if present) specifies which input fields were problematic.
 

@@ -141,6 +141,50 @@ paths:
           $ref: '#/components/responses/ErrorResponse'
 components:
   schemas:
+    ErrorData:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          oneOf:
+          - type: string
+          - type: array
+            items:
+              type: string
+        fields:
+          oneOf:
+          - type: string
+          - type: array
+            items:
+              type: string
+    UpdateSdkKeyRequestData:
+      allOf:
+      - $ref: '#/components/schemas/SdkKey'
+      - description: 'Request payload for updating an existing SDK key. This endpoint supports partial updates, allowing you to modify specific fields while keeping others unchanged.
+
+          Only the fields you want to update need to be included in the request body.
+
+          '
+    SdkKeysListResponseData:
+      type: object
+      description: Response containing a list of SDK keys defined for a specific Full Stack project, along with pagination details if applicable.
+      properties:
+        data:
+          $ref: '#/components/schemas/SdkKeysList'
+    SdkKeysList:
+      type: array
+      description: A list of SDK key objects.
+      items:
+        $ref: '#/components/schemas/SdkKey'
+    SdkKeyStatuses:
+      type: string
+      enum:
+      - enabled
+      - disabled
+      description: Indicates whether the SDK key is active and can be used for API authentication. When disabled, all requests using this key will be rejected.
+      default: enabled
     SdkKey:
       type: object
       description: 'Defines an SDK key used by Convert''s Full Stack SDKs (e.g., Node.js, JavaScript) to securely fetch project configurations (features, experiments) and send tracking data from server-side applications or rich client-side apps.
@@ -182,37 +226,6 @@ components:
             When a key is set as default, any previously default key for the same environment will be automatically unset.
 
             '
-    ErrorData:
-      type: object
-      properties:
-        code:
-          type: integer
-          format: int32
-        message:
-          oneOf:
-          - type: string
-          - type: array
-            items:
-              type: string
-        fields:
-          oneOf:
-          - type: string
-          - type: array
-            items:
-              type: string
-    SdkKeysList:
-      type: array
-      description: A list of SDK key objects.
-      items:
-        $ref: '#/components/schemas/SdkKey'
-    UpdateSdkKeyRequestData:
-      allOf:
-      - $ref: '#/components/schemas/SdkKey'
-      - description: 'Request payload for updating an existing SDK key. This endpoint supports partial updates, allowing you to modify specific fields while keeping others unchanged.
-
-          Only the fields you want to update need to be included in the request body.
-
-          '
     CreateSdkKeyRequestData:
       allOf:
       - $ref: '#/components/schemas/SdkKey'
@@ -231,12 +244,6 @@ components:
             description: Whether the SDK key should have a secret key. When true, a secret key will be generated and returned in the response.
             default: true
             writeOnly: true
-    SdkKeysListResponseData:
-      type: object
-      description: Response containing a list of SDK keys defined for a specific Full Stack project, along with pagination details if applicable.
-      properties:
-        data:
-          $ref: '#/components/schemas/SdkKeysList'
     SuccessData:
       type: object
       properties:
@@ -245,28 +252,6 @@ components:
           format: int32
         message:
           type: string
-    SdkKeyStatuses:
-      type: string
-      enum:
-      - enabled
-      - disabled
-      description: Indicates whether the SDK key is active and can be used for API authentication. When disabled, all requests using this key will be rejected.
-      default: enabled
-  requestBodies:
-    CreateSdkKeyRequest:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/CreateSdkKeyRequestData'
-      description: Contains the `name` for the new SDK key, the target `environment` (e.g., 'production', 'staging') it applies to, and a boolean `has_secret` indicating if an SDK secret should be generated for secure SDK authentication.
-      required: true
-    UpdateSdkKeyRequest:
-      description: Payload to update an existing SDK key
-      required: true
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/UpdateSdkKeyRequestData'
   responses:
     SdkKeysListResponse:
       description: A list of SDK keys defined for a project. Each key is associated with an environment (e.g., production, staging) and is used by Convert's Full Stack SDKs for authentication and configuration fetching.
@@ -280,14 +265,6 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/SdkKey'
-    SuccessResponse:
-      description: 'A generic success response, typically used for operations that don''t return specific data (like deletions or some updates). The `code` is usually 200, and `message` confirms the successful action.
-
-        '
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/SuccessData'
     ErrorResponse:
       description: 'Indicates an error occurred while processing the request. The `code` provides an HTTP status code, `message` offers a human-readable explanation or an array of validation errors, and `fields` (if present) specifies which input fields were problematic.
 
@@ -296,6 +273,29 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorData'
+    SuccessResponse:
+      description: 'A generic success response, typically used for operations that don''t return specific data (like deletions or some updates). The `code` is usually 200, and `message` confirms the successful action.
+
+        '
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SuccessData'
+  requestBodies:
+    UpdateSdkKeyRequest:
+      description: Payload to update an existing SDK key
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UpdateSdkKeyRequestData'
+    CreateSdkKeyRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CreateSdkKeyRequestData'
+      description: Contains the `name` for the new SDK key, the target `environment` (e.g., 'production', 'staging') it applies to, and a boolean `has_secret` indicating if an SDK secret should be generated for secure SDK authentication.
+      required: true
   securitySchemes:
     requestSigning:
       type: apiKey

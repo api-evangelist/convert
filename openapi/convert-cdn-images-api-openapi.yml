@@ -103,39 +103,6 @@ paths:
           $ref: '#/components/responses/ErrorResponse'
 components:
   schemas:
-    CdnImagesListResponseData:
-      type: object
-      description: Response containing a list of images hosted on Convert's CDN for the project.
-      properties:
-        data:
-          $ref: '#/components/schemas/CdnImagesList'
-    UploadCdnImageRequestData:
-      type: object
-      description: 'Request body for uploading an image to the project''s CDN storage. Uses multipart/form-data.
-
-        Supported image types: JPEG, PNG, GIF, WEBP, SVG.
-
-        Maximum file size: 2MB. Maximum 50 images per hour per account-project.
-
-        Knowledge Base: "Image Upload Guidelines for Convert Visual Editor".
-
-        '
-      properties:
-        image_name:
-          description: The desired filename (including extension, e.g., "new_banner.png", "logo_variant.svg") for the image as it will be stored on the CDN.
-          type: string
-          maxLength: 200
-        image:
-          description: 'The binary image file content to be uploaded.
-
-            Constraints: Max 2MB; JPEG, PNG, GIF, WEBP, SVG.
-
-            '
-          type: string
-          format: binary
-      required:
-      - image_name
-      - image
     ErrorData:
       type: object
       properties:
@@ -174,19 +141,6 @@ components:
           description: 'The maximum number of images to return in this request. Used for pagination. Default is 50.
 
             '
-    SuccessData:
-      type: object
-      properties:
-        code:
-          type: integer
-          format: int32
-        message:
-          type: string
-    CdnImagesList:
-      type: array
-      description: A list of CDN image objects.
-      items:
-        $ref: '#/components/schemas/CdnImage'
     CdnImage:
       type: object
       description: Represents an image file hosted on Convert's CDN, typically used in experience variations.
@@ -201,21 +155,59 @@ components:
 
             '
           type: string
-  responses:
-    SuccessResponse:
-      description: 'A generic success response, typically used for operations that don''t return specific data (like deletions or some updates). The `code` is usually 200, and `message` confirms the successful action.
+    UploadCdnImageRequestData:
+      type: object
+      description: 'Request body for uploading an image to the project''s CDN storage. Uses multipart/form-data.
+
+        Supported image types: JPEG, PNG, GIF, WEBP, SVG.
+
+        Maximum file size: 2MB. Maximum 50 images per hour per account-project.
+
+        Knowledge Base: "Image Upload Guidelines for Convert Visual Editor".
 
         '
+      properties:
+        image_name:
+          description: The desired filename (including extension, e.g., "new_banner.png", "logo_variant.svg") for the image as it will be stored on the CDN.
+          type: string
+          maxLength: 200
+        image:
+          description: 'The binary image file content to be uploaded.
+
+            Constraints: Max 2MB; JPEG, PNG, GIF, WEBP, SVG.
+
+            '
+          type: string
+          format: binary
+      required:
+      - image_name
+      - image
+    CdnImagesListResponseData:
+      type: object
+      description: Response containing a list of images hosted on Convert's CDN for the project.
+      properties:
+        data:
+          $ref: '#/components/schemas/CdnImagesList'
+    CdnImagesList:
+      type: array
+      description: A list of CDN image objects.
+      items:
+        $ref: '#/components/schemas/CdnImage'
+    SuccessData:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+  responses:
+    CdnImagesListResponse:
+      description: A list of images uploaded to the Convert CDN for a project. Each entry provides the `cdn_url` for accessing the image and its `key` (filename).
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/SuccessData'
-    ImageCdnResponse:
-      description: Details of a single image uploaded to the CDN, including its `cdn_url` and `key`.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/CdnImage'
+            $ref: '#/components/schemas/CdnImagesListResponseData'
     ErrorResponse:
       description: 'Indicates an error occurred while processing the request. The `code` provides an HTTP status code, `message` offers a human-readable explanation or an array of validation errors, and `fields` (if present) specifies which input fields were problematic.
 
@@ -224,13 +216,26 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorData'
-    CdnImagesListResponse:
-      description: A list of images uploaded to the Convert CDN for a project. Each entry provides the `cdn_url` for accessing the image and its `key` (filename).
+    ImageCdnResponse:
+      description: Details of a single image uploaded to the CDN, including its `cdn_url` and `key`.
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/CdnImagesListResponseData'
+            $ref: '#/components/schemas/CdnImage'
+    SuccessResponse:
+      description: 'A generic success response, typically used for operations that don''t return specific data (like deletions or some updates). The `code` is usually 200, and `message` confirms the successful action.
+
+        '
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SuccessData'
   requestBodies:
+    UploadImageRequest:
+      content:
+        multipart/form-data:
+          schema:
+            $ref: '#/components/schemas/UploadCdnImageRequestData'
     GetCdnImagesListRequest:
       content:
         application/json:
@@ -238,11 +243,6 @@ components:
             $ref: '#/components/schemas/GetCdnImagesListRequestData'
       description: Optional parameters to control pagination for the list of CDN images. Use `start_from` with an image key (filename) to list images after that specific one, and `max_results` to limit the number of images returned per request.
       required: false
-    UploadImageRequest:
-      content:
-        multipart/form-data:
-          schema:
-            $ref: '#/components/schemas/UploadCdnImageRequestData'
   securitySchemes:
     requestSigning:
       type: apiKey

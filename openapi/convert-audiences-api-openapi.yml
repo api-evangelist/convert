@@ -331,135 +331,15 @@ paths:
           $ref: '#/components/responses/ErrorResponse'
 components:
   schemas:
-    RuleObjectAudience:
-      type: object
-      nullable: true
-      description: This one describes a logical rule that is being used inside the app for triggering goals, matching audiences etc
-      properties:
-        OR:
-          description: This describes an outer set of blocks which are evaluated using OR's between them
-          type: array
-          items:
-            type: object
-            properties:
-              AND:
-                description: This describes a colections of logical blocks which are evaluated using AND's between them
-                type: array
-                items:
-                  type: object
-                  properties:
-                    OR_WHEN:
-                      description: This describes a colections of logical blocks which are evaluated using OR's between them
-                      type: array
-                      items:
-                        $ref: '#/components/schemas/RuleElementAudience'
-    GoalTriggeredMatchRule:
+    SegmentBucketedMatchRule:
       allOf:
-      - $ref: '#/components/schemas/BaseRuleWithGoalTriggeredValue'
+      - $ref: '#/components/schemas/BaseRuleWithSegmentBucketedValue'
       - type: object
         required:
         - rule_type
         properties:
           rule_type:
-            $ref: '#/components/schemas/GoalTriggeredMatchRulesTypes'
-          matching:
-            allOf:
-            - $ref: '#/components/schemas/BaseMatch'
-            - type: object
-              properties:
-                match_type:
-                  $ref: '#/components/schemas/ChoiceMatchingOptions'
-    OsMatchRulesTypes:
-      type: string
-      enum:
-      - os
-    CookieMatchingOptions:
-      type: string
-      enum:
-      - matches
-      - regexMatches
-      - contains
-      - endsWith
-      - startsWith
-      - exists
-      - doesNotExist
-    AudienceBase:
-      type: object
-      properties:
-        id:
-          type: integer
-          description: The unique numerical identifier for the audience.
-          readOnly: true
-        description:
-          type: string
-          description: An optional, more detailed explanation of the audience's purpose or criteria, aiding in identification and management.
-          maxLength: 500
-        status:
-          $ref: '#/components/schemas/AudienceStatuses'
-        name:
-          type: string
-          description: A user-defined, friendly name for the audience (e.g., "New Visitors from USA", "Repeat Purchasers - Mobile"). This name appears in the Convert UI when selecting audiences for experiences.
-          maxLength: 100
-        preset:
-          type: boolean
-          description: Indicates if this audience is a system-defined preset (e.g., "All Visitors", "Mobile Users"). Preset audiences cannot be modified directly but can be used as templates.
-          readOnly: true
-        selected_default:
-          type: boolean
-          description: If true, this audience will be automatically pre-selected when creating new experiences within the project. Useful for commonly targeted segments.
-        stats:
-          type: object
-          readOnly: true
-          description: Statistics related to the usage of this audience.
-          properties:
-            experiences_usage:
-              description: 'The number of currently active experiences that are using this audience for targeting.
-
-                This is an optional field, included if ''stats.experiences_usage'' is specified in the `include` parameter.
-
-                '
-              type: number
-              default: 0
-    BaseRuleWithHourOfDayValue:
-      allOf:
-      - $ref: '#/components/schemas/BaseRule'
-      - type: object
-        properties:
-          value:
-            description: Hour of day used for matching
-            type: number
-            minimum: 0
-            maximum: 24
-    BaseRuleWithVisitorTypeValue:
-      allOf:
-      - $ref: '#/components/schemas/BaseRule'
-      - type: object
-        properties:
-          value:
-            description: Type of the visitors
-            type: string
-            enum:
-            - new
-            - returning
-    BaseRuleWithLanguageCodeValue:
-      allOf:
-      - $ref: '#/components/schemas/BaseRule'
-      - type: object
-        properties:
-          value:
-            description: The 2 letter ISO language code used for matching
-            type: string
-            minLength: 2
-            maxLength: 2
-    VisitorDataExistsMatchRule:
-      allOf:
-      - $ref: '#/components/schemas/BaseRuleWithBooleanValue'
-      - type: object
-        required:
-        - rule_type
-        properties:
-          rule_type:
-            $ref: '#/components/schemas/VisitorDataExistsMatchRulesTypes'
+            $ref: '#/components/schemas/SegmentBucketedMatchRulesTypes'
           matching:
             allOf:
             - $ref: '#/components/schemas/BaseMatch'
@@ -479,37 +359,63 @@ components:
       required:
       - id
       - status
-    WeatherConditionMatchRulesTypes:
-      type: string
-      enum:
-      - weather_condition
-    CookieMatchRule:
+    AudienceWithoutUrlMatching:
       allOf:
-      - $ref: '#/components/schemas/BaseRuleWithStringValue'
+      - $ref: '#/components/schemas/AudienceBase'
       - type: object
-        required:
-        - rule_type
         properties:
-          rule_type:
-            $ref: '#/components/schemas/CookieMatchRulesTypes'
-          matching:
+          type:
+            $ref: '#/components/schemas/AudienceTypesNoUrl'
+          rules:
+            nullable: true
             allOf:
-            - $ref: '#/components/schemas/BaseMatch'
-            - type: object
-              properties:
-                match_type:
-                  $ref: '#/components/schemas/CookieMatchingOptions'
-          key:
-            description: The name of the cookie which value is compared to the given rule value
+            - $ref: '#/components/schemas/RuleObjectNoUrl'
+    BaseRuleWithStringValue:
+      allOf:
+      - $ref: '#/components/schemas/BaseRule'
+      - type: object
+        properties:
+          value:
+            description: The value used to match against 'rule_type' using 'matching'
             type: string
-    AudiencesListResponseData:
+    AudiencePreset:
       type: object
-      description: Response containing a list of audiences defined within a project, along with pagination details if applicable.
       properties:
-        data:
-          $ref: '#/components/schemas/AudiencesList'
-        extra:
-          $ref: '#/components/schemas/Extra'
+        id:
+          type: integer
+          description: The unique identifier for the audience preset.
+          readOnly: true
+        description:
+          type: string
+          description: A brief explanation of the criteria this preset audience targets.
+        name:
+          type: string
+          description: The display name of the preset audience (e.g., "All Visitors", "Desktop Users").
+        stats:
+          type: object
+          readOnly: true
+          description: Statistics related to the usage of this preset.
+          properties:
+            experiences_usage:
+              description: 'The number of active experiences currently using this preset audience.
+
+                '
+              type: number
+              default: 0
+        rules:
+          nullable: true
+          allOf:
+          - $ref: '#/components/schemas/RuleObjectAudience'
+    OnlyCount:
+      type: object
+      properties:
+        onlyCount:
+          type: boolean
+          description: 'If set to `true` in a list request, the response will only contain the total count of matching items (`extra.pagination.items_count`)
+
+            and will not include the actual item data. Useful for quickly getting totals without fetching full datasets.
+
+            '
     CountryMatchRule:
       allOf:
       - $ref: '#/components/schemas/BaseRuleWithCountryCodeValue'
@@ -526,32 +432,330 @@ components:
               properties:
                 match_type:
                   $ref: '#/components/schemas/ChoiceMatchingOptions'
-    RuleObjectNoUrl:
+    AudiencesPresetsList:
+      type: array
+      description: A list of audience preset objects.
+      items:
+        $ref: '#/components/schemas/AudiencePreset'
+    RuleElementNoUrl:
+      oneOf:
+      - $ref: '#/components/schemas/GenericTextMatchRule'
+      - $ref: '#/components/schemas/GenericNumericMatchRule'
+      - $ref: '#/components/schemas/GenericBoolMatchRule'
+      - $ref: '#/components/schemas/CookieMatchRule'
+      - $ref: '#/components/schemas/GenericTextKeyValueMatchRule'
+      - $ref: '#/components/schemas/GenericNumericKeyValueMatchRule'
+      - $ref: '#/components/schemas/GenericBoolKeyValueMatchRule'
+      - $ref: '#/components/schemas/CountryMatchRule'
+      - $ref: '#/components/schemas/LanguageMatchRule'
+      - $ref: '#/components/schemas/GoalTriggeredMatchRule'
+      - $ref: '#/components/schemas/SegmentBucketedMatchRule'
+      - $ref: '#/components/schemas/DayOfWeekMatchRule'
+      - $ref: '#/components/schemas/HourOfDayMatchRule'
+      - $ref: '#/components/schemas/MinuteOfHourMatchRule'
+      - $ref: '#/components/schemas/BrowserNameMatchRule'
+      - $ref: '#/components/schemas/OsMatchRule'
+      - $ref: '#/components/schemas/WeatherConditionMatchRule'
+      - $ref: '#/components/schemas/VisitorTypeMatchRule'
+      - $ref: '#/components/schemas/JsConditionMatchRule'
+      - $ref: '#/components/schemas/VisitorDataExistsMatchRule'
+      discriminator:
+        propertyName: rule_type
+        mapping:
+          campaign: '#/components/schemas/GenericTextMatchRule'
+          keyword: '#/components/schemas/GenericTextMatchRule'
+          medium: '#/components/schemas/GenericTextMatchRule'
+          source_name: '#/components/schemas/GenericTextMatchRule'
+          avg_time_page: '#/components/schemas/GenericNumericMatchRule'
+          city: '#/components/schemas/GenericTextMatchRule'
+          country: '#/components/schemas/CountryMatchRule'
+          region: '#/components/schemas/GenericTextMatchRule'
+          days_since_last_visit: '#/components/schemas/GenericNumericMatchRule'
+          language: '#/components/schemas/LanguageMatchRule'
+          pages_visited_count: '#/components/schemas/GenericNumericMatchRule'
+          goal_triggered: '#/components/schemas/GoalTriggeredMatchRule'
+          visit_duration: '#/components/schemas/GenericNumericMatchRule'
+          cookie: '#/components/schemas/CookieMatchRule'
+          visitor_type: '#/components/schemas/VisitorTypeMatchRule'
+          visits_count: '#/components/schemas/GenericNumericMatchRule'
+          bucketed_into_experience: '#/components/schemas/GenericBoolMatchRule'
+          bucketed_into_segment: '#/components/schemas/SegmentBucketedMatchRule'
+          local_time_day_of_week: '#/components/schemas/DayOfWeekMatchRule'
+          local_time_hour_of_day: '#/components/schemas/HourOfDayMatchRule'
+          local_time_minute_of_hour: '#/components/schemas/MinuteOfHourMatchRule'
+          project_time_day_of_week: '#/components/schemas/DayOfWeekMatchRule'
+          project_time_hour_of_day: '#/components/schemas/HourOfDayMatchRule'
+          project_time_minute_of_hour: '#/components/schemas/MinuteOfHourMatchRule'
+          browser_name: '#/components/schemas/BrowserNameMatchRule'
+          browser_version: '#/components/schemas/GenericTextMatchRule'
+          os: '#/components/schemas/OsMatchRule'
+          user_agent: '#/components/schemas/GenericTextMatchRule'
+          is_desktop: '#/components/schemas/GenericBoolMatchRule'
+          is_mobile: '#/components/schemas/GenericBoolMatchRule'
+          is_tablet: '#/components/schemas/GenericBoolMatchRule'
+          js_condition: '#/components/schemas/JsConditionMatchRule'
+          page_tag_page_type: '#/components/schemas/GenericTextMatchRule'
+          page_tag_category_id: '#/components/schemas/GenericTextMatchRule'
+          page_tag_category_name: '#/components/schemas/GenericTextMatchRule'
+          page_tag_product_sku: '#/components/schemas/GenericTextMatchRule'
+          page_tag_product_name: '#/components/schemas/GenericTextMatchRule'
+          page_tag_product_price: '#/components/schemas/GenericNumericMatchRule'
+          page_tag_customer_id: '#/components/schemas/GenericTextMatchRule'
+          page_tag_custom_1: '#/components/schemas/GenericTextMatchRule'
+          page_tag_custom_2: '#/components/schemas/GenericTextMatchRule'
+          page_tag_custom_3: '#/components/schemas/GenericTextMatchRule'
+          page_tag_custom_4: '#/components/schemas/GenericTextMatchRule'
+          weather_condition: '#/components/schemas/WeatherConditionMatchRule'
+          generic_text_key_value: '#/components/schemas/GenericTextKeyValueMatchRule'
+          generic_numeric_key_value: '#/components/schemas/GenericNumericKeyValueMatchRule'
+          generic_bool_key_value: '#/components/schemas/GenericBoolKeyValueMatchRule'
+          visitor_id: '#/components/schemas/GenericTextMatchRule'
+          visitor_data_exists: '#/components/schemas/VisitorDataExistsMatchRule'
+    GenericBoolKeyValueMatchRule:
+      allOf:
+      - $ref: '#/components/schemas/BaseRuleWithBooleanValue'
+      - type: object
+        required:
+        - rule_type
+        properties:
+          rule_type:
+            $ref: '#/components/schemas/GenericBoolKeyValueMatchRulesTypes'
+          matching:
+            allOf:
+            - $ref: '#/components/schemas/BaseMatch'
+            - type: object
+              properties:
+                match_type:
+                  $ref: '#/components/schemas/ChoiceMatchingOptions'
+      - $ref: '#/components/schemas/GenericKey'
+    AudienceIncludeFields:
+      type: string
+      enum:
+      - rules
+      - stats.experiences_usage
+    BulkAudiencesIds:
+      type: array
+      description: A list of audience unique numerical identifiers to be affected by a bulk operation.
+      items:
+        type: integer
+      minItems: 1
+      maxItems: 100
+    BaseRuleWithLanguageCodeValue:
+      allOf:
+      - $ref: '#/components/schemas/BaseRule'
+      - type: object
+        properties:
+          value:
+            description: The 2 letter ISO language code used for matching
+            type: string
+            minLength: 2
+            maxLength: 2
+    DayOfWeekMatchRule:
+      allOf:
+      - $ref: '#/components/schemas/BaseRuleWithDayOfWeekValue'
+      - type: object
+        required:
+        - rule_type
+        properties:
+          rule_type:
+            $ref: '#/components/schemas/DayOfWeekMatchRulesTypes'
+          matching:
+            allOf:
+            - $ref: '#/components/schemas/BaseMatch'
+            - type: object
+              properties:
+                match_type:
+                  $ref: '#/components/schemas/NumericMatchingOptions'
+    BulkSuccessData:
+      allOf:
+      - $ref: '#/components/schemas/SuccessData'
+      - type: object
+        properties:
+          code:
+            type: integer
+            format: int32
+          errors:
+            type: array
+            description: List of unprocessed entities. Would be empty, if all passed entities processed
+            items:
+              $ref: '#/components/schemas/BulkEntityError'
+    AudiencesPresetsListResponseData:
       type: object
-      nullable: true
-      description: 'Similar to `RuleObject`, but the individual `RuleElementNoUrl` conditions within `OR_WHEN` arrays cannot include URL-based matching types.
+      description: Response containing a list of predefined audience templates (presets) available in the system.
+      properties:
+        data:
+          $ref: '#/components/schemas/AudiencesPresetsList'
+    AudienceTypesNoUrl:
+      description: 'Defines the behavior and persistence of an audience that does *not* use URL-based conditions in its rules.
 
-        Used for ''permanent'' or ''transient'' audiences where URL context is not persistently evaluated or relevant for the audience type.
+        - `permanent`: Once a visitor matches the audience criteria, they are permanently considered part of this audience for future sessions and evaluations, even if their characteristics change later. The matching is checked only at the initial bucketing time.
+
+        - `transient`: A visitor must match the audience criteria upon each evaluation (e.g., on every page load or when an experiment is rechecked) to be included. If conditions are no longer met, the visitor is no longer part of the audience for that specific evaluation.
+
+        For Full Stack projects, only `transient` and `segmentation` (if applicable without URL rules) are valid.
 
         '
+      type: string
+      enum:
+      - permanent
+      - transient
+    AudienceWithUrlMatching:
+      allOf:
+      - $ref: '#/components/schemas/AudienceBase'
+      - type: object
+        properties:
+          type:
+            $ref: '#/components/schemas/AudienceTypesWithUrl'
+          rules:
+            nullable: true
+            allOf:
+            - $ref: '#/components/schemas/RuleObjectAudience'
+    VisitorTypeMatchRulesTypes:
+      type: string
+      enum:
+      - visitor_type
+    GetAudiencesListRequestData:
+      allOf:
+      - $ref: '#/components/schemas/OnlyCount'
+      - $ref: '#/components/schemas/AudiencesListFilteringOptions'
+      - $ref: '#/components/schemas/PageNumber'
+      - type: object
+        properties:
+          include:
+            description: Specifies the list of fields to be included in the response, which otherwise would not be sent.
+            type: array
+            items:
+              $ref: '#/components/schemas/AudienceIncludeFields'
+          only:
+            description: 'Only retrieve audiences with the given ids.
+
+              '
+            type: array
+            nullable: true
+            items:
+              type: integer
+            maxItems: 100
+          except:
+            description: 'Except audiences with the given ids.
+
+              '
+            type: array
+            items:
+              type: integer
+            maxItems: 100
+    SortDirection:
+      type: object
       properties:
-        OR:
-          description: An array of AND-blocks.
-          type: array
-          items:
-            type: object
-            properties:
-              AND:
-                description: An array of OR_WHEN-blocks.
-                type: array
-                items:
-                  type: object
-                  properties:
-                    OR_WHEN:
-                      description: An array of individual rule elements that do not involve URL matching.
-                      type: array
-                      items:
-                        $ref: '#/components/schemas/RuleElementNoUrl'
+        sort_direction:
+          type: string
+          nullable: true
+          default: desc
+          description: 'The direction for sorting the list results, based on the `sort_by` field.
+
+            - `asc`: Ascending order (e.g., A-Z, 1-10, oldest to newest).
+
+            - `desc`: Descending order (e.g., Z-A, 10-1, newest to oldest).
+
+            Defaults to `desc` (newest/highest first) if not specified.
+
+            '
+          enum:
+          - asc
+          - desc
+    JsConditionMatchRulesTypes:
+      type: string
+      enum:
+      - js_condition
+    CreateAudienceRequestData:
+      $ref: '#/components/schemas/AudienceCreate'
+    ChoiceMatchingOptions:
+      type: string
+      enum:
+      - equals
+    SuccessData:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+    OsMatchRulesTypes:
+      type: string
+      enum:
+      - os
+    GenericTextKeyValueMatchRulesTypes:
+      type: string
+      enum:
+      - generic_text_key_value
+    GenericKey:
+      type: object
+      properties:
+        key:
+          description: The name of the key whose value will be retrieved and compared against the rule's `value`.
+          type: string
+    BaseRuleWithVisitorTypeValue:
+      allOf:
+      - $ref: '#/components/schemas/BaseRule'
+      - type: object
+        properties:
+          value:
+            description: Type of the visitors
+            type: string
+            enum:
+            - new
+            - returning
+    AudienceTypes:
+      type: string
+      enum:
+      - segmentation
+      - permanent
+      - transient
+    VisitorTypeMatchRule:
+      allOf:
+      - $ref: '#/components/schemas/BaseRuleWithVisitorTypeValue'
+      - type: object
+        required:
+        - rule_type
+        properties:
+          rule_type:
+            $ref: '#/components/schemas/VisitorTypeMatchRulesTypes'
+          matching:
+            allOf:
+            - $ref: '#/components/schemas/BaseMatch'
+            - type: object
+              properties:
+                match_type:
+                  $ref: '#/components/schemas/ChoiceMatchingOptions'
+    NumericMatchRulesTypes:
+      type: string
+      enum:
+      - avg_time_page
+      - days_since_last_visit
+      - pages_visited_count
+      - visit_duration
+      - visits_count
+      - page_tag_product_price
+    BaseRule:
+      type: object
+      required:
+      - rule_type
+      properties:
+        rule_type:
+          description: 'The specific attribute or condition to evaluate. Examples: ''url'', ''cookie'', ''browser_name'', ''js_condition'', ''page_tag_product_price''.
+
+            The allowed `rule_type` values depend on whether the rule is for an Audience (which can use visitor and page content attributes if it''s a ''segmentation'' type) or a Location (typically URL or page tag based).
+
+            '
+          type: string
+    BaseRuleWithNumericValue:
+      allOf:
+      - $ref: '#/components/schemas/BaseRule'
+      - type: object
+        properties:
+          value:
+            description: The value used to match against 'rule_type' using 'matching'
+            type: number
     GenericNumericKeyValueMatchRule:
       allOf:
       - $ref: '#/components/schemas/BaseRuleWithNumericValue'
@@ -569,138 +773,6 @@ components:
                 match_type:
                   $ref: '#/components/schemas/NumericMatchingOptions'
       - $ref: '#/components/schemas/GenericKey'
-    BaseRuleWithSegmentBucketedValue:
-      allOf:
-      - $ref: '#/components/schemas/BaseRule'
-      - type: object
-        properties:
-          value:
-            description: ID of the segment used for matching
-            type: number
-    AudienceStatuses:
-      type: string
-      description: 'The status of an audience:
-
-        - `active`: The audience is currently active and can be used for targeting experiences.
-
-        - `archived`: The audience is no longer active and cannot be used for new experiences, but its definition and past usage data are preserved. Archived audiences can often be cloned.
-
-        Knowledge Base: "Benefits of Archiving Unused Goals, Locations, and Audiences."
-
-        '
-      enum:
-      - active
-      - archived
-    HourOfDayMatchRule:
-      allOf:
-      - $ref: '#/components/schemas/BaseRuleWithHourOfDayValue'
-      - type: object
-        required:
-        - rule_type
-        properties:
-          rule_type:
-            $ref: '#/components/schemas/HourOfDayMatchRulesTypes'
-          matching:
-            allOf:
-            - $ref: '#/components/schemas/BaseMatch'
-            - type: object
-              properties:
-                match_type:
-                  $ref: '#/components/schemas/NumericMatchingOptions'
-    BrowserNameMatchRule:
-      allOf:
-      - $ref: '#/components/schemas/BaseRuleWithBrowserNameValue'
-      - type: object
-        required:
-        - rule_type
-        properties:
-          rule_type:
-            $ref: '#/components/schemas/BrowserNameMatchRulesTypes'
-          matching:
-            allOf:
-            - $ref: '#/components/schemas/BaseMatch'
-            - type: object
-              properties:
-                match_type:
-                  $ref: '#/components/schemas/ChoiceMatchingOptions'
-    AudiencesList:
-      type: array
-      description: A list of audience objects.
-      items:
-        $ref: '#/components/schemas/Audience'
-    BaseRuleWithMinuteOfHourValue:
-      allOf:
-      - $ref: '#/components/schemas/BaseRule'
-      - type: object
-        properties:
-          value:
-            description: Minute of hour used for matching
-            type: number
-            minimum: 1
-            maximum: 60
-    WeatherConditionMatchRule:
-      allOf:
-      - $ref: '#/components/schemas/BaseRuleWithWeatherConditionValue'
-      - type: object
-        required:
-        - rule_type
-        properties:
-          rule_type:
-            $ref: '#/components/schemas/WeatherConditionMatchRulesTypes'
-          matching:
-            allOf:
-            - $ref: '#/components/schemas/BaseMatch'
-            - type: object
-              properties:
-                match_type:
-                  $ref: '#/components/schemas/TextMatchingOptions'
-    BaseRuleWithCountryCodeValue:
-      allOf:
-      - $ref: '#/components/schemas/BaseRule'
-      - type: object
-        properties:
-          value:
-            description: The 2 letter ISO country code used for matching
-            type: string
-            minLength: 2
-            maxLength: 2
-    SuccessData:
-      type: object
-      properties:
-        code:
-          type: integer
-          format: int32
-        message:
-          type: string
-    JsConditionMatchRule:
-      allOf:
-      - $ref: '#/components/schemas/BaseRuleWithJsCodeValue'
-      - type: object
-        required:
-        - rule_type
-        properties:
-          rule_type:
-            $ref: '#/components/schemas/JsConditionMatchRulesTypes'
-          matching:
-            allOf:
-            - $ref: '#/components/schemas/BaseMatch'
-            - type: object
-              properties:
-                match_type:
-                  $ref: '#/components/schemas/ChoiceMatchingOptions'
-    AudiencesPresetsListResponseData:
-      type: object
-      description: Response containing a list of predefined audience templates (presets) available in the system.
-      properties:
-        data:
-          $ref: '#/components/schemas/AudiencesPresetsList'
-    BoolMatchRulesTypes:
-      type: string
-      enum:
-      - bucketed_into_experience
-      - is_desktop
-      - is_mobile
-      - is_tablet
     TextMatchingOptions:
       type: string
       enum:
@@ -709,6 +781,21 @@ components:
       - contains
       - endsWith
       - startsWith
+    AudiencesListResponseData:
+      type: object
+      description: Response containing a list of audiences defined within a project, along with pagination details if applicable.
+      properties:
+        data:
+          $ref: '#/components/schemas/AudiencesList'
+        extra:
+          $ref: '#/components/schemas/Extra'
+    AudiencesList:
+      type: array
+      description: A list of audience objects.
+      items:
+        $ref: '#/components/schemas/Audience'
+    UpdateAudienceRequestData:
+      $ref: '#/components/schemas/Audience'
     OsMatchRule:
       allOf:
       - $ref: '#/components/schemas/BaseRuleWithOsValue'
@@ -729,35 +816,67 @@ components:
       type: string
       enum:
       - generic_numeric_key_value
-    BulkSuccessData:
+    GenericTextKeyValueMatchRule:
       allOf:
-      - $ref: '#/components/schemas/SuccessData'
+      - $ref: '#/components/schemas/BaseRuleWithStringValue'
+      - type: object
+        required:
+        - rule_type
+        properties:
+          rule_type:
+            $ref: '#/components/schemas/GenericTextKeyValueMatchRulesTypes'
+          matching:
+            allOf:
+            - $ref: '#/components/schemas/BaseMatch'
+            - type: object
+              properties:
+                match_type:
+                  $ref: '#/components/schemas/TextMatchingOptions'
+      - $ref: '#/components/schemas/GenericKey'
+    ErrorData:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          oneOf:
+          - type: string
+          - type: array
+            items:
+              type: string
+        fields:
+          oneOf:
+          - type: string
+          - type: array
+            items:
+              type: string
+    BaseRuleWithMinuteOfHourValue:
+      allOf:
+      - $ref: '#/components/schemas/BaseRule'
       - type: object
         properties:
-          code:
-            type: integer
-            format: int32
-          errors:
-            type: array
-            description: List of unprocessed entities. Would be empty, if all passed entities processed
-            items:
-              $ref: '#/components/schemas/BulkEntityError'
-    BulkAudiencesIds:
-      type: array
-      description: A list of audience unique numerical identifiers to be affected by a bulk operation.
-      items:
-        type: integer
-      minItems: 1
-      maxItems: 100
-    GenericTextKeyValueMatchRulesTypes:
-      type: string
-      enum:
-      - generic_text_key_value
-    MinuteOfHourMatchRulesTypes:
-      type: string
-      enum:
-      - local_time_minute_of_hour
-      - project_time_minute_of_hour
+          value:
+            description: Minute of hour used for matching
+            type: number
+            minimum: 1
+            maximum: 60
+    BaseRuleWithBrowserNameValue:
+      allOf:
+      - $ref: '#/components/schemas/BaseRule'
+      - type: object
+        properties:
+          value:
+            description: Browser name used for matching
+            type: string
+            enum:
+            - chrome
+            - microsoft_ie
+            - firefox
+            - microsoft_edge
+            - mozilla
+            - opera
+            - safari
     GenericBoolMatchRule:
       allOf:
       - $ref: '#/components/schemas/BaseRuleWithBooleanValue'
@@ -767,6 +886,133 @@ components:
         properties:
           rule_type:
             $ref: '#/components/schemas/BoolMatchRulesTypes'
+          matching:
+            allOf:
+            - $ref: '#/components/schemas/BaseMatch'
+            - type: object
+              properties:
+                match_type:
+                  $ref: '#/components/schemas/ChoiceMatchingOptions'
+    BaseRuleWithGoalTriggeredValue:
+      allOf:
+      - $ref: '#/components/schemas/BaseRule'
+      - type: object
+        properties:
+          value:
+            description: ID of the goal used for matching
+            type: number
+    VisitorDataExistsMatchRulesTypes:
+      type: string
+      enum:
+      - visitor_data_exists
+    GenericBoolKeyValueMatchRulesTypes:
+      type: string
+      enum:
+      - generic_bool_key_value
+    GoalTriggeredMatchRule:
+      allOf:
+      - $ref: '#/components/schemas/BaseRuleWithGoalTriggeredValue'
+      - type: object
+        required:
+        - rule_type
+        properties:
+          rule_type:
+            $ref: '#/components/schemas/GoalTriggeredMatchRulesTypes'
+          matching:
+            allOf:
+            - $ref: '#/components/schemas/BaseMatch'
+            - type: object
+              properties:
+                match_type:
+                  $ref: '#/components/schemas/ChoiceMatchingOptions'
+    ResultsPerPage:
+      type: object
+      properties:
+        results_per_page:
+          type: integer
+          nullable: true
+          minimum: 0
+          maximum: 50
+          default: 30
+          description: 'Specifies the maximum number of items to return in a single page of results.
+
+            Used for pagination. Default is 30, maximum is 50.
+
+            '
+    DayOfWeekMatchRulesTypes:
+      type: string
+      enum:
+      - local_time_day_of_week
+      - project_time_day_of_week
+    AudienceWithUrlMatchingCreate:
+      required:
+      - name
+      - rules
+      - type
+      allOf:
+      - $ref: '#/components/schemas/AudienceWithUrlMatching'
+    PageNumber:
+      type: object
+      properties:
+        page:
+          type: integer
+          minimum: 1
+          description: 'The page number for paginated results. For example, if `results_per_page` is 30, `page: 2` will retrieve items 31-60.
+
+            Defaults to 1 if not specified.
+
+            '
+    GenericTextMatchRule:
+      allOf:
+      - $ref: '#/components/schemas/BaseRuleWithStringValue'
+      - type: object
+        required:
+        - rule_type
+        properties:
+          rule_type:
+            $ref: '#/components/schemas/TextMatchRulesTypes'
+          matching:
+            allOf:
+            - $ref: '#/components/schemas/BaseMatch'
+            - type: object
+              properties:
+                match_type:
+                  $ref: '#/components/schemas/TextMatchingOptions'
+    MinuteOfHourMatchRule:
+      allOf:
+      - $ref: '#/components/schemas/BaseRuleWithMinuteOfHourValue'
+      - type: object
+        required:
+        - rule_type
+        properties:
+          rule_type:
+            $ref: '#/components/schemas/MinuteOfHourMatchRulesTypes'
+          matching:
+            allOf:
+            - $ref: '#/components/schemas/BaseMatch'
+            - type: object
+              properties:
+                match_type:
+                  $ref: '#/components/schemas/NumericMatchingOptions'
+    BaseMatch:
+      type: object
+      properties:
+        negated:
+          description: 'If `true`, the logical result of the match is inverted.
+
+            For example, if `match_type` is ''contains'' and `value` is ''apple'', `negated: true` means the rule matches if the attribute *does not* contain ''apple''.
+
+            '
+          type: boolean
+    JsConditionMatchRule:
+      allOf:
+      - $ref: '#/components/schemas/BaseRuleWithJsCodeValue'
+      - type: object
+        required:
+        - rule_type
+        properties:
+          rule_type:
+            $ref: '#/components/schemas/JsConditionMatchRulesTypes'
           matching:
             allOf:
             - $ref: '#/components/schemas/BaseMatch'
@@ -790,100 +1036,28 @@ components:
               properties:
                 match_type:
                   $ref: '#/components/schemas/NumericMatchingOptions'
-    AudiencesListFilteringOptions:
-      allOf:
-      - $ref: '#/components/schemas/ResultsPerPage'
-      - $ref: '#/components/schemas/SortDirection'
-      - type: object
-        properties:
-          status:
-            type: array
-            nullable: true
-            description: List of audience statuses to be returned
-            items:
-              $ref: '#/components/schemas/AudienceStatuses'
-          search:
-            type: string
-            maxLength: 200
-            nullable: true
-            description: a search string that would be used to search against audience's name or description
-          is_default:
-            type: boolean
-            nullable: true
-            description: 'A flag to filter audiences by default status
-
-
-              If set to true, only default audiences will be returned, if not set, all audiences will be returned
-
-              '
-          sort_by:
-            type: string
-            nullable: true
-            default: id
-            description: 'A value to sort audiences by specific field
-
-
-              Defaults to **id** if not provided
-
-              '
-            enum:
-            - id
-            - type
-            - name
-            - usage
-            - status
-            - key
-          type:
-            allOf:
-            - $ref: '#/components/schemas/AudienceTypes'
-            nullable: true
-          experiences:
-            type: array
-            nullable: true
-            description: List of experiences to be returned
-            items:
-              type: integer
-            maxItems: 100
-          usage:
-            type: string
-            nullable: true
-            description: It indicates wherever retrieved audiences are used or not inside experiences
-            enum:
-            - used
-            - not_used
-    BaseRule:
-      type: object
-      required:
-      - rule_type
-      properties:
-        rule_type:
-          description: 'The specific attribute or condition to evaluate. Examples: ''url'', ''cookie'', ''browser_name'', ''js_condition'', ''page_tag_product_price''.
-
-            The allowed `rule_type` values depend on whether the rule is for an Audience (which can use visitor and page content attributes if it''s a ''segmentation'' type) or a Location (typically URL or page tag based).
-
-            '
-          type: string
-    BaseRuleWithNumericValue:
+    BaseRuleWithJsCodeValue:
       allOf:
       - $ref: '#/components/schemas/BaseRule'
       - type: object
         properties:
           value:
-            description: The value used to match against 'rule_type' using 'matching'
-            type: number
-    LanguageMatchRulesTypes:
-      type: string
-      enum:
-      - language
-    SegmentBucketedMatchRule:
+            description: 'The JS code that would be executed when rule is checked. The return value of this JS code is what is gonna be matched
+
+
+              against **true**(or **false** if **matching.negated = true** is provided)
+
+              '
+            type: string
+    VisitorDataExistsMatchRule:
       allOf:
-      - $ref: '#/components/schemas/BaseRuleWithSegmentBucketedValue'
+      - $ref: '#/components/schemas/BaseRuleWithBooleanValue'
       - type: object
         required:
         - rule_type
         properties:
           rule_type:
-            $ref: '#/components/schemas/SegmentBucketedMatchRulesTypes'
+            $ref: '#/components/schemas/VisitorDataExistsMatchRulesTypes'
           matching:
             allOf:
             - $ref: '#/components/schemas/BaseMatch'
@@ -891,6 +1065,20 @@ components:
               properties:
                 match_type:
                   $ref: '#/components/schemas/ChoiceMatchingOptions'
+    CookieMatchRulesTypes:
+      type: string
+      enum:
+      - cookie
+    BaseRuleWithCountryCodeValue:
+      allOf:
+      - $ref: '#/components/schemas/BaseRule'
+      - type: object
+        properties:
+          value:
+            description: The 2 letter ISO country code used for matching
+            type: string
+            minLength: 2
+            maxLength: 2
     RuleElementAudience:
       oneOf:
       - $ref: '#/components/schemas/GenericTextMatchRule'
@@ -968,41 +1156,130 @@ components:
           generic_bool_key_value: '#/components/schemas/GenericBoolKeyValueMatchRule'
           visitor_id: '#/components/schemas/GenericTextMatchRule'
           visitor_data_exists: '#/components/schemas/VisitorDataExistsMatchRule'
-    AudienceTypes:
+    BrowserNameMatchRulesTypes:
       type: string
       enum:
-      - segmentation
-      - permanent
-      - transient
-    GenericKey:
+      - browser_name
+    BaseRuleWithSegmentBucketedValue:
+      allOf:
+      - $ref: '#/components/schemas/BaseRule'
+      - type: object
+        properties:
+          value:
+            description: ID of the segment used for matching
+            type: number
+    LanguageMatchRulesTypes:
+      type: string
+      enum:
+      - language
+    HourOfDayMatchRule:
+      allOf:
+      - $ref: '#/components/schemas/BaseRuleWithHourOfDayValue'
+      - type: object
+        required:
+        - rule_type
+        properties:
+          rule_type:
+            $ref: '#/components/schemas/HourOfDayMatchRulesTypes'
+          matching:
+            allOf:
+            - $ref: '#/components/schemas/BaseMatch'
+            - type: object
+              properties:
+                match_type:
+                  $ref: '#/components/schemas/NumericMatchingOptions'
+    BulkDeleteAudienceRequestData:
       type: object
+      description: Request body for bulk deleting multiple audiences. Contains a list of audience IDs to be permanently removed.
+      additionalProperties: false
       properties:
-        key:
-          description: The name of the key whose value will be retrieved and compared against the rule's `value`.
-          type: string
-    AudienceTypesWithUrl:
-      description: 'Defines the behavior for an audience that *includes* URL-based conditions in its rules.
+        id:
+          $ref: '#/components/schemas/BulkAudiencesIds'
+      required:
+      - id
+    RuleObjectNoUrl:
+      type: object
+      nullable: true
+      description: 'Similar to `RuleObject`, but the individual `RuleElementNoUrl` conditions within `OR_WHEN` arrays cannot include URL-based matching types.
 
-        - `segmentation`: Once a visitor matches the audience criteria (which can include URL rules), they are tagged and permanently added to this segment. This segment membership persists across sessions and can be used for long-term targeting or analysis. URL rules are evaluated to determine initial entry into the segment.
-
-        Knowledge Base: "A segment basically allows a visitor to qualify for an audience on subsequent visits even if they do not meet the audience conditions."
+        Used for ''permanent'' or ''transient'' audiences where URL context is not persistently evaluated or relevant for the audience type.
 
         '
+      properties:
+        OR:
+          description: An array of AND-blocks.
+          type: array
+          items:
+            type: object
+            properties:
+              AND:
+                description: An array of OR_WHEN-blocks.
+                type: array
+                items:
+                  type: object
+                  properties:
+                    OR_WHEN:
+                      description: An array of individual rule elements that do not involve URL matching.
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/RuleElementNoUrl'
+    WeatherConditionMatchRule:
+      allOf:
+      - $ref: '#/components/schemas/BaseRuleWithWeatherConditionValue'
+      - type: object
+        required:
+        - rule_type
+        properties:
+          rule_type:
+            $ref: '#/components/schemas/WeatherConditionMatchRulesTypes'
+          matching:
+            allOf:
+            - $ref: '#/components/schemas/BaseMatch'
+            - type: object
+              properties:
+                match_type:
+                  $ref: '#/components/schemas/TextMatchingOptions'
+    WeatherConditionMatchRulesTypes:
       type: string
       enum:
-      - segmentation
-    CreateAudienceRequestData:
-      $ref: '#/components/schemas/AudienceCreate'
-    OnlyCount:
+      - weather_condition
+    HourOfDayMatchRulesTypes:
+      type: string
+      enum:
+      - local_time_hour_of_day
+      - project_time_hour_of_day
+    CookieMatchingOptions:
+      type: string
+      enum:
+      - matches
+      - regexMatches
+      - contains
+      - endsWith
+      - startsWith
+      - exists
+      - doesNotExist
+    RuleObjectAudience:
       type: object
+      nullable: true
+      description: This one describes a logical rule that is being used inside the app for triggering goals, matching audiences etc
       properties:
-        onlyCount:
-          type: boolean
-          description: 'If set to `true` in a list request, the response will only contain the total count of matching items (`extra.pagination.items_count`)
-
-            and will not include the actual item data. Useful for quickly getting totals without fetching full datasets.
-
-            '
+        OR:
+          description: This describes an outer set of blocks which are evaluated using OR's between them
+          type: array
+          items:
+            type: object
+            properties:
+              AND:
+                description: This describes a colections of logical blocks which are evaluated using AND's between them
+                type: array
+                items:
+                  type: object
+                  properties:
+                    OR_WHEN:
+                      description: This describes a colections of logical blocks which are evaluated using OR's between them
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/RuleElementAudience'
     Audience:
       oneOf:
       - $ref: '#/components/schemas/AudienceWithoutUrlMatching'
@@ -1013,136 +1290,6 @@ components:
           permanent: '#/components/schemas/AudienceWithoutUrlMatching'
           segmentation: '#/components/schemas/AudienceWithUrlMatching'
           transient: '#/components/schemas/AudienceWithoutUrlMatching'
-    PageNumber:
-      type: object
-      properties:
-        page:
-          type: integer
-          minimum: 1
-          description: 'The page number for paginated results. For example, if `results_per_page` is 30, `page: 2` will retrieve items 31-60.
-
-            Defaults to 1 if not specified.
-
-            '
-    ChoiceMatchingOptions:
-      type: string
-      enum:
-      - equals
-    NumericMatchingOptions:
-      type: string
-      enum:
-      - equalsNumber
-      - less
-      - lessEqual
-    BaseMatch:
-      type: object
-      properties:
-        negated:
-          description: 'If `true`, the logical result of the match is inverted.
-
-            For example, if `match_type` is ''contains'' and `value` is ''apple'', `negated: true` means the rule matches if the attribute *does not* contain ''apple''.
-
-            '
-          type: boolean
-    AudiencePreset:
-      type: object
-      properties:
-        id:
-          type: integer
-          description: The unique identifier for the audience preset.
-          readOnly: true
-        description:
-          type: string
-          description: A brief explanation of the criteria this preset audience targets.
-        name:
-          type: string
-          description: The display name of the preset audience (e.g., "All Visitors", "Desktop Users").
-        stats:
-          type: object
-          readOnly: true
-          description: Statistics related to the usage of this preset.
-          properties:
-            experiences_usage:
-              description: 'The number of active experiences currently using this preset audience.
-
-                '
-              type: number
-              default: 0
-        rules:
-          nullable: true
-          allOf:
-          - $ref: '#/components/schemas/RuleObjectAudience'
-    AudiencesPresetsList:
-      type: array
-      description: A list of audience preset objects.
-      items:
-        $ref: '#/components/schemas/AudiencePreset'
-    DayOfWeekMatchRulesTypes:
-      type: string
-      enum:
-      - local_time_day_of_week
-      - project_time_day_of_week
-    BrowserNameMatchRulesTypes:
-      type: string
-      enum:
-      - browser_name
-    AudienceWithUrlMatching:
-      allOf:
-      - $ref: '#/components/schemas/AudienceBase'
-      - type: object
-        properties:
-          type:
-            $ref: '#/components/schemas/AudienceTypesWithUrl'
-          rules:
-            nullable: true
-            allOf:
-            - $ref: '#/components/schemas/RuleObjectAudience'
-    BulkEntityError:
-      type: object
-      additionalProperties: false
-      properties:
-        id:
-          type: integer
-          description: The unique identifier of the entity that could not be processed.
-        message:
-          type: string
-          description: A message explaining the reason for the failure for this specific entity.
-    GenericBoolKeyValueMatchRule:
-      allOf:
-      - $ref: '#/components/schemas/BaseRuleWithBooleanValue'
-      - type: object
-        required:
-        - rule_type
-        properties:
-          rule_type:
-            $ref: '#/components/schemas/GenericBoolKeyValueMatchRulesTypes'
-          matching:
-            allOf:
-            - $ref: '#/components/schemas/BaseMatch'
-            - type: object
-              properties:
-                match_type:
-                  $ref: '#/components/schemas/ChoiceMatchingOptions'
-      - $ref: '#/components/schemas/GenericKey'
-    Pagination:
-      type: object
-      properties:
-        current_page:
-          description: The current page number being displayed from the paginated set.
-          type: integer
-          minimum: 1
-        items_count:
-          description: The total number of items available across all pages for the current filter criteria.
-          type: integer
-          minimum: 0
-        items_per_page:
-          description: The number of items included in the current page of results (matches `results_per_page` from the request).
-          type: integer
-          minimum: 0
-        pages_count:
-          description: The total number of pages available for the current filter criteria and `results_per_page` setting.
-          type: integer
-          minimum: 0
     AudienceWithoutUrlMatchingCreate:
       required:
       - name
@@ -1150,93 +1297,67 @@ components:
       - type
       allOf:
       - $ref: '#/components/schemas/AudienceWithoutUrlMatching'
-    Extra:
-      type: object
-      properties:
-        pagination:
-          $ref: '#/components/schemas/Pagination'
-    CookieMatchRulesTypes:
-      type: string
-      enum:
-      - cookie
-    ResultsPerPage:
-      type: object
-      properties:
-        results_per_page:
-          type: integer
-          nullable: true
-          minimum: 0
-          maximum: 50
-          default: 30
-          description: 'Specifies the maximum number of items to return in a single page of results.
-
-            Used for pagination. Default is 30, maximum is 50.
-
-            '
-    GenericTextMatchRule:
+    AudiencesListFilteringOptions:
       allOf:
-      - $ref: '#/components/schemas/BaseRuleWithStringValue'
+      - $ref: '#/components/schemas/ResultsPerPage'
+      - $ref: '#/components/schemas/SortDirection'
       - type: object
-        required:
-        - rule_type
         properties:
-          rule_type:
-            $ref: '#/components/schemas/TextMatchRulesTypes'
-          matching:
+          status:
+            type: array
+            nullable: true
+            description: List of audience statuses to be returned
+            items:
+              $ref: '#/components/schemas/AudienceStatuses'
+          search:
+            type: string
+            maxLength: 200
+            nullable: true
+            description: a search string that would be used to search against audience's name or description
+          is_default:
+            type: boolean
+            nullable: true
+            description: 'A flag to filter audiences by default status
+
+
+              If set to true, only default audiences will be returned, if not set, all audiences will be returned
+
+              '
+          sort_by:
+            type: string
+            nullable: true
+            default: id
+            description: 'A value to sort audiences by specific field
+
+
+              Defaults to **id** if not provided
+
+              '
+            enum:
+            - id
+            - type
+            - name
+            - usage
+            - status
+            - key
+          type:
             allOf:
-            - $ref: '#/components/schemas/BaseMatch'
-            - type: object
-              properties:
-                match_type:
-                  $ref: '#/components/schemas/TextMatchingOptions'
-    AudienceTypesNoUrl:
-      description: 'Defines the behavior and persistence of an audience that does *not* use URL-based conditions in its rules.
-
-        - `permanent`: Once a visitor matches the audience criteria, they are permanently considered part of this audience for future sessions and evaluations, even if their characteristics change later. The matching is checked only at the initial bucketing time.
-
-        - `transient`: A visitor must match the audience criteria upon each evaluation (e.g., on every page load or when an experiment is rechecked) to be included. If conditions are no longer met, the visitor is no longer part of the audience for that specific evaluation.
-
-        For Full Stack projects, only `transient` and `segmentation` (if applicable without URL rules) are valid.
-
-        '
-      type: string
-      enum:
-      - permanent
-      - transient
-    ErrorData:
-      type: object
-      properties:
-        code:
-          type: integer
-          format: int32
-        message:
-          oneOf:
-          - type: string
-          - type: array
+            - $ref: '#/components/schemas/AudienceTypes'
+            nullable: true
+          experiences:
+            type: array
+            nullable: true
+            description: List of experiences to be returned
             items:
-              type: string
-        fields:
-          oneOf:
-          - type: string
-          - type: array
-            items:
-              type: string
-    HourOfDayMatchRulesTypes:
-      type: string
-      enum:
-      - local_time_hour_of_day
-      - project_time_hour_of_day
-    NumericMatchRulesTypes:
-      type: string
-      enum:
-      - avg_time_page
-      - days_since_last_visit
-      - pages_visited_count
-      - visit_duration
-      - visits_count
-      - page_tag_product_price
-    UpdateAudienceRequestData:
-      $ref: '#/components/schemas/Audience'
+              type: integer
+            maxItems: 100
+          usage:
+            type: string
+            nullable: true
+            description: It indicates wherever retrieved audiences are used or not inside experiences
+            enum:
+            - used
+            - not_used
     BaseRuleWithBooleanValue:
       allOf:
       - $ref: '#/components/schemas/BaseRule'
@@ -1245,64 +1366,6 @@ components:
           value:
             description: The value used to match against 'rule_type' using 'matching'
             type: boolean
-    BaseRuleWithStringValue:
-      allOf:
-      - $ref: '#/components/schemas/BaseRule'
-      - type: object
-        properties:
-          value:
-            description: The value used to match against 'rule_type' using 'matching'
-            type: string
-    BaseRuleWithOsValue:
-      allOf:
-      - $ref: '#/components/schemas/BaseRule'
-      - type: object
-        properties:
-          value:
-            description: Operating System name used for matching
-            type: string
-            enum:
-            - android
-            - iphone
-            - ipod
-            - ipad
-            - windows
-            - macos
-            - linux
-    VisitorTypeMatchRule:
-      allOf:
-      - $ref: '#/components/schemas/BaseRuleWithVisitorTypeValue'
-      - type: object
-        required:
-        - rule_type
-        properties:
-          rule_type:
-            $ref: '#/components/schemas/VisitorTypeMatchRulesTypes'
-          matching:
-            allOf:
-            - $ref: '#/components/schemas/BaseMatch'
-            - type: object
-              properties:
-                match_type:
-                  $ref: '#/components/schemas/ChoiceMatchingOptions'
-    GoalTriggeredMatchRulesTypes:
-      type: string
-      enum:
-      - goal_triggered
-    JsConditionMatchRulesTypes:
-      type: string
-      enum:
-      - js_condition
-    BaseRuleWithDayOfWeekValue:
-      allOf:
-      - $ref: '#/components/schemas/BaseRule'
-      - type: object
-        properties:
-          value:
-            description: Day of week used for matching
-            type: number
-            minimum: 1
-            maximum: 7
     TextMatchRulesTypes:
       type: string
       enum:
@@ -1328,90 +1391,66 @@ components:
       - page_tag_custom_3
       - page_tag_custom_4
       - visitor_id
-    GetAudiencesListRequestData:
-      allOf:
-      - $ref: '#/components/schemas/OnlyCount'
-      - $ref: '#/components/schemas/AudiencesListFilteringOptions'
-      - $ref: '#/components/schemas/PageNumber'
-      - type: object
-        properties:
-          include:
-            description: Specifies the list of fields to be included in the response, which otherwise would not be sent.
-            type: array
-            items:
-              $ref: '#/components/schemas/AudienceIncludeFields'
-          only:
-            description: 'Only retrieve audiences with the given ids.
+    AudienceTypesWithUrl:
+      description: 'Defines the behavior for an audience that *includes* URL-based conditions in its rules.
 
-              '
-            type: array
-            nullable: true
-            items:
-              type: integer
-            maxItems: 100
-          except:
-            description: 'Except audiences with the given ids.
+        - `segmentation`: Once a visitor matches the audience criteria (which can include URL rules), they are tagged and permanently added to this segment. This segment membership persists across sessions and can be used for long-term targeting or analysis. URL rules are evaluated to determine initial entry into the segment.
 
-              '
-            type: array
-            items:
-              type: integer
-            maxItems: 100
-    VisitorDataExistsMatchRulesTypes:
+        Knowledge Base: "A segment basically allows a visitor to qualify for an audience on subsequent visits even if they do not meet the audience conditions."
+
+        '
       type: string
       enum:
-      - visitor_data_exists
-    CountryMatchRulesTypes:
+      - segmentation
+    Extra:
+      type: object
+      properties:
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+    NumericMatchingOptions:
       type: string
       enum:
-      - country
-    SegmentBucketedMatchRulesTypes:
-      type: string
-      enum:
-      - bucketed_into_segment
-    BaseRuleWithBrowserNameValue:
-      allOf:
-      - $ref: '#/components/schemas/BaseRule'
-      - type: object
-        properties:
-          value:
-            description: Browser name used for matching
-            type: string
-            enum:
-            - chrome
-            - microsoft_ie
-            - firefox
-            - microsoft_edge
-            - mozilla
-            - opera
-            - safari
-    DayOfWeekMatchRule:
-      allOf:
-      - $ref: '#/components/schemas/BaseRuleWithDayOfWeekValue'
-      - type: object
-        required:
-        - rule_type
-        properties:
-          rule_type:
-            $ref: '#/components/schemas/DayOfWeekMatchRulesTypes'
-          matching:
-            allOf:
-            - $ref: '#/components/schemas/BaseMatch'
-            - type: object
-              properties:
-                match_type:
-                  $ref: '#/components/schemas/NumericMatchingOptions'
-    AudienceCreate:
-      oneOf:
-      - $ref: '#/components/schemas/AudienceWithoutUrlMatchingCreate'
-      - $ref: '#/components/schemas/AudienceWithUrlMatchingCreate'
-      discriminator:
-        propertyName: type
-        mapping:
-          permanent: '#/components/schemas/AudienceWithoutUrlMatchingCreate'
-          segmentation: '#/components/schemas/AudienceWithUrlMatchingCreate'
-          transient: '#/components/schemas/AudienceWithoutUrlMatchingCreate'
-    GenericTextKeyValueMatchRule:
+      - equalsNumber
+      - less
+      - lessEqual
+    AudienceBase:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The unique numerical identifier for the audience.
+          readOnly: true
+        description:
+          type: string
+          description: An optional, more detailed explanation of the audience's purpose or criteria, aiding in identification and management.
+          maxLength: 500
+        status:
+          $ref: '#/components/schemas/AudienceStatuses'
+        name:
+          type: string
+          description: A user-defined, friendly name for the audience (e.g., "New Visitors from USA", "Repeat Purchasers - Mobile"). This name appears in the Convert UI when selecting audiences for experiences.
+          maxLength: 100
+        preset:
+          type: boolean
+          description: Indicates if this audience is a system-defined preset (e.g., "All Visitors", "Mobile Users"). Preset audiences cannot be modified directly but can be used as templates.
+          readOnly: true
+        selected_default:
+          type: boolean
+          description: If true, this audience will be automatically pre-selected when creating new experiences within the project. Useful for commonly targeted segments.
+        stats:
+          type: object
+          readOnly: true
+          description: Statistics related to the usage of this audience.
+          properties:
+            experiences_usage:
+              description: 'The number of currently active experiences that are using this audience for targeting.
+
+                This is an optional field, included if ''stats.experiences_usage'' is specified in the `include` parameter.
+
+                '
+              type: number
+              default: 0
+    CookieMatchRule:
       allOf:
       - $ref: '#/components/schemas/BaseRuleWithStringValue'
       - type: object
@@ -1419,37 +1458,45 @@ components:
         - rule_type
         properties:
           rule_type:
-            $ref: '#/components/schemas/GenericTextKeyValueMatchRulesTypes'
+            $ref: '#/components/schemas/CookieMatchRulesTypes'
           matching:
             allOf:
             - $ref: '#/components/schemas/BaseMatch'
             - type: object
               properties:
                 match_type:
-                  $ref: '#/components/schemas/TextMatchingOptions'
-      - $ref: '#/components/schemas/GenericKey'
-    BaseRuleWithJsCodeValue:
-      allOf:
-      - $ref: '#/components/schemas/BaseRule'
-      - type: object
-        properties:
-          value:
-            description: 'The JS code that would be executed when rule is checked. The return value of this JS code is what is gonna be matched
-
-
-              against **true**(or **false** if **matching.negated = true** is provided)
-
-              '
+                  $ref: '#/components/schemas/CookieMatchingOptions'
+          key:
+            description: The name of the cookie which value is compared to the given rule value
             type: string
-    LanguageMatchRule:
+    Pagination:
+      type: object
+      properties:
+        current_page:
+          description: The current page number being displayed from the paginated set.
+          type: integer
+          minimum: 1
+        items_count:
+          description: The total number of items available across all pages for the current filter criteria.
+          type: integer
+          minimum: 0
+        items_per_page:
+          description: The number of items included in the current page of results (matches `results_per_page` from the request).
+          type: integer
+          minimum: 0
+        pages_count:
+          description: The total number of pages available for the current filter criteria and `results_per_page` setting.
+          type: integer
+          minimum: 0
+    BrowserNameMatchRule:
       allOf:
-      - $ref: '#/components/schemas/BaseRuleWithLanguageCodeValue'
+      - $ref: '#/components/schemas/BaseRuleWithBrowserNameValue'
       - type: object
         required:
         - rule_type
         properties:
           rule_type:
-            $ref: '#/components/schemas/LanguageMatchRulesTypes'
+            $ref: '#/components/schemas/BrowserNameMatchRulesTypes'
           matching:
             allOf:
             - $ref: '#/components/schemas/BaseMatch'
@@ -1457,37 +1504,21 @@ components:
               properties:
                 match_type:
                   $ref: '#/components/schemas/ChoiceMatchingOptions'
-    AudienceWithUrlMatchingCreate:
-      required:
-      - name
-      - rules
-      - type
-      allOf:
-      - $ref: '#/components/schemas/AudienceWithUrlMatching'
-    BulkDeleteAudienceRequestData:
+    BulkEntityError:
       type: object
-      description: Request body for bulk deleting multiple audiences. Contains a list of audience IDs to be permanently removed.
       additionalProperties: false
       properties:
         id:
-          $ref: '#/components/schemas/BulkAudiencesIds'
-      required:
-      - id
-    AudienceWithoutUrlMatching:
-      allOf:
-      - $ref: '#/components/schemas/AudienceBase'
-      - type: object
-        properties:
-          type:
-            $ref: '#/components/schemas/AudienceTypesNoUrl'
-          rules:
-            nullable: true
-            allOf:
-            - $ref: '#/components/schemas/RuleObjectNoUrl'
-    VisitorTypeMatchRulesTypes:
+          type: integer
+          description: The unique identifier of the entity that could not be processed.
+        message:
+          type: string
+          description: A message explaining the reason for the failure for this specific entity.
+    MinuteOfHourMatchRulesTypes:
       type: string
       enum:
-      - visitor_type
+      - local_time_minute_of_hour
+      - project_time_minute_of_hour
     BaseRuleWithWeatherConditionValue:
       allOf:
       - $ref: '#/components/schemas/BaseRule'
@@ -1535,144 +1566,119 @@ components:
 
               '
             type: string
-    RuleElementNoUrl:
+    SegmentBucketedMatchRulesTypes:
+      type: string
+      enum:
+      - bucketed_into_segment
+    AudienceCreate:
       oneOf:
-      - $ref: '#/components/schemas/GenericTextMatchRule'
-      - $ref: '#/components/schemas/GenericNumericMatchRule'
-      - $ref: '#/components/schemas/GenericBoolMatchRule'
-      - $ref: '#/components/schemas/CookieMatchRule'
-      - $ref: '#/components/schemas/GenericTextKeyValueMatchRule'
-      - $ref: '#/components/schemas/GenericNumericKeyValueMatchRule'
-      - $ref: '#/components/schemas/GenericBoolKeyValueMatchRule'
-      - $ref: '#/components/schemas/CountryMatchRule'
-      - $ref: '#/components/schemas/LanguageMatchRule'
-      - $ref: '#/components/schemas/GoalTriggeredMatchRule'
-      - $ref: '#/components/schemas/SegmentBucketedMatchRule'
-      - $ref: '#/components/schemas/DayOfWeekMatchRule'
-      - $ref: '#/components/schemas/HourOfDayMatchRule'
-      - $ref: '#/components/schemas/MinuteOfHourMatchRule'
-      - $ref: '#/components/schemas/BrowserNameMatchRule'
-      - $ref: '#/components/schemas/OsMatchRule'
-      - $ref: '#/components/schemas/WeatherConditionMatchRule'
-      - $ref: '#/components/schemas/VisitorTypeMatchRule'
-      - $ref: '#/components/schemas/JsConditionMatchRule'
-      - $ref: '#/components/schemas/VisitorDataExistsMatchRule'
+      - $ref: '#/components/schemas/AudienceWithoutUrlMatchingCreate'
+      - $ref: '#/components/schemas/AudienceWithUrlMatchingCreate'
       discriminator:
-        propertyName: rule_type
+        propertyName: type
         mapping:
-          campaign: '#/components/schemas/GenericTextMatchRule'
-          keyword: '#/components/schemas/GenericTextMatchRule'
-          medium: '#/components/schemas/GenericTextMatchRule'
-          source_name: '#/components/schemas/GenericTextMatchRule'
-          avg_time_page: '#/components/schemas/GenericNumericMatchRule'
-          city: '#/components/schemas/GenericTextMatchRule'
-          country: '#/components/schemas/CountryMatchRule'
-          region: '#/components/schemas/GenericTextMatchRule'
-          days_since_last_visit: '#/components/schemas/GenericNumericMatchRule'
-          language: '#/components/schemas/LanguageMatchRule'
-          pages_visited_count: '#/components/schemas/GenericNumericMatchRule'
-          goal_triggered: '#/components/schemas/GoalTriggeredMatchRule'
-          visit_duration: '#/components/schemas/GenericNumericMatchRule'
-          cookie: '#/components/schemas/CookieMatchRule'
-          visitor_type: '#/components/schemas/VisitorTypeMatchRule'
-          visits_count: '#/components/schemas/GenericNumericMatchRule'
-          bucketed_into_experience: '#/components/schemas/GenericBoolMatchRule'
-          bucketed_into_segment: '#/components/schemas/SegmentBucketedMatchRule'
-          local_time_day_of_week: '#/components/schemas/DayOfWeekMatchRule'
-          local_time_hour_of_day: '#/components/schemas/HourOfDayMatchRule'
-          local_time_minute_of_hour: '#/components/schemas/MinuteOfHourMatchRule'
-          project_time_day_of_week: '#/components/schemas/DayOfWeekMatchRule'
-          project_time_hour_of_day: '#/components/schemas/HourOfDayMatchRule'
-          project_time_minute_of_hour: '#/components/schemas/MinuteOfHourMatchRule'
-          browser_name: '#/components/schemas/BrowserNameMatchRule'
-          browser_version: '#/components/schemas/GenericTextMatchRule'
-          os: '#/components/schemas/OsMatchRule'
-          user_agent: '#/components/schemas/GenericTextMatchRule'
-          is_desktop: '#/components/schemas/GenericBoolMatchRule'
-          is_mobile: '#/components/schemas/GenericBoolMatchRule'
-          is_tablet: '#/components/schemas/GenericBoolMatchRule'
-          js_condition: '#/components/schemas/JsConditionMatchRule'
-          page_tag_page_type: '#/components/schemas/GenericTextMatchRule'
-          page_tag_category_id: '#/components/schemas/GenericTextMatchRule'
-          page_tag_category_name: '#/components/schemas/GenericTextMatchRule'
-          page_tag_product_sku: '#/components/schemas/GenericTextMatchRule'
-          page_tag_product_name: '#/components/schemas/GenericTextMatchRule'
-          page_tag_product_price: '#/components/schemas/GenericNumericMatchRule'
-          page_tag_customer_id: '#/components/schemas/GenericTextMatchRule'
-          page_tag_custom_1: '#/components/schemas/GenericTextMatchRule'
-          page_tag_custom_2: '#/components/schemas/GenericTextMatchRule'
-          page_tag_custom_3: '#/components/schemas/GenericTextMatchRule'
-          page_tag_custom_4: '#/components/schemas/GenericTextMatchRule'
-          weather_condition: '#/components/schemas/WeatherConditionMatchRule'
-          generic_text_key_value: '#/components/schemas/GenericTextKeyValueMatchRule'
-          generic_numeric_key_value: '#/components/schemas/GenericNumericKeyValueMatchRule'
-          generic_bool_key_value: '#/components/schemas/GenericBoolKeyValueMatchRule'
-          visitor_id: '#/components/schemas/GenericTextMatchRule'
-          visitor_data_exists: '#/components/schemas/VisitorDataExistsMatchRule'
-    BaseRuleWithGoalTriggeredValue:
-      allOf:
-      - $ref: '#/components/schemas/BaseRule'
-      - type: object
-        properties:
-          value:
-            description: ID of the goal used for matching
-            type: number
-    GenericBoolKeyValueMatchRulesTypes:
+          permanent: '#/components/schemas/AudienceWithoutUrlMatchingCreate'
+          segmentation: '#/components/schemas/AudienceWithUrlMatchingCreate'
+          transient: '#/components/schemas/AudienceWithoutUrlMatchingCreate'
+    GoalTriggeredMatchRulesTypes:
       type: string
       enum:
-      - generic_bool_key_value
-    SortDirection:
-      type: object
-      properties:
-        sort_direction:
-          type: string
-          nullable: true
-          default: desc
-          description: 'The direction for sorting the list results, based on the `sort_by` field.
-
-            - `asc`: Ascending order (e.g., A-Z, 1-10, oldest to newest).
-
-            - `desc`: Descending order (e.g., Z-A, 10-1, newest to oldest).
-
-            Defaults to `desc` (newest/highest first) if not specified.
-
-            '
-          enum:
-          - asc
-          - desc
-    AudienceIncludeFields:
-      type: string
-      enum:
-      - rules
-      - stats.experiences_usage
-    MinuteOfHourMatchRule:
+      - goal_triggered
+    LanguageMatchRule:
       allOf:
-      - $ref: '#/components/schemas/BaseRuleWithMinuteOfHourValue'
+      - $ref: '#/components/schemas/BaseRuleWithLanguageCodeValue'
       - type: object
         required:
         - rule_type
         properties:
           rule_type:
-            $ref: '#/components/schemas/MinuteOfHourMatchRulesTypes'
+            $ref: '#/components/schemas/LanguageMatchRulesTypes'
           matching:
             allOf:
             - $ref: '#/components/schemas/BaseMatch'
             - type: object
               properties:
                 match_type:
-                  $ref: '#/components/schemas/NumericMatchingOptions'
+                  $ref: '#/components/schemas/ChoiceMatchingOptions'
+    BoolMatchRulesTypes:
+      type: string
+      enum:
+      - bucketed_into_experience
+      - is_desktop
+      - is_mobile
+      - is_tablet
+    BaseRuleWithHourOfDayValue:
+      allOf:
+      - $ref: '#/components/schemas/BaseRule'
+      - type: object
+        properties:
+          value:
+            description: Hour of day used for matching
+            type: number
+            minimum: 0
+            maximum: 24
+    BaseRuleWithOsValue:
+      allOf:
+      - $ref: '#/components/schemas/BaseRule'
+      - type: object
+        properties:
+          value:
+            description: Operating System name used for matching
+            type: string
+            enum:
+            - android
+            - iphone
+            - ipod
+            - ipad
+            - windows
+            - macos
+            - linux
+    AudienceStatuses:
+      type: string
+      description: 'The status of an audience:
+
+        - `active`: The audience is currently active and can be used for targeting experiences.
+
+        - `archived`: The audience is no longer active and cannot be used for new experiences, but its definition and past usage data are preserved. Archived audiences can often be cloned.
+
+        Knowledge Base: "Benefits of Archiving Unused Goals, Locations, and Audiences."
+
+        '
+      enum:
+      - active
+      - archived
+    CountryMatchRulesTypes:
+      type: string
+      enum:
+      - country
+    BaseRuleWithDayOfWeekValue:
+      allOf:
+      - $ref: '#/components/schemas/BaseRule'
+      - type: object
+        properties:
+          value:
+            description: Day of week used for matching
+            type: number
+            minimum: 1
+            maximum: 7
   requestBodies:
-    BulkDeleteAudiencesRequest:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/BulkDeleteAudienceRequestData'
     CreateAudienceRequest:
       content:
         application/json:
           schema:
             allOf:
             - $ref: '#/components/schemas/CreateAudienceRequestData'
+      required: true
+    BulkDeleteAudiencesRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BulkDeleteAudienceRequestData'
+    UpdateAudienceRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UpdateAudienceRequestData'
       required: true
     BulkUpdateAudiencesRequest:
       content:
@@ -1681,44 +1687,18 @@ components:
             $ref: '#/components/schemas/BulkUpdateAudienceRequestData'
       description: Contains a list of audience `id`s and the target `status` (e.g., 'active', 'archived') to apply to all of them.
       required: true
-    UpdateAudienceRequest:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/UpdateAudienceRequestData'
-      required: true
     GetAudiencesListRequest:
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/GetAudiencesListRequestData'
   responses:
-    SuccessResponse:
-      description: 'A generic success response, typically used for operations that don''t return specific data (like deletions or some updates). The `code` is usually 200, and `message` confirms the successful action.
-
-        '
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/SuccessData'
     AudiencesListResponse:
       description: A list of audiences defined within a project. Each audience entry includes its ID, name, type (permanent, transient, segmentation), status, and potentially usage statistics. Audiences define who sees an experience.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/AudiencesListResponseData'
-    AudienceResponse:
-      description: Detailed information for a single audience, including its name, type, status, and the `rules` (visitor data, traffic source, cookie values, JS conditions) that define its criteria.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Audience'
-    AudiencesPresetsListResponse:
-      description: A list of predefined audience templates (presets) provided by Convert, such as "New Visitors" or "Mobile Users," which can be used as a starting point for creating custom audiences.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/AudiencesPresetsListResponseData'
     BulkSuccessResponse:
       description: 'Indicates the outcome of a bulk operation (e.g., bulk update or delete). Provides a general success `message` and an `errors` array listing any entities that could not be processed, along with the reason for failure for each.
 
@@ -1735,6 +1715,26 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorData'
+    SuccessResponse:
+      description: 'A generic success response, typically used for operations that don''t return specific data (like deletions or some updates). The `code` is usually 200, and `message` confirms the successful action.
+
+        '
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SuccessData'
+    AudienceResponse:
+      description: Detailed information for a single audience, including its name, type, status, and the `rules` (visitor data, traffic source, cookie values, JS conditions) that define its criteria.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Audience'
+    AudiencesPresetsListResponse:
+      description: A list of predefined audience templates (presets) provided by Convert, such as "New Visitors" or "Mobile Users," which can be used as a starting point for creating custom audiences.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/AudiencesPresetsListResponseData'
   securitySchemes:
     requestSigning:
       type: apiKey

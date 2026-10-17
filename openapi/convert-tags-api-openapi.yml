@@ -203,60 +203,80 @@ paths:
         default:
           $ref: '#/components/responses/ErrorResponse'
 components:
-  responses:
-    BulkSuccessResponse:
-      description: 'Indicates the outcome of a bulk operation (e.g., bulk update or delete). Provides a general success `message` and an `errors` array listing any entities that could not be processed, along with the reason for failure for each.
-
-        '
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/BulkSuccessData'
-    ErrorResponse:
-      description: 'Indicates an error occurred while processing the request. The `code` provides an HTTP status code, `message` offers a human-readable explanation or an array of validation errors, and `fields` (if present) specifies which input fields were problematic.
-
-        '
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorData'
-    TagsListResponse:
-      description: A list of tags defined within a project. Each tag has an `id`, `name`, and `description`. Tags are used for organizing entities like experiences or goals.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/TagsListResponseData'
-    TagResponse:
-      description: Details for a single tag, including its `id`, `name`, and `description`.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Tag'
-    SuccessResponse:
-      description: 'A generic success response, typically used for operations that don''t return specific data (like deletions or some updates). The `code` is usually 200, and `message` confirms the successful action.
-
-        '
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/SuccessData'
   schemas:
-    BulkSuccessData:
-      allOf:
-      - $ref: '#/components/schemas/SuccessData'
-      - type: object
-        properties:
-          code:
-            type: integer
-            format: int32
-          errors:
-            type: array
-            description: List of unprocessed entities. Would be empty, if all passed entities processed
-            items:
-              $ref: '#/components/schemas/BulkEntityError'
     TagsListDataOptions:
       allOf:
       - $ref: '#/components/schemas/ResultsPerPage'
+    Tag:
+      type: object
+      description: 'Represents a tag (keyword or label) that can be associated with various Convert entities like experiences, goals, audiences, hypotheses, and observations.
+
+        Tags help organize and categorize these entities for easier filtering, searching, and management.
+
+        Knowledge Base: "Adding tags to your Experiences".
+
+        '
+      properties:
+        id:
+          type: integer
+          readOnly: true
+          description: The unique numerical identifier for the tag.
+        name:
+          type: string
+          description: The user-defined name of the tag (e.g., "Q3 Campaigns", "Homepage Tests", "High Priority", "Mobile Specific"). This is the primary identifier shown in the UI.
+          maxLength: 100
+        description:
+          type: string
+          description: (Optional) A brief explanation of the tag's purpose or the criteria for its application.
+          maxLength: 200
+          nullable: true
+    ErrorData:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          oneOf:
+          - type: string
+          - type: array
+            items:
+              type: string
+        fields:
+          oneOf:
+          - type: string
+          - type: array
+            items:
+              type: string
+    CreateTagRequestData:
+      allOf:
+      - $ref: '#/components/schemas/TagToCreate'
+    TagsListResponseData:
+      type: object
+      description: Response containing a list of tags defined within a project, along with pagination details if applicable.
+      properties:
+        data:
+          $ref: '#/components/schemas/TagsList'
+        extra:
+          $ref: '#/components/schemas/Extra'
+    TagToCreate:
+      allOf:
+      - $ref: '#/components/schemas/Tag'
+      required:
+      - name
+    Extra:
+      type: object
+      properties:
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+    SuccessData:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
     BulkEntityError:
       type: object
       additionalProperties: false
@@ -286,14 +306,6 @@ components:
           description: The total number of pages available for the current filter criteria and `results_per_page` setting.
           type: integer
           minimum: 0
-    UpdateTagRequestData:
-      allOf:
-      - $ref: '#/components/schemas/Tag'
-    Extra:
-      type: object
-      properties:
-        pagination:
-          $ref: '#/components/schemas/Pagination'
     GetTagsListRequestData:
       allOf:
       - $ref: '#/components/schemas/TagsListDataOptions'
@@ -322,10 +334,6 @@ components:
             maxLength: 100
             nullable: true
             description: A search string that would be used to search against Tag's name
-    TagsList:
-      type: array
-      items:
-        $ref: '#/components/schemas/Tag'
     ResultsPerPage:
       type: object
       properties:
@@ -340,72 +348,6 @@ components:
             Used for pagination. Default is 30, maximum is 50.
 
             '
-    CreateTagRequestData:
-      allOf:
-      - $ref: '#/components/schemas/TagToCreate'
-    BulkDeleteTagRequestData:
-      type: object
-      description: Request body for bulk deleting multiple tags. Contains a list of tag IDs to be permanently removed.
-      additionalProperties: false
-      properties:
-        id:
-          $ref: '#/components/schemas/BulkTagsIds'
-      required:
-      - id
-    ErrorData:
-      type: object
-      properties:
-        code:
-          type: integer
-          format: int32
-        message:
-          oneOf:
-          - type: string
-          - type: array
-            items:
-              type: string
-        fields:
-          oneOf:
-          - type: string
-          - type: array
-            items:
-              type: string
-    TagsListResponseData:
-      type: object
-      description: Response containing a list of tags defined within a project, along with pagination details if applicable.
-      properties:
-        data:
-          $ref: '#/components/schemas/TagsList'
-        extra:
-          $ref: '#/components/schemas/Extra'
-    TagToCreate:
-      allOf:
-      - $ref: '#/components/schemas/Tag'
-      required:
-      - name
-    Tag:
-      type: object
-      description: 'Represents a tag (keyword or label) that can be associated with various Convert entities like experiences, goals, audiences, hypotheses, and observations.
-
-        Tags help organize and categorize these entities for easier filtering, searching, and management.
-
-        Knowledge Base: "Adding tags to your Experiences".
-
-        '
-      properties:
-        id:
-          type: integer
-          readOnly: true
-          description: The unique numerical identifier for the tag.
-        name:
-          type: string
-          description: The user-defined name of the tag (e.g., "Q3 Campaigns", "Homepage Tests", "High Priority", "Mobile Specific"). This is the primary identifier shown in the UI.
-          maxLength: 100
-        description:
-          type: string
-          description: (Optional) A brief explanation of the tag's purpose or the criteria for its application.
-          maxLength: 200
-          nullable: true
     PageNumber:
       type: object
       properties:
@@ -417,14 +359,32 @@ components:
             Defaults to 1 if not specified.
 
             '
-    SuccessData:
+    BulkDeleteTagRequestData:
       type: object
+      description: Request body for bulk deleting multiple tags. Contains a list of tag IDs to be permanently removed.
+      additionalProperties: false
       properties:
-        code:
-          type: integer
-          format: int32
-        message:
-          type: string
+        id:
+          $ref: '#/components/schemas/BulkTagsIds'
+      required:
+      - id
+    BulkSuccessData:
+      allOf:
+      - $ref: '#/components/schemas/SuccessData'
+      - type: object
+        properties:
+          code:
+            type: integer
+            format: int32
+          errors:
+            type: array
+            description: List of unprocessed entities. Would be empty, if all passed entities processed
+            items:
+              $ref: '#/components/schemas/BulkEntityError'
+    TagsList:
+      type: array
+      items:
+        $ref: '#/components/schemas/Tag'
     BulkTagsIds:
       type: array
       description: A list of tag unique numerical identifiers to be affected by a bulk delete operation.
@@ -432,30 +392,70 @@ components:
         type: integer
       minItems: 1
       maxItems: 100
+    UpdateTagRequestData:
+      allOf:
+      - $ref: '#/components/schemas/Tag'
   requestBodies:
-    CreateTagRequest:
+    BulkDeleteTagsRequest:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/CreateTagRequestData'
-      required: true
+            $ref: '#/components/schemas/BulkDeleteTagRequestData'
     GetTagsRequest:
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/GetTagsListRequestData'
       description: Optional filters for listing tags, primarily `search` for tag names and pagination parameters (`page`, `results_per_page`). Also supports `only`/`except` for specific tag IDs.
+    CreateTagRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CreateTagRequestData'
+      required: true
     UpdateTagRequest:
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/UpdateTagRequestData'
       required: true
-    BulkDeleteTagsRequest:
+  responses:
+    TagsListResponse:
+      description: A list of tags defined within a project. Each tag has an `id`, `name`, and `description`. Tags are used for organizing entities like experiences or goals.
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/BulkDeleteTagRequestData'
+            $ref: '#/components/schemas/TagsListResponseData'
+    TagResponse:
+      description: Details for a single tag, including its `id`, `name`, and `description`.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Tag'
+    SuccessResponse:
+      description: 'A generic success response, typically used for operations that don''t return specific data (like deletions or some updates). The `code` is usually 200, and `message` confirms the successful action.
+
+        '
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SuccessData'
+    BulkSuccessResponse:
+      description: 'Indicates the outcome of a bulk operation (e.g., bulk update or delete). Provides a general success `message` and an `errors` array listing any entities that could not be processed, along with the reason for failure for each.
+
+        '
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BulkSuccessData'
+    ErrorResponse:
+      description: 'Indicates an error occurred while processing the request. The `code` provides an HTTP status code, `message` offers a human-readable explanation or an array of validation errors, and `fields` (if present) specifies which input fields were problematic.
+
+        '
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorData'
   securitySchemes:
     requestSigning:
       type: apiKey

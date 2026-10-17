@@ -31,37 +31,7 @@ paths:
         default:
           $ref: '#/components/responses/ErrorResponse'
 components:
-  responses:
-    OAuthTokenResponse:
-      description: One-time code exchanged for a scoped OAuth bearer session token.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/OAuthTokenResponseData'
-    ErrorResponse:
-      description: 'Indicates an error occurred while processing the request. The `code` provides an HTTP status code, `message` offers a human-readable explanation or an array of validation errors, and `fields` (if present) specifies which input fields were problematic.
-
-        '
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorData'
   schemas:
-    OAuthScopeAccountResponse:
-      type: object
-      required:
-      - account_id
-      properties:
-        account_id:
-          type: integer
-          minimum: 1
-        name:
-          description: Display name of the account.
-          type: string
-        projects:
-          type: array
-          items:
-            $ref: '#/components/schemas/OAuthScopeProject'
     OAuthScopeProject:
       type: object
       required:
@@ -77,10 +47,6 @@ components:
         name:
           description: Display name of the project.
           type: string
-    OAuthScopeMode:
-      type: string
-      enum:
-      - selected_accounts_projects
     ErrorData:
       type: object
       properties:
@@ -99,17 +65,6 @@ components:
           - type: array
             items:
               type: string
-    OAuthScopeResponse:
-      type: object
-      required:
-      - mode
-      properties:
-        mode:
-          $ref: '#/components/schemas/OAuthScopeMode'
-        accounts:
-          type: array
-          items:
-            $ref: '#/components/schemas/OAuthScopeAccountResponse'
     OAuthTokenRequestData:
       type: object
       required:
@@ -137,6 +92,36 @@ components:
           minLength: 43
           maxLength: 128
           pattern: ^[A-Za-z0-9\-._~]+$
+    OAuthScopeResponse:
+      type: object
+      required:
+      - mode
+      properties:
+        mode:
+          $ref: '#/components/schemas/OAuthScopeMode'
+        accounts:
+          type: array
+          items:
+            $ref: '#/components/schemas/OAuthScopeAccountResponse'
+    OAuthScopeMode:
+      type: string
+      enum:
+      - selected_accounts_projects
+    OAuthScopeAccountResponse:
+      type: object
+      required:
+      - account_id
+      properties:
+        account_id:
+          type: integer
+          minimum: 1
+        name:
+          description: Display name of the account.
+          type: string
+        projects:
+          type: array
+          items:
+            $ref: '#/components/schemas/OAuthScopeProject'
     OAuthTokenResponseData:
       type: object
       required:
@@ -165,6 +150,21 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/OAuthTokenRequestData'
+  responses:
+    ErrorResponse:
+      description: 'Indicates an error occurred while processing the request. The `code` provides an HTTP status code, `message` offers a human-readable explanation or an array of validation errors, and `fields` (if present) specifies which input fields were problematic.
+
+        '
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorData'
+    OAuthTokenResponse:
+      description: One-time code exchanged for a scoped OAuth bearer session token.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/OAuthTokenResponseData'
   securitySchemes:
     requestSigning:
       type: apiKey

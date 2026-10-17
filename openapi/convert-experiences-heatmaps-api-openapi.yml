@@ -54,62 +54,6 @@ paths:
           $ref: '#/components/responses/ErrorResponse'
 components:
   schemas:
-    HeatmapInteractions:
-      type: string
-      enum:
-      - click
-      - scroll
-      - move
-      default: click
-      description: Interaction type for the heatmap overlay.
-    ExperienceHeatmapBackgroundResponseData:
-      type: object
-      description: Response for POST heatmap background by heatmap id.
-      properties:
-        data:
-          type: object
-          properties:
-            heatmap_id:
-              type: string
-            device:
-              $ref: '#/components/schemas/HeatmapDevices'
-            background:
-              type: string
-              format: byte
-              nullable: true
-              description: Base64-encoded background image. Null when available is false.
-    GetExperienceHeatmapBackgroundRequestData:
-      type: object
-      description: Optional filters for the heatmap background image.
-      properties:
-        device:
-          $ref: '#/components/schemas/HeatmapDevices'
-    ErrorData:
-      type: object
-      properties:
-        code:
-          type: integer
-          format: int32
-        message:
-          oneOf:
-          - type: string
-          - type: array
-            items:
-              type: string
-        fields:
-          oneOf:
-          - type: string
-          - type: array
-            items:
-              type: string
-    HeatmapDevices:
-      type: string
-      enum:
-      - desktop
-      - tablet
-      - mobile
-      default: desktop
-      description: Device type for the heatmap image.
     ExperienceHeatmapOverlayResponseData:
       type: object
       description: Response for POST heatmap overlay by heatmap id.
@@ -128,6 +72,24 @@ components:
               format: byte
               nullable: true
               description: Base64-encoded overlay image. Null when available is false.
+    ErrorData:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          oneOf:
+          - type: string
+          - type: array
+            items:
+              type: string
+        fields:
+          oneOf:
+          - type: string
+          - type: array
+            items:
+              type: string
     GetExperienceHeatmapOverlayRequestData:
       type: object
       description: Optional filters for the heatmap overlay (interaction) image.
@@ -136,7 +98,52 @@ components:
           $ref: '#/components/schemas/HeatmapDevices'
         interaction:
           $ref: '#/components/schemas/HeatmapInteractions'
+    HeatmapDevices:
+      type: string
+      enum:
+      - desktop
+      - tablet
+      - mobile
+      default: desktop
+      description: Device type for the heatmap image.
+    HeatmapInteractions:
+      type: string
+      enum:
+      - click
+      - scroll
+      - move
+      default: click
+      description: Interaction type for the heatmap overlay.
+    GetExperienceHeatmapBackgroundRequestData:
+      type: object
+      description: Optional filters for the heatmap background image.
+      properties:
+        device:
+          $ref: '#/components/schemas/HeatmapDevices'
+    ExperienceHeatmapBackgroundResponseData:
+      type: object
+      description: Response for POST heatmap background by heatmap id.
+      properties:
+        data:
+          type: object
+          properties:
+            heatmap_id:
+              type: string
+            device:
+              $ref: '#/components/schemas/HeatmapDevices'
+            background:
+              type: string
+              format: byte
+              nullable: true
+              description: Base64-encoded background image. Null when available is false.
   parameters:
+    HeatmapId:
+      name: heatmap_id
+      in: path
+      required: true
+      description: ID of the heatmap.
+      schema:
+        type: string
     ExperienceId:
       name: experience_id
       in: path
@@ -158,27 +165,20 @@ components:
       description: ID of the account that owns the retrieved/saved data
       schema:
         type: integer
-    HeatmapId:
-      name: heatmap_id
-      in: path
-      required: true
-      description: ID of the heatmap.
-      schema:
-        type: string
   requestBodies:
-    GetExperienceHeatmapOverlayRequest:
-      description: Optional filters for the heatmap overlay image (e.g. device, interaction type). Passed in body for extensibility.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/GetExperienceHeatmapOverlayRequestData'
-      required: false
     GetExperienceHeatmapBackgroundRequest:
       description: Optional filters for the heatmap background image (e.g. device). Passed in body for extensibility.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/GetExperienceHeatmapBackgroundRequestData'
+      required: false
+    GetExperienceHeatmapOverlayRequest:
+      description: Optional filters for the heatmap overlay image (e.g. device, interaction type). Passed in body for extensibility.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GetExperienceHeatmapOverlayRequestData'
       required: false
   responses:
     ExperienceHeatmapBackgroundResponse:
@@ -187,6 +187,12 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ExperienceHeatmapBackgroundResponseData'
+    ExperienceHeatmapOverlayResponse:
+      description: Heatmap overlay (interaction) image for the given heatmap id, device, and interaction type.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ExperienceHeatmapOverlayResponseData'
     ErrorResponse:
       description: 'Indicates an error occurred while processing the request. The `code` provides an HTTP status code, `message` offers a human-readable explanation or an array of validation errors, and `fields` (if present) specifies which input fields were problematic.
 
@@ -195,12 +201,6 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorData'
-    ExperienceHeatmapOverlayResponse:
-      description: Heatmap overlay (interaction) image for the given heatmap id, device, and interaction type.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ExperienceHeatmapOverlayResponseData'
   securitySchemes:
     requestSigning:
       type: apiKey
